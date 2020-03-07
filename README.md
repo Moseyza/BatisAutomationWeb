@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # batis-automation-web
 
 ## Project setup
@@ -22,3 +23,7 @@ npm run lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+=======
+# BatisAutomationWeb
+Automation application from Batis co
+>>>>>>> origin/master
