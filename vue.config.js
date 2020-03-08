@@ -1,14 +1,13 @@
-const path = require('path');
+// const path = require('path');
 
-const resolve = dir => {
-    return path.join(__dirname,dir);
-}
+// const resolve = dir => {
+//     return path.join(__dirname,dir);
+// }
 
 
-module.exports = {
-    configureWebpack: {
-      devtool: 'source-map'
-    },
-    baseUrl:'/',
-    productionSourceMap:false
-  }
+// module.exports = {
+//     configureWebpack: {
+//       devtool: 'source-map'
+//     },
+//     productionSourceMap:false
+//   }
