@@ -4,12 +4,7 @@ import Home from '../views/Home.vue'
 
 Vue.use(VueRouter)
 
-function dynamicTitle(t: string){
-  const reult =  {title : t};
-  console.log(reult);
-  alert('test');
-  return reult;
-}
+
 const routes = [
   {
     path: '/',
