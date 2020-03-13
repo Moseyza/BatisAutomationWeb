@@ -7,13 +7,8 @@ export const batisAutomationApi = axios.create(
 
 export async function getLetters(): Promise<LetterList>{
     const serverResult  = await  batisAutomationApi.get("/letter");
-    
     const letterArray =  serverResult.data as LetterDto[];
-    console.log("data in service is:");
-    
-
     const test: any = {};
     test.letters = letterArray;
-    console.log(test);
     return test as LetterList; 
 }

@@ -4,6 +4,12 @@ import Home from '../views/Home.vue'
 
 Vue.use(VueRouter)
 
+function dynamicTitle(t: string){
+  const reult =  {title : t};
+  console.log(reult);
+  alert('test');
+  return reult;
+}
 const routes = [
   {
     path: '/',
@@ -19,7 +25,7 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
   },
   {
-    path: '/letterDetail',
+    path: '/letterDetail/:title',
     name: 'LetterDetail',
     component: () => import(/* webpackChunkName: "LetterDetail" */'../views/LetterDetail.vue'),
     props: true

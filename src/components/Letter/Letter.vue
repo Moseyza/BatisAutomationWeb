@@ -1,5 +1,5 @@
 <template>
-    <router-link to="/letterDetail" tag="div" >
+    <router-link :to="{name: 'LetterDetail' , params:{title: letterData.title} }" tag="div" >
         <div class="letter">
             <div>عنوان: {{letterData.title}} </div>
             <div>از: {{letterData.from}} </div>

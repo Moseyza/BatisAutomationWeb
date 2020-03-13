@@ -29,12 +29,8 @@ export default class App extends Vue {
   
   letters: LetterDto[] = [];
   async created(){
-    
     const letterList =   await api.getLetters();
     this.letters = letterList.letters;
-    console.log("letters is:");
-    console.log(this.letters);
-
   }
 }
 
