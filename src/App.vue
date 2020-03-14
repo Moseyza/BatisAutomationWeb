@@ -1,18 +1,14 @@
 <template>
   <div id="app">
-    <!-- <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/> -->
-    <h3>نامه ها</h3>
-    <hr>
-    <Letter 
+   
+   
+    
+    <!-- <Letter 
     v-for="letter in letters"
     :letterData="letter"
     :key="letter.id"
     >
-    </Letter>
+    </Letter> -->
     <router-view/>
   </div>
 </template>
@@ -22,15 +18,18 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 import * as api from './store/api';
 import Letter from './components/Letter/Letter.vue';
 import { LetterDto } from '@/store/models';
+import store from '@/store';
 @Component({
+  store,
   components:{Letter}
 })
 export default class App extends Vue {
   
   letters: LetterDto[] = [];
   async created(){
-    const letterList =   await api.getLetters();
-    this.letters = letterList.letters;
+    this.$router.replace({name: "Login"});
+    //const letterList =   await api.getLetters();
+    //this.letters = letterList.letters;
   }
 }
 
