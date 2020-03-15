@@ -18,9 +18,9 @@ import * as api from '@/store/api'
 })
 export default class Login extends Vue {
   
-  userName: string = '';
-  password: string = '';
-  isInvalid: boolean = false;
+  userName = '';
+  password = '';
+  isInvalid = false;
   async login(){
       this.isInvalid = ! await api.isUserValid(this.userName,this.password);
       if(!this.isInvalid){
@@ -34,7 +34,8 @@ export default class Login extends Vue {
 </script>
 
 <style  scoped>
-    .span{
+    
+    span{
         color:red;
     }
 </style>
