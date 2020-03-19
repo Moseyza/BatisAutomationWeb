@@ -34,8 +34,8 @@ const routes = [
   },
   {
     path: '/',
-    name: 'Cartable',
-    component: () => import('@/components/cartable.vue')
+    name: 'MainWindow',
+    component: () => import('@/components/MainWindow.vue')
   }
 
 ]

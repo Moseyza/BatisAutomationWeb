@@ -2,7 +2,7 @@
     <div>
         <input type="text" placeholder="نام کاربری" v-model="userName">
         <input type="password" placeholder="کلمه عبور" v-model="password">
-        <span v-if="isInvalid" >نام کاربری یا کلمه عبور نادرست است</span>
+        <span :class="{hide: isUserValid  }" >نام کاربری یا کلمه عبور نادرست است</span>
         <button @click="login">ورود</button>        
     </div>
 </template>
@@ -11,20 +11,23 @@
 import { Component, Prop, Vue } from 'vue-property-decorator'; 
 import store from '@/store';
 import * as api from '@/store/api'
-
+import {notFilter} from './filters/filters';
 @Component({
     store,
-    components:{}
+    filters: {
+        notFilter: notFilter,
+    }
 })
 export default class Login extends Vue {
   
   userName = '';
   password = '';
-  isInvalid = false;
+  isUserValid = true;
   async login(){
-      this.isInvalid = ! await api.isUserValid(this.userName,this.password);
-      if(!this.isInvalid){
-          this.$router.replace({name: "Cartable"});
+      this.isUserValid =  await api.isUserValid(this.userName,this.password);
+      if(this.isUserValid){
+          this.$store.commit("setIsLoggedIn",true);
+          this.$router.replace({name: "MainWindow"});
 
       }
   }
@@ -37,6 +40,9 @@ export default class Login extends Vue {
     
     span{
         color:red;
+    }
+    .hide{
+        display: none;
     }
 </style>
 

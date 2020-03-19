@@ -27,7 +27,10 @@ export default class App extends Vue {
   
   letters: LetterDto[] = [];
   async created(){
-    this.$router.replace({name: "Login"});
+    if(store.state.isLoggedIn === false)
+      this.$router.replace({name: "Login"});
+    else 
+      this.$router.replace({name: "MainWindow"});
     //const letterList =   await api.getLetters();
     //this.letters = letterList.letters;
   }
