@@ -3,6 +3,7 @@ import axios from 'axios'
 import { LetterDto, LetterList } from '@/store/models'
 import store from '@/store'
 import router from '@/router';
+import { LetterOwnerWithPicture } from '@/store/models/letterOwnerWithPicture';
 
 
 
@@ -48,13 +49,20 @@ batisAutomationApi.interceptors.response.use(
 export async function isUserValid(userName: string , password: string): Promise<boolean> {
     try {
         const data = qs.stringify({"userName": userName , "password": password  , 'grant_type': "password"});
-        console.log(data);
         const config = { headers: {
             'content-type': 'application/x-www-form-urlencoded;charset=utf-8',
+        
           }};
         const serverResponse =  await batisAutomationApi.post("/token",data,config);
         if(serverResponse){
             store.commit("setAuthenticationToken",serverResponse.data.access_token);
+            store.commit("setUserId",serverResponse.data.userId);
+            store.commit("clearBranchIds");
+            const branchesCount =  serverResponse.data.branchesCount as number;
+            for(let i = 0; i<branchesCount; i++)
+            {
+                store.commit("addToBranchIds",serverResponse.data[`branchId${i+1}`]);
+            }
             return true;
         }
         else{
@@ -62,7 +70,6 @@ export async function isUserValid(userName: string , password: string): Promise<
         }
         
     } catch (error) {
-        alert(error);
         console.log(error);
         return false;
     }
@@ -77,14 +84,21 @@ export async function getLetters(): Promise<LetterList>{
     return test as LetterList; 
 }
 
-export async function getLetterOwners(): Promise<any>
+export async function getLetterOwners(): Promise<LetterOwnerWithPicture[]>
 {
     try {
-        const test = await batisAutomationApi.get("/LetterOwners");
-        return test.data;
+        const config = {
+            headers: {'Content-Type': 'application/json' }
+        };
+        const data = {
+            userId: store.state.userId,
+            branchIds: store.state.branchIds
+        };
+        const serverResult = await batisAutomationApi.post("/LetterOwners",data,config);
+        return serverResult.data;
     } catch (error) {
         console.log(error);
-        return null;
+        return [];
     }
    
 }

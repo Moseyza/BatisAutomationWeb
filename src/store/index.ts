@@ -8,7 +8,10 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     authenticationToken: '',
-    isLoggedIn: false
+    isLoggedIn: false,
+    userId: '',
+    ownerIds: [],
+    branchIds:  []
 
   },
   mutations: {
@@ -22,7 +25,20 @@ export default new Vuex.Store({
     },
     setIsLoggedIn(state,isLoggedIn){
       state.isLoggedIn = isLoggedIn;
+    },
+    setUserId(state,userId){
+      state.userId = userId;
+    },
+    clearBranchIds(state)
+    {
+      state.branchIds = []
+    },
+    addToBranchIds(state,branchId)
+    {
+      (state.branchIds as string[]).push(branchId);
+      
     }
+
   },
   actions: {
   },
