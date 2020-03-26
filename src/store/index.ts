@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import {userModule} from '@/store/moduels/userModule.ts'
+import {userModule} from '@/store/moduels/userModule'
 
 
 Vue.use(Vuex)
@@ -10,8 +10,10 @@ export default new Vuex.Store({
     authenticationToken: '',
     isLoggedIn: false,
     userId: '',
+    ownerId: '',
     ownerIds: [],
-    branchIds:  []
+    branchIds:  [],
+
 
   },
   mutations: {
@@ -37,6 +39,9 @@ export default new Vuex.Store({
     {
       (state.branchIds as string[]).push(branchId);
       
+    },
+    setOwnerId(state,ownerId){
+      state.ownerId = ownerId;
     }
 
   },

@@ -3,12 +3,15 @@
       {{ownerName}}
       [{{post}}]
       <img :src="ownerImage"/>
+      <button>فرم اداری</button>
+      <button>ارسال سریع</button>
     </div>
 </template>
 
 <script lang="ts">
 import { Vue, Prop, Component } from 'vue-property-decorator';
 import * as api from '@/store/api';
+import router from '@/router';
 
 @Component
 export default class SingleCartableOwner extends Vue{
@@ -21,6 +24,8 @@ export default class SingleCartableOwner extends Vue{
         this.post = currentLetterOwner.post;
         this.ownerName = currentLetterOwner.nameOnly;
         this.ownerImage = 'data:image/png;base64, ' + currentLetterOwner.picture;
+        this.$store.commit("setOwnerId",currentLetterOwner.id);
+        this.$router.replace("ReceivedLetters");
     }
 }
 </script>

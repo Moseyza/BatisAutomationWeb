@@ -1,6 +1,6 @@
-export interface LetterOwnerWithPicture {
-    picture: string;
-    onlyForReceivingIncommingLetter: boolean;
+import  Title  from "@/store/models/Letter/Title";
+
+export interface LetterOwner {
     id: string;
     name: string;
     nameOnly: string;
@@ -21,16 +21,8 @@ export interface LetterOwnerWithPicture {
     title: Title;
     canSeeAllLetters: boolean;
     canMakeLetterSecure: boolean;
-    hasFullAccessToPhonebook: boolean;
+    hasFullAccessToPhonebook?: boolean | null;
     canChangePhoneBook: boolean;
-    englishNameId?: null;
+    englishNameId: string;
     notificationShowPeriod: number;
   }
-  export interface Title {
-    id: string;
-    name: string;
-    title: string;
-    oneLineTitle: string;
-    postTitle: string;
-  }
-  

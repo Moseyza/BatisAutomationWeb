@@ -35,8 +35,17 @@ const routes = [
   {
     path: '/',
     name: 'MainWindow',
-    component: () => import('@/components/MainWindow.vue')
+    component: () => import('@/components/MainWindow.vue'),
+    children:[
+      {
+        path: 'ReceivedLetters',
+        name: 'ReceivedLetters',
+        component: () => import('@/components/Cartable/LetterList/LetterList.vue')
+      }
+    
+    ]
   }
+
 
 ]
 

@@ -1,7 +1,6 @@
 <template>
   <div id="app">
    
-   
     
     <!-- <Letter 
     v-for="letter in letters"
@@ -16,12 +15,10 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import * as api from './store/api';
-import Letter from './components/Letter/Letter.vue';
 import { LetterDto } from '@/store/models';
 import store from '@/store';
 @Component({
   store,
-  components:{Letter}
 })
 export default class App extends Vue {
   
@@ -40,5 +37,7 @@ export default class App extends Vue {
 
 
 <style>
-
+  div{
+    direction: rtl;
+  }
 </style>

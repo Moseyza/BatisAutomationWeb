@@ -3,7 +3,8 @@ import axios from 'axios'
 import { LetterDto, LetterList } from '@/store/models'
 import store from '@/store'
 import router from '@/router';
-import { LetterOwnerWithPicture } from '@/store/models/letterOwnerWithPicture';
+import { LetterOwnerWithPicture } from '@/store/models/LetterOwner/letterOwnerWithPicture';
+import LetterListerWithPaginationResult from '@/store/models/Letter/LetterListerWithPaginationResult';
 
 
 
@@ -82,6 +83,24 @@ export async function getLetters(): Promise<LetterList>{
     const test: any = {};
     test.letters = letterArray;
     return test as LetterList; 
+}
+
+export async function getReceivedLetters(): Promise<LetterListerWithPaginationResult>{
+    try {
+        const config = {
+            headers: {'Content-Type': 'application/json' }
+        };
+        const data = {
+            ownerId: store.state.ownerId,
+            form: null,
+            to: null
+        };
+        const serverResult = await batisAutomationApi.post("/ReceivedLetters",data,config);
+        return serverResult.data;
+    } catch (error) {
+        console.log(error);
+        return {} as LetterListerWithPaginationResult;
+    }
 }
 
 export async function getLetterOwners(): Promise<LetterOwnerWithPicture[]>
