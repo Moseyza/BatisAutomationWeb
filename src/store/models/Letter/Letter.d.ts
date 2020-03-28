@@ -14,8 +14,8 @@ export default interface Letter {
     createTime: string;
     sendTime: string;
     parts?: (Parts)[] | null;
-    sender: LetterOwner;
-    recievers?: null;
+    sender?: LetterOwner | null;
+    recievers?: (LetterOwner)[] | null;
     isOpenned: boolean;
     comment: string;
     letterNo: string;

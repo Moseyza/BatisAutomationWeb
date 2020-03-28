@@ -6,8 +6,12 @@
         <div>
             شماره: {{number}}
         </div>
-        <div>
+        <div v-if="isSent == false">
             از: {{from}}
+        </div>
+        <div v-if="isSent">
+            به:
+            <span v-for="receiver in to" :key="receiver" > {{receiver}} <br> </span>
         </div>
         <div>
             خلاصه: {{abstract}}
@@ -33,7 +37,10 @@ export default class SingleLetter extends Vue{
     isSelected = false;
     isClosed = false;
     from = '';
+    to: (string)[] = [];
     isOpenned = false;
+    isSent = false;
+    
     created(){
         if(!this.letterData) return;
         this.id = this.letterData.id;
@@ -42,7 +49,18 @@ export default class SingleLetter extends Vue{
         this.abstract = this.letterData.abstract;
         this.isClosed = this.letterData.isClosed;
         this.isSecured = this.letterData.isSecured;
-        this.from = this.letterData.sender.name;
+        if(this.letterData.sender === null || this.letterData.sender === undefined){
+            this.isSent = true;
+            if(this.letterData.recievers !== undefined && this.letterData.recievers !== null){
+            this.letterData.recievers.forEach(receiver => {
+                    this.to.push(receiver.name);
+            });
+            }
+        }
+        else{
+            this.from = this.letterData.sender.name;
+        }
+        
         this.isOpenned = this.letterData.isOpenned;
         
     }

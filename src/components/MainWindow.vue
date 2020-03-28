@@ -1,6 +1,7 @@
 <template>
     <div>
         <SingleCartableOwner></SingleCartableOwner>
+        <FoldersTree></FoldersTree>
         <router-view/>
     </div>
 </template>
@@ -9,9 +10,9 @@
 import { Vue, Component, Prop} from 'vue-property-decorator'
 import * as api from '@/store/api'
 import SingleCartableOwner from '@/components/Cartable/CartableOwner/SingleCartableOwner.vue'
-import LetterList from '@/components/Cartable/LetterList/LetterList.vue'
+import FoldersTree from '@/components/Cartable/FoldersTree/FoldersTree.vue'
 @Component({
-    components: {SingleCartableOwner, LetterList}
+    components: {SingleCartableOwner, FoldersTree}
 })
 export default class MainWindow extends Vue {
     

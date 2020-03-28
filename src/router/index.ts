@@ -40,7 +40,12 @@ const routes = [
       {
         path: 'ReceivedLetters',
         name: 'ReceivedLetters',
-        component: () => import('@/components/Cartable/LetterList/LetterList.vue')
+        component: () => import('@/components/Cartable/ReceivedLetters/ReceivedLetters.vue')
+      },
+      {
+        path: 'SentLetters',
+        name: 'SentLetters',
+        component: () => import('@/components/Cartable/SentLetters/SentLetters.vue')
       }
     
     ]

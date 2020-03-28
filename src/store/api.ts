@@ -88,14 +88,29 @@ export async function getLetters(): Promise<LetterList>{
 export async function getReceivedLetters(): Promise<LetterListerWithPaginationResult>{
     try {
         const config = {
-            headers: {'Content-Type': 'application/json' }
+            //headers: {'Content-Type': 'application/json' }
         };
         const data = {
             ownerId: store.state.ownerId,
             form: null,
             to: null
         };
-        const serverResult = await batisAutomationApi.post("/ReceivedLetters",data,config);
+        const serverResult = await batisAutomationApi.post("/ReceivedLetters",data);
+        return serverResult.data;
+    } catch (error) {
+        console.log(error);
+        return {} as LetterListerWithPaginationResult;
+    }
+}
+
+export async function getSentLetters(from?: Date, to?: Date): Promise<LetterListerWithPaginationResult>{
+    try {
+        const data = {
+            ownerId: store.state.ownerId,
+            form: from,
+            to: to
+        };
+        const serverResult = await batisAutomationApi.post("/SentLetters",data);
         return serverResult.data;
     } catch (error) {
         console.log(error);
