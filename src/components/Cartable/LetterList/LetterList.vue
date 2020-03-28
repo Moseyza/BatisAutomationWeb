@@ -5,8 +5,6 @@
         :key="letter.id"
         :letterData ="letter"
         ></SingleLetter>
-
- 
     </div>
 </template>
 
@@ -21,13 +19,14 @@ import Letter from '@/store/models/Letter/Letter'
     components:{SingleLetter}
 })
 export default class LetterList extends Vue{
-    letters?: Letter[] = []
-    async created(){
-        const serverResult = await api.getReceivedLetters();
-        if(!serverResult.letterList) return;
-        this.letters =  serverResult.letterList;
-    }
-   
+    @Prop() letters?: Letter[];
+    // get mutableLetters() {
+    //     const temp: Letter[] = [];
+    //     if(this.letters !== undefined){
+    //         temp.push(...this.letters);
+    //     }
+    //     return temp;
+    // }
 }
 
 </script>
