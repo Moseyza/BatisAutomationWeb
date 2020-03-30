@@ -1,6 +1,6 @@
 import  Title  from "@/store/models/Letter/Title";
 
-export interface LetterOwner {
+export class LetterOwner {
     id: string;
     name: string;
     nameOnly: string;
@@ -25,4 +25,7 @@ export interface LetterOwner {
     canChangePhoneBook: boolean;
     englishNameId: string;
     notificationShowPeriod: number;
+    // mailSenderId: string;
+    // selectedFaxId: string;
+    // selectedEmails?: null;
   }

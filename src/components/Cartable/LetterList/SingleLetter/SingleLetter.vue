@@ -16,6 +16,8 @@
         <div>
             خلاصه: {{abstract}}
         </div>
+
+        <div :style="priorityColor">This is color</div>
        
     </div>
 </template>
@@ -40,6 +42,7 @@ export default class SingleLetter extends Vue{
     to: (string)[] = [];
     isOpenned = false;
     isSent = false;
+    priority = 0;
     
     created(){
         if(!this.letterData) return;
@@ -49,6 +52,7 @@ export default class SingleLetter extends Vue{
         this.abstract = this.letterData.abstract;
         this.isClosed = this.letterData.isClosed;
         this.isSecured = this.letterData.isSecured;
+        this.priority = this.letterData.priority;
         if(this.letterData.sender === null || this.letterData.sender === undefined){
             this.isSent = true;
             if(this.letterData.recievers !== undefined && this.letterData.recievers !== null){
@@ -63,6 +67,15 @@ export default class SingleLetter extends Vue{
         
         this.isOpenned = this.letterData.isOpenned;
         
+    }
+
+    get priorityColor(){
+        if(this.priority<5)
+            return  {'background-color':'#69B577'};
+        if(this.priority === 5)
+            return  {'background-color':'#E9C46B'}; 
+        else
+            return {'background-color':'#FF6B6B'};
     }
    
 }

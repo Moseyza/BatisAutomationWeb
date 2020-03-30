@@ -2,8 +2,9 @@ import Title from "@/store/models/Letter/Title";
 import Parts from "@/store/models/Letter/Parts";
 import { LetterOwner } from "@/store/models/LetterOwner/LetterOwner";
 import LetterReferencesToOtherLetters from "@/store/models/Letter/LetterReferencesToOtherLetters";
+import { InformationForSentLetter } from "@/store/models/Letter/InformationForSentLetter";
 
-export default interface Letter {
+export default class Letter {
     id: string;
     letterPossessionId: string;
     isMainPossession: boolean;

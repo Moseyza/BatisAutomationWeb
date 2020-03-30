@@ -5,7 +5,7 @@ import store from '@/store'
 import router from '@/router';
 import { LetterOwnerWithPicture } from '@/store/models/LetterOwner/letterOwnerWithPicture';
 import LetterListerWithPaginationResult from '@/store/models/Letter/LetterListerWithPaginationResult';
-
+import {DraftLetter} from "@/store/models/Letter/DraftLetter"
 
 
 export const batisAutomationApi = axios.create(
@@ -115,6 +115,22 @@ export async function getSentLetters(from?: Date, to?: Date): Promise<LetterList
     } catch (error) {
         console.log(error);
         return {} as LetterListerWithPaginationResult;
+    }
+}
+
+export async function getDraftLetters(from?: Date, to?: Date): Promise<DraftLetter[]> {
+    try {
+        const data = {
+            ownerId: store.state.ownerId,
+            form: from,
+            to: to
+        };
+        const serverResult = await batisAutomationApi.post("/DraftLetters",data);
+        const result =  serverResult.data.letterList;
+        return result;
+    } catch (error) {
+        console.log(error);
+        return [] ;
     }
 }
 
