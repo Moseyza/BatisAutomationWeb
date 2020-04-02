@@ -1,13 +1,5 @@
 <template>
   <div id="app">
-   
-    
-    <!-- <Letter 
-    v-for="letter in letters"
-    :letterData="letter"
-    :key="letter.id"
-    >
-    </Letter> -->
     <router-view/>
   </div>
 </template>
@@ -28,16 +20,13 @@ export default class App extends Vue {
       this.$router.replace({name: "Login"});
     else 
       this.$router.replace({name: "MainWindow"});
-    //const letterList =   await api.getLetters();
-    //this.letters = letterList.letters;
   }
 }
 
 </script>
 
 
-<style>
-  div{
-    direction: rtl;
-  }
+<style lang="less">
+@import './assets/styles/styles.less';
 </style>
+

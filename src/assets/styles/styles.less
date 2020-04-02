@@ -1,0 +1,99 @@
+@back-color1: #3f3f3f;
+@back-color2: #494949;
+@back-color3: #4d4d4d;
+@back-color4: #575757;
+@back-color5: #5f5f5f;
+@back-color6: #939393;
+@color-success:#69b578;
+@color-danger: #ff6b6b;
+@color-primary: #3498db;
+@color-caution: #e9c46a;
+@color-font: #e7e7e7;
+
+@font-face{
+    font-family: 'BNazanin';
+    src: url('../fonts/B-NAZANIN.TTF');
+}
+@font-face{
+    font-family: 'BHoma';
+    src: url('../fonts/B Homa_0.ttf');
+}
+*{
+    direction: rtl;
+    box-sizing: border-box;
+    font-family: 'BHoma';
+}
+
+html,body{
+    
+    height: 100%;
+    margin: 0;
+}
+
+#app{
+
+    background-color: @back-color1;
+    height: 100%;
+    
+}
+
+
+.container{
+    border-radius: 5px;
+}
+.container1{
+    .container;
+    background-color: @back-color1;
+}
+
+.container2{
+    .container;
+    background-color: @back-color2;
+}
+
+.container3{
+    .container;
+    background-color: @back-color3;
+}
+
+.container4{
+    .container;
+    background-color: @back-color4;
+}
+
+.container5{
+    .container;
+    background-color: @back-color5;
+}
+
+.form-input{
+    background-color: @back-color6;
+    width: 100%;
+    margin: 5px;
+    padding: 5px;
+    border: none;
+    font-size: 12pt;
+}
+
+.form-button-primary{
+    width: 100%;
+    padding: 5px;
+    margin: 5px;
+    border: none;
+    color: @color-font;
+    background-color: @color-primary;
+    font-size: 12pt;
+    &:hover{
+        background-color: darken(@color-primary,10%);
+    }
+}
+.form-label{
+    color: @color-font;
+    margin-right: 5px;
+    font-size: 12pt;
+}
+
+.danger-label{
+    color: @color-danger;
+    text-align: center;
+}

@@ -1,9 +1,30 @@
 <template>
-    <div>
-        <input type="text" placeholder="نام کاربری" v-model="userName">
-        <input type="password" placeholder="کلمه عبور" v-model="password">
-        <span :class="{hide: isUserValid  }" >نام کاربری یا کلمه عبور نادرست است</span>
-        <button @click="login">ورود</button>        
+    <div id="container">
+        <div id="login-form" class="container5">
+        <div class="form-label">
+            نام کاربری
+        </div>
+        <div>
+            <input class="form-input" type="text" v-model="userName">
+        </div>
+        <div class="form-label">
+            گذرواژه
+        </div>
+        <div>
+            <input class="form-input" type="password"  v-model="password">
+        </div>
+        <div>
+             <div :class="{hide: isUserValid,'danger-label':true}" >نام کاربری یا گذرواژه نادرست است</div>
+        </div>
+        <div>
+            <button class='form-button-primary' @click="login">ورود</button> 
+        </div>
+           <div style="text-align:center;font-size:8pt">
+            شرکت ایده پردازان باتیس
+        </div>   
+                   
+        </div>
+     
     </div>
 </template>
 
@@ -37,12 +58,25 @@ export default class Login extends Vue {
 </script>
 
 <style  scoped>
-    
-    span{
-        color:red;
+    #container{
+        
+        height: 100%;
+        display: flex;
+        align-content: center;
+        align-items: center;
     }
+    #login-form{
+        width: 25%;
+        margin:0 auto;
+        padding: 20px;
+
+    }
+   
     .hide{
         display: none;
     }
+    
+
+
 </style>
 

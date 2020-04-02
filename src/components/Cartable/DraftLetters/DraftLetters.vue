@@ -23,8 +23,7 @@ export default class DraftLetters extends Vue {
 
 </script>
 
-<style scoped>
 
-</style>
+
 
 
