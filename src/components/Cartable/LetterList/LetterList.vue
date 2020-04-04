@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div id="letter-list">
         <SingleLetter 
         v-for="letter in letters"
         :key="letter.id"
@@ -31,8 +31,14 @@ export default class LetterList extends Vue{
 
 </script>
 
-<style scoped>
-
+<style lang="less" scoped>
+@import './../../../assets/styles/colors.less';
+    #letter-list{
+        overflow-y: scroll;
+        width:25%;
+        background-color: @back-color2
+    }
 </style>
+
 
 

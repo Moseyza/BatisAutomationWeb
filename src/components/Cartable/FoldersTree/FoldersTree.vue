@@ -6,9 +6,7 @@
         <router-link tag="div" to="SentLetters" >نامه های ارسالی</router-link>
         <br>
         <router-link tag="div" to="DraftLetters" >پیش نویس های ثبت شده</router-link>
-        <div class="test">This is test</div>
     </div>
-    <div class="classdovom">This is another test</div>
     </div>
 </template>
 

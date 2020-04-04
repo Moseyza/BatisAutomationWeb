@@ -1,24 +1,35 @@
 <template>
-    <div class="single-letter">
-        <div>
-            عنوان: {{title}}
-        </div>
-        <div>
-            شماره: {{number}}
-        </div>
-        <div v-if="isSent == false">
-            از: {{from}}
-        </div>
-        <div v-if="isSent">
-            به:
-            <span v-for="receiver in to" :key="receiver" > {{receiver}} <br> </span>
-        </div>
-        <div>
-            خلاصه: {{abstract}}
-        </div>
+    <div id="letter-container">
+        <div style="flex:0 0 3px" :style="priorityColor"></div>
+        <div style="flex:1 0 0" class="single-letter">
+            <div class="letter-title">
+                 {{title}}
+            </div>
+            <div class="letter-audience">
+                <div v-if="isSent == false">
+                    {{from}}
+                </div>
+                <div v-if="isSent">
+                    <span v-for="receiver in to" :key="receiver" > {{receiver}} <br> </span>
+                </div>
+            </div>
+            
+            <!-- <div>
+                شماره: {{number}}
+            </div>
+            <div v-if="isSent == false">
+                از: {{from}}
+            </div>
+            <div v-if="isSent">
+                به:
+                <span v-for="receiver in to" :key="receiver" > {{receiver}} <br> </span>
+            </div>
+            <div>
+                خلاصه: {{abstract}}
+            </div> -->
 
-        <div :style="priorityColor">This is color</div>
-       
+
+        </div>
     </div>
 </template>
 
@@ -57,12 +68,12 @@ export default class SingleLetter extends Vue{
             this.isSent = true;
             if(this.letterData.recievers !== undefined && this.letterData.recievers !== null){
             this.letterData.recievers.forEach(receiver => {
-                    this.to.push(receiver.name);
+                    this.to.push(receiver.nameOnly);
             });
             }
         }
         else{
-            this.from = this.letterData.sender.name;
+            this.from = this.letterData.sender.nameOnly;
         }
         
         this.isOpenned = this.letterData.isOpenned;
@@ -71,11 +82,11 @@ export default class SingleLetter extends Vue{
 
     get priorityColor(){
         if(this.priority<5)
-            return  {'background-color':'#69B577'};
+            return  {'background-color':'#69b578'};
         if(this.priority === 5)
-            return  {'background-color':'#E9C46B'}; 
+            return  {'background-color':'#e9c46a'}; 
         else
-            return {'background-color':'#FF6B6B'};
+            return {'background-color':'#ff6b6b'};
     }
    
 }
@@ -83,10 +94,31 @@ export default class SingleLetter extends Vue{
 </script>
 
 
-<style scoped>
-    .single-letter{
-        border:black 1px solid;
-        margin: 10px;
+<style lang="less">
+@import './../../../../assets/styles/colors.less';
+    #letter-container{
+        display: flex;
+        flex-direction: row;
+        align-content: stretch;
+        margin: 3px;
+        //padding: 8px;
     }
+     .single-letter{
+        //border: @color-danger 1px solid;
+        
+        height: 100px;
+        background-color: @back-color3;
+        padding: 3px;
+        
+    }
+    .letter-title{
+        color: @color-font;
+    }
+    .letter-audience{
+        color: @color-primary;
+
+    }
+
 </style>
+
 
