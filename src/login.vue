@@ -1,6 +1,13 @@
 <template>
     <div id="container">
+       
         <div id="login-form" class="container5">
+        <div style="text-align: center;">
+             <img src="@/assets/logo.png" style="width: 100px; height: 100px" alt="">
+        </div>
+        <div class="form-label" style="text-align: center;font-size:9pt">
+            برای ورود اطلاعات را وارد کنید
+        </div>
         <div class="form-label">
             نام کاربری
         </div>
