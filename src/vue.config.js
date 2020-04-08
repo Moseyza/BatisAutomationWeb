@@ -4,10 +4,8 @@
 //     return path.join(__dirname,dir);
 // }
 
-
-module.exports = {
+  module.exports = {
     configureWebpack: {
-      devtool: 'source-map',
-      
+      devtool: 'source-map'
     }
   }

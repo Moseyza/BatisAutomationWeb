@@ -1,4 +1,4 @@
-import Letter from "@/store/models/Letter/Letter";
+import {Letter} from "@/store/models/Letter/Letter";
 import { InformationForSentLetter } from "@/store/models/Letter/InformationForSentLetter";
 import { LetterOwnerForSendingFaxAndEmailAndSms } from "@/store/models/LetterOwner/LetterOwnerForSendingFaxAndEmailAndSms";
 

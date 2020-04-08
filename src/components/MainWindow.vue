@@ -1,8 +1,8 @@
 <template>
-    <div>
-        <SingleCartableOwner></SingleCartableOwner>
-        <FoldersTree></FoldersTree>
-        <router-view/>
+    <div style="display:flex;flex-direction:column;height:-webkit-fill-available;">
+        <SingleCartableOwner style="flex:0"></SingleCartableOwner>
+        <FoldersTree style="flex:0"></FoldersTree>
+        <router-view style="flex:1;max-height:-webkit-fill-available;overflow:auto;height:100%;"/>
     </div>
 </template>
 

@@ -40,6 +40,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 import store from '@/store';
 import * as api from '@/store/api'
 import {notFilter} from './filters/filters';
+import {Letter} from '@/store/models/Letter/Letter'
 @Component({
     store,
     filters: {

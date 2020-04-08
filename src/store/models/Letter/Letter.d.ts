@@ -3,8 +3,11 @@ import Parts from "@/store/models/Letter/Parts";
 import { LetterOwner } from "@/store/models/LetterOwner/LetterOwner";
 import LetterReferencesToOtherLetters from "@/store/models/Letter/LetterReferencesToOtherLetters";
 import { InformationForSentLetter } from "@/store/models/Letter/InformationForSentLetter";
+import { getNewGuid } from '@/util/utils';
+import { IObservablArrayItem } from '@/store/models/ObservableArray';
 
-export default class Letter {
+
+export  class Letter  {
     id: string;
     letterPossessionId: string;
     isMainPossession: boolean;
@@ -31,6 +34,7 @@ export default class Letter {
     enterpriseFormName: string;
     isHardSecured: boolean;
     isClosed: boolean;
+    isSelected: boolean;
   }
  
 
