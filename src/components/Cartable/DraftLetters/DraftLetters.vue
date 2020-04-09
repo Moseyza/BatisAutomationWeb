@@ -1,6 +1,6 @@
 <template>
      <div>
-        <LetterList :letters="letters"></LetterList>
+        <LetterList :lettersProp="letters"></LetterList>
     </div>
 </template>
 
