@@ -27,7 +27,9 @@
                 </tr>
                 <tr>
                     <td>
-                        {{sendTime}}
+                        <div class="letter-date" >
+                            {{sendTime}}
+                        </div>
                     </td>
                 </tr>
             </table>
@@ -102,6 +104,11 @@ export default class SingleLetter extends Vue{
     .letter-audience{
         color: @color-primary;
         font-size: 10pt;
+
+    }
+    .letter-date{
+        color: @color-icon;
+        font-size: 12pt;
 
     }
     table{
