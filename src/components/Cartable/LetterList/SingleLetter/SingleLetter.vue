@@ -25,6 +25,11 @@
                         </div>
                     </td>
                 </tr>
+                <tr>
+                    <td>
+                        {{sendTime}}
+                    </td>
+                </tr>
             </table>
         </div>
     </div>
@@ -34,6 +39,7 @@
 
 import {Vue, Prop, Component} from 'vue-property-decorator'
 import {Letter} from "@/store/models/Letter/Letter";
+import {getPersianDate} from "@/util/utils";
 
 @Component
 export default class SingleLetter extends Vue{
@@ -45,6 +51,7 @@ export default class SingleLetter extends Vue{
          if(this.letterData.sender === null || this.letterData.sender === undefined){
              this.isSent = true;
          }
+      
     }
 
     get priorityColor(){
@@ -57,10 +64,16 @@ export default class SingleLetter extends Vue{
             return {'background-color':'#ff6b6b'};
     }
 
+    get sendTime(){
+        if(this.letterData === undefined) return '';
+        return getPersianDate(this.letterData.sendTime,'MM/DD');
+    }
+
     select(){
         if(this.letterData === undefined)return;
         this.$emit("letterselected",this.letterData.id);
     }
+
 }
 
 </script>
