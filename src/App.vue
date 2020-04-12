@@ -28,5 +28,6 @@ export default class App extends Vue {
 
 <style lang="less">
 @import './assets/styles/styles.less';
+@import './assets/styles/icons.css';
 </style>
 

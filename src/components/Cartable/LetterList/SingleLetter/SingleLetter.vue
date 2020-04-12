@@ -31,6 +31,9 @@
                             {{sendTime}}
                         </div>
                     </td>
+                    <td>
+                        <span class="icon-mail letter-date"></span>
+                    </td>
                 </tr>
             </table>
         </div>
@@ -42,6 +45,7 @@
 import {Vue, Prop, Component} from 'vue-property-decorator'
 import {Letter} from "@/store/models/Letter/Letter";
 import {getPersianDate} from "@/util/utils";
+
 
 @Component
 export default class SingleLetter extends Vue{
@@ -100,6 +104,8 @@ export default class SingleLetter extends Vue{
     }
     .letter-title{
         color: @color-font;
+        width: 90%;
+        overflow: hidden;
     }
     .letter-audience{
         color: @color-primary;

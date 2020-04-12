@@ -1,7 +1,7 @@
-module.exports = {
+// module.exports = {
     
-    rules: {
-      '@typescript-eslint/no-var-requires': 0,
-    }
-  }
+//     rules: {
+//       '@typescript-eslint/no-var-requires': 0,
+//     }
+//   }
   
