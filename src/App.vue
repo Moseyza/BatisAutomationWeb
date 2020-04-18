@@ -20,6 +20,7 @@ export default class App extends Vue {
       this.$router.replace({name: "Login"});
     else 
       this.$router.replace({name: "MainWindow"});
+     
   }
 }
 

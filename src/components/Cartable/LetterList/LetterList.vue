@@ -1,12 +1,15 @@
 <template>
-    <div id="letter-list">
-        <SingleLetter 
-        v-for="(letter,index) in letters"
-        :key="letter.id"
-        :index="index"
-        :item="letter"
-        :letterData ="letter" @letterselected="onLetterSelected($event)"
-        ></SingleLetter>
+    <div>
+        <div id="letter-list">
+            <SingleLetter 
+            v-for="(letter,index) in letters"
+            :key="letter.id"
+            :index="index"
+            :item="letter"
+            :letterData ="letter" @letterselected="onLetterSelected($event)"
+            ></SingleLetter>
+        </div>
+        <!-- <router-view></router-view> -->
     </div>
 </template>
 
@@ -40,6 +43,9 @@ export default class LetterList extends Vue{
         });
         tempLetter.isSelected = true;
         this.$set(this.letters,index,tempLetter);
+        const selectedLetter =  this.letters.find(item=>item.id === id);
+        this.$emit("selected-letter-changed",selectedLetter);
+        //this.$router.push({ name: 'letterDetails', params: { id } });
     }
 
     // created(){

@@ -2,7 +2,7 @@
     <div>
       {{ownerName}}
       [{{post}}]
-      <img :src="ownerImage"/>
+      <!-- <img :src="ownerImage"/> -->
       <button>فرم اداری</button>
       <button>ارسال سریع</button>
     </div>

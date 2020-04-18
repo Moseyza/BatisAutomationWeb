@@ -21,12 +21,12 @@ const routes = [
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
   },
-  {
-    path: '/letterDetail/:title',
-    name: 'LetterDetail',
-    component: () => import(/* webpackChunkName: "LetterDetail" */'../views/LetterDetail.vue'),
-    props: true
-  },
+  // {
+  //   path: '/letterDetail/:title',
+  //   name: 'LetterDetail',
+  //   component: () => import('../views/LetterDetail.vue'),
+  //   props: true
+  // },
   {
     path: '/login',
     name: 'Login',
@@ -40,7 +40,15 @@ const routes = [
       {
         path: 'ReceivedLetters',
         name: 'ReceivedLetters',
-        component: () => import('@/components/Cartable/ReceivedLetters/ReceivedLetters.vue')
+        component: () => import('@/components/Cartable/ReceivedLetters/ReceivedLetters.vue'),
+        // children:[
+        //   {
+        //     path: 'LetterDetails/:id',
+        //     name: 'letterDetails',
+        //     component: () => import('@/components/Cartable/LetterDetails/LetterDetails.vue')
+    
+        //   }
+        // ]
       },
       {
         path: 'SentLetters',
