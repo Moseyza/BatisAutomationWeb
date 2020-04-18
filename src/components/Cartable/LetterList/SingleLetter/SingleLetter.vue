@@ -72,7 +72,7 @@ export default class SingleLetter extends Vue{
 
     get sendTime(){
         if(this.letterData === undefined) return '';
-        return getPersianDate(this.letterData.sendTime,'MM/DD');
+        return getPersianDate(this.letterData.sendTime,'MM/DD',false);
     }
 
     select(){

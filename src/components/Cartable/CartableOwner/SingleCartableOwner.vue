@@ -3,8 +3,8 @@
       {{ownerName}}
       [{{post}}]
       <!-- <img :src="ownerImage"/> -->
-      <button>فرم اداری</button>
-      <button>ارسال سریع</button>
+      <!-- <button>فرم اداری</button> -->
+      <!-- <button>ارسال سریع</button> -->
     </div>
 </template>
 

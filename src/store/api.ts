@@ -6,6 +6,7 @@ import router from '@/router';
 import { LetterOwnerWithPicture } from '@/store/models/LetterOwner/letterOwnerWithPicture';
 import LetterListerWithPaginationResult from '@/store/models/Letter/LetterListerWithPaginationResult';
 import {DraftLetter} from "@/store/models/Letter/DraftLetter"
+import { Branch } from '@/store/models/LetterOwner/Branch';
 
 
 export const batisAutomationApi = axios.create(
@@ -152,3 +153,23 @@ export async function getLetterOwners(): Promise<LetterOwnerWithPicture[]>
     }
    
 }
+
+export async function getBranches(): Promise<Branch[]>
+{
+    try {
+        // const config = {
+        //     headers: {'Content-Type': 'application/json' }
+        // };
+        const data = {
+            userId: store.state.userId,
+            branchIds: store.state.branchIds
+        };
+        const serverResult = await batisAutomationApi.post("/Branches",data);
+        return serverResult.data;
+    } catch (error) {
+        console.log(error);
+        return [];
+    }
+   
+}
+

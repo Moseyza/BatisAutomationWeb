@@ -6,12 +6,11 @@ export function getNewGuid() {
 }
 
 
-export function getPersianDate(date: string,format: string){
-  if(format === 'MM/DD'){
+export function getPersianDate(date: string,format: string, formatPersian = true){
       const persianDate =  require('@/../public/persian-date.js');
       const pd = new persianDate(new Date(date));
-      //return `${pd.month()}/${pd.day()}`;
-      return pd.format("MM/DD");
-  }
-  return '';
+      pd.formatPersian = formatPersian;
+      return pd.format(format);
+  
 }
+
