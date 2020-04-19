@@ -1,6 +1,6 @@
 <template>
      <div>
-        <LetterList :lettersProp="letters"></LetterList>
+        <LetterList :lettersProp="letters" @selected-letter-changed="onSelectedLetterChanged($event)" ></LetterList>
     </div>
 </template>
 
@@ -18,6 +18,9 @@ export default class DraftLetters extends Vue {
          const draftLetters = await api.getDraftLetters(undefined,undefined);
         if(!draftLetters) return;
         this.letters =  draftLetters;
+    }
+     onSelectedLetterChanged(letter: Letter){
+        this.$emit('selected-letter-changed',letter);
     }
 }
 

@@ -1,5 +1,5 @@
-<template>
-    <div>
+<template >
+    <div class="container3">
     <div  id="menu" class="primary">
         <router-link tag="div" to= "ReceivedLetters" >نامه های دریافتی</router-link>
         <br>
@@ -25,12 +25,7 @@ export default class FoldersTree extends Vue {
     .primary(@fontSize: 10pt){
         font-size: @fontSize;
     }
-    #menu{
-        color:red;
-        .test{
-            color:yellow;
-        }
-    }
+    
 
     .classaval{
         border: 5px green solid;

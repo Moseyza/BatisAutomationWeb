@@ -9,6 +9,21 @@
     font-family: 'Yekan';
     src: url('../fonts/Weblogma_Yekan.ttf');
 }
+
+::-webkit-scrollbar {
+    width: 5px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: @back-color3; 
+  }
+   
+  ::-webkit-scrollbar-thumb {
+    background: @color-font; 
+  }
+  
+ 
+
 *{
     direction: rtl;
     box-sizing: border-box;
@@ -32,7 +47,7 @@ html,body{
 
 
 .container{
-    border-radius: 5px;
+   // border-radius: 5px;
     color: @color-font;
     margin: 5px;
     padding: 5px;
@@ -92,4 +107,39 @@ html,body{
 .danger-label{
     color: @color-danger;
     text-align: center;
+}
+
+.symmetric-grid{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.highlight{
+    color: @color-primary;
+}
+
+.fixed-icon{
+    font-size: xx-large;
+}
+.action-icon{
+    font-size: xx-large;
+    cursor: pointer;
+    &:hover{
+        color: @color-danger;
+    }
+}
+
+.helper-icon-large{
+    font-size: xxx-large;
+    cursor: pointer;
+    &:hover{
+        color: @color-success;
+    }
+}
+
+.selected-letter
+{
+    background-color: @back-color5 !important;
 }

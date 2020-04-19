@@ -62,8 +62,8 @@ export default class LetterList extends Vue{
 <style lang="less" scoped>
 @import './../../../assets/styles/colors.less';
     #letter-list{
-        overflow: auto;
-        width:25%;
+        //overflow: auto;
+        width:100%;
         background-color: @back-color2;
         height: 100%;
         
