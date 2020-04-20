@@ -40,6 +40,7 @@
 import {Vue, Prop, Component} from 'vue-property-decorator'
 import {Letter} from "@/store/models/Letter/Letter";
 import {getPersianDate} from "@/util/utils";
+import * as api from '@/store/Services/letterServices';
 
 
 @Component
@@ -73,7 +74,11 @@ export default class SingleLetter extends Vue{
     select(){
         
         if(this.letterData === undefined)return;
+        if(this.letterData.isOpenned === false){
+            api.OpenLetter(this.letterData.letterPossessionId);
+        }
         this.letterData.isOpenned = true;
+        
         this.$emit("letterselected",this.letterData.id);
     }
 
