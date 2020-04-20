@@ -21,7 +21,7 @@
                     <div v-for="receiver in letter.recievers" :key="receiver.id"><h4 class="highlight">{{receiver.nameOnly}}</h4> <br/></div>
                 </div>
                 <div>
-                    <i class="helper-icon-large icon-pdf"></i>
+                    <i @click="downloadLetterPdf()" class="helper-icon-large icon-pdf"></i>
                 </div>
             </div>
         </div>
@@ -47,7 +47,8 @@
 <script lang="ts">
 import {Vue, Component, Prop, Watch} from 'vue-property-decorator';
 import { Letter } from '@/store/models/Letter/Letter';
-
+import { saveFile, converBase64toBlob } from '@/util/utils';
+import * as api from '@/store/Services/fileService';
 @Component
 export default class LetterDetails extends Vue {
 
@@ -66,6 +67,14 @@ export default class LetterDetails extends Vue {
         if(this.letter == undefined)return;
         if(this.letter.recievers === null)
             this.isReceived = true;
+    }
+
+    async downloadLetterPdf(){
+        if(this.letter === undefined)return;
+        if(this.letter.parts === undefined || this.letter.parts === null)return;
+        const file = await api.getFile(this.letter.parts[0].file.id);
+        const blob =  converBase64toBlob(file.content||"",'');
+        saveFile(blob,file.extension);
     }
     
     
