@@ -108,12 +108,19 @@ html,body{
     color: @color-danger;
     text-align: center;
 }
-
-.symmetric-grid{
+.grid{
+    width: 100%;
     display: flex;
+}
+.symmetric-grid{
+    .grid;
     justify-content: space-between;
     align-items: center;
-    width: 100%;
+}
+.wrap-grid{
+    .grid;
+    justify-content: flex-start;
+    flex-wrap: wrap;
 }
 
 .highlight{
@@ -139,6 +146,13 @@ html,body{
     }
 }
 
+.helper-icon-small{
+    font-size:small;
+    cursor: pointer;
+    &:hover{
+        color: @color-success;
+    }
+}
 .selected-letter
 {
     background-color: @back-color5 !important;

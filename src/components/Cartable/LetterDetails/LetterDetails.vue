@@ -24,6 +24,14 @@
                     <i @click="downloadLetterPdf()" class="helper-icon-large icon-pdf"></i>
                 </div>
             </div>
+            <div class="wrap-grid">
+                <LetterAttachment
+                v-for="part in attachments"
+                :key="part.id"
+                :file="part.file"
+                >
+                </LetterAttachment>
+            </div>
         </div>
         <div>
             <div v-if="letter.comment !==''">
@@ -48,8 +56,12 @@
 import {Vue, Component, Prop, Watch} from 'vue-property-decorator';
 import { Letter } from '@/store/models/Letter/Letter';
 import { saveFile, converBase64toBlob } from '@/util/utils';
+import LetterAttachment from '@/components/Cartable/LetterDetails/LetterAttachment/LetterAttachment.vue';
 import * as api from '@/store/Services/fileService';
-@Component
+import Parts from '@/store/models/Letter/Parts';
+@Component({
+    components:{LetterAttachment}
+})
 export default class LetterDetails extends Vue {
 
     isReceived = true;
@@ -61,7 +73,16 @@ export default class LetterDetails extends Vue {
     created(){
         this.setIsReceived();
     }
-    
+    get attachments(){
+        
+        const result: Parts[] = [];
+        if(this.letter === undefined)return result;
+        if(this.letter.parts === undefined || this.letter.parts === null)return result;
+        for(let i = 1;i<this.letter.parts.length;i++){
+            result.push(this.letter.parts[i]);
+        }
+        return result;
+    }
     setIsReceived(){
         this.isReceived = false;
         if(this.letter == undefined)return;
