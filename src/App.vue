@@ -9,6 +9,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 import * as api from './store/api';
 import { LetterDto } from '@/store/models';
 import store from '@/store';
+require("./assets/scripts/semantic.min.js");
 @Component({
   store,
 })
@@ -28,6 +29,7 @@ export default class App extends Vue {
 
 
 <style lang="less">
+@import './assets/styles/semantic.min.css';
 @import './assets/styles/styles.less';
 @import './assets/styles/icons.css';
 </style>

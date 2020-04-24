@@ -7,16 +7,28 @@
         <br>
         <router-link tag="div" to="DraftLetters" >پیش نویس های ثبت شده</router-link>
     </div>
+    <div style="margin: 100px" class="ui selection dropdown">
+  	    <input type="hidden" name="gender">
+  	    <i class="dropdown icon"></i>
+  	    <div class="default text">Gender</div>
+  	    <div class="menu">
+            <div class="item" data-value="1">Male</div>
+            <div class="item" data-value="0">Female</div>
+  	    </div>
+	</div>
     </div>
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop} from 'vue-property-decorator'
-import * as api from '@/store/api'
-
+import { Vue, Component, Prop} from 'vue-property-decorator';
+import * as api from '@/store/api';
+import * as $ from 'jquery';
 @Component
 export default class FoldersTree extends Vue {
     
+    mounted(){
+        $(".dropdown").dropdown();
+    }
 }
 </script>
 
