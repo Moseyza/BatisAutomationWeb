@@ -24,6 +24,14 @@
                     <i @click="downloadLetterPdf()" class="helper-icon-large icon-pdf"></i>
                 </div>
             </div>
+            <div>
+                <div>
+                    {{letterTime}}
+                </div>
+                <div>
+                    <LetterTrailTree :letterId="letter.letterPossessionId"></LetterTrailTree>
+                </div>
+            </div>
             <div class="wrap-grid">
                 <LetterAttachment
                 v-for="part in attachments"
@@ -55,12 +63,15 @@
 <script lang="ts">
 import {Vue, Component, Prop, Watch} from 'vue-property-decorator';
 import { Letter } from '@/store/models/Letter/Letter';
-import { saveFile, converBase64toBlob } from '@/util/utils';
+import { saveFile, converBase64toBlob, getPersianDate } from '@/util/utils';
 import LetterAttachment from '@/components/Cartable/LetterDetails/LetterAttachment/LetterAttachment.vue';
-import * as api from '@/store/Services/fileService';
+import * as fileService from '@/store/Services/fileService';
+import * as letterService from '@/store/Services/letterServices';
 import Parts from '@/store/models/Letter/Parts';
+import LetterTrailTree from './LetterTrail/LetterTrailTree.vue';
+import { LetterTrail } from '@/store/models/Letter/LetterTrail';
 @Component({
-    components:{LetterAttachment}
+    components:{LetterAttachment, LetterTrailTree}
 })
 export default class LetterDetails extends Vue {
 
@@ -69,9 +80,11 @@ export default class LetterDetails extends Vue {
     @Watch("letter")
     onLetterChanged(newVal: Letter, oldVal: Letter){
         this.setIsReceived();
+        //this.getLetterTrail();
     }
     created(){
         this.setIsReceived();
+        //this.getLetterTrail();
     }
     get attachments(){
         
@@ -83,6 +96,16 @@ export default class LetterDetails extends Vue {
         }
         return result;
     }
+
+    get letterTime(){
+        if(this.letter === undefined) return '';
+        const date = new Date( this.letter.sendTime);
+        date.setMinutes(date.getMinutes() - 270);
+        return (date).toLocaleTimeString();
+    }
+
+   
+
     setIsReceived(){
         this.isReceived = false;
         if(this.letter == undefined)return;
@@ -93,7 +116,7 @@ export default class LetterDetails extends Vue {
     async downloadLetterPdf(){
         if(this.letter === undefined)return;
         if(this.letter.parts === undefined || this.letter.parts === null)return;
-        const file = await api.getFile(this.letter.parts[0].file.id);
+        const file = await fileService.getFile(this.letter.parts[0].file.id);
         const blob =  converBase64toBlob(file.content||"",'');
         saveFile(blob,file.extension);
     }

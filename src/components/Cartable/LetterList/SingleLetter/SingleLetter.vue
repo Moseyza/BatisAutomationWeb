@@ -96,10 +96,11 @@ export default class SingleLetter extends Vue{
         margin: 3px;
     }
      .single-letter{
-        height: 100px;
+        height: 80px;
         background-color: @back-color3;
         padding: 3px 5px 3px 5px;
         white-space: nowrap;
+        width: 100%;
         
     }
     .letter-text{

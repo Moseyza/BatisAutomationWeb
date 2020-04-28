@@ -2,13 +2,13 @@
     <div id="main-container">
         <CartableTitle/>
         <div class="container3" id="child-container"  style="">
-            <div class="container2" style="flex:1;">
+            <div class="container2" style="flex:1.5;">
                     <FoldersTree  ></FoldersTree>
             </div>
-            <div class="conatiner2" style="flex:2;overflow:auto;">
+            <div class="conatiner2" style="flex:2.5;overflow:auto;">
                 <router-view @selected-letter-changed="onSelectdLetterChanged($event)"></router-view>
             </div>
-            <div class="container2" style="flex:3">
+            <div class="container2" style="flex:6">
                 <LetterDetails v-if="noLetterSelected == false" :letter="selectedLetter"></LetterDetails>
             </div>
             

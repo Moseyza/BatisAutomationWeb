@@ -11,8 +11,8 @@ import { Branch } from '@/store/models/LetterOwner/Branch';
 
 export const batisAutomationApi = axios.create(
     {
-        baseURL:"http://185.8.174.148:1620/api",
-        //baseURL:"http://localhost:54173/api"
+        //baseURL:"http://185.8.174.148:1620/api",
+        baseURL:"http://localhost:54173/api"
     }
 );
 

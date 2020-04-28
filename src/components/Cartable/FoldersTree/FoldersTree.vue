@@ -7,15 +7,15 @@
         <br>
         <router-link tag="div" to="DraftLetters" >پیش نویس های ثبت شده</router-link>
     </div>
-    <div style="margin: 100px" class="ui selection dropdown">
-  	    <input type="hidden" name="gender">
+    <!-- <div style="margin: 100px" class="ui selection dropdown">
+  	<input type="hidden" name="gender">
   	    <i class="dropdown icon"></i>
   	    <div class="default text">Gender</div>
   	    <div class="menu">
-            <div class="item" data-value="1">Male</div>
-            <div class="item" data-value="0">Female</div>
+            <div class="item" data-value="1">test11</div>
+            <div class="item" data-value="0">test2</div>
   	    </div>
-	</div>
+	</div> -->
     </div>
 </template>
 
