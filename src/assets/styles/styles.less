@@ -136,29 +136,38 @@ html,body{
 .fixed-icon{
     font-size: xx-large;
 }
+.icon{
+    cursor: pointer;
+}
 .action-icon{
     font-size: xx-large;
-    cursor: pointer;
+    .icon;
     &:hover{
         color: @color-danger;
     }
 }
 
-.helper-icon-large{
-    font-size: xxx-large;
-    cursor: pointer;
+.helper-icon{
+    .icon;
     &:hover{
         color: @color-success;
     }
 }
 
-.helper-icon-small{
-    font-size:small;
-    cursor: pointer;
-    &:hover{
-        color: @color-success;
-    }
+.helper-icon-large{
+    .helper-icon;
+    font-size: xxx-large;
 }
+.helper-icon-medium{
+    .helper-icon;
+    font-size: xx-large;
+}
+.helper-icon-small{
+    .helper-icon;
+    font-size:small;
+}
+
+
 .selected-letter
 {
     background-color: @back-color5 !important;

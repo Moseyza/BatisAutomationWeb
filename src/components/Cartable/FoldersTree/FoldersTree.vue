@@ -1,21 +1,12 @@
 <template >
-    <div class="container3">
-    <div  id="menu" class="primary">
-        <router-link tag="div" to= "ReceivedLetters" >نامه های دریافتی</router-link>
-        <br>
-        <router-link tag="div" to="SentLetters" >نامه های ارسالی</router-link>
-        <br>
-        <router-link tag="div" to="DraftLetters" >پیش نویس های ثبت شده</router-link>
-    </div>
-    <!-- <div style="margin: 100px" class="ui selection dropdown">
-  	<input type="hidden" name="gender">
-  	    <i class="dropdown icon"></i>
-  	    <div class="default text">Gender</div>
-  	    <div class="menu">
-            <div class="item" data-value="1">test11</div>
-            <div class="item" data-value="0">test2</div>
-  	    </div>
-	</div> -->
+    <div id="folders-container" class="container2">
+        <div  id="menu" class="primary">
+            <router-link tag="div" to= "ReceivedLetters" >نامه های دریافتی</router-link>
+            <br>
+            <router-link tag="div" to="SentLetters" >نامه های ارسالی</router-link>
+            <br>
+            <router-link tag="div" to="DraftLetters" >پیش نویس های ثبت شده</router-link>
+        </div>
     </div>
 </template>
 
@@ -34,25 +25,9 @@ export default class FoldersTree extends Vue {
 
 <style lang="less" scoped>
 
-    .primary(@fontSize: 10pt){
-        font-size: @fontSize;
+    #folders-container{
+        height: 100%;
     }
     
-
-    .classaval{
-        border: 5px green solid;
-        margin: 50px;
-    }
-@var: #004590;
-    .classdovom{
-        .classaval;
-        background-color: sandybrown;
-        .primary(20pt);
-        
-  &:hover{
-    background-color: fadeout(red, 50%)
-  }
-       
-    }
 </style>
 

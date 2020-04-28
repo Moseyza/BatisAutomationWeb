@@ -1,6 +1,6 @@
 <template>
     <div>
-        <LetterList :lettersProp="letters" @selected-letter-changed="onSelectedLetterChanged($event)" ></LetterList>
+        <LetterList :lettersProp="letters" :loading="loading" @selected-letter-changed="onSelectedLetterChanged($event)" ></LetterList>
     </div>
 </template>
 
@@ -14,8 +14,11 @@ import * as api from '@/store/api'
 })
 export default class ReceivedLetters extends Vue {
     letters?: Letter[] = [];
+    loading = false;
     async created(){
+        this.loading = true;
         const serverResult = await api.getSentLetters(undefined,undefined);
+        this.loading = false;
         if(!serverResult.letterList) return;
         this.letters =  serverResult.letterList;
     }

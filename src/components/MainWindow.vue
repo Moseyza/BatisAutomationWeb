@@ -2,8 +2,8 @@
     <div id="main-container">
         <CartableTitle/>
         <div class="container3" id="child-container"  style="">
-            <div class="container2" style="flex:1.5;">
-                    <FoldersTree  ></FoldersTree>
+            <div style="flex:1.5;">
+                    <FoldersTree></FoldersTree>
             </div>
             <div class="conatiner2" style="flex:2.5;overflow:auto;">
                 <router-view @selected-letter-changed="onSelectdLetterChanged($event)"></router-view>

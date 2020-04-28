@@ -23,6 +23,8 @@ import { converBase64toBlob, saveFile } from '@/util/utils';
 </script>
 
 <style lang="less" scoped>
-
+    div{
+        font-size: 7pt;
+    }
 </style>
 

@@ -5,7 +5,7 @@
                 {{nodeData.senderName}}
             </div>
             <div>
-                <LetterTrailTreeNode
+            <LetterTrailTreeNode
             v-for="item in nodeData.recievers"
             :key="item.senderId"
             :nodeData="item"
