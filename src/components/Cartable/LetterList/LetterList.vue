@@ -1,21 +1,31 @@
 <template>
-    <div>
-        <div class="container2" style="margin:5px 0;">
+    <div class="three-part-flexbox">
+        <div class="flex-part-top">
             <LetterSearch style="margin:5px 0;"></LetterSearch>
             <LetterFilter></LetterFilter>
         </div>
-        <div v-if="loading" class="ui active inline centered loader"></div>
-        <div v-else>
-            <div  id="letter-list">
-                <SingleLetter 
-                v-for="(letter,index) in letters"
-                :key="letter.id"
-                :index="index"
-                :item="letter"
-                :letterData ="letter" @letterselected="onLetterSelected($event)"
-                ></SingleLetter>
+        <!-- <div class="container2" style="margin:5px 0;">
+            <LetterSearch style="margin:5px 0;"></LetterSearch>
+            <LetterFilter></LetterFilter>
+        </div> -->
+        <div class="flex-part-middle">
+            <div v-if="loading" class="ui active inline centered loader"></div>
+            <div v-else>
+                <div  id="letter-list">
+                    <SingleLetter 
+                    v-for="(letter,index) in letters"
+                    :key="letter.id"
+                    :index="index"
+                    :item="letter"
+                    :letterData ="letter" @letterselected="onLetterSelected($event)"
+                    ></SingleLetter>
+                </div>
             </div>
         </div>
+        <div  class="flex-part-bottom">
+
+        </div>
+        
     </div>
 </template>
 

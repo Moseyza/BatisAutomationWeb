@@ -1,7 +1,7 @@
 <template>
     <div id="main-container">
         <CartableTitle/>
-        <div class="container3" id="child-container"  style="">
+        <div class="container3 height-fill-container" id="child-container"  style="">
             <div style="flex:1.5;">
                     <FoldersTree></FoldersTree>
             </div>

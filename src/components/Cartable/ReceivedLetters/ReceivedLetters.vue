@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div style="height:100%">
         <LetterList :lettersProp="letters" :loading="loading" @selected-letter-changed="onSelectedLetterChanged($event)"></LetterList>
     </div>
 </template>

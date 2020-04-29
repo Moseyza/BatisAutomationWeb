@@ -1,0 +1,22 @@
+.height-fill-container{
+    display: flex;  
+    min-height: -webkit-fill-available
+}
+.three-part-flexbox{
+    display: flex;
+    height: 100%;
+    justify-content: space-around;
+    flex-direction: column;
+}
+.three-part-flexbox .flex-part-top{
+    flex: 1 0 0px;
+}
+.three-part-flexbox .flex-part-middle{
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+    flex: 5 0 0;
+}
+.three-part-flexbox .flex-part-bottom{
+    flex: 1 0 0px;
+}
