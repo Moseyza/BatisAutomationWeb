@@ -1,13 +1,9 @@
 <template>
     <div class="three-part-flexbox">
-        <div class="flex-part-top">
+        <div class="container2 flex-part-top">
             <LetterSearch style="margin:5px 0;"></LetterSearch>
             <LetterFilter></LetterFilter>
         </div>
-        <!-- <div class="container2" style="margin:5px 0;">
-            <LetterSearch style="margin:5px 0;"></LetterSearch>
-            <LetterFilter></LetterFilter>
-        </div> -->
         <div class="flex-part-middle">
             <div v-if="loading" class="ui active inline centered loader"></div>
             <div v-else>
@@ -22,8 +18,8 @@
                 </div>
             </div>
         </div>
-        <div  class="flex-part-bottom">
-
+        <div style="display:flex"  class="flex-part-bottom">
+            <LetterTypeSelector></LetterTypeSelector>
         </div>
         
     </div>
@@ -38,8 +34,10 @@ import {Letter} from '@/store/models/Letter/Letter'
 import { getNewGuid } from '@/util/utils';
 import LetterFilter from './LetterFilter/LetterFilter.vue';
 import LetterSearch from './LetterSearch/LetterSearch.vue';
+import LetterTypeSelector from './LetterTypeSelector/LetterTypeSelector.vue';
+
 @Component({
-    components:{SingleLetter, LetterFilter, LetterSearch}
+    components:{SingleLetter, LetterFilter, LetterSearch,LetterTypeSelector}
 })
 export default class LetterList extends Vue{
     @Prop() lettersProp?: Letter[];
