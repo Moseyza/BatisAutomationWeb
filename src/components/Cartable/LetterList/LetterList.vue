@@ -18,8 +18,8 @@
                 </div>
             </div>
         </div>
-        <div style="display:flex"  class="flex-part-bottom">
-            <LetterTypeSelector></LetterTypeSelector>
+        <div style="display:flex; flex-direction:column; flex: 0.5 0 0;"  class="flex-part-bottom">
+            <LetterTypeSelector style="align-items: stretch;"></LetterTypeSelector>
         </div>
         
     </div>

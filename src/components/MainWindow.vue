@@ -1,7 +1,7 @@
 <template>
-    <div id="main-container">
-        <CartableTitle/>
-        <div class="container3 height-fill-container" id="child-container"  style="">
+    <div class="three-part-flexbox" id="main-container">
+        <CartableTitle class="flex-part-top" />
+        <div class="container3 flex-part-middle" id="child-container"  style="flex: 18 1 0%;overflow: unset;">
             <div style="flex:1.5;">
                     <FoldersTree></FoldersTree>
             </div>
@@ -12,6 +12,9 @@
                 <LetterDetails v-if="noLetterSelected == false" :letter="selectedLetter"></LetterDetails>
             </div>
             
+        </div>
+        <div class="flex-part-bottom container2" style="flex: .2 0 0;direction:ltr;font-size:x-small;">
+            Batis idea processors. All rights reserved ©
         </div>
     </div>
 </template>
@@ -42,8 +45,8 @@ export default class MainWindow extends Vue {
 
 <style lang="less" scoped>
 #main-container{
-    //display:flex;
-    //flex-direction:column;
+    display:flex;
+    flex-direction:column;
     //height:-webkit-fill-available;
 }
 

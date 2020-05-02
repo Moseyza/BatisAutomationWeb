@@ -17,7 +17,7 @@
                     <div v-else>نامه های ارسالی</div>
                 </div>
             </div>
-            <div style="flex:5" class="flex-part-middle">
+            <div style="flex:6" class="flex-part-middle">
            
             <div class="container3">
                 <div class="symmetric-grid">
@@ -63,9 +63,11 @@
             </div>
             </div>
         <!-- </div> -->
-        <div  style="flex:1;" class="flex-part-bottom">
-            <div class="container5">
-
+        <div  style="flex:.5 1 0;display:flex;flex-direction:column;align-items:strech" class="flex-part-bottom">
+            <div style="flex:1; display:flex;justify-content:space-around" class="container5">
+                <div style="flex:1;text-align: center;"><i class="icon-download action-icon"></i></div>
+                <div style="flex:1;text-align: center;"><i class="icon-download action-icon"></i></div>
+                <div style="flex:1;text-align: center;"><i class="icon-download action-icon"></i></div>
             </div>
         </div>
     </div>
