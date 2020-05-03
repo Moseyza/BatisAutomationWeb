@@ -1,6 +1,6 @@
 <template>
-     <div>
-        <LetterList :lettersProp="letters" @selected-letter-changed="onSelectedLetterChanged($event)" ></LetterList>
+     <div style="height:100%">
+        <LetterList :lettersProp="letters" :loading="loading" @selected-letter-changed="onSelectedLetterChanged($event)" ></LetterList>
     </div>
 </template>
 
@@ -14,8 +14,11 @@ import * as api from '@/store/api'
 })
 export default class DraftLetters extends Vue {
     letters?: Letter[] = [];
+    loading = false;
     async created(){
-         const draftLetters = await api.getDraftLetters(undefined,undefined);
+        this.loading = true;
+        const draftLetters = await api.getDraftLetters(undefined,undefined);
+        this.loading = false;
         if(!draftLetters) return;
         this.letters =  draftLetters;
     }

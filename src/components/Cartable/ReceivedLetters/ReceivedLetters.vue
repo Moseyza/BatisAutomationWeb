@@ -9,7 +9,6 @@ import {Vue, Component, Prop} from 'vue-property-decorator'
 import LetterList from '@/components/Cartable/LetterList/LetterList.vue';
 import {Letter} from '@/store/models/Letter/Letter'
 import * as api from '@/store/api'
-import { getNewGuid } from '@/util/utils';
 @Component({
     components:{LetterList}
 })

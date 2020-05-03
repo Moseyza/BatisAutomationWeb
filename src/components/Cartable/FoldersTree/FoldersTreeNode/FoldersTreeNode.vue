@@ -1,16 +1,17 @@
 <template>
     <ul>
         <li>
-            <div>
-                <i :class="data.iconClass"></i>
-                <router-link tag="div" :to="data.url" >{{data.name}}</router-link>
+            <div id="node-title">
+                <i style="flex:1" :class="data.iconClass"></i>
+                <h5 style="flex:4" v-if="data.isRoot">{{data.name}}</h5>
+                <router-link style="flex:4;cursor:pointer" v-else tag="div" :to="data.url" >{{data.name}}</router-link>
             </div>
-            <FoldersTreeNoode
+            <FoldersTreeNode
             v-for="child in data.children" 
             :data="child"
             :key="child.url"
             >
-            <FoldersTreeNode/>
+            </FoldersTreeNode>
         </li>
     </ul>
 </template>
@@ -39,6 +40,18 @@ export interface FoldersTreeNodeData {
 </script>
 
 <style lang="less" scoped>
+    ul{
+        list-style-type: none;
+    }
+    #node-title{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        white-space: nowrap;
+    }
+    router-link{
+        cursor: pointer;
+    }
 
 </style>
 
