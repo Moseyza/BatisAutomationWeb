@@ -1,11 +1,11 @@
 <template>
 <div id="container" class="container5">
-    <SingleCartableOwner/>
+    <SingleCartableOwner @on-letter-owner-set="onLetterOwnerSet"/>
     <div>
         {{branch}}
     </div>
     <div style="direction: ltr">
-       {{currentDate}} : {{currentTime}}
+       {{currentDate}}  {{currentTime}}
     </div>
 </div>    
 </template>
@@ -32,6 +32,10 @@ export default class CartableTitle extends Vue{
         }, 1000);
         const branches =  await getBranches();
         this.branch = branches[0].name;
+    }
+
+    onLetterOwnerSet(){
+        this.$emit('on-letter-owner-set');
     }
 }
 </script>

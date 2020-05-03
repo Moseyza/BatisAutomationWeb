@@ -29,11 +29,11 @@ export default class LetterTrailTreeNode extends Vue {
     @Prop() nodeData?: LetterTrail;
 
     get isOpened(){
-        console.log("test");
-        console.log(this.nodeData);
+        //console.log("test");
+        //console.log(this.nodeData);
         
         if(this.nodeData === undefined) return false;
-        console.log(getPersianDate(this.nodeData.sendTime,"dddd dd MMMM"));
+        //console.log(getPersianDate(this.nodeData.sendTime,"dddd dd MMMM"));
         if(this.nodeData.openTime === null)
             return false;
         else

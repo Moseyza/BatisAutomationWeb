@@ -27,8 +27,8 @@
                     {{sendTime}}
                 </div>
                 <div>
-                    <span v-if="letterData.isOpenned" class="fixed-icon icon-openedLetter"></span>
-                    <span v-else class="fixed-icon icon-notOpenedLetter"></span>
+                    <span v-if="letterData.isOpenned" class="fixed-icon icon-openEnvelope"></span>
+                    <span v-else class="fixed-icon icon-envelope"></span>
                 </div>
             </div>
         </div>

@@ -2,9 +2,6 @@
     <div>
       {{ownerName}}
       [{{post}}]
-      <!-- <img :src="ownerImage"/> -->
-      <!-- <button>فرم اداری</button> -->
-      <!-- <button>ارسال سریع</button> -->
     </div>
 </template>
 
@@ -25,6 +22,7 @@ export default class SingleCartableOwner extends Vue{
         this.ownerName = currentLetterOwner.nameOnly;
         this.ownerImage = 'data:image/png;base64, ' + currentLetterOwner.picture;
         this.$store.commit("setOwnerId",currentLetterOwner.id);
+        this.$emit('on-letter-owner-set');
         this.$router.replace("ReceivedLetters");
     }
 }

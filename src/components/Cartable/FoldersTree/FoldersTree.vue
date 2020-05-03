@@ -11,17 +11,23 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop} from 'vue-property-decorator';
+import { Vue, Component, Prop, Watch} from 'vue-property-decorator';
 import * as api from '@/store/api';
-import * as $ from 'jquery';
+import * as letterOwnerService from '@/store/Services/letterOwnerService.ts';
+
 @Component
 export default class FoldersTree extends Vue {
+    @Prop() letterOwnerId?: string;
+    @Watch('letterOwnerId')
+    async onLetterOwnerChanged(){
+        if(this.letterOwnerId === undefined) return;
+        const test =  await letterOwnerService.getArchiveFolders(this.letterOwnerId);
+      
+    } 
     
-    mounted(){
-        $(".dropdown").dropdown();
-    }
 }
 </script>
+
 
 <style lang="less" scoped>
 

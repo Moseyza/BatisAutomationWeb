@@ -33,5 +33,6 @@ export default class App extends Vue {
 @import './assets/styles/styles.less';
 @import './assets/styles/flexStyles.less';
 @import './assets/styles/icons.css';
+@import './assets/styles/semanticOverWrite.less';
 </style>
 

@@ -1,15 +1,23 @@
 <template>
     <div class="three-part-flexbox">
-        <!-- <div   id="main-container" > -->
             <div style="flex:1"  class="flex-part-top" >
                 <div class="symmetric-grid">
                 <div style="flex:3">
-                    <h3>{{letter.title}}</h3>
+                    <h4>{{letter.title}}</h4>
                 </div>
                 <div style="flex:1" class="symmetric-grid">
                     <i class="action-icon icon-comment"></i>
-                    <i class="action-icon icon-closedLetter"></i>
-                    <i class="action-icon icon-threeDots"></i>
+                    <i class="action-icon icon-stampFast"></i>
+                    <div  class="ui icon top left dropdown">
+  		                <i class="action-icon icon-threeDots"></i>
+  		                <div class="menu">
+    		                <div class="item menu-item"><span> اختتام </span> <i class="fixed-icon icon-comment"></i> </div>
+    		                <div class="item menu-item"><span> چاپ </span> <i class="fixed-icon icon-comment"></i></div>
+    		                <div class="item menu-item"><span> جریان وابستگی </span> <i class="fixed-icon icon-comment"></i></div>
+                            <div class="item menu-item"><span> مشاهده گزارش </span> <i class="fixed-icon icon-comment"></i></div>
+  		                </div>
+	                </div>
+                    
                 </div>
                 </div>
                  <div>
@@ -62,12 +70,11 @@
                 </div>
             </div>
             </div>
-        <!-- </div> -->
         <div  style="flex:.5 1 0;display:flex;flex-direction:column;align-items:strech" class="flex-part-bottom">
             <div style="flex:1; display:flex;justify-content:space-around" class="container5">
-                <div style="flex:1;text-align: center;"><i class="icon-download action-icon"></i></div>
-                <div style="flex:1;text-align: center;"><i class="icon-download action-icon"></i></div>
-                <div style="flex:1;text-align: center;"><i class="icon-download action-icon"></i></div>
+                <div style="flex:1;text-align: center;"><i class="icon-replay action-icon"></i></div>
+                <div style="flex:1;text-align: center;"><i class="icon-replayAll  action-icon"></i></div>
+                <div style="flex:1;text-align: center;"><i class="icon-forward action-icon"></i></div>
             </div>
         </div>
     </div>
@@ -83,6 +90,7 @@ import * as letterService from '@/store/Services/letterServices';
 import Parts from '@/store/models/Letter/Parts';
 import LetterTrailTree from './LetterTrail/LetterTrailTree.vue';
 import { LetterTrail } from '@/store/models/Letter/LetterTrail';
+import * as $ from 'jquery';
 @Component({
     components:{LetterAttachment, LetterTrailTree}
 })
@@ -93,11 +101,9 @@ export default class LetterDetails extends Vue {
     @Watch("letter")
     onLetterChanged(newVal: Letter, oldVal: Letter){
         this.setIsReceived();
-        //this.getLetterTrail();
     }
     created(){
         this.setIsReceived();
-        //this.getLetterTrail();
     }
     get attachments(){
         
@@ -134,12 +140,11 @@ export default class LetterDetails extends Vue {
         saveFile(blob,file.extension);
     }
     
-    
+    mounted(){
+        $(".dropdown").dropdown();
+    }
 }
 </script>
 <style lang="less" scoped>
-    #main-container{
-       //display: flex;
-    }
 </style>
 

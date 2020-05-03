@@ -1,9 +1,9 @@
 <template>
     <div class="three-part-flexbox" id="main-container">
-        <CartableTitle class="flex-part-top" />
+        <CartableTitle @on-letter-owner-set="onLetterOwnerSet" class="flex-part-top" />
         <div class="container3 flex-part-middle" id="child-container"  style="flex: 18 1 0%;overflow: unset;">
             <div style="flex:1.5;">
-                    <FoldersTree></FoldersTree>
+                    <FoldersTree :letterOwnerId="letterOwnerId"></FoldersTree>
             </div>
             <div class="conatiner2" style="flex:2.5;overflow:auto;">
                 <router-view @selected-letter-changed="onSelectdLetterChanged($event)"></router-view>
@@ -34,11 +34,16 @@ export default class MainWindow extends Vue {
     selectedLetter?: Letter = {} as Letter;
     letterTitle1 = '';
     noLetterSelected = true;
+    letterOwnerId = '';
     onSelectdLetterChanged(letter: Letter){
         this.noLetterSelected = false;
         const temp: any = {};
         Object.assign(temp,letter)
         this.selectedLetter = temp;
+    }
+
+    onLetterOwnerSet(){
+        this.letterOwnerId = this.$store.state.ownerId;
     }
 }
 </script>
