@@ -41,14 +41,6 @@ const routes = [
         path: 'ReceivedLetters',
         name: 'ReceivedLetters',
         component: () => import('@/components/Cartable/ReceivedLetters/ReceivedLetters.vue'),
-        // children:[
-        //   {
-        //     path: 'LetterDetails/:id',
-        //     name: 'letterDetails',
-        //     component: () => import('@/components/Cartable/LetterDetails/LetterDetails.vue')
-    
-        //   }
-        // ]
       },
       {
         path: 'SentLetters',
@@ -59,6 +51,12 @@ const routes = [
         path: 'DraftLetters',
         name: 'DraftLetters',
         component: () => import('@/components/Cartable/DraftLetters/DraftLetters.vue')
+      },
+      {
+        path: 'FolderLetters',
+        name: 'FolderLetters',
+        component: () => import('@/components/Cartable/ArchiveFolder/ArchiveFolder.vue'),
+        props: (route: any) => ({folderId: route.query.folderId})
       }
     ]
   }

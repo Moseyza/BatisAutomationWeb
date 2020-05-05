@@ -1,6 +1,6 @@
 <template>
-    <ul>
-        <li>
+    <!-- <ul> -->
+        <div class="node">
             <div id="node-title">
                 <i style="flex:1" :class="data.iconClass"></i>
                 <h5 style="flex:4" v-if="data.isRoot">{{data.name}}</h5>
@@ -12,8 +12,8 @@
             :key="child.url"
             >
             </FoldersTreeNode>
-        </li>
-    </ul>
+        </div>
+    <!-- </ul> -->
 </template>
 
 <script lang="ts">
@@ -42,6 +42,8 @@ export interface FoldersTreeNodeData {
 <style lang="less" scoped>
     ul{
         list-style-type: none;
+        // margin: 0;
+        // padding: 0;
     }
     #node-title{
         display: flex;
@@ -51,6 +53,10 @@ export interface FoldersTreeNodeData {
     }
     router-link{
         cursor: pointer;
+    }
+
+    .node{
+        margin-right: 10px;
     }
 
 </style>

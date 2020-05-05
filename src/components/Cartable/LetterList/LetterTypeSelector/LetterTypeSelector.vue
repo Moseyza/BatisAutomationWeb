@@ -39,7 +39,7 @@ export default class LetterTypeSelector extends Vue {
     text-align: center;
     cursor: pointer;
     margin: 10px 0;
-    padding: 10px 0;
+    padding: 5px 0;
     
 }
 .selected{

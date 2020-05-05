@@ -66,12 +66,31 @@ export default class FoldersTree extends Vue {
         const archiveFoldersNode = {} as FoldersTreeNodeData;
         archiveFoldersNode.name = 'پوشه های طبقه بندی';
         archiveFoldersNode.isRoot = true;
-        //archiveFoldersNode.iconClass = {'icon-folder':true,'fixed-icon':true};
         archiveFoldersNode.url = 'ArchiveFolders';
         archiveFoldersNode.children = [];
         this.addArchiveFolder(archiveFoldersNode,archiveFolders);
        
-        this.folders.push(cartableFolder,draftFolder,archiveFoldersNode);
+        const colosedLettersNode = {} as FoldersTreeNodeData;
+        colosedLettersNode.name = 'نامه های مختومه';
+        colosedLettersNode.isRoot = true;
+        colosedLettersNode.url = 'ClosedLetters';
+        colosedLettersNode.children = [];
+
+        const closedIncomingLetters = {} as FoldersTreeNodeData;
+        closedIncomingLetters.name = 'نامه های مختومه دریافتی';
+        closedIncomingLetters.isRoot = false;
+        closedIncomingLetters.url = 'ClosedIncomingLetters';
+        closedIncomingLetters.children = [];
+
+        const closedOutgoingLetters = {} as FoldersTreeNodeData;
+        closedOutgoingLetters.name = 'نامه های مختومه ارسالی';
+        closedOutgoingLetters.isRoot = false;
+        closedOutgoingLetters.url = 'ClosedOutGoingLetters';
+        closedOutgoingLetters.children = [];
+
+        colosedLettersNode.children.push(closedIncomingLetters,closedOutgoingLetters);
+
+        this.folders.push(cartableFolder,draftFolder,archiveFoldersNode,colosedLettersNode);
       
     }
 
@@ -81,7 +100,7 @@ export default class FoldersTree extends Vue {
             childNode.name = folder.name;
             childNode.isRoot = false;
             childNode.iconClass = {'icon-folder':true,'fixed-icon':true};
-            childNode.url = folder.id;
+            childNode.url = `FolderLetters?folderId=${folder.id}`;
             childNode.children = [];
             parent.children.push(childNode);
             if(folder.childFolders !== null && folder.childFolders != undefined)

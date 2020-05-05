@@ -10,7 +10,7 @@
                 <div  id="letter-list">
                     <SingleLetter 
                     v-for="(letter,index) in letters"
-                    :key="letter.id"
+                    :key="letter.letterNo"
                     :index="index"
                     :item="letter"
                     :letterData ="letter" @letterselected="onLetterSelected($event)"
