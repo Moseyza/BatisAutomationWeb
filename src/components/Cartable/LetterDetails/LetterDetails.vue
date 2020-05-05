@@ -11,10 +11,10 @@
                     <div  class="ui icon top left dropdown">
   		                <i class="action-icon icon-threeDots"></i>
   		                <div class="menu">
-    		                <div class="item menu-item"><span> اختتام </span> <i class="fixed-icon icon-comment"></i> </div>
-    		                <div class="item menu-item"><span> چاپ </span> <i class="fixed-icon icon-comment"></i></div>
-    		                <div class="item menu-item"><span> جریان وابستگی </span> <i class="fixed-icon icon-comment"></i></div>
-                            <div class="item menu-item"><span> مشاهده گزارش </span> <i class="fixed-icon icon-comment"></i></div>
+    		                <div class="item menu-item"><div style="padding-left:5px">اختتام</div> <i class="fixed-icon icon-stamp"></i> </div>
+    		                <div class="item menu-item"><div style="padding-left:5px">چاپ</div> <i class="fixed-icon icon-print"></i></div>
+    		                <div class="item menu-item"><div style="padding-left:5px">جریان وابستگی</div> <i class="fixed-icon icon-tree"></i></div>
+                            <div class="item menu-item"><div style="padding-left:5px">مشاهده گزارش</div> <i class="fixed-icon icon-form1"></i></div>
   		                </div>
 	                </div>
                     

@@ -2,16 +2,19 @@
     <!-- <ul> -->
         <div class="node">
             <div id="node-title">
+                <i class="node-icon" @click="toggle()" :class="{'icon-nodeClose':!isOpen , 'icon-nodeOpen':isOpen}" ></i>
                 <i style="flex:1" :class="data.iconClass"></i>
-                <h5 style="flex:4" v-if="data.isRoot">{{data.name}}</h5>
-                <router-link style="flex:4;cursor:pointer" v-else tag="div" :to="data.url" >{{data.name}}</router-link>
+                <h5 style="flex:5" v-if="data.isRoot">{{data.name}}</h5>
+                <router-link style="flex:5;cursor:pointer" v-else tag="div" :to="data.url" >{{data.name}}</router-link>
             </div>
-            <FoldersTreeNode
-            v-for="child in data.children" 
-            :data="child"
-            :key="child.url"
-            >
-            </FoldersTreeNode>
+            <div :class="{hide:!isOpen}">
+                <FoldersTreeNode
+                v-for="child in data.children" 
+                :data="child"
+                :key="child.url"
+                >
+                </FoldersTreeNode>
+            </div>
         </div>
     <!-- </ul> -->
 </template>
@@ -23,8 +26,17 @@ import {Vue, Component, Prop} from 'vue-property-decorator';
 @Component
 export default class FoldersTreeNode extends Vue {
     @Prop() data?: FoldersTreeNodeData;
+    isOpen = false;
+    toggle(){
+        if(this.data === undefined) return;
+        if(this.data.children.length === 0) return;
+        this.isOpen = !this.isOpen;
+    }
 
-
+    created(){
+        if(this.data === undefined) return;
+        if(this.data.children.length === 0 || this.data.children === undefined) this.isOpen = true;
+    }
 }
 
 
@@ -57,6 +69,19 @@ export interface FoldersTreeNodeData {
 
     .node{
         margin-right: 10px;
+        margin-top: 5px;
+    }
+    h5{
+        margin: 0;
+    }
+    .node-icon{
+        color:#96171A;
+        font-size: x-small;
+        flex: 1;
+        cursor: pointer;
+    }
+    .hide{
+        display: none;
     }
 
 </style>

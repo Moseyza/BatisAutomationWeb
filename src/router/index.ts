@@ -57,6 +57,16 @@ const routes = [
         name: 'FolderLetters',
         component: () => import('@/components/Cartable/ArchiveFolder/ArchiveFolder.vue'),
         props: (route: any) => ({folderId: route.query.folderId})
+      },
+      {
+        path: 'IncomingClosedLetters',
+        name: 'IncomingClosedLetters',
+        component: () => import('@/components/Cartable/ClosedLetters/Incoming/IncomingClosedLetters.vue'),
+      },
+      {
+        path: 'OutgoingClosedLetters',
+        name: 'OutgoingClosedLetters',
+        component: () => import('@/components/Cartable/ClosedLetters/Outgoing/OutgoingClosedLetters.vue'),
       }
     ]
   }

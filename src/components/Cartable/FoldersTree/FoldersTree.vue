@@ -11,6 +11,7 @@
         v-for="folder in folders"
         :data="folder"
         :key="folder.url"
+        style="margin-bottom:20px;"
         >
         </FoldersTreeNode>
     </div>
@@ -39,16 +40,19 @@ export default class FoldersTree extends Vue {
         cartableFolder.isRoot = true;
         cartableFolder.url = "Cartable";
         cartableFolder.children = [];
+        cartableFolder.iconClass = {'icon-drawer':true,'fixed-icon':true }
         const receiveLetters = {} as FoldersTreeNodeData;
         receiveLetters.name = 'نامه های دریافتی';
         receiveLetters.url = "ReceivedLetters"
         receiveLetters.isRoot = false;
+        receiveLetters.children = [];
         receiveLetters.iconClass = {'icon-inbox':true,'fixed-icon':true }
-         const sentLetters = {} as FoldersTreeNodeData;
+        const sentLetters = {} as FoldersTreeNodeData;
         sentLetters.name = 'نامه های ارسالی';
         sentLetters.url = "SentLetters"
         sentLetters.isRoot = false;
         sentLetters.iconClass = {'icon-outbox':true,'fixed-icon':true }
+        sentLetters.children = [];
         cartableFolder.children.push(receiveLetters,sentLetters);
 
         const draftFolder = {} as FoldersTreeNodeData;
@@ -56,41 +60,53 @@ export default class FoldersTree extends Vue {
         draftFolder.isRoot = true;
         draftFolder.url = 'Drafts';
         draftFolder.children = [];
+        draftFolder.iconClass = {'icon-clipboard':true,'fixed-icon':true};
         const savedDraft = {} as FoldersTreeNodeData;
         savedDraft.isRoot = false;
-        savedDraft.name = 'پیشنویس های ثبت شده';
+        savedDraft.name = 'پیش نویس های ثبت شده';
         savedDraft.url = 'DraftLetters';
         savedDraft.iconClass = {'icon-form':true,'fixed-icon':true};
+        savedDraft.children = [];
         draftFolder.children.push(savedDraft);
 
         const archiveFoldersNode = {} as FoldersTreeNodeData;
         archiveFoldersNode.name = 'پوشه های طبقه بندی';
         archiveFoldersNode.isRoot = true;
         archiveFoldersNode.url = 'ArchiveFolders';
+        archiveFoldersNode.iconClass = {'icon-folder1':true,'fixed-icon':true }
         archiveFoldersNode.children = [];
         this.addArchiveFolder(archiveFoldersNode,archiveFolders);
+
+        const faxesNode = {} as FoldersTreeNodeData;
+        faxesNode.name = 'فکس ها';
+        faxesNode.isRoot = true;
+        faxesNode.children = [];
+        faxesNode.iconClass = {'icon-fax':true,'fixed-icon':true};
        
         const colosedLettersNode = {} as FoldersTreeNodeData;
         colosedLettersNode.name = 'نامه های مختومه';
         colosedLettersNode.isRoot = true;
         colosedLettersNode.url = 'ClosedLetters';
         colosedLettersNode.children = [];
+        colosedLettersNode.iconClass = {'icon-stamp':true,'fixed-icon':true};
 
         const closedIncomingLetters = {} as FoldersTreeNodeData;
         closedIncomingLetters.name = 'نامه های مختومه دریافتی';
         closedIncomingLetters.isRoot = false;
-        closedIncomingLetters.url = 'ClosedIncomingLetters';
+        closedIncomingLetters.url = 'IncomingClosedLetters';
+        closedIncomingLetters.iconClass = {'icon-letterStamp':true,'fixed-icon':true};
         closedIncomingLetters.children = [];
 
         const closedOutgoingLetters = {} as FoldersTreeNodeData;
         closedOutgoingLetters.name = 'نامه های مختومه ارسالی';
         closedOutgoingLetters.isRoot = false;
-        closedOutgoingLetters.url = 'ClosedOutGoingLetters';
+        closedOutgoingLetters.url = 'OutgoingClosedLetters';
+        closedOutgoingLetters.iconClass = {'icon-letterStamp':true,'fixed-icon':true};
         closedOutgoingLetters.children = [];
 
         colosedLettersNode.children.push(closedIncomingLetters,closedOutgoingLetters);
 
-        this.folders.push(cartableFolder,draftFolder,archiveFoldersNode,colosedLettersNode);
+        this.folders.push(cartableFolder,draftFolder,archiveFoldersNode,faxesNode,colosedLettersNode);
       
     }
 
