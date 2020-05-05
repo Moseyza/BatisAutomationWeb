@@ -19,26 +19,21 @@ export default class ArchiveFolder extends Vue {
     @Prop() folderId?: string;
     @Watch('folderId')
     async onFolderIdChanged(){
-        if(this.folderId === undefined)return;
-        this.loading = true;
-        const archiveLetters = await api.getReceivedLetters(); //await letterService.GetArchiveFolderLetters(this.folderId);
-        this.loading = false;
-        if(!archiveLetters || this.letters === undefined) return;
-        if(archiveLetters.letterList === null) return;
-        this.letters = archiveLetters.letterList;
+        await this.loadArchiveLetters();
     }
-    created(){
-        alert("test");
+    async created(){
+        await this.loadArchiveLetters();
     }
 
-    // async created(){
-    //      if(this.folderId === undefined)return;
-    //     this.loading = true;
-    //     const archiveLetters = await letterService.GetArchiveFolderLetters(this.folderId);
-    //     this.loading = false;
-    //     if(!archiveLetters) return;
-    //     this.letters =  archiveLetters;
-    // }
+    async loadArchiveLetters(){
+        
+        if(this.folderId === undefined)return;
+        this.loading = true;
+        const archiveLetters = await letterService.GetArchiveFolderLetters(this.folderId);
+        this.loading = false;
+        if(!archiveLetters || this.letters === undefined) return;
+        this.letters = archiveLetters;
+    }
     
      onSelectedLetterChanged(letter: Letter){
         this.$emit('selected-letter-changed',letter);

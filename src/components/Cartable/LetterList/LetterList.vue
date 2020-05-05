@@ -46,6 +46,7 @@ export default class LetterList extends Vue{
     letters: Letter[] = [];
     @Watch('lettersProp')
     onLettersPropChanged(newVal: Letter[],oldVal: Letter[]){
+        this.letters.length = 0;
         this.letters.push(...newVal);
     }
     onLetterSelected(id: string){
