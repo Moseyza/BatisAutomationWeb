@@ -9,7 +9,7 @@
             <div v-else>
                 <div  id="letter-list">
                     <SingleLetter 
-                    v-for="(letter,index) in letters"
+                    v-for="(letter,index) in filteredLetters"
                     :key="letter.letterNo"
                     :index="index"
                     :item="letter"
@@ -19,7 +19,7 @@
             </div>
         </div>
         <div style="display:flex; flex-direction:column; flex: 0.5 0 0;"  class="flex-part-bottom">
-            <LetterTypeSelector style="align-items: stretch;"></LetterTypeSelector>
+            <LetterTypeSelector  v-if="mode !== '' && mode !== undefined" :mode="mode" @letter-type-changed="onLetterTypeChanged($event)" style="align-items: stretch;"></LetterTypeSelector>
         </div>
         
     </div>
@@ -42,8 +42,13 @@ import LetterTypeSelector from './LetterTypeSelector/LetterTypeSelector.vue';
 export default class LetterList extends Vue{
     @Prop() lettersProp?: Letter[];
     @Prop() loading?: boolean;
+    @Prop() mode?: string;
+
+   
 
     letters: Letter[] = [];
+    filter = (x: Letter) => {return true;};
+
     @Watch('lettersProp')
     onLettersPropChanged(newVal: Letter[],oldVal: Letter[]){
         this.letters.length = 0;
@@ -64,6 +69,22 @@ export default class LetterList extends Vue{
         this.$set(this.letters,index,tempLetter);
         const selectedLetter =  this.letters.find(item=>item.id === id);
         this.$emit("selected-letter-changed",selectedLetter);
+    }
+
+    get filteredLetters(){
+        return this.letters.filter(this.filter)
+    }
+
+    onLetterTypeChanged(mode: string){
+        if(mode === 'notRead'){
+            this.filter = (letter) => !letter.isOpenned
+        }
+        else if(mode === 'notForwarded'){
+            this.filter = (letter) => !letter.isForwarded;
+        }
+        else if(mode === 'all'){
+            this.filter = (letter) => true;
+        }
     }
 
    

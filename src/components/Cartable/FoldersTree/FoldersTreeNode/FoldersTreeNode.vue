@@ -23,7 +23,9 @@
 import {Vue, Component, Prop} from 'vue-property-decorator';
 
 
-@Component
+@Component({
+    name:'FoldersTreeNode'
+})
 export default class FoldersTreeNode extends Vue {
     @Prop() data?: FoldersTreeNodeData;
     isOpen = false;
@@ -69,7 +71,7 @@ export interface FoldersTreeNodeData {
 
     .node{
         margin-right: 10px;
-        margin-top: 5px;
+        // margin-top: 5px;
     }
     h5{
         margin: 0;

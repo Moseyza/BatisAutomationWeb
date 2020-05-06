@@ -1,6 +1,6 @@
 <template>
     <div style="height:100%">
-        <LetterList :lettersProp="letters" :loading="loading" @selected-letter-changed="onSelectedLetterChanged($event)"></LetterList>
+        <LetterList :lettersProp="letters" :mode="'received'" :loading="loading" @selected-letter-changed="onSelectedLetterChanged($event)"></LetterList>
     </div>
 </template>
 

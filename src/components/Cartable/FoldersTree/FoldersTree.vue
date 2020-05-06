@@ -1,17 +1,9 @@
 <template >
     <div id="folders-container" class="container2">
-        <!-- <div  id="menu" class="primary">
-            <router-link tag="div" to= "ReceivedLetters" >نامه های دریافتی</router-link>
-            <br>
-            <router-link tag="div" to="SentLetters" >نامه های ارسالی</router-link>
-            <br>
-            <router-link tag="div" to="DraftLetters" >پیش نویس های ثبت شده</router-link>
-        </div> -->
         <FoldersTreeNode
         v-for="folder in folders"
         :data="folder"
         :key="folder.url"
-        style="margin-bottom:20px;"
         >
         </FoldersTreeNode>
     </div>

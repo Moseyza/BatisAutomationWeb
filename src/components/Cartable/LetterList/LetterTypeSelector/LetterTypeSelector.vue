@@ -1,19 +1,28 @@
 <template>
     <div class="symmetric-grid">
-        <div class="type-btn" :class="{selected:firstSelected}" @click="select(1)" >خوانده نشده</div>
-        <div class="type-btn" :class="{selected:secondSelected}" @click="select(2)"  >ارجاع نشده</div>
-        <div class="type-btn" :class="{selected:allSelected}" @click="select(3)"  >همه</div>
+        <div class="type-btn" :class="{selected:firstSelected}" @click="select(1)" >{{firstButtonTxt}}</div>
+        <div class="type-btn" :class="{selected:secondSelected}" @click="select(2)"  >{{secondButtonTxt}}</div>
+        <div class="type-btn" :class="{selected:allSelected}" @click="select(3)"  >{{thirdButtonTxt}}</div>
     </div>    
 </template>
 
 <script lang="ts">
-import {Vue, Component, Prop} from 'vue-property-decorator';
+import {Vue, Component, Prop, Watch} from 'vue-property-decorator';
 
 @Component
 export default class LetterTypeSelector extends Vue {
     firstSelected = false;
     secondSelected = false;
     allSelected = true;
+    firstButtonTxt = '';
+    secondButtonTxt = '';
+    thirdButtonTxt = '';
+    @Prop() mode?: string;
+    @Watch('mode')
+    onModeChanged(newVal: string, oldVal: string){
+        this.setButtonsText();
+        
+    }
     unSelectAll(){
         this.allSelected = false;
         this.secondSelected = false;
@@ -23,10 +32,32 @@ export default class LetterTypeSelector extends Vue {
         this.unSelectAll();
         if(p === 1){
             this.firstSelected = true;
+            if(this.mode === 'received')
+                this.$emit('letter-type-changed',"notRead");
         }else if(p === 2){
             this.secondSelected = true;
+            if(this.mode === 'received')
+                this.$emit('letter-type-changed','notForwarded');
         }else{
             this.allSelected = true;
+             this.$emit('letter-type-changed',"all");
+        }
+    }
+    created(){
+        this.setButtonsText();
+    }
+
+    setButtonsText(){
+        if(this.mode === 'received'){
+            this.firstButtonTxt = 'خوانده نشده';
+            this.secondButtonTxt = 'ارجاع نشده';
+            this.thirdButtonTxt = 'همه';
+
+        }
+        else if(this.mode === 'drafts'){
+            this.firstButtonTxt = 'ارسال شده';
+            this.secondButtonTxt = 'ارسال نشده';
+            this.thirdButtonTxt = 'همه';
         }
     }
 }
