@@ -1,7 +1,7 @@
 <template>
     <div class="three-part-flexbox">
         <div class="container2 flex-part-top">
-            <LetterSearch style="margin:5px 0;"></LetterSearch>
+            <LetterSearch @search-text-changed="onSearch($event)" style="margin:5px 0;"></LetterSearch>
             <LetterFilter></LetterFilter>
         </div>
         <div class="flex-part-middle">
@@ -44,8 +44,8 @@ export default class LetterList extends Vue{
     @Prop() loading?: boolean;
     @Prop() mode?: string;
 
-   
-
+    currentLetterType = 'all';
+    currentSearchText = '';
     letters: Letter[] = [];
     filter = (x: Letter) => {return true;};
 
@@ -71,20 +71,58 @@ export default class LetterList extends Vue{
         this.$emit("selected-letter-changed",selectedLetter);
     }
 
+    onSearch(searchText: string){
+        this.currentSearchText = searchText;
+        this.onLetterTypeChanged(this.currentLetterType);
+        const currentFilter = this.filter;
+        this.filter = (letter) => currentFilter(letter) && this.FilterForSearch(letter);
+    }
+
+    FilterForSearch(letter: Letter): boolean{
+
+        // this.currentSearchText.replace(/ي/g, "ی");
+        // this.currentSearchText.replace(/ۍ/g, "ی");
+        // this.currentSearchText.replace(/ێ/g, "ی");
+        // this.currentSearchText.replace(/ۑ/g, "ی");
+        // this.currentSearchText.replace(/ې/g, "ی");
+        // this.currentSearchText.replace(/ك/g, "ک");
+        // this.currentSearchText.replace(/ګ/g, "ک");
+        // this.currentSearchText.replace(/ڬ/g, "ک");
+        // this.currentSearchText.replace(/ڇ/g, "چ");
+
+        return letter.letterNo.includes(this.currentSearchText) 
+        || letter.title.includes(this.currentSearchText) 
+        || letter.abstract.includes(this.currentSearchText) 
+        || (letter.sender !== undefined && letter.sender !== null && letter.sender.name.includes(this.currentSearchText) )
+        || (letter.recievers !== null && letter.recievers !== undefined && letter.recievers.filter(item=>item.name.includes(this.currentSearchText)).length>0)
+        
+    }
+
     get filteredLetters(){
         return this.letters.filter(this.filter)
     }
 
     onLetterTypeChanged(mode: string){
+        this.currentLetterType = mode;
         if(mode === 'notRead'){
-            this.filter = (letter) => !letter.isOpenned
+            this.filter = (letter) => !letter.isOpenned && this.FilterForSearch(letter);
+            
         }
         else if(mode === 'notForwarded'){
-            this.filter = (letter) => !letter.isForwarded;
+            this.filter = (letter) => !letter.isForwarded && this.FilterForSearch(letter);
+        }
+        else if(mode === 'sent'){
+            this.filter = (letter) => letter.isForwarded && this.FilterForSearch(letter);
+
+        }
+        else if(mode === 'notSent'){
+            this.filter = (letter) => !letter.isForwarded && this.FilterForSearch(letter);
         }
         else if(mode === 'all'){
-            this.filter = (letter) => true;
+            this.filter = (letter) => true && this.FilterForSearch(letter);
         }
+        
+
     }
 
    

@@ -34,10 +34,14 @@ export default class LetterTypeSelector extends Vue {
             this.firstSelected = true;
             if(this.mode === 'received')
                 this.$emit('letter-type-changed',"notRead");
+            else if(this.mode === 'drafts')
+                this.$emit('letter-type-changed',"sent");
         }else if(p === 2){
             this.secondSelected = true;
             if(this.mode === 'received')
                 this.$emit('letter-type-changed','notForwarded');
+            else if(this.mode === 'drafts')
+                this.$emit('letter-type-changed',"notSent");
         }else{
             this.allSelected = true;
              this.$emit('letter-type-changed',"all");

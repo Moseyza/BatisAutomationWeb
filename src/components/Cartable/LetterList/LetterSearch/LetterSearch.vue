@@ -1,6 +1,6 @@
 <template>
     <div id="search-container" class="symmetric-grid" >
-        <input type="text">
+        <input type="text" v-model="searchText">
         <div style="padding:3px 3px">
             <i id="search-icon"  class="icon-search"></i>
         </div>
@@ -9,11 +9,15 @@
 </template>
 
 <script lang="ts">
-import {Vue, Component, Prop} from 'vue-property-decorator';
+import {Vue, Component, Prop, Watch} from 'vue-property-decorator';
 
 @Component
 export default class LetterSearch extends Vue {
-
+    searchText = '';
+    @Watch('searchText')
+    onSearchTextChanged(){
+        this.$emit('search-text-changed',this.searchText);
+    }
 }
 </script>
 
