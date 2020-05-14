@@ -1,8 +1,8 @@
 <template>
     <div class="three-part-flexbox">
-        <div class="container2 flex-part-top">
+        <div class="container2 flex-part-top" style="flex: 0.5 0 0;">
             <LetterSearch @search-text-changed="onSearch($event)" style="margin:5px 0;"></LetterSearch>
-            <LetterFilter></LetterFilter>
+            <!-- <LetterFilter></LetterFilter> -->
         </div>
         <div class="flex-part-middle">
             <div v-if="loading" class="ui active inline centered loader"></div>

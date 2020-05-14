@@ -94,6 +94,7 @@ export default class SingleLetter extends Vue{
         flex-direction: row;
         align-content: stretch;
         margin: 3px;
+        overflow: hidden;
     }
      .single-letter{
         height: 80px;
@@ -101,6 +102,7 @@ export default class SingleLetter extends Vue{
         padding: 3px 5px 3px 5px;
         white-space: nowrap;
         width: 100%;
+        overflow: hidden;
         
     }
     .letter-text{
@@ -111,6 +113,7 @@ export default class SingleLetter extends Vue{
         color: @color-font;
         width: 90%;
         overflow: hidden;
+        text-overflow: ellipsis;
     }
     .letter-audience{
         color: @color-primary;

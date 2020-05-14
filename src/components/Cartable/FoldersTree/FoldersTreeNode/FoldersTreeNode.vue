@@ -77,7 +77,8 @@ export interface FoldersTreeNodeData {
         margin: 0;
     }
     .node-icon{
-        color:#96171A;
+        color: #939393;
+        // color:#96171A;
         font-size: x-small;
         flex: 1;
         cursor: pointer;

@@ -5,7 +5,7 @@
             <div style="flex:2;">
                     <FoldersTree :letterOwnerId="letterOwnerId"></FoldersTree>
             </div>
-            <div class="conatiner2" style="flex:3;overflow:auto;">
+            <div class="conatiner2" style="flex:3;overflow:hidden;">
                 <router-view @selected-letter-changed="onSelectdLetterChanged($event)"></router-view>
             </div>
             <div class="container2" style="flex:6">
