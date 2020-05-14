@@ -8,7 +8,7 @@
                 <div style="flex:1" class="symmetric-grid">
                     <i class="action-icon icon-comment"></i>
                     <i class="action-icon icon-stampFast"></i>
-                    <div  class="ui icon top left dropdown">
+                    <div id="options-dropdown"  class="ui icon top left dropdown">
   		                <i class="action-icon icon-threeDots"></i>
   		                <div class="menu">
     		                <div class="item menu-item"><div style="padding-left:5px">اختتام</div> <i class="fixed-icon icon-stamp"></i> </div>
@@ -141,7 +141,7 @@ export default class LetterDetails extends Vue {
     }
     
     mounted(){
-        $(".dropdown").dropdown();
+        $("#options-dropdown").dropdown({action: 'hide'});
     }
 }
 </script>
