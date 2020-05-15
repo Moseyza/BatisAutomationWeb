@@ -10,9 +10,8 @@
                 <div  id="letter-list">
                     <SingleLetter 
                     v-for="(letter,index) in filteredLetters"
-                    :key="letter.letterNo"
+                    :key="letter.id"
                     :index="index"
-                    :item="letter"
                     :letterData ="letter" @letterselected="onLetterSelected($event)"
                     ></SingleLetter>
                 </div>

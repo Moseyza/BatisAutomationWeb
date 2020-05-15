@@ -2,10 +2,8 @@
     <div id="letter-container" @click="select">
         <div style="flex:0 0 3px" :style="priorityColor"></div>
         <div style="flex:1 0 0" class="single-letter" :class="{'selected-letter': letterData.isSelected}">
-            <div>
-                <div class="letter-title">
-                    {{letterData.title}}
-                </div>
+            <div class="letter-title">
+                 {{letterData.title}}
             </div>
             <div class="symmetric-grid">
                 <div style="flex:2">
@@ -111,7 +109,8 @@ export default class SingleLetter extends Vue{
     }
     .letter-title{
         color: @color-font;
-        width: 90%;
+        // width: 90%;
+        max-width: 300px;
         overflow: hidden;
         text-overflow: ellipsis;
     }

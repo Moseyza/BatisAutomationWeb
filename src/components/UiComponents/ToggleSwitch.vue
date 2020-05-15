@@ -12,7 +12,17 @@ export default class ToggleSwitch extends Vue {
     checked = false;
     @Watch('checked')
     onCheckedChanged(){
-      //alert(this.checked);
+        this.$emit('checked-changed',this.checked);
+    }
+
+    @Prop() checkedProp?: boolean;
+    @Watch('checkedProp')
+    onCheckPropChanged(newVal: boolean, oldVal: boolean){
+      this.checked = newVal;
+    }
+    created(){
+      if(this.checkedProp)
+        this.checked = this.checkedProp;
     }
 }
 

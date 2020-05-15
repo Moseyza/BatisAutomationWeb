@@ -4,20 +4,12 @@
         <div style="padding:3px 3px">
             <i id="search-icon"  class="icon-search"></i>
         </div>
-        <!-- <div style="padding:3px 3px">
-            <i id="search-icon"  class="icon-filter"></i>
-        </div> -->
          <div style="padding:3px 3px" id="filter-dropdown" class="ui icon top left dropdown simple" >
               <i id="search-icon"  class="icon-filter action-icon icon-filter helper-icon-medium"></i>
   		        <div class="menu" >
-    		        <div class="item menu-item"><div style="padding-left:5px">نامه های دریافتی</div> <ToggleSwitch /> </div>
-    		        <div class="item menu-item"><div style="padding-left:5px">فرم های دریافتی</div> <ToggleSwitch /> </div>
-    		        <div class="item menu-item"><div style="padding-left:5px">مرتب سازی بر اساس ماه</div> <ToggleSwitch /> </div>
-                    <div class="item menu-item"><div style="padding-left:5px">نامه های حذف شده</div> <ToggleSwitch /> </div>
-                    <div class="item menu-item"><div style="padding-left:5px">نامه های مختومه</div> 
-                        <ToggleSwitch /> 
-                        <i class="dropdown icon right"></i>
-                        Publish To Web
+    		        <div class="item menu-item"><div style="padding-left:5px">همه</div> <ToggleSwitch :checkedProp="showAll" @checked-changed="onCheckChanged('all',$event)" /> </div>
+    		        <div class="item menu-item"><div style="padding-left:5px">غیر فرم سازمانی</div> <ToggleSwitch :checkedProp="showNotForms" @checked-changed="onCheckChanged('notForms',$event)" /> </div>
+    		        <div class="item menu-item"><div style="padding-left:5px">فرمهای سازمانی</div> <ToggleSwitch :checkedProp="showForms" @checked-changed="onCheckChanged('forms',$event)" /> 
                         <div class="left menu"  style="z-index: 300 !important">
                         <div class="item">Google Docs</div>
                         <div class="item">Google Drive</div>
@@ -42,6 +34,9 @@ import * as $ from 'jquery';
 })
 export default class LetterSearch extends Vue {
     searchText = '';
+    showAll = true;
+    showForms = true;
+    showNotForms = true;
     @Watch('searchText')
     onSearchTextChanged(){
         this.$emit('search-text-changed',this.searchText);
@@ -49,6 +44,31 @@ export default class LetterSearch extends Vue {
 
      mounted(){
           $('#filter-dropdown').dropdown({action: 'nothing'});
+    }
+
+    onCheckChanged(mode: string, checked: boolean){
+        this.showAll = false;
+        this.showForms = false;
+        this.showNotForms = false;
+        if(checked === true){
+            if(mode === 'all'){
+                this.showAll = true;
+                this.showForms = false;
+                this.showNotForms = false;
+
+            }
+            else if(mode === 'forms'){
+                this.showAll = false;
+                this.showForms = true;
+                this.showNotForms = false;
+
+            }else if(mode === 'notForms'){
+                this.showAll = false;
+                this.showForms = false;
+                this.showNotForms = true;
+            }
+        }
+        
     }
 }
 </script>

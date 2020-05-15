@@ -3,9 +3,9 @@
         <CartableTitle @on-letter-owner-set="onLetterOwnerSet" class="flex-part-top" />
         <div class="container3 flex-part-middle" id="child-container"  style="flex: 18 1 0%;overflow: unset;">
             <div style="flex:2;">
-                    <FoldersTree :letterOwnerId="letterOwnerId"></FoldersTree>
+                     <FoldersTree :letterOwnerId="letterOwnerId"></FoldersTree>
             </div>
-            <div class="conatiner2" style="flex:3;overflow:hidden;">
+            <div class="conatiner2" style="flex:3">
                 <router-view @selected-letter-changed="onSelectdLetterChanged($event)"></router-view>
             </div>
             <div class="container2" style="flex:6">
