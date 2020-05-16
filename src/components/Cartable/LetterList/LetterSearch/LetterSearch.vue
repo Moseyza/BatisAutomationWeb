@@ -7,17 +7,17 @@
          <div style="padding:3px 3px" id="filter-dropdown" class="ui icon top left dropdown simple" >
               <i id="search-icon"  class="icon-filter action-icon icon-filter helper-icon-medium"></i>
   		        <div class="menu" >
-    		        <div class="item menu-item"><div style="padding-left:5px">همه</div> <ToggleSwitch :checkedProp="showAll" @checked-changed="onCheckChanged('all',$event)" /> </div>
-    		        <div class="item menu-item"><div style="padding-left:5px">غیر فرم سازمانی</div> <ToggleSwitch :checkedProp="showNotForms" @checked-changed="onCheckChanged('notForms',$event)" /> </div>
-    		        <div class="item menu-item"><div style="padding-left:5px">فرمهای سازمانی</div> <ToggleSwitch :checkedProp="showForms" @checked-changed="onCheckChanged('forms',$event)" /> 
-                        <div class="left menu"  style="z-index: 300 !important">
-                        <div class="item">Google Docs</div>
-                        <div class="item">Google Drive</div>
-                        <div class="item">Dropbox</div>
-                        <div class="item">Adobe Creative Cloud</div>
-                        <div class="item">Private FTP</div>
-                        <div class="item">Another Service...</div>
-                        </div>
+    		        <div class="item menu-item"><div style="padding-left:5px">همه</div> <ToggleSwitch :checkedProp="showAll" @click="onToggleSwitchClick('all')" :isReadOnly="true" /> </div>
+    		        <div class="item menu-item"><div style="padding-left:5px">غیر فرم سازمانی</div> <ToggleSwitch :checkedProp="showNotForms" @click="onToggleSwitchClick('notForms')" :isReadOnly="true" /> </div>
+    		        <div class="item menu-item"><div style="padding-left:5px">فرمهای سازمانی</div> <ToggleSwitch :checkedProp="showForms" @click="onToggleSwitchClick('forms')" :isReadOnly="true" /> 
+                        <div class="left menu" >
+                                <div v-for="wf in workflows" :key="wf.id" class="item menu-item" :class="{'disabled': !showForms}">
+                                    <div style="padding-left:5px">{{wf.name}}</div> 
+                                    <div class="left menu" >
+                                        <div class="item menu-item" >test</div>
+                                    </div>
+                                </div>
+  		                </div>
                     </div>
   		        </div>
 	    </div>
@@ -29,28 +29,34 @@
 import {Vue, Component, Prop, Watch} from 'vue-property-decorator';
 import ToggleSwitch from '@/components/UiComponents/ToggleSwitch.vue';
 import * as $ from 'jquery';
+import { Workflow } from '../../../../store/models/workflow/workflow';
+
 @Component({
     components: {ToggleSwitch}
 })
 export default class LetterSearch extends Vue {
     searchText = '';
     showAll = true;
-    showForms = true;
-    showNotForms = true;
+    showForms = false;
+    showNotForms = false;
     @Watch('searchText')
     onSearchTextChanged(){
         this.$emit('search-text-changed',this.searchText);
     }
 
-     mounted(){
-          $('#filter-dropdown').dropdown({action: 'nothing'});
+    mounted(){
+        $('#filter-dropdown').dropdown({action: 'nothing'});
     }
 
-    onCheckChanged(mode: string, checked: boolean){
-        this.showAll = false;
-        this.showForms = false;
-        this.showNotForms = false;
-        if(checked === true){
+    @Prop() workflows?: Workflow[];
+
+    // @Watch('workflows')
+    // onWorkflowsChanged(){
+    //     console.log("**************************");
+    //     console.log(this.workflows);
+    //     console.log("**************************");
+    // }
+    onToggleSwitchClick(mode: string){
             if(mode === 'all'){
                 this.showAll = true;
                 this.showForms = false;
@@ -67,8 +73,6 @@ export default class LetterSearch extends Vue {
                 this.showForms = false;
                 this.showNotForms = true;
             }
-        }
-        
     }
 }
 </script>
@@ -94,5 +98,8 @@ input:focus{
 #search-container{
     background-color:#575757
 }
+
+
+
 
 </style>

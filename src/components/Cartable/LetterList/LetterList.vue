@@ -1,7 +1,7 @@
 <template>
     <div class="three-part-flexbox">
         <div class="container2 flex-part-top" style="flex: 0.5 0 0;">
-            <LetterSearch @search-text-changed="onSearch($event)" style="margin:5px 0;"></LetterSearch>
+            <LetterSearch @search-text-changed="onSearch($event)" style="margin:5px 0;" :workflows="usedWorkFlows" ></LetterSearch>
             <!-- <LetterFilter></LetterFilter> -->
         </div>
         <div class="flex-part-middle">
@@ -34,6 +34,9 @@ import { getNewGuid } from '@/util/utils';
 import LetterFilter from './LetterFilter/LetterFilter.vue';
 import LetterSearch from './LetterSearch/LetterSearch.vue';
 import LetterTypeSelector from './LetterTypeSelector/LetterTypeSelector.vue';
+import * as workflowService from '@/store/Services/workflowService';
+import { Workflow, EnterpriseForm } from '../../../store/models/workflow/workflow';
+import store from '@/store'
 
 @Component({
     components:{SingleLetter, LetterFilter, LetterSearch,LetterTypeSelector}
@@ -46,7 +49,14 @@ export default class LetterList extends Vue{
     currentLetterType = 'all';
     currentSearchText = '';
     letters: Letter[] = [];
+    usedWorkFlows: Workflow[] = [];
+
     filter = (x: Letter) => {return true;};
+
+    @Watch('letters')
+    onLettersChanged(){
+        this.setUsedEnterpriseForms();
+    }
 
     @Watch('lettersProp')
     onLettersPropChanged(newVal: Letter[],oldVal: Letter[]){
@@ -124,6 +134,48 @@ export default class LetterList extends Vue{
 
     }
 
+    async created(){
+        if(store.state.workflows.length === 0)
+        {
+             const workflows =  await workflowService.getAllWorkflowsWithEnterpriseForms();
+            store.commit("setWorkflows",workflows);
+        }
+        
+    }
+
+    setUsedEnterpriseForms(){
+        const enterpriseForms =  this.letters.filter(letter=>letter.isEnterpriseForm);
+        const distinctForms: Letter[] = [];
+        enterpriseForms.forEach(form => {
+            const item =  distinctForms.find(x=>x.enterpriseFormId === form.enterpriseFormId);
+            if(item === undefined){
+                distinctForms.push(form);
+            }
+        });
+        this.usedWorkFlows.length = 0;
+        const allWorkflows = store.state.workflows as Workflow[];
+        distinctForms.forEach(letter=>{
+            allWorkflows.forEach(wf=>{
+                if(wf.enterpriseForms != null && wf.enterpriseForms != undefined){
+                    const form = wf.enterpriseForms.find(ef=>ef.id === letter.enterpriseFormId);
+                    if(form != undefined){
+                        let usedWorkflow = this.usedWorkFlows.find(uwf=>uwf.id === wf.id);
+                        if(usedWorkflow === undefined){
+                            usedWorkflow = {id: wf.id , name: wf.name , enterpriseForms: []} as Workflow;
+                            this.usedWorkFlows.push({id: wf.id , name: wf.name , enterpriseForms: []});
+                        }
+                        usedWorkflow = this.usedWorkFlows.find(uwf=>uwf.id === wf.id);
+                            if(usedWorkflow != undefined){
+                            if(usedWorkflow.enterpriseForms !== undefined && usedWorkflow.enterpriseForms !== null){
+                                usedWorkflow.enterpriseForms.push(form);
+                            }
+                        }
+
+                    }
+                }
+            });
+        });
+    }
    
 }
 

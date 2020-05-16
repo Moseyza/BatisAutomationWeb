@@ -1,6 +1,6 @@
 <template>
-    <label class="switch">
-        <input type="checkbox" v-model="checked">
+    <label @click="onClick()" class="switch">
+        <input type="checkbox" v-model="checked" :disabled="isReadOnly">
         <span class="slider round"></span>
     </label>    
 </template>
@@ -14,7 +14,7 @@ export default class ToggleSwitch extends Vue {
     onCheckedChanged(){
         this.$emit('checked-changed',this.checked);
     }
-
+    @Prop() isReadOnly?: boolean;
     @Prop() checkedProp?: boolean;
     @Watch('checkedProp')
     onCheckPropChanged(newVal: boolean, oldVal: boolean){
@@ -23,6 +23,9 @@ export default class ToggleSwitch extends Vue {
     created(){
       if(this.checkedProp)
         this.checked = this.checkedProp;
+    }
+    onClick(){
+      this.$emit("click");
     }
 }
 

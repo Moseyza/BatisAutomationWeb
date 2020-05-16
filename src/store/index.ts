@@ -13,6 +13,7 @@ export default new Vuex.Store({
     ownerId: '',
     ownerIds: [],
     branchIds:  [],
+    workflows: []
 
 
   },
@@ -42,6 +43,9 @@ export default new Vuex.Store({
     },
     setOwnerId(state,ownerId){
       state.ownerId = ownerId;
+    },
+    setWorkflows(state,workflows){
+      state.workflows = workflows;
     }
 
   },
