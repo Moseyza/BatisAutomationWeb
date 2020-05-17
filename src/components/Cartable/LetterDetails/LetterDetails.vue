@@ -17,7 +17,6 @@
                             <div class="item menu-item"><div style="padding-left:5px">مشاهده گزارش</div> <i class="fixed-icon icon-form1"></i></div>
   		                </div>
 	                </div>
-                    
                 </div>
                 </div>
                  <div>

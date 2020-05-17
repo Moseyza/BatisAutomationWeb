@@ -4,7 +4,7 @@
         <div style="padding:3px 3px">
             <i id="search-icon"  class="icon-search"></i>
         </div>
-         <div style="padding:3px 3px" id="filter-dropdown" class="ui icon top left dropdown simple" >
+         <div style="padding:3px 3px" id="filter-dropdown" class="ui icon top left dropdown" >
               <i id="search-icon"  class="icon-filter action-icon icon-filter helper-icon-medium"></i>
   		        <div class="menu" >
     		        <div class="item menu-item"><div style="padding-left:5px">همه</div> <ToggleSwitch :checkedProp="showAll" @click="onToggleSwitchClick('all')" :isReadOnly="true" /> </div>
@@ -14,7 +14,7 @@
                                 <div v-for="wf in workflows" :key="wf.id" class="item menu-item" :class="{'disabled': !showForms}">
                                     <div style="padding-left:5px">{{wf.name}}</div> 
                                     <div class="left menu" >
-                                        <div class="item menu-item" >test</div>
+                                        <div v-for="item in wf.enterpriseForms" :key="item.id" class="item menu-item" > <div style="padding-left:5px"> {{item.name}} </div> <ToggleSwitch @checked-changed="formFilterSelection($event,item.id)"  /> </div>
                                     </div>
                                 </div>
   		                </div>
@@ -45,17 +45,11 @@ export default class LetterSearch extends Vue {
     }
 
     mounted(){
-        $('#filter-dropdown').dropdown({action: 'nothing'});
+         $('#filter-dropdown').dropdown({action: 'nothing'});
     }
 
-    @Prop() workflows?: Workflow[];
 
-    // @Watch('workflows')
-    // onWorkflowsChanged(){
-    //     console.log("**************************");
-    //     console.log(this.workflows);
-    //     console.log("**************************");
-    // }
+    @Prop() workflows?: Workflow[];
     onToggleSwitchClick(mode: string){
             if(mode === 'all'){
                 this.showAll = true;
@@ -73,6 +67,11 @@ export default class LetterSearch extends Vue {
                 this.showForms = false;
                 this.showNotForms = true;
             }
+    }
+    formFilterSelection(checked: boolean, formId: string){
+        if(checked){
+            alert(formId);
+        }
     }
 }
 </script>
