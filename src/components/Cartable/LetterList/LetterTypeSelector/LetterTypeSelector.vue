@@ -23,6 +23,11 @@ export default class LetterTypeSelector extends Vue {
         this.setButtonsText();
         
     }
+    @Prop() counts?: any;
+    @Watch('counts')
+    onCountsChange(n: any,o: any){
+        this.setButtonsText();
+    }
     unSelectAll(){
         this.allSelected = false;
         this.secondSelected = false;
@@ -53,9 +58,9 @@ export default class LetterTypeSelector extends Vue {
 
     setButtonsText(){
         if(this.mode === 'received'){
-            this.firstButtonTxt = 'خوانده نشده';
-            this.secondButtonTxt = 'ارجاع نشده';
-            this.thirdButtonTxt = 'همه';
+            this.firstButtonTxt = `خوانده نشده(${this.counts.notRead})`;
+            this.secondButtonTxt = `ارجاع نشده(${this.counts.notForwarded})`;
+            this.thirdButtonTxt = `همه(${this.counts.all})`;
 
         }
         else if(this.mode === 'drafts'){

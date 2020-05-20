@@ -7,9 +7,9 @@
          <div style="padding:3px 3px" id="filter-dropdown" class="ui icon top left dropdown" >
               <i id="search-icon"  class="icon-filter action-icon icon-filter helper-icon-medium"></i>
   		        <div class="menu" >
-    		        <div class="item menu-item"><div style="padding-left:5px">همه</div> <ToggleSwitch :checkedProp="showAll" @click="onToggleSwitchClick('all')" :isReadOnly="true" /> </div>
-    		        <div class="item menu-item"><div style="padding-left:5px">غیر فرم سازمانی</div> <ToggleSwitch :checkedProp="showNotForms" @click="onToggleSwitchClick('notForms')" :isReadOnly="true" /> </div>
-    		        <div class="item menu-item"><div style="padding-left:5px">فرمهای سازمانی</div> <ToggleSwitch :checkedProp="showForms" @click="onToggleSwitchClick('forms')" :isReadOnly="true" /> 
+    		        <div class="item menu-item"><div style="padding-left:5px">همه({{counts.all}})</div> <ToggleSwitch :checkedProp="showAll" @click="onToggleSwitchClick('all')" :isReadOnly="true" /> </div>
+    		        <div class="item menu-item"><div style="padding-left:5px">غیر فرم سازمانی({{counts.notForms}})</div> <ToggleSwitch :checkedProp="showNotForms" @click="onToggleSwitchClick('notForms')" :isReadOnly="true" /> </div>
+    		        <div class="item menu-item"><div style="padding-left:5px">فرم های سازمانی({{counts.forms}})</div> <ToggleSwitch :checkedProp="showForms" @click="onToggleSwitchClick('forms')" :isReadOnly="true" /> 
                         <div class="left menu" >
                                 <div v-for="wf in workflows" :key="wf.id" class="item menu-item" :class="{'disabled': !showForms}">
                                     <div style="padding-left:5px">{{wf.name}}</div> 
@@ -50,6 +50,7 @@ export default class LetterSearch extends Vue {
 
 
     @Prop() workflows?: Workflow[];
+    @Prop() counts?: any;
     onToggleSwitchClick(mode: string){
             if(mode === 'all'){
                 this.showAll = true;
@@ -67,11 +68,10 @@ export default class LetterSearch extends Vue {
                 this.showForms = false;
                 this.showNotForms = true;
             }
+            this.$emit('mode-changed',mode);
     }
     formFilterSelection(checked: boolean, formId: string){
-        if(checked){
-            alert(formId);
-        }
+        this.$emit("form-selection",{isSelected: checked , formId: formId});
     }
 }
 </script>

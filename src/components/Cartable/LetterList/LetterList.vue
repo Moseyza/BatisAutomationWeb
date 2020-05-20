@@ -1,7 +1,7 @@
 <template>
     <div class="three-part-flexbox">
         <div class="container2 flex-part-top" style="flex: 0.5 0 0;">
-            <LetterSearch @search-text-changed="onSearch($event)" style="margin:5px 0;" :workflows="usedWorkFlows" ></LetterSearch>
+            <LetterSearch @mode-changed="onFilterModeChanged($event)" @form-selection="onFormSelection($event)" @search-text-changed="onSearch($event)" style="margin:5px 0;" :workflows="usedWorkFlows" :counts="counts" ></LetterSearch>
             <!-- <LetterFilter></LetterFilter> -->
         </div>
         <div class="flex-part-middle">
@@ -18,7 +18,7 @@
             </div>
         </div>
         <div style="display:flex; flex-direction:column; flex: 0.5 0 0;"  class="flex-part-bottom">
-            <LetterTypeSelector  v-if="mode !== '' && mode !== undefined" :mode="mode" @letter-type-changed="onLetterTypeChanged($event)" style="align-items: stretch;"></LetterTypeSelector>
+            <LetterTypeSelector  v-if="mode !== '' && mode !== undefined" :mode="mode" @letter-type-changed="onLetterTypeChanged($event)" style="align-items: stretch;" :counts="counts" ></LetterTypeSelector>
         </div>
         
     </div>
@@ -50,12 +50,26 @@ export default class LetterList extends Vue{
     currentSearchText = '';
     letters: Letter[] = [];
     usedWorkFlows: Workflow[] = [];
-
+    filteredFormIds: string[] = [];
+    curretnFilterMode = 'all';
+    counts = {all: 0,notRead: 0 , notForwarded: 0 , forms: 0 , notForms: 0 };
     filter = (x: Letter) => {return true;};
 
     @Watch('letters')
     onLettersChanged(){
         this.setUsedEnterpriseForms();
+        this.calcCounts();
+    }
+
+    calcCounts(){
+        const all =  this.letters.length;
+        const notRead = this.letters.filter(l=>!l.isOpenned).length;
+        const notForwarded = this.letters.filter(l=>!l.isForwarded).length;
+        const forms = this.letters.filter(l=>l.isEnterpriseForm).length;
+        const notForms = all - forms;
+        const obj = {all: all,notRead: notRead , notForwarded: notForwarded , forms: forms , notForms: notForms };
+        this.$emit('count-calcuted', obj)
+        this.counts = obj;
     }
 
     @Watch('lettersProp')
@@ -82,56 +96,107 @@ export default class LetterList extends Vue{
 
     onSearch(searchText: string){
         this.currentSearchText = searchText;
-        this.onLetterTypeChanged(this.currentLetterType);
-        const currentFilter = this.filter;
-        this.filter = (letter) => currentFilter(letter) && this.FilterForSearch(letter);
+        this.updateFilter();
+    }
+
+    onFormSelection(selection: any){
+        if(selection.isSelected){
+            this.filteredFormIds.push(selection.formId);
+        }else{
+            const index =  this.filteredFormIds.indexOf(selection.formId);
+            if(index > -1){
+                this.filteredFormIds.splice(index,1);
+            }
+        }
+        this.onFilterModeChanged(this.curretnFilterMode);
     }
 
     FilterForSearch(letter: Letter): boolean{
-
-        // this.currentSearchText.replace(/ي/g, "ی");
-        // this.currentSearchText.replace(/ۍ/g, "ی");
-        // this.currentSearchText.replace(/ێ/g, "ی");
-        // this.currentSearchText.replace(/ۑ/g, "ی");
-        // this.currentSearchText.replace(/ې/g, "ی");
-        // this.currentSearchText.replace(/ك/g, "ک");
-        // this.currentSearchText.replace(/ګ/g, "ک");
-        // this.currentSearchText.replace(/ڬ/g, "ک");
-        // this.currentSearchText.replace(/ڇ/g, "چ");
-
         return letter.letterNo.includes(this.currentSearchText) 
-        || letter.title.includes(this.currentSearchText) 
-        || letter.abstract.includes(this.currentSearchText) 
-        || (letter.sender !== undefined && letter.sender !== null && letter.sender.name.includes(this.currentSearchText) )
-        || (letter.recievers !== null && letter.recievers !== undefined && letter.recievers.filter(item=>item.name.includes(this.currentSearchText)).length>0)
+        || this.replaceChars(letter.title).includes(this.currentSearchText) 
+        || this.replaceChars(letter.abstract).includes(this.currentSearchText) 
+        || (letter.sender !== undefined && letter.sender !== null && this.replaceChars(letter.sender.name).includes(this.currentSearchText) )
+        || (letter.recievers !== null && letter.recievers !== undefined && letter.recievers.filter(item=>this.replaceChars(item.name).includes(this.currentSearchText)).length>0)
         
     }
 
+    filterForLetterState(letter: Letter): boolean {
+        if(this.currentLetterType === 'notRead'){
+            return  !letter.isOpenned;
+            
+        }
+        else if(this.currentLetterType === 'notForwarded'){
+            return  !letter.isForwarded;
+        }
+        else if(this.currentLetterType === 'sent'){
+            return  letter.isForwarded;
+
+        }
+        else if(this.currentLetterType === 'notSent'){
+            return   !letter.isForwarded;
+        }
+        else if(this.currentLetterType === 'all'){
+            return  true;
+        }
+        
+        return true;
+        
+    }
+
+    filterForLetterType(letter: Letter): boolean {
+          if(this.curretnFilterMode === 'forms'){
+            if(this.filteredFormIds.length > 0){
+                return letter.isEnterpriseForm && (this.filteredFormIds.indexOf(letter.enterpriseFormId) > -1) ;
+            }
+            else{
+                return letter.isEnterpriseForm;
+            }
+            
+
+        }else if(this.curretnFilterMode === 'notForms'){
+            return !letter.isEnterpriseForm;
+        }
+        return true;
+    }
+
+    replaceChars(inputStr: string): string{
+        
+       inputStr = inputStr.replace(/ي/g, "ی");
+       inputStr = inputStr.replace(/ۍ/g, "ی");
+       inputStr = inputStr.replace(/ێ/g, "ی");
+       inputStr = inputStr.replace(/ۑ/g, "ی");
+       inputStr = inputStr.replace(/ې/g, "ی");
+       inputStr = inputStr.replace(/ك/g, "ک");
+       inputStr = inputStr.replace(/ګ/g, "ک");
+       inputStr = inputStr.replace(/ڬ/g, "ک");
+       inputStr = inputStr.replace(/ڇ/g, "چ");
+        return inputStr;
+    }
+
+    refresh(){
+       
+        this.$forceUpdate();
+    }
+
     get filteredLetters(){
-        return this.letters.filter(this.filter)
+        return  this.letters.filter(this.filter)
+        
+    }
+
+    updateFilter(){
+        this.filter = (letter) =>  this.FilterForSearch(letter) && this.filterForLetterState(letter) && this.filterForLetterType(letter);
     }
 
     onLetterTypeChanged(mode: string){
         this.currentLetterType = mode;
-        if(mode === 'notRead'){
-            this.filter = (letter) => !letter.isOpenned && this.FilterForSearch(letter);
-            
-        }
-        else if(mode === 'notForwarded'){
-            this.filter = (letter) => !letter.isForwarded && this.FilterForSearch(letter);
-        }
-        else if(mode === 'sent'){
-            this.filter = (letter) => letter.isForwarded && this.FilterForSearch(letter);
-
-        }
-        else if(mode === 'notSent'){
-            this.filter = (letter) => !letter.isForwarded && this.FilterForSearch(letter);
-        }
-        else if(mode === 'all'){
-            this.filter = (letter) => true && this.FilterForSearch(letter);
-        }
+        this.updateFilter();
         
 
+    }
+
+    onFilterModeChanged(mode: string){
+        this.curretnFilterMode = mode;
+        this.updateFilter();
     }
 
     async created(){
