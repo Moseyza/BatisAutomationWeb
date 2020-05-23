@@ -7,6 +7,8 @@ import { LetterOwnerWithPicture } from '@/store/models/LetterOwner/letterOwnerWi
 import LetterListerWithPaginationResult from '@/store/models/Letter/LetterListerWithPaginationResult';
 import {DraftLetter} from "@/store/models/Letter/DraftLetter"
 import { Branch } from '@/store/models/LetterOwner/Branch';
+import * as persianDate from 'persian-date';
+
 
 
 export const batisAutomationApi = axios.create(
@@ -24,11 +26,11 @@ batisAutomationApi.interceptors.request.use(
         config.headers['Authorization'] = `Bearer ${ token }`
       }
   
-      return config
+      return config;
     },
   
     (error) => {
-      return Promise.reject(error)
+      return Promise.reject(error);
     }
 );
 
@@ -44,7 +46,6 @@ batisAutomationApi.interceptors.response.use(
                 store.commit("clearToken");
                 router.replace({name: "Login"});
             }
-            
         
     }
     
@@ -89,17 +90,39 @@ export async function getLetters(): Promise<LetterList>{
     return test as LetterList; 
 }
 
-export async function getReceivedLetters(): Promise<LetterListerWithPaginationResult>{
+export function getCartableYears(startDate: string, endDate: string ): number[]{
+    const pcStart = new persianDate(new Date(startDate));
+    const pcEnd = new persianDate(new Date(endDate));
+    const startMonth = pcStart.month() as number;
+    const startYear = pcStart.year() as number;
+    const endMonth = pcEnd.month() as number;
+    const endYear = pcEnd.year() as number;
+    let counter = endYear;
+    const result = [];
+    while(counter>= startYear){
+        result.push(counter);
+        counter--;
+    }
+    return result;
+}
+
+export function getDefaultDate(date: string): any{
+    const pc = new persianDate(new Date(date));
+    return {year: pc.year(), month: pc.month()}
+}
+
+export async function getReceivedLetters(from?: Date, to?: Date): Promise<LetterListerWithPaginationResult>{
     try {
         const config = {
             //headers: {'Content-Type': 'application/json' }
         };
         const data = {
             ownerId: store.state.ownerId,
-            form: null,
-            to: null
+            from: from,
+            to: to
         };
         const serverResult = await batisAutomationApi.post("/ReceivedLetters",data);
+        getCartableYears(serverResult.data.from,serverResult.data.to);
         return serverResult.data;
     } catch (error) {
         console.log(error);

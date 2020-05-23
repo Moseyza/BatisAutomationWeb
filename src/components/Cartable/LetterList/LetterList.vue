@@ -1,7 +1,18 @@
 <template>
     <div class="three-part-flexbox">
         <div class="container2 flex-part-top" style="flex: 0.5 0 0;">
-            <LetterSearch @mode-changed="onFilterModeChanged($event)" @form-selection="onFormSelection($event)" @search-text-changed="onSearch($event)" style="margin:5px 0;" :workflows="usedWorkFlows" :counts="counts" ></LetterSearch>
+            <LetterSearch 
+            @mode-changed="onFilterModeChanged($event)" 
+            @form-selection="onFormSelection($event)" 
+            @search-text-changed="onSearch($event)"  
+            @sort-mode-changed="onSortModeChanged($event)"
+            @date-filter-changed="onDateFilterChanged($event)"
+            :workflows="usedWorkFlows" 
+            :counts="counts" :years="years" 
+            :defaultDate="defaultDate" 
+            style="margin:5px 0;" 
+             >
+            </LetterSearch>
             <!-- <LetterFilter></LetterFilter> -->
         </div>
         <div class="flex-part-middle">
@@ -45,7 +56,8 @@ export default class LetterList extends Vue{
     @Prop() lettersProp?: Letter[];
     @Prop() loading?: boolean;
     @Prop() mode?: string;
-
+    @Prop() years?: number[];
+    @Prop() defaultDate?: any;
     currentLetterType = 'all';
     currentSearchText = '';
     letters: Letter[] = [];
@@ -206,6 +218,7 @@ export default class LetterList extends Vue{
             store.commit("setWorkflows",workflows);
         }
         
+        
     }
 
     setUsedEnterpriseForms(){
@@ -239,6 +252,20 @@ export default class LetterList extends Vue{
                     }
                 }
             });
+        });
+    }
+
+    onDateFilterChanged(date: any){
+        this.$emit('date-filter-changed',date);
+    }
+
+    onSortModeChanged(mode: string){
+        if(mode === 'title') this.letters = this.letters.sort((l1,l2)=>l1.title.localeCompare(l2.title));
+        if(mode === 'date') this.letters = this.letters.sort((l1,l2)=> (new Date(l2.sendTime).getTime() - (new Date(l1.sendTime)).getTime()));
+        if(mode === 'sender') this.letters = this.letters.sort((l1,l2)=>{
+            if(l1.sender === null || l1.sender === undefined) return 0;
+            if(l2.sender === null || l2.sender === undefined) return 0;
+            return l1.sender.name.localeCompare(l2.sender.name);
         });
     }
    

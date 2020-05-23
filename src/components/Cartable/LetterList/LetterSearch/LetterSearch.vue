@@ -19,6 +19,30 @@
                                 </div>
   		                </div>
                     </div>
+                    <div class="divider"></div>
+                     <div class="item menu-item"><div style="padding-left:5px">بارگذاری براساس تاریخ</div> 
+                        <div class="left menu ">
+                            <div class="item menu-item"><div style="padding-left:5px">سال</div>
+                                <div class="left menu" >
+                                        <div v-for="year in yearsArray" :key="year.value" class="item menu-item" > <div style="padding-left:5px"> {{year.value}} </div> <ToggleSwitch isReadOnly= true :checkedProp="year.isSelected" @click="yearSelected(year.value)" /> </div>
+                                </div>
+                            </div>
+                            <div class="item menu-item scrolling"><div style="padding-left:5px">ماه</div>
+                         
+                                <div class="left menu "  >
+                                        <div v-for="month in months" :key="month.id" class="item menu-item " > <div style="padding-left:5px"> {{month.name}} </div> <ToggleSwitch isReadOnly= true :checkedProp="month.isSelected" @click="monthSelected(month.id)"  /> </div>
+                                </div>
+                               
+                            </div>
+                        </div>
+                     </div>
+                     <div class="item menu-item"><div style="padding-left:5px">مرتب سازی براساس</div> 
+                        <div class="left menu ">
+                            <div class="item menu-item"><div style="padding-left:5px">تاریخ</div><ToggleSwitch isReadOnly= true :checkedProp="sortOnDate"  @click="sortModeChanged('date')" /></div>
+                            <div class="item menu-item"><div style="padding-left:5px">نام فرستنده</div><ToggleSwitch isReadOnly= true :checkedProp="sortOnSender"  @click="sortModeChanged('sender')" /></div>
+                            <div class="item menu-item"><div style="padding-left:5px">عنوان</div><ToggleSwitch isReadOnly= true :checkedProp="sortOnTitle"  @click="sortModeChanged('title')" /></div>
+                        </div>
+                     </div>
   		        </div>
 	    </div>
         
@@ -39,6 +63,9 @@ export default class LetterSearch extends Vue {
     showAll = true;
     showForms = false;
     showNotForms = false;
+    sortOnDate = true;
+    sortOnSender = false;
+    sortOnTitle = false;
     @Watch('searchText')
     onSearchTextChanged(){
         this.$emit('search-text-changed',this.searchText);
@@ -51,6 +78,77 @@ export default class LetterSearch extends Vue {
 
     @Prop() workflows?: Workflow[];
     @Prop() counts?: any;
+    @Prop() years?: number[];
+    @Prop() defaultDate?: any;
+    @Watch("defaultDate")
+    onDefaultDateChanged(n: any, o: any){
+        this.monthSelected(n.month);
+        this.yearSelected(n.year);
+        
+    }
+    
+    yearsArray =  [] as any[];
+    @Watch('years')
+    onYearsChanged(newVal: number[],oldVal: number[] ){
+        newVal.forEach(year=>{
+            this.yearsArray.push({value: year, isSelected: this.defaultDate.year === year});
+        });
+    }
+
+
+    months =  [
+            {isSelected:false, name: "فروردین", id: 1},
+            {isSelected:false, name: "اردیبهشت", id: 2},
+            {isSelected:false, name: "خرداد", id: 3},
+            {isSelected:false, name: "تیر", id: 4},
+            {isSelected:false, name: "مرداد", id: 5},
+            {isSelected:false, name: "شهریور", id: 6},
+            {isSelected:false, name: "مهر", id: 7},
+            {isSelected:false, name: "آبان", id: 8},
+            {isSelected:false, name: "آذر", id: 9},
+            {isSelected:false, name: "دی", id: 10},
+            {isSelected:false, name: "بهمن", id: 11},
+            {isSelected:false, name: "اسفند", id: 12},
+        ];
+    
+
+    
+
+    monthSelected(monthId: number){
+        this.months.forEach(month=>{month.isSelected = false;});
+        const selectedMonth =  this.months.find(month=>month.id === monthId);
+        if(selectedMonth)
+            selectedMonth.isSelected = true;
+        this.sendDateChangedMessage();
+        
+    }
+
+    yearSelected(val: number){
+        this.yearsArray.forEach(year=>{year.isSelected = false;});
+        const selectedYear =  this.yearsArray.find(year=>year.value === val);
+        if(selectedYear)
+            selectedYear.isSelected = true;
+        this.sendDateChangedMessage();
+    }
+
+    sendDateChangedMessage(){
+        const year =  this.yearsArray.find(y=>y.isSelected);
+        const month = this.months.find(m=>m.isSelected);
+        if(month && year){
+            this.$emit('date-filter-changed',{month: month.id , year: year.value});
+        }
+    }
+
+    sortModeChanged(mode: string){
+        this.sortOnDate = false;
+        this.sortOnSender = false;
+        this.sortOnTitle = false;
+        if(mode === 'date') this.sortOnDate = true;
+        if(mode === 'title') this.sortOnTitle = true;
+        if(mode === 'sender') this.sortOnSender = true;
+        this.$emit('sort-mode-changed',mode);
+    }
+
     onToggleSwitchClick(mode: string){
             if(mode === 'all'){
                 this.showAll = true;
@@ -73,6 +171,8 @@ export default class LetterSearch extends Vue {
     formFilterSelection(checked: boolean, formId: string){
         this.$emit("form-selection",{isSelected: checked , formId: formId});
     }
+
+    
 }
 </script>
 

@@ -35,6 +35,7 @@
     "eslint-plugin-vue": "^6.1.2",
     "less": "^3.11.1",
     "less-loader": "^5.0.0",
+    "persian-date": "^1.1.0",
     "typescript": "~3.7.5",
     "vue-template-compiler": "^2.6.11"
   },
