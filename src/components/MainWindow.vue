@@ -9,7 +9,8 @@
                 <router-view @selected-letter-changed="onSelectdLetterChanged($event)"></router-view>
             </div>
             <div class="container2" style="flex:6">
-                <LetterDetails v-if="noLetterSelected == false" :letter="selectedLetter"></LetterDetails>
+                <LetterDetails v-if="noLetterSelected == false && leftSideMode==='details'" :letter="selectedLetter" @finalize-letter="onFinalizeLetter($event)"></LetterDetails>
+                <FinalizeLetter v-if="leftSideMode=== 'finalize'" :letter="selectedLetter"  />
             </div>
             
         </div>
@@ -26,16 +27,19 @@ import SingleCartableOwner from '@/components/Cartable/CartableOwner/SingleCarta
 import CartableTitle from '@/components/Cartable/CartableTitle/CartableTitle.vue';
 import FoldersTree from '@/components/Cartable/FoldersTree/FoldersTree.vue';
 import LetterDetails from '@/components/Cartable/LetterDetails/LetterDetails.vue';
+import FinalizeLetter from '@/components/Cartable/LetterDetails/FinalizeLetter/FinalizeLetter.vue';
 import { Letter } from '@/store/models/Letter/Letter';
 @Component({
-    components: { FoldersTree, LetterDetails, CartableTitle}
+    components: { FoldersTree, LetterDetails, CartableTitle,FinalizeLetter}
 })
 export default class MainWindow extends Vue {
     selectedLetter?: Letter = {} as Letter;
     letterTitle1 = '';
     noLetterSelected = true;
     letterOwnerId = '';
+    leftSideMode = 'details';
     onSelectdLetterChanged(letter: Letter){
+        this.leftSideMode = 'details';
         this.noLetterSelected = false;
         const temp: any = {};
         Object.assign(temp,letter)
@@ -44,6 +48,9 @@ export default class MainWindow extends Vue {
 
     onLetterOwnerSet(){
         this.letterOwnerId = this.$store.state.ownerId;
+    }
+    onFinalizeLetter(letterId: string){
+        this.leftSideMode = 'finalize';
     }
 }
 </script>

@@ -104,6 +104,8 @@ export default class LetterList extends Vue{
         this.$set(this.letters,index,tempLetter);
         const selectedLetter =  this.letters.find(item=>item.id === id);
         this.$emit("selected-letter-changed",selectedLetter);
+        
+        
     }
 
     onSearch(searchText: string){

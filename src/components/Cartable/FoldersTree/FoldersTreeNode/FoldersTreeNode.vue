@@ -4,14 +4,17 @@
             <div id="node-title">
                 <i class="node-icon" @click="toggle()" :class="{'icon-nodeClose':!isOpen , 'icon-nodeOpen':isOpen}" ></i>
                 <i style="flex:1" :class="data.iconClass"></i>
-                <h5 style="flex:5" v-if="data.isRoot">{{data.name}}</h5>
+                <h5 style="flex:5;text-align:right" v-if="data.isRoot">{{data.name}}</h5>
                 <router-link style="flex:5;cursor:pointer" v-else tag="div" :to="data.url" >{{data.name}}</router-link>
+                <input type="checkbox" v-if="isSelectable" v-model="isSelected"/>
             </div>
             <div :class="{hide:!isOpen}">
                 <FoldersTreeNode
                 v-for="child in data.children" 
                 :data="child"
                 :key="child.url"
+                :isSelectable= "isSelectable"
+                @selected-changed="onChildSelectionChanged($event)"
                 >
                 </FoldersTreeNode>
             </div>
@@ -20,7 +23,7 @@
 </template>
 
 <script lang="ts">
-import {Vue, Component, Prop} from 'vue-property-decorator';
+import {Vue, Component, Prop, Watch} from 'vue-property-decorator';
 
 
 @Component({
@@ -28,6 +31,17 @@ import {Vue, Component, Prop} from 'vue-property-decorator';
 })
 export default class FoldersTreeNode extends Vue {
     @Prop() data?: FoldersTreeNodeData;
+    @Prop() isSelectable?: boolean;
+    
+    isSelected = false;
+    @Watch('isSelected')
+    onSelectionChanged(nVal: boolean, oVal: boolean){
+        if(this.data)
+            this.$emit("selected-changed",{isSelected: nVal , id: this.data.url});
+    }
+    onChildSelectionChanged(selection: any){
+        this.$emit("selected-changed",selection);
+    }
     isOpen = false;
     toggle(){
         if(this.data === undefined) return;
@@ -45,6 +59,7 @@ export default class FoldersTreeNode extends Vue {
 export interface FoldersTreeNodeData {
     isRoot: boolean;
     name: string;
+    id: string;
     iconClass: any;
     url: string;
     children: FoldersTreeNodeData[];

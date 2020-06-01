@@ -58,9 +58,9 @@ export default class LetterTypeSelector extends Vue {
 
     setButtonsText(){
         if(this.mode === 'received'){
-            this.firstButtonTxt = `خوانده نشده(${this.counts.notRead})`;
-            this.secondButtonTxt = `ارجاع نشده(${this.counts.notForwarded})`;
-            this.thirdButtonTxt = `همه(${this.counts.all})`;
+            this.firstButtonTxt = `خوانده نشده (${this.counts.notRead})`;
+            this.secondButtonTxt = `ارجاع نشده (${this.counts.notForwarded})`;
+            this.thirdButtonTxt = `همه (${this.counts.all})`;
 
         }
         else if(this.mode === 'drafts'){

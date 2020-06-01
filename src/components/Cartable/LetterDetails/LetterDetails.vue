@@ -11,7 +11,7 @@
                     <div id="options-dropdown"  class="ui icon top left dropdown">
   		                <i class="action-icon icon-threeDots"></i>
   		                <div class="menu">
-    		                <div class="item menu-item"><div style="padding-left:5px">اختتام</div> <i class="fixed-icon icon-stamp"></i> </div>
+    		                <div class="item menu-item" @click="finalizeLetter()" ><div style="padding-left:5px">اختتام</div> <i class="fixed-icon icon-stamp"></i> </div>
     		                <div class="item menu-item"><div style="padding-left:5px">چاپ</div> <i class="fixed-icon icon-print"></i></div>
     		                <div class="item menu-item"><div style="padding-left:5px">جریان وابستگی</div> <i class="fixed-icon icon-tree"></i></div>
                             <div class="item menu-item"><div style="padding-left:5px">مشاهده گزارش</div> <i class="fixed-icon icon-form1"></i></div>
@@ -90,8 +90,10 @@ import Parts from '@/store/models/Letter/Parts';
 import LetterTrailTree from './LetterTrail/LetterTrailTree.vue';
 import { LetterTrail } from '@/store/models/Letter/LetterTrail';
 import * as $ from 'jquery';
+import FinalizeLetter from './FinalizeLetter/FinalizeLetter.vue';
 @Component({
-    components:{LetterAttachment, LetterTrailTree}
+    name:"LetterDetails",
+    components:{LetterAttachment, LetterTrailTree, FinalizeLetter}
 })
 export default class LetterDetails extends Vue {
 
@@ -123,7 +125,7 @@ export default class LetterDetails extends Vue {
     }
 
    
-
+    
     setIsReceived(){
         this.isReceived = false;
         if(this.letter == undefined)return;
@@ -140,7 +142,12 @@ export default class LetterDetails extends Vue {
     }
     
     mounted(){
-        $("#options-dropdown").dropdown({action: 'hide'});
+        $("#options-dropdown").dropdown({action: 'hide',silent: true});
+    }
+
+    finalizeLetter(){
+        if(this.letter === undefined || this.letter === null) return;
+        this.$emit('finalize-letter',this.letter.id);
     }
 }
 </script>

@@ -55,3 +55,12 @@ export async function GetOutgoingClosedLetters(from?: Date, to?: Date): Promise<
         return {} as LetterListerWithPaginationResult;
     }
 }
+
+
+export async function CloseLetter(letterPossessionId: string,comment: string, acrchiveFolderIds: string[]){
+    try {
+        const serverResult =  await api.batisAutomationApi.post("/letters/Close",{letterPossessionId: letterPossessionId, comment: comment, archiveFolderIds: acrchiveFolderIds});
+    } catch (error) {
+        console.log(error);
+    }
+}
