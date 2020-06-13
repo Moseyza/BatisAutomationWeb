@@ -9,8 +9,13 @@
                 <router-view @selected-letter-changed="onSelectdLetterChanged($event)"></router-view>
             </div>
             <div class="container2" style="flex:6">
-                <LetterDetails v-if="noLetterSelected == false && leftSideMode==='details'" :letter="selectedLetter" @finalize-letter="onFinalizeLetter($event)"></LetterDetails>
+                <LetterDetails v-if="noLetterSelected == false && leftSideMode==='details'" :letter="selectedLetter" 
+                @finalize-letter="onFinalizeLetter($event)"
+                @forward-letter="onForwardLetter($event)"
+                >
+                </LetterDetails>
                 <FinalizeLetter v-if="leftSideMode=== 'finalize'" :letter="selectedLetter"  />
+                <ForwardLetter v-if="leftSideMode=== 'forward'" :letter="selectedLetter" />
             </div>
             
         </div>
@@ -29,8 +34,9 @@ import FoldersTree from '@/components/Cartable/FoldersTree/FoldersTree.vue';
 import LetterDetails from '@/components/Cartable/LetterDetails/LetterDetails.vue';
 import FinalizeLetter from '@/components/Cartable/LetterDetails/FinalizeLetter/FinalizeLetter.vue';
 import { Letter } from '@/store/models/Letter/Letter';
+import ForwardLetter from '@/components/Cartable/ForwardLetter/ForwardLetter.vue';
 @Component({
-    components: { FoldersTree, LetterDetails, CartableTitle,FinalizeLetter}
+    components: { FoldersTree, LetterDetails, CartableTitle,FinalizeLetter, ForwardLetter}
 })
 export default class MainWindow extends Vue {
     selectedLetter?: Letter = {} as Letter;
@@ -51,6 +57,10 @@ export default class MainWindow extends Vue {
     }
     onFinalizeLetter(letterId: string){
         this.leftSideMode = 'finalize';
+    }
+
+    onForwardLetter(){
+        this.leftSideMode = 'forward';
     }
 }
 </script>

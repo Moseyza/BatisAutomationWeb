@@ -10,3 +10,14 @@ export async function getCloseAutoCompleteData(): Promise<AutoCompleteData[]>{
         return {} as AutoCompleteData[];    
     }
 }
+
+export async function getForwardingAutoCompleteData(): Promise<AutoCompleteData[]>{
+    try {
+        const serverResult =  await api.batisAutomationApi.post("/AutoCompleteData/Forward");
+        return serverResult.data as AutoCompleteData[];
+    } 
+    catch (error) {
+        console.log(error);
+        return {} as AutoCompleteData[];    
+    }
+}

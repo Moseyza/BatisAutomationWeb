@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('fonts/icomoon.eot?fzc9im');
-  src:  url('fonts/icomoon.eot?fzc9im#iefix') format('embedded-opentype'),
-    url('fonts/icomoon.ttf?fzc9im') format('truetype'),
-    url('fonts/icomoon.woff?fzc9im') format('woff'),
-    url('fonts/icomoon.svg?fzc9im#icomoon') format('svg');
+  src:  url('fonts/icomoon.eot?77hgpn');
+  src:  url('fonts/icomoon.eot?77hgpn#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?77hgpn') format('truetype'),
+    url('fonts/icomoon.woff?77hgpn') format('woff'),
+    url('fonts/icomoon.svg?77hgpn#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -13,7 +13,7 @@
 [class^="icon-"], [class*=" icon-"] {
   /* use !important to prevent issues with browser extensions that change fonts */
   font-family: 'icomoon' !important;
-  speak: none;
+  speak: never;
   font-style: normal;
   font-weight: normal;
   font-variant: normal;
@@ -25,10 +25,25 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-paperclip:before {
+  content: "\f0c6";
+}
+.icon-verticalLine:before {
+  content: "\e927";
+}
+.icon-mail:before {
+  content: "\e919";
+}
+.icon-telegram:before {
+  content: "\e924";
+}
+.icon-sms:before {
+  content: "\e925";
+}
 .icon-attachment:before {
   content: "\e923";
 }
-.icon-dropdownArrow:before {
+.icon-adropdownArrow:before {
   content: "\e922";
 }
 .icon-nodeClose:before {
@@ -123,6 +138,9 @@
 }
 .icon-download:before {
   content: "\e900";
+}
+.icon-paraph:before {
+  content: "\e926";
 }
 .icon-pdf:before {
   content: "\e904";

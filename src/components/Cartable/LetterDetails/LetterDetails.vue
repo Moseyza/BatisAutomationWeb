@@ -73,7 +73,7 @@
             <div style="flex:1; display:flex;justify-content:space-around" class="container5">
                 <div style="flex:1;text-align: center;"><i class="icon-replay action-icon"></i></div>
                 <div style="flex:1;text-align: center;"><i class="icon-replayAll  action-icon"></i></div>
-                <div style="flex:1;text-align: center;"><i class="icon-forward action-icon"></i></div>
+                <div style="flex:1;text-align: center;" @click="forwardLetter()" ><i class="icon-forward action-icon"></i></div>
             </div>
         </div>
     </div>
@@ -149,6 +149,11 @@ export default class LetterDetails extends Vue {
         if(this.letter === undefined || this.letter === null) return;
         this.$emit('finalize-letter',this.letter.id);
     }
+    forwardLetter(){
+        if(this.letter)
+            this.$emit('forward-letter',this.letter.id);
+    }
+
 }
 </script>
 <style lang="less" scoped>

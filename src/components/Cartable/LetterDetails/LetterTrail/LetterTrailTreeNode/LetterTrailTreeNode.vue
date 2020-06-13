@@ -9,8 +9,8 @@
                 </div>
             <div>
             <LetterTrailTreeNode
-            v-for="item in nodeData.recievers"
-            :key="item.senderId"
+            v-for="(item,index) in nodeData.recievers"
+            :key="item.sendTime + index"
             :nodeData="item"
             ></LetterTrailTreeNode>
             </div>

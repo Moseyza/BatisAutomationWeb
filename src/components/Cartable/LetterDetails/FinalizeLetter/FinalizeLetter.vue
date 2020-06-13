@@ -21,7 +21,7 @@
                 </div>
             </div>
         </div>
-        <div class="flex-part-middle" style="flex: 6">
+        <div class="flex-part-middle" style="flex: 8">
             <div style="min-height:300px">
                 <div class="symmetric-grid">
                     <div style="flex:2">
@@ -63,7 +63,7 @@
                 </div>
             </div>
         </div>
-        <div  style="flex:.5 1 0;display:flex;flex-direction:column;align-items:strech" class="flex-part-bottom">
+        <div  style="flex:.2 1 0;display:flex;flex-direction:column;align-items:strech" class="flex-part-bottom">
             <div style="flex:1; display:flex;justify-content:space-around" class="container5">
                 <div style="flex:1;text-align: center;" class="action-icon" @click="finalize()" ><i class="icon-stamp" style="font-size:xx-large"></i></div>
             </div>
@@ -173,7 +173,6 @@ get letterTime(){
     }
 
     onFolderSelectedChanged(selection: any){
-        alert(selection.id);
         if(selection.isSelected)
         {
             this.selectedFolderIds.push(selection.id);

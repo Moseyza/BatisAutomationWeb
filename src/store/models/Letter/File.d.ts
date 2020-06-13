@@ -1,6 +1,6 @@
 export default interface File {
     id: string;
-    content?: null;
+    content: string;
     extension: string;
     isBasedOnPattern: boolean;
     openMaximized: boolean;

@@ -48,3 +48,7 @@ export function converBase64toBlob(content: string, contentType: string) {
     window.URL.revokeObjectURL(url);
 }
 
+export function ReadFileAndAddToRecipient(param: any)
+{
+    alert(param.name);
+}
