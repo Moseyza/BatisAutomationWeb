@@ -1,8 +1,8 @@
 <template>
     <div class="single-recipient" >
         <div class="item-block" >
-            <div class="xsmall-text" style="flex:3">{{recipient.nameOnly}}</div>
-            <div class="xxsmall-text" style="flex:4">{{recipient.post}}</div>
+            <div class="xsmall-text nowrap" style="flex:3">{{recipient.nameOnly}}</div>
+            <div class="xxsmall-text nowrap" style="flex:4">{{recipient.post}}</div>
             <div class="symmetric-grid" style="flex:2">
                 <div @click="toggleMail()" > <i class="icon-mail icon" :class="{active: isMailActive}"></i> </div>
                 <div @click="toggleTelegram()"> <i class="icon-telegram icon" :class="{active: this.recipient.shallReceiveMessageViaMessagingApp}"></i> </div>
@@ -22,7 +22,8 @@
                     <progress v-else :value="loadedPercent" max="100"></progress>
                     
         </div>
-        <div class="item-block" style="justify-content: flex-start;overflow-x: auto;" v-if="recipient.attachments.length > 0">
+        <div class="item-block xxsmall-text" style="justify-content: flex-start;overflow-x: auto;" v-if="recipient.attachments.length > 0">
+            پیوست:
             <LetterAttachment v-for="(file,index) in recipient.attachments" 
             :key="index"
             :canRemove=true
@@ -101,9 +102,8 @@ export default class SingleSelectedRecipient extends Vue{
             this.$emit("paraph",this.recipient.id);
     }
   
-      onFileChanged(e: any){
+    onFileChanged(e: any){
         if(!this.recipient)return;
-        alert(this.recipient.name);
         const file = e.target.files[0];
         this.currentAttachedFileName = file.currentAttachedFileName;
         const reader = new FileReader();
@@ -114,6 +114,7 @@ export default class SingleSelectedRecipient extends Vue{
             const attachedFile = {} as File;
             if(x.target && this.recipient)
             {
+                attachedFile.id = '00000000-0000-0000-0000-000000000000';
                 attachedFile.extension = file.name;
                 attachedFile.content = (x.target as any).result;
                 this.recipient.attachments.push(attachedFile);

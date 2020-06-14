@@ -1,29 +1,6 @@
 <template>
     <div class="three-part-flexbox">
-        <button @click="test()">test</button>
        <div class="flex-part-top">
-           <div id="comment-dimmer" class="ui page  dimmer ">
-                <div class="content paraph-form">
-                    <div class="paraph-title">هامش برای {{recipientForComment.nameOnly}}</div>
-                    <div class="paraph-body">
-                        <div >
-                            <input list="list"  v-model="comment" style="width: 100%">
-                            <datalist id="list">
-                            <option v-for="item in autoCompleteData" :key="item.id" :value="item.name" ></option>
-                            </datalist>
-                        </div>
-                        <div>
-                            <div style="text-align: right;margin:3px 0" ><ToggleSwitch @checked-changed="applyToAllMainRecipients($event)"/> اعمال برای تمام گیرندگان اصلی</div>
-                            <div style="text-align: right;margin:3px 0" ><ToggleSwitch @checked-changed="applyToAllCopyRecipients($event)"/> اعمال برای تمام گیرندگان رونوشت</div>
-                        </div>
-                        <div>
-                            <button @click="confirmComment()" class="ui blue button">ثبت</button>
-                            <button @click="cancelComment()" class="ui red button">انصراف</button>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
             گیرنده اصلی:
            <div id="main-recipient-dropdown" class="ui fluid search selection dropdown" style="direction:ltr">
             <input type="hidden" >
@@ -61,7 +38,12 @@
            />
        </div>
        <div class="flex-part-middle" ></div>
-       <div class="flex-part-bottom" ></div>
+       <div class="flex-part-bottom" >
+           <div style="display:flex">
+               <div @click="cancel" class="action-icon bg1" style="flex:1;text-align:center"><i style="color:inherit" class="icon icon-x"></i></div>
+               <div @click="send" class="action-icon bg1" style="flex:1;text-align:center"><i style="color:inherit" class="icon icon-telegram"></i></div>
+            </div>
+        </div>
     </div>
    
 </template>
@@ -69,6 +51,7 @@
 <script lang="ts">
 import {Vue, Component, Prop} from 'vue-property-decorator';
 import * as letterOwnerService from '@/store/Services/letterOwnerService';
+import * as letterService from '@/store/Services/letterServices';
 import store from '@/store';
 import * as $ from 'jquery';
 import RecipientSelector from './RecipientSelector/RecipientSelector.vue';
@@ -77,18 +60,18 @@ import {LetterOwnerWithSendingInformationAndAttachments } from '@/store/models/L
 import * as autoCompleteDataService from '@/store/Services/autoCompleteDataService.ts';
 import { AutoCompleteData } from '@/store/models/Letter/AutoCompleteData';
 import ToggleSwitch from '@/components/UiComponents/ToggleSwitch.vue';
+import { LetterOwnerEmail } from '@/store/models/LetterOwner/LetterOwnerEmail';
+import { Letter } from '@/store/models/Letter/Letter';
+import * as util from '@/util/utils';
 @Component({
     components: {RecipientSelector, ToggleSwitch}
 })
 export default class ForwardLetter extends Vue{
     recipients: LetterOwnerWithFaxAndEmails[] = [];
-    recipientForComment?: LetterOwnerWithSendingInformationAndAttachments = {} as LetterOwnerWithSendingInformationAndAttachments;
     selectedMainRecipients:  LetterOwnerWithSendingInformationAndAttachments [] = [];
     selectedCopyRecipients:  LetterOwnerWithSendingInformationAndAttachments [] = [];
     autoCompleteData: AutoCompleteData[] = [];
-    comment = '';
-    shallApplyToAllMainRecipients =false;
-    shallApplyToAllCopyRecipients = false;
+    @Prop() letter?: Letter;
     async created(){
         const ownerId = store.state.ownerId;
         this.recipients =   await letterOwnerService.getOwnerRecipients(ownerId);
@@ -97,9 +80,6 @@ export default class ForwardLetter extends Vue{
         $('#main-recipient-dropdown').dropdown({action:'hide',silent: true ,message: {noResults : 'یافت نشد'}});
         $('#copy-recipient-dropdown').dropdown({action:'hide',silent: true ,message: {noResults : 'یافت نشد'}});
        
-    }
-    test(){
-        console.log(this.selectedMainRecipients);
     }
     getLetterOwnerWithSendingInfo(recipient: LetterOwnerWithFaxAndEmails): LetterOwnerWithSendingInformationAndAttachments{
         const result = {} as LetterOwnerWithSendingInformationAndAttachments;
@@ -144,58 +124,39 @@ export default class ForwardLetter extends Vue{
         const index =  this.selectedCopyRecipients.indexOf(removedItem);
         this.selectedCopyRecipients.splice(index,1);        
     }
-    onParaph(recipientId: string){
-        this.recipientForComment = this.selectedMainRecipients.find(item=>item.id === recipientId);
-        if(!this.recipientForComment)
-        {
-            this.recipientForComment = this.selectedCopyRecipients.find(item=>item.id === recipientId);
-            
-        }
-        if(this.recipientForComment){
-            this.comment = this.recipientForComment.forwardingComment;
-            $("#comment-dimmer").dimmer("show");
-        }
-    }
-    applyToAllMainRecipients(checked: boolean){
-        this.shallApplyToAllMainRecipients = checked;
-    }
-
-    applyToAllCopyRecipients(checked: boolean){
-        this.shallApplyToAllCopyRecipients = checked;
-    }
-
-    confirmComment(){
-        if(this.shallApplyToAllMainRecipients){
-            this.selectedMainRecipients.forEach(item=>{
-                item.forwardingComment = this.comment;
+    
+    async send(){
+        this.selectedMainRecipients.forEach(recipient=>{
+            const emailsToRemove = [] as LetterOwnerEmail[];
+            for(let i = 0;i<recipient.emails.length; i++ ){
+                if(!recipient.emails[i].canBeUsedForSending)
+                    emailsToRemove.push(recipient.emails[i]);
+            }
+            emailsToRemove.forEach(removingEmail=>{
+                const index =  recipient.emails.indexOf(removingEmail);
+                recipient.emails.splice(index,1);
             });
-        }
-        if(this.shallApplyToAllCopyRecipients){
-             this.selectedCopyRecipients.forEach(item=>{
-                item.forwardingComment = this.comment;
-            });
-        }
-
-        let currentRecipientId = '';
-        if(this.recipientForComment)
-            currentRecipientId = this.recipientForComment.id;
-        let currentRecipient =  this.selectedMainRecipients.find(item=>item.id === currentRecipientId)
-        if(currentRecipient)
-        {
-            const index =  this.selectedMainRecipients.indexOf(currentRecipient);
-            this.selectedMainRecipients[index].forwardingComment = this.comment;
-        }else{
-            currentRecipient =  this.selectedCopyRecipients.find(item=>item.id === currentRecipientId)
-            if(currentRecipient)
-            {
-                const index =  this.selectedCopyRecipients.indexOf(currentRecipient);
-                this.selectedCopyRecipients[index].forwardingComment = this.comment;
-            }   
-        }
-        $("#comment-dimmer").dimmer("hide");
+            recipient.attachments.forEach(file=>{
+                file.content = util.base64ToArrayBuffer(file.content);
+            });   
+        });
+        this.selectedCopyRecipients.forEach(recipient=>{
+            const emailsToRemove = [] as LetterOwnerEmail[];
+            for(let i = 0;i<recipient.emails.length; i++ ){
+                if(!recipient.emails[i].canBeUsedForSending)
+                    emailsToRemove.push(recipient.emails[i]);
+            }
+            emailsToRemove.forEach(removingEmail=>{
+                const index =  recipient.emails.indexOf(removingEmail);
+                recipient.emails.splice(index,1);
+            });   
+        });
+        if(!this.letter)return;
+        await letterService.ForwardLetter(this.letter.letterPossessionId,this.selectedMainRecipients,this.selectedCopyRecipients)
     }
-    cancelComment(){
-         $("#comment-dimmer").dimmer("hide");
+
+    cancel(){
+        this.$emit("forward-canceled");
     }
 }
 </script>

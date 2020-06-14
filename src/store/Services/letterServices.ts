@@ -3,6 +3,7 @@ import { LetterTrail } from '@/store/models/Letter/LetterTrail';
 import { Letter } from '@/store/models/Letter/Letter';
 import LetterListerWithPaginationResult from '@/store/models/Letter/LetterListerWithPaginationResult';
 import store from '@/store';
+import { LetterOwnerWithSendingInformationAndAttachments } from '@/store/models/LetterOwner/LetterOwnerWithSendingInformationAndAttachments';
 
 export async function OpenLetter(letterPossessionId: string){
     const serverResult =  await api.batisAutomationApi.post("/Letters/OpenLetter",{letterPossessionId: letterPossessionId});
@@ -60,6 +61,16 @@ export async function GetOutgoingClosedLetters(from?: Date, to?: Date): Promise<
 export async function CloseLetter(letterPossessionId: string,comment: string, acrchiveFolderIds: string[]){
     try {
         const serverResult =  await api.batisAutomationApi.post("/letters/Close",{letterPossessionId: letterPossessionId, comment: comment, archiveFolderIds: acrchiveFolderIds});
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export async function ForwardLetter(letterPossessionId: string, mainRecipients: LetterOwnerWithSendingInformationAndAttachments[], copyRecipients: LetterOwnerWithSendingInformationAndAttachments[])
+{
+    alert(letterPossessionId + mainRecipients.length + copyRecipients.length);
+    try {
+        const serverResult =  await api.batisAutomationApi.post("/letters/Forward",{letterPossessionId: letterPossessionId, mainRecipients: mainRecipients, copyRecipients: copyRecipients});
     } catch (error) {
         console.log(error);
     }

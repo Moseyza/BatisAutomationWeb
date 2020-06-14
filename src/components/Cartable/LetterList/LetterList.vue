@@ -94,7 +94,7 @@ export default class LetterList extends Vue{
         const tempLetter: any = {};
         this.letters.forEach((item,i)=>{
             item.isSelected = false;
-            if(item.id === id){
+            if(item.letterPossessionId === id){
                 index = i;
                 Object.assign(tempLetter,item);
                 
@@ -102,7 +102,7 @@ export default class LetterList extends Vue{
         });
         tempLetter.isSelected = true;
         this.$set(this.letters,index,tempLetter);
-        const selectedLetter =  this.letters.find(item=>item.id === id);
+        const selectedLetter =  this.letters.find(item=>item.letterPossessionId === id);
         this.$emit("selected-letter-changed",selectedLetter);
         
         

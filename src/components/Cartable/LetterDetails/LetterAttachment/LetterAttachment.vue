@@ -20,7 +20,7 @@ import { converBase64toBlob, saveFile } from '@/util/utils';
         async downloadFile(){
             if(this.file === undefined)return;
             
-            if(this.file.id ===  '' || this.file.id === undefined){
+            if(this.file.id ==='' || this.file.id ===  '00000000-0000-0000-0000-000000000000' || this.file.id === undefined){
                 this.file.content =  this.file.content.substring(this.file.content.indexOf(',') + 1);
                 const blob =  converBase64toBlob(this.file.content||"",'');
                 saveFile(blob,this.file.extension);

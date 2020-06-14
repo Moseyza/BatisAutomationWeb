@@ -48,7 +48,15 @@ export function converBase64toBlob(content: string, contentType: string) {
     window.URL.revokeObjectURL(url);
 }
 
-export function ReadFileAndAddToRecipient(param: any)
-{
-    alert(param.name);
+export function base64ToArrayBuffer(base64: any) {
+  base64 = (base64 as string).substring((base64 as string).indexOf(',')+1);
+  return base64;
+  // alert(base64);
+  // const binaryString = window.atob(base64);
+  // const len = binaryString.length;
+  // const bytes = new Uint8Array(len);
+  // for (let i = 0; i < len; i++) {
+  //     bytes[i] = binaryString.charCodeAt(i);
+  // }
+  // return bytes.buffer;
 }

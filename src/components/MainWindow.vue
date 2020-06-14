@@ -15,7 +15,7 @@
                 >
                 </LetterDetails>
                 <FinalizeLetter v-if="leftSideMode=== 'finalize'" :letter="selectedLetter"  />
-                <ForwardLetter v-if="leftSideMode=== 'forward'" :letter="selectedLetter" />
+                <ForwardLetter v-if="leftSideMode=== 'forward'" @forward-canceled="onForwardCanceled" :letter="selectedLetter" />
             </div>
             
         </div>
@@ -61,6 +61,9 @@ export default class MainWindow extends Vue {
 
     onForwardLetter(){
         this.leftSideMode = 'forward';
+    }
+    onForwardCanceled(){
+        this.leftSideMode = 'details'
     }
 }
 </script>
