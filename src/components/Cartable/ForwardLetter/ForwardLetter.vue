@@ -2,7 +2,7 @@
     <div class="three-part-flexbox">
        <div class="flex-part-top">
             گیرنده اصلی:
-           <div id="main-recipient-dropdown" class="ui fluid search selection dropdown" style="direction:ltr">
+           <!-- <div id="main-recipient-dropdown" class="ui fluid search selection dropdown" style="direction:ltr">
             <input type="hidden" >
             <i class="icon-dropdownArrow" style="right: 0"></i>
             <div class="left menu">
@@ -13,14 +13,15 @@
                     </div>
                 </div>
             </div>
-           </div>
+           </div> -->
+           <RecipientLookup :recipients="recipients" @recipient-selected="selectMainRecipient($event)"/>
            <RecipientSelector :recipients="selectedMainRecipients" 
            @recipient-removed="onMainRecipientRemoved($event)"
            @paraph="onParaph($event)"
            />
 
             گیرنده رونوشت:
-           <div id="copy-recipient-dropdown" class="ui fluid search selection dropdown" style="direction:ltr">
+           <!-- <div id="copy-recipient-dropdown" class="ui fluid search selection dropdown" style="direction:ltr">
             <input type="hidden" >
             <i class="icon-dropdownArrow" style="right: 0"></i>
             <div class="left menu">
@@ -31,7 +32,8 @@
                     </div>
                 </div>
             </div>
-           </div>
+           </div> -->
+           <RecipientLookup :recipients="recipients" @recipient-selected="selectCopyRecipient($event)"/>
            <RecipientSelector :recipients="selectedCopyRecipients" 
            @recipient-removed="onCopyRecipientRemoved($event)"
            @paraph="onParaph($event)"
@@ -63,8 +65,9 @@ import ToggleSwitch from '@/components/UiComponents/ToggleSwitch.vue';
 import { LetterOwnerEmail } from '@/store/models/LetterOwner/LetterOwnerEmail';
 import { Letter } from '@/store/models/Letter/Letter';
 import * as util from '@/util/utils';
+import RecipientLookup from './RecipientLookup/RecipientLookup.vue';
 @Component({
-    components: {RecipientSelector, ToggleSwitch}
+    components: {RecipientSelector, ToggleSwitch, RecipientLookup}
 })
 export default class ForwardLetter extends Vue{
     recipients: LetterOwnerWithFaxAndEmails[] = [];
@@ -153,6 +156,7 @@ export default class ForwardLetter extends Vue{
         });
         if(!this.letter)return;
         await letterService.ForwardLetter(this.letter.letterPossessionId,this.selectedMainRecipients,this.selectedCopyRecipients)
+        this.$emit("forward-done");
     }
 
     cancel(){

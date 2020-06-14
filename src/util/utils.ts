@@ -60,3 +60,17 @@ export function base64ToArrayBuffer(base64: any) {
   // }
   // return bytes.buffer;
 }
+
+export function replaceChars(inputStr: string): string{
+        
+  inputStr = inputStr.replace(/ي/g, "ی");
+  inputStr = inputStr.replace(/ۍ/g, "ی");
+  inputStr = inputStr.replace(/ێ/g, "ی");
+  inputStr = inputStr.replace(/ۑ/g, "ی");
+  inputStr = inputStr.replace(/ې/g, "ی");
+  inputStr = inputStr.replace(/ك/g, "ک");
+  inputStr = inputStr.replace(/ګ/g, "ک");
+  inputStr = inputStr.replace(/ڬ/g, "ک");
+  inputStr = inputStr.replace(/ڇ/g, "چ");
+   return inputStr;
+}
