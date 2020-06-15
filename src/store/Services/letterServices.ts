@@ -4,6 +4,7 @@ import { Letter } from '@/store/models/Letter/Letter';
 import LetterListerWithPaginationResult from '@/store/models/Letter/LetterListerWithPaginationResult';
 import store from '@/store';
 import { LetterOwnerWithSendingInformationAndAttachments } from '@/store/models/LetterOwner/LetterOwnerWithSendingInformationAndAttachments';
+import SentLetterInformation from '@/store/models/Letter/SentLetterInformation';
 
 export async function OpenLetter(letterPossessionId: string){
     const serverResult =  await api.batisAutomationApi.post("/Letters/OpenLetter",{letterPossessionId: letterPossessionId});
@@ -66,12 +67,14 @@ export async function CloseLetter(letterPossessionId: string,comment: string, ac
     }
 }
 
-export async function ForwardLetter(letterPossessionId: string, mainRecipients: LetterOwnerWithSendingInformationAndAttachments[], copyRecipients: LetterOwnerWithSendingInformationAndAttachments[])
+export async function ForwardLetter(letterPossessionId: string, mainRecipients: LetterOwnerWithSendingInformationAndAttachments[], copyRecipients: LetterOwnerWithSendingInformationAndAttachments[]): Promise<SentLetterInformation>
 {
-    alert(letterPossessionId + mainRecipients.length + copyRecipients.length);
+   
     try {
         const serverResult =  await api.batisAutomationApi.post("/letters/Forward",{letterPossessionId: letterPossessionId, mainRecipients: mainRecipients, copyRecipients: copyRecipients});
+        return serverResult.data;
     } catch (error) {
         console.log(error);
+        return {} as SentLetterInformation
     }
 }

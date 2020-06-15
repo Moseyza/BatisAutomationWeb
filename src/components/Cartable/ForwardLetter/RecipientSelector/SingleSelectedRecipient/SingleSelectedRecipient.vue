@@ -145,9 +145,9 @@ export default class SingleSelectedRecipient extends Vue{
         justify-content: space-between;
         width: 350px;
         border-radius: 3px;
-        background-color: #3f3f3f;
         margin: 2px 2px;
         padding: 2px 5px;
+        background-color: #5f5f5f;
     }
 
     .active{

@@ -42,7 +42,7 @@ import { converBase64toBlob, saveFile } from '@/util/utils';
 
 <style lang="less" scoped>
     .single-attachment{
-        background-color: #494949;
+        background-color: #3f3f3f;
         padding: 3px;
         margin: 2px;
         border-radius: 3px;

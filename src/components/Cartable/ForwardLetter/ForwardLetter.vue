@@ -1,19 +1,12 @@
 <template>
     <div class="three-part-flexbox">
+       <MessageBox 
+       :isActive="shallShowMessageBox" 
+       :buttons="msgBoxBtns" 
+       :message="message" 
+       @button-clicked="onMessageBoxBtnClicked($event)"/>
        <div class="flex-part-top">
             گیرنده اصلی:
-           <!-- <div id="main-recipient-dropdown" class="ui fluid search selection dropdown" style="direction:ltr">
-            <input type="hidden" >
-            <i class="icon-dropdownArrow" style="right: 0"></i>
-            <div class="left menu">
-                <div class="item"  v-for="recipient in recipients" :key="recipient.id" >
-                    <div @click="selectMainRecipient(recipient)" class="recipient-item"> 
-                        <div style="flex:3;font-size:medium;text-align:right" >{{recipient.nameOnly}}</div>
-                        <div style="flex:1;font-size:small" >{{recipient.post}}</div>
-                    </div>
-                </div>
-            </div>
-           </div> -->
            <RecipientLookup :recipients="recipients" @recipient-selected="selectMainRecipient($event)"/>
            <RecipientSelector :recipients="selectedMainRecipients" 
            @recipient-removed="onMainRecipientRemoved($event)"
@@ -21,25 +14,27 @@
            />
 
             گیرنده رونوشت:
-           <!-- <div id="copy-recipient-dropdown" class="ui fluid search selection dropdown" style="direction:ltr">
-            <input type="hidden" >
-            <i class="icon-dropdownArrow" style="right: 0"></i>
-            <div class="left menu">
-                <div class="item"  v-for="recipient in recipients" :key="recipient.id" >
-                    <div @click="selectCopyRecipient(recipient)" class="recipient-item"> 
-                        <div style="flex:3;font-size:medium;text-align:right" >{{recipient.nameOnly}}</div>
-                        <div style="flex:1;font-size:small" >{{recipient.post}}</div>
-                    </div>
-                </div>
-            </div>
-           </div> -->
            <RecipientLookup :recipients="recipients" @recipient-selected="selectCopyRecipient($event)"/>
            <RecipientSelector :recipients="selectedCopyRecipients" 
            @recipient-removed="onCopyRecipientRemoved($event)"
            @paraph="onParaph($event)"
            />
        </div>
-       <div class="flex-part-middle" ></div>
+       <div class="flex-part-middle" >
+            <div v-if="attachments.length > 0">پیوست ها:</div> 
+            <div class="wrap-grid">
+                    <LetterAttachment
+                    v-for="part in attachments"
+                    :key="part.id"
+                    :file="part.file"
+                    >
+                    </LetterAttachment>
+            </div>
+            <div class="container3">
+                <div>{{letter.title}}</div>
+                <div>{{letter.abstract}}</div>
+            </div>
+       </div>
        <div class="flex-part-bottom" >
            <div style="display:flex">
                <div @click="cancel" class="action-icon bg1" style="flex:1;text-align:center"><i style="color:inherit" class="icon icon-x"></i></div>
@@ -66,15 +61,32 @@ import { LetterOwnerEmail } from '@/store/models/LetterOwner/LetterOwnerEmail';
 import { Letter } from '@/store/models/Letter/Letter';
 import * as util from '@/util/utils';
 import RecipientLookup from './RecipientLookup/RecipientLookup.vue';
+import Parts from '@/store/models/Letter/Parts';
+import LetterAttachment from '@/components/Cartable/LetterDetails/LetterAttachment/LetterAttachment.vue';
+import MessageBox from '@/components/UiComponents/MessageBox.vue';
 @Component({
-    components: {RecipientSelector, ToggleSwitch, RecipientLookup}
+    components: {RecipientSelector, ToggleSwitch, RecipientLookup, LetterAttachment,MessageBox}
 })
 export default class ForwardLetter extends Vue{
     recipients: LetterOwnerWithFaxAndEmails[] = [];
     selectedMainRecipients:  LetterOwnerWithSendingInformationAndAttachments [] = [];
     selectedCopyRecipients:  LetterOwnerWithSendingInformationAndAttachments [] = [];
     autoCompleteData: AutoCompleteData[] = [];
+    msgBoxBtns = 'ok';
+    message = '';
+    shallShowMessageBox = false;
+    isDone = false;
     @Prop() letter?: Letter;
+    get attachments(){
+        
+        const result: Parts[] = [];
+        if(this.letter === undefined)return result;
+        if(this.letter.parts === undefined || this.letter.parts === null)return result;
+        for(let i = 1;i<this.letter.parts.length;i++){
+            result.push(this.letter.parts[i]);
+        }
+        return result;
+    }
     async created(){
         const ownerId = store.state.ownerId;
         this.recipients =   await letterOwnerService.getOwnerRecipients(ownerId);
@@ -129,6 +141,11 @@ export default class ForwardLetter extends Vue{
     }
     
     async send(){
+        if(this.selectedMainRecipients.length === 0 && this.selectedCopyRecipients.length === 0){
+            this.message = 'هیچ گیرنده اصلی یا رونوشت انتخاب نشده است';
+            this.shallShowMessageBox = true;
+            return;
+        }
         this.selectedMainRecipients.forEach(recipient=>{
             const emailsToRemove = [] as LetterOwnerEmail[];
             for(let i = 0;i<recipient.emails.length; i++ ){
@@ -155,12 +172,24 @@ export default class ForwardLetter extends Vue{
             });   
         });
         if(!this.letter)return;
-        await letterService.ForwardLetter(this.letter.letterPossessionId,this.selectedMainRecipients,this.selectedCopyRecipients)
+        const result = await letterService.ForwardLetter(this.letter.letterPossessionId,this.selectedMainRecipients,this.selectedCopyRecipients)
+        console.log('result is');
+        console.log(result);
+        if(result != null){
+            this.message = "ارجاع انجام شد";
+            this.shallShowMessageBox = true;
+            this.isDone = true;
+        }
         this.$emit("forward-done");
     }
 
     cancel(){
         this.$emit("forward-canceled");
+    }
+    onMessageBoxBtnClicked(btn: string){
+        this.shallShowMessageBox = false;
+        if(this.isDone)
+            this.cancel();
     }
 }
 </script>
