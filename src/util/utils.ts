@@ -43,9 +43,20 @@ export function converBase64toBlob(content: string, contentType: string) {
     a.style.display = "none";
     const    url = window.URL.createObjectURL(data);
     a.href = url;
+    alert("asdlkjfalskdjf alsdkjf");
+    alert(url);
     a.download = fileName;
     a.click();
     window.URL.revokeObjectURL(url);
+}
+
+export function GetFileUrl(data: Blob, fileName: string)
+{
+  const a = document.createElement("a");
+  document.body.appendChild(a);
+  a.style.display = "none";
+  const    url = window.URL.createObjectURL(data);
+  return url;
 }
 
 export function base64ToArrayBuffer(base64: any) {

@@ -63,9 +63,12 @@
                     </div>
                 </div>
                 <div>
-                    <p>
-                        {{letter.abstract}}
-                    </p>
+                    <!-- <p> -->
+                        <!-- {{letter.abstract}} -->
+                        <div id="my-container" class="ng-scope pdfobject-container">
+                            <iframe :src="pdfSrc" type="application/pdf" width="100%" height="500px" style="overflow: auto;"></iframe>
+                        </div>
+                    <!-- </p> -->
                 </div>
             </div>
             </div>
@@ -91,6 +94,7 @@ import LetterTrailTree from './LetterTrail/LetterTrailTree.vue';
 import { LetterTrail } from '@/store/models/Letter/LetterTrail';
 import * as $ from 'jquery';
 import FinalizeLetter from './FinalizeLetter/FinalizeLetter.vue';
+import * as util from '@/util/utils.ts';
 @Component({
     name:"LetterDetails",
     components:{LetterAttachment, LetterTrailTree, FinalizeLetter}
@@ -98,10 +102,12 @@ import FinalizeLetter from './FinalizeLetter/FinalizeLetter.vue';
 export default class LetterDetails extends Vue {
 
     isReceived = true;
+    pdfSrc = {} as any;
     @Prop() letter?: Letter;
     @Watch("letter")
     onLetterChanged(newVal: Letter, oldVal: Letter){
         this.setIsReceived();
+        this.setPdfUrl();
     }
     created(){
         this.setIsReceived();
@@ -140,9 +146,17 @@ export default class LetterDetails extends Vue {
         const blob =  converBase64toBlob(file.content||"",'');
         saveFile(blob,file.extension);
     }
-    
-    mounted(){
+    async setPdfUrl(){
+         if(this.letter === undefined)return;
+        if(this.letter.parts === undefined || this.letter.parts === null)return;
+            const file = await fileService.getFile(this.letter.parts[0].file.id);
+            this.pdfSrc = "data:application/pdf;base64," + file.content;
+
+        
+    }
+    async mounted(){
         $("#options-dropdown").dropdown({action: 'hide',silent: true});
+        await this.setPdfUrl();
     }
 
     finalizeLetter(){
