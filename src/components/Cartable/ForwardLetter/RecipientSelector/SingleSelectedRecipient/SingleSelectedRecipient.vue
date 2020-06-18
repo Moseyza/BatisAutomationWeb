@@ -11,15 +11,17 @@
             </div>
         </div>
         <div class="item-block xxsmall-text">
+            
             هامش:   <input type="text" list="items"  v-model="recipient.forwardingComment" >
                     <datalist id="items">
                         <option v-for="item in autoCompleteData" :key="item.id" :value="item.name" />
                     </datalist> 
-                    <label v-if="!loadingFile" :for="fileInputId">
+                    <!-- <label v-if="!loadingFile" :for="fileInputId">
                         <i class="icon icon-paperclip action-icon"></i>
                         <input type="file" :id="fileInputId" style="display:none" >
-                    </label>
-                    <progress v-else :value="loadedPercent" max="100"></progress>
+                    </label> -->
+                    <FileSelector @file-changed="onFileSelectorChanged($event)"/>
+                    <progress v-if="loadingFile" :value="loadedPercent" max="100"></progress>
                     
         </div>
         <div class="item-block xxsmall-text" style="justify-content: flex-start;overflow-x: auto;" v-if="recipient.attachments.length > 0">
@@ -53,8 +55,9 @@ import File from '@/store/models/Letter/File';
 import LetterAttachment from '@/components/Cartable/LetterDetails/LetterAttachment/LetterAttachment.vue';
 import * as util from '@/util/utils.ts';
 import * as $ from 'jquery';
+import FileSelector from '@/components/UiComponents/FileSelector.vue';
 @Component({
-    components: { LetterAttachment }
+    components: { LetterAttachment, FileSelector }
 })
 export default class SingleSelectedRecipient extends Vue{
     isTelegramActive = false;
@@ -72,7 +75,8 @@ export default class SingleSelectedRecipient extends Vue{
     @Prop() recipient?: LetterOwnerWithSendingInformationAndAttachments;
     @Prop() autoCompleteData?: AutoCompleteData[];
     mounted(){
-        $('#'+this.fileInputId).change(this.onFileChanged.bind(this));
+
+        //$('#'+this.fileInputId).change(this.onFileChanged.bind(this));
     }
     remove(){
         if(this.recipient)
@@ -101,7 +105,27 @@ export default class SingleSelectedRecipient extends Vue{
         if(this.recipient)
             this.$emit("paraph",this.recipient.id);
     }
-  
+    onFileSelectorChanged(file: any){
+        const reader = new FileReader();
+        reader.addEventListener("progress",(evt)=>{
+            this.loadedPercent = (evt.loaded / evt.total) * 100;
+        });
+        reader.addEventListener("loadend",(x)=>{
+            const attachedFile = {} as File;
+            if(x.target && this.recipient)
+            {
+                attachedFile.id = '00000000-0000-0000-0000-000000000000';
+                attachedFile.extension = file.name;
+                attachedFile.content = (x.target as any).result;
+                this.recipient.attachments.push(attachedFile);
+            }
+            this.loadingFile = false;
+        });
+        
+        this.loadingFile = true;
+        reader.readAsDataURL(file);
+        
+    }
     onFileChanged(e: any){
         if(!this.recipient)return;
         const file = e.target.files[0];
