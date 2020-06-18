@@ -36,10 +36,16 @@
             </div>
        </div>
        <div class="flex-part-bottom" >
-           <div style="display:flex">
-               <div @click="cancel" class="action-icon bg1" style="flex:1;text-align:center"><i style="color:inherit" class="icon icon-x"></i></div>
-               <div @click="send" class="action-icon bg1" style="flex:1;text-align:center"><i style="color:inherit" class="icon icon-telegram"></i></div>
-            </div>
+           <div style="display:flex;flex-direction:column">
+               <div style="flex:1">
+
+               </div>
+               <div style="display:flex">
+                    <div @click="cancel" class="action-icon bg1" style="flex:1;text-align:center"><i style="color:inherit" class="icon icon-x"></i></div>
+                    <div @click="send" class="action-icon bg1" style="flex:1;text-align:center"><i style="color:inherit" class="icon icon-telegram"></i></div>
+               </div>
+           </div>
+           
         </div>
     </div>
    
