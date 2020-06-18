@@ -7,12 +7,12 @@
             </div>
             <div class="symmetric-grid">
                 <div style="flex:2">
-                    <div style="display:inline" class="letter-audience">
+                    <div style="display:inline;" class="letter-audience">
                         <div v-if="isSent == false">
                             {{letterData.sender.nameOnly}}
                         </div>
-                        <div v-if="isSent">
-                            <span v-for="receiver in letterData.recievers" :key="receiver.id" > {{receiver.nameOnly}} <br> </span>
+                        <div v-if="isSent" style="max-height:20px;overflow:auto">
+                            <span v-for="(receiver,index) in letterData.recievers" :key="index+receiver.id" > {{receiver.nameOnly}} <br> </span>
                         </div>
                     </div>
                 </div>
@@ -75,9 +75,11 @@ export default class SingleLetter extends Vue{
         if(this.letterData.isOpenned === false){
             api.OpenLetter(this.letterData.letterPossessionId);
         }
+        alert(this.letterData.sendTime);
         this.letterData.isOpenned = true;
         //alert(this.letterData.letterPossessionId);
         this.$emit("letterselected",this.letterData.letterPossessionId);
+        
     }
 
 }

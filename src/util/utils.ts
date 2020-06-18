@@ -43,8 +43,6 @@ export function converBase64toBlob(content: string, contentType: string) {
     a.style.display = "none";
     const    url = window.URL.createObjectURL(data);
     a.href = url;
-    alert("asdlkjfalskdjf alsdkjf");
-    alert(url);
     a.download = fileName;
     a.click();
     window.URL.revokeObjectURL(url);

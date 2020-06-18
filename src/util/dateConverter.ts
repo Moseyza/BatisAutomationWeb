@@ -86,6 +86,18 @@ export class DateConverter{
             result.minutes = parseInt(((elapsedTime % 3600000)/60000).toString());
             return result;
         }
+        if(dayDifference == 0 ){//isToday        
+            const result = new TodayResult();
+            result.hour = parseInt((elapsedTime/3600000).toString());
+            result.minute = parseInt(((elapsedTime % 3600000)/60000).toString());
+            return result;
+
+        }
+        if(dayDifference - 1 >=0){//isYesterday
+            const result = new YesterdayReslt();
+            //result.minute = 
+        }
             
     }
+
 }

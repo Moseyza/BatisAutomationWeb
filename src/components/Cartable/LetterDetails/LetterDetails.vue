@@ -27,12 +27,12 @@
             <div style="flex:6" class="flex-part-middle">
            
             <div class="container3">
-                <div class="symmetric-grid">
+                <div class="symmetric-grid" >
                     <h4 class="highlight" v-if="isReceived">{{letter.sender.nameOnly}}</h4>
-                    <div v-else>
-                        <div v-for="receiver in letter.recievers" :key="receiver.id"><h4 class="highlight">{{receiver.nameOnly}}</h4> <br/></div>
+                    <div v-else style="max-height: 20px; overflow: auto; flex:1">
+                        <div v-for="(receiver,index) in letter.recievers" :key="index"><h4 class="highlight">{{receiver.nameOnly}}</h4> <br/></div>
                     </div>
-                    <div>
+                    <div style="flex:1; text-align:end">
                         <i @click="downloadLetterPdf()" class="helper-icon-large icon-pdf"></i>
                     </div>
                 </div>
@@ -66,8 +66,12 @@
                     <!-- <p> -->
                         <!-- {{letter.abstract}} -->
                         <div id="my-container" class="ng-scope pdfobject-container">
-                            <iframe :src="pdfSrc" type="application/pdf" width="100%" height="500px" style="overflow: auto;"></iframe>
+                            <iframe :src="pdfSrc" type="application/pdf" width="100%" height="100%" style="overflow: auto;"></iframe>
                         </div>
+
+                        <!-- <object :data="pdfSrc" type="application/pdf" width="100%" >
+                            <p><b>Example fallback content</b>: This browser does not support PDFs. Please download the PDF to view it: <a href="/pdf/sample.pdf">Download PDF</a>.</p>
+                        </object> -->
                     <!-- </p> -->
                 </div>
             </div>
@@ -125,8 +129,8 @@ export default class LetterDetails extends Vue {
 
     get letterTime(){
         if(this.letter === undefined) return '';
-        const date = new Date( this.letter.sendTime);
-        date.setMinutes(date.getMinutes() - 270);
+        const date = new Date( this.letter.sendTime.substring(0,this.letter.sendTime.length -1));
+        //date.setMinutes(date.getMinutes() - 270);
         return (date).toLocaleTimeString();
     }
 
@@ -150,6 +154,9 @@ export default class LetterDetails extends Vue {
          if(this.letter === undefined)return;
         if(this.letter.parts === undefined || this.letter.parts === null)return;
             const file = await fileService.getFile(this.letter.parts[0].file.id);
+            // const blob =  converBase64toBlob(file.content,file.extension);
+            // this.pdfSrc = blob;
+            // console.log(blob);
             this.pdfSrc = "data:application/pdf;base64," + file.content;
 
         

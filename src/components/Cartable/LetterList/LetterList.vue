@@ -21,7 +21,7 @@
                 <div  id="letter-list">
                     <SingleLetter 
                     v-for="(letter,index) in filteredLetters"
-                    :key="letter.sendTime"
+                    :key="letter.letterPossessionId"
                     :index="index"
                     :letterData ="letter" @letterselected="onLetterSelected($event)"
                     ></SingleLetter>
