@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>test pdf</title>
+</head>
+<body>
+	<script type="text/javascript" src="jquery.js"></script>
+	<script type="text/javascript" src="persian-date.js"></script>
+	<div >
+    	<h1>this is a test for persian date</h1>
+	</div>
+	<script type="text/javascript">
+		$("document").ready(function(){
+			var pd1 = new persianDate(new Date('2020-06-25T13:15:42'));
+			var pd2 = new persianDate(new Date('2020-06-21T13:15:42'));
+			//alert(pd2.diff(pd1,'days'));
+			alert(parseInt(pd1.toLocale('en').format('HH')));
+		});
+
+		function isInSameWeek(pd1,pd2){
+			if(pd1.isSameDay(pd2)) return true;
+			//if(!pd1.isSameMonth(pd2))return false;
+			if(pd1.day() === pd2.day()) return false;
+			var p1 = null;
+			var p2 =null;
+			if(pd1.unix()>=pd2.unix()){
+				p1 = pd2;
+				p2 = pd1;
+			}
+			else{
+				p1 = pd1;
+				p2 = pd2;
+			}
+			if(!p1 || !p2 ) return;
+			if(p2.day() < p1.day())return false;
+			var dayDiff = p2.day() - p1.day();
+			var tempDate = p1.add('days',dayDiff);
+			if(tempDate.unix() === p2.unix()){
+				return true;
+			}
+			return false;
+		}
+	</script>
+</body>
+</html>

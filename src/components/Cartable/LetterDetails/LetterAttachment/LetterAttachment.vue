@@ -10,7 +10,7 @@
     import {Vue, Component, Prop, Watch} from 'vue-property-decorator';
     import File from '@/store/models/Letter/File';
     import * as api from '@/store/Services/fileService';
-import { converBase64toBlob, saveFile } from '@/util/utils';
+    import { converBase64toBlob, saveFile } from '@/util/utils';
     @Component
     export default class LetterAttachment extends Vue {
         @Prop() file?: File;

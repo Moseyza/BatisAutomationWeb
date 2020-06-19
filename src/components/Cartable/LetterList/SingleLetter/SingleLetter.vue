@@ -39,6 +39,7 @@ import {Vue, Prop, Component} from 'vue-property-decorator'
 import {Letter} from "@/store/models/Letter/Letter";
 import {getPersianDate} from "@/util/utils";
 import * as api from '@/store/Services/letterServices';
+import { DateBaseOnCurrentTimeConverter } from '@/util/dateConverter';
 
 
 @Component
@@ -66,7 +67,9 @@ export default class SingleLetter extends Vue{
 
     get sendTime(){
         if(this.letterData === undefined) return '';
-        return getPersianDate(this.letterData.sendTime,'MM/DD',false);
+        //return getPersianDate(this.letterData.sendTime,'MM/DD',false);
+        const dateConverter = new  DateBaseOnCurrentTimeConverter();
+        return dateConverter.getDateString(new Date(this.letterData.sendTime.substring(0,this.letterData.sendTime.length -1)),this.letterData.title)
     }
 
     select(){
