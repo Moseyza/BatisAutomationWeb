@@ -38,7 +38,7 @@ export default class FoldersTree extends Vue {
         receiveLetters.url = "ReceivedLetters"
         receiveLetters.isRoot = false;
         receiveLetters.children = [];
-        receiveLetters.iconClass = {'icon-inbox':true,'fixed-icon':true }
+        receiveLetters.iconClass = {'icon-outbox':true,'fixed-icon':true }
         const sentLetters = {} as FoldersTreeNodeData;
         sentLetters.name = 'نامه های ارسالی';
         sentLetters.url = "SentLetters"

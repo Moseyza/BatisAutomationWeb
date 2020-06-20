@@ -1,14 +1,14 @@
 <template>
     <!-- <ul> -->
         <div class="node">
-            <div id="node-title">
+            <div class="node-title">
                 <i class="node-icon" @click="toggle()" :class="{'icon-nodeClose':!isOpen , 'icon-nodeOpen':isOpen}" ></i>
                 <i style="flex:1" :class="data.iconClass"></i>
                 <h5 style="flex:5;text-align:right" v-if="data.isRoot">{{data.name}}</h5>
                 <router-link style="flex:5;cursor:pointer" v-else tag="div" :to="data.url" >{{data.name}}</router-link>
                 <input type="checkbox" v-if="isSelectable" v-model="isSelected"/>
             </div>
-            <div :class="{hide:!isOpen}">
+            <div class="node-child" :class="{hide:!isOpen}">
                 <FoldersTreeNode
                 v-for="child in data.children" 
                 :data="child"
@@ -74,7 +74,7 @@ export interface FoldersTreeNodeData {
         // margin: 0;
         // padding: 0;
     }
-    #node-title{
+    .node-title{
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -88,18 +88,61 @@ export interface FoldersTreeNodeData {
         margin-right: 10px;
         // margin-top: 5px;
     }
+    // .node-child::before{
+    //     content: '';
+    //     padding:10px 5px;
+    //     border-right: 1px dotted whitesmoke;
+    //     border-bottom: 1px dotted whitesmoke;
+    //     position: relative;
+    //     right: 3px;
+    //     top: 0;
+    //     width: 5px;
+    // }
+    .node::after{
+         content: '';
+        padding:5px 5px;
+        border-right: 1px solid gray;
+        //border-bottom: 1px dotted whitesmoke;
+        position: relative;
+        right: 5px;
+        top: 0;
+        width: 5px;
+    }
+    .node:last-child::after{
+         padding:10px 5px;
+        border-right: none;
+        //border-bottom: 1px dotted whitesmoke;
+        position: relative;
+        right: 5px;
+        top: 0;
+        width: 5px;
+    }
+    .node-child{
+        border-right: 1px solid gray;
+        margin-right: 5px;
+        margin-top: 0px;
+    }
+    .node-child:last-child{
+        //background-color: greenyellow;
+    }
     h5{
         margin: 0;
     }
     .node-icon{
         color: #939393;
         // color:#96171A;
-        font-size: x-small;
+        font-size: small;
         flex: 1;
         cursor: pointer;
     }
+    .node-icon:hover{
+        color: red;
+    }
     .hide{
         display: none;
+    }
+    .node-child .node{
+        margin-right: 30px;
     }
 
 </style>
