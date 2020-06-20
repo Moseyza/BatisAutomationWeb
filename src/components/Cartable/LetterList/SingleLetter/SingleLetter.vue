@@ -8,11 +8,11 @@
             <div class="symmetric-grid">
                 <div style="flex:2">
                     <div style="display:inline;" class="letter-audience">
-                        <div v-if="isSent == false">
+                        <div v-if="isSent == false" class="small-text">
                             {{letterData.sender.nameOnly}}
                         </div>
                         <div v-if="isSent" style="max-height:20px;overflow:auto">
-                            <span v-for="(receiver,index) in letterData.recievers" :key="index+receiver.id" > {{receiver.nameOnly}} <br> </span>
+                            <span class="small-text" v-for="(receiver,index) in letterData.recievers" :key="index+receiver.id" > {{receiver.nameOnly}} <br> </span>
                         </div>
                     </div>
                 </div>
@@ -21,7 +21,7 @@
                 </div>
             </div>
             <div class="symmetric-grid">
-                <div  class="letter-date" >
+                <div  class="letter-date small-text" >
                     {{sendTime}}
                 </div>
                 <div>
@@ -69,7 +69,7 @@ export default class SingleLetter extends Vue{
         if(this.letterData === undefined) return '';
         //return getPersianDate(this.letterData.sendTime,'MM/DD',false);
         const dateConverter = new  DateBaseOnCurrentTimeConverter();
-        return dateConverter.getDateString(new Date(this.letterData.sendTime.substring(0,this.letterData.sendTime.length -1)),this.letterData.title)
+        return dateConverter.getDateString(new Date(this.letterData.sendTime.substring(0,this.letterData.sendTime.length -1)))
     }
 
     select(){
@@ -78,7 +78,6 @@ export default class SingleLetter extends Vue{
         if(this.letterData.isOpenned === false){
             api.OpenLetter(this.letterData.letterPossessionId);
         }
-        alert(this.letterData.sendTime);
         this.letterData.isOpenned = true;
         //alert(this.letterData.letterPossessionId);
         this.$emit("letterselected",this.letterData.letterPossessionId);
@@ -121,12 +120,12 @@ export default class SingleLetter extends Vue{
     }
     .letter-audience{
         color: @color-primary;
-        font-size: 10pt;
+        //font-size: 10pt;
 
     }
     .letter-date{
         color: @color-icon;
-        font-size: 12pt;
+        //font-size: 12pt;
 
     }
     table{

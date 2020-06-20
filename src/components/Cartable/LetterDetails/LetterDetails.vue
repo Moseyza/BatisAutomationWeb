@@ -53,7 +53,7 @@
                     </LetterAttachment>
                 </div>
             </div>
-            <div>
+            <div style="height: 100%">
                 <div v-if="letter.comment !==''">
                     <div style="margin: 10px 0">هامش: {{letter.comment}}</div>
                     <div class="symmetric-grid" style="padding:20px">
@@ -62,10 +62,10 @@
                         <div style="flex:1"></div>
                     </div>
                 </div>
-                <div>
+                <div style="display:flex; height:100%">
                     <!-- <p> -->
                         <!-- {{letter.abstract}} -->
-                        <div id="my-container" class="ng-scope pdfobject-container">
+                        <div style="padding:5px;flex:1" class="ng-scope pdfobject-container">
                             <iframe :src="pdfSrc" type="application/pdf" width="100%" height="100%" style="overflow: auto;"></iframe>
                         </div>
 
