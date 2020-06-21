@@ -1,5 +1,5 @@
 <template >
-    <div id="folders-container" class="container2">
+    <div id="folders-container"  class="container2">
         <FoldersTreeNode
         v-for="folder in folders"
         :data="folder"
@@ -132,6 +132,7 @@ export default class FoldersTree extends Vue {
 
     #folders-container{
         height: 100%;
+        overflow: auto;
     }
     
 </style>

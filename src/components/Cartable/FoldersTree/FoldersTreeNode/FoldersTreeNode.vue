@@ -2,10 +2,11 @@
     <!-- <ul> -->
         <div class="node">
             <div class="node-title">
-                <i class="node-icon" @click="toggle()" :class="{'icon-nodeClose':!isOpen , 'icon-nodeOpen':isOpen}" ></i>
-                <i style="flex:1" :class="data.iconClass"></i>
-                <h5 style="flex:5;text-align:right" v-if="data.isRoot">{{data.name}}</h5>
-                <router-link style="flex:5;cursor:pointer" v-else tag="div" :to="data.url" >{{data.name}}</router-link>
+                <div class="leaf-node" v-if="data.children.length == 0" ></div>
+                <i v-if="data.children.length >0" class="node-icon" @click="toggle()" :class="{'icon-nodeClose':!isOpen , 'icon-nodeOpen':isOpen}" ></i>
+                <i style="flex:1;padding-top:5px" :class="data.iconClass"></i>
+                <h5 style="flex:5;text-align:right;padding-top:10px" v-if="data.isRoot">{{data.name}}</h5>
+                <router-link style="flex:5;cursor:pointer;padding-top:10px" v-else tag="div" :to="data.url" >{{data.name}}</router-link>
                 <input type="checkbox" v-if="isSelectable" v-model="isSelected"/>
             </div>
             <div class="node-child" :class="{hide:!isOpen}">
@@ -122,8 +123,26 @@ export interface FoldersTreeNodeData {
         margin-right: 5px;
         margin-top: 0px;
     }
-    .node-child:last-child{
-        //background-color: greenyellow;
+    
+    #folders-container > .node:last-child > .node-child{
+        border-right: none;
+    }
+    .node-child .node:last-child > .node-child{
+        border-right: none;
+    }
+    .leaf-node::before{
+        content: '';
+        display: inline;
+        padding-top: 3px;
+        padding-right: 10px;
+        position: relative;
+        // width: 3px;
+        // height: 5px;
+        border-right: 1px solid gray;
+        border-bottom: 1px solid gray;
+        right: 5px;
+        top: 0;
+        margin-left: 10px;
     }
     h5{
         margin: 0;
@@ -136,7 +155,7 @@ export interface FoldersTreeNodeData {
         cursor: pointer;
     }
     .node-icon:hover{
-        color: red;
+        color: #ff6b6b;
     }
     .hide{
         display: none;

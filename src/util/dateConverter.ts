@@ -202,9 +202,6 @@ export class DateBaseOnCurrentTimeConverter{
     {
         const dateConverter = new DateConverter();
         const result =   dateConverter.convertToString(d, new Date());
-        // console.log(title);
-        // console.log(result);
-        // console.log("***************");
         if(result)
         return result.toString();
         return '';

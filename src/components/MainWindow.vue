@@ -2,7 +2,7 @@
     <div class="three-part-flexbox" id="main-container">
         <CartableTitle @on-letter-owner-set="onLetterOwnerSet" class="flex-part-top" />
         <div class="container3 flex-part-middle" id="child-container"  style="flex: 18 1 0%;overflow: hidden;">
-            <div style="flex:2;overflow:auto">
+            <div style="flex:2;">
                      <FoldersTree :letterOwnerId="letterOwnerId"></FoldersTree>
             </div>
             <div class="conatiner2" style="flex:3">
