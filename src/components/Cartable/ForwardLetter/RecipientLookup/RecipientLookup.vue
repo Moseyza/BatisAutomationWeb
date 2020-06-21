@@ -1,6 +1,6 @@
 <template>
         <div id="recipient-dropdown"  class="ui icon top left dropdown recipients-dropdown">
-            <div  class="bg1 fc1 symmetric-grid">
+            <div style="border-radius:5px" class="bg1 fc1 symmetric-grid">
                 <div  style="flex:1">
                     <input   type="text"  v-model="searchText">
                 </div>

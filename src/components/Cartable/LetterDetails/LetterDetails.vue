@@ -78,9 +78,9 @@
             </div>
         <div  style="flex:.5 1 0;display:flex;flex-direction:column;align-items:strech" class="flex-part-bottom">
             <div style="flex:1; display:flex;justify-content:space-around" class="container5">
-                <div style="flex:1;text-align: center;"><i class="icon-replay action-icon"></i></div>
-                <div style="flex:1;text-align: center;"><i class="icon-replayAll  action-icon"></i></div>
-                <div style="flex:1;text-align: center;" @click="forwardLetter()" ><i class="icon-forward action-icon"></i></div>
+                <div style="flex:1;text-align: center;" class="action-icon "><i class=" icon-replay xlarg-text"></i></div>
+                <div style="flex:1;text-align: center;" class="action-icon"><i class=" icon-replayAll xlarg-text"></i></div>
+                <div style="flex:1;text-align: center;" @click="forwardLetter()"  class=" action-icon"><i class=" icon-forward xlarg-text"></i></div>
             </div>
         </div>
     </div>

@@ -2,6 +2,7 @@ import * as api from '@/store/api';
 import { OwnerFolder } from '@/store/models/LetterOwner/OwnerFolder';
 import { LetterOwner } from '@/store/models/LetterOwner/LetterOwner';
 import { LetterOwnerWithFaxAndEmails } from '@/store/models/LetterOwner/LetterOwnerWithFaxAndEmails';
+import { LetterOwnerWithSendingInformationAndAttachments } from '../models/LetterOwner/LetterOwnerWithSendingInformationAndAttachments';
 
 export async function getArchiveFolders(ownerId: string): Promise<OwnerFolder[]>{
     try {
@@ -23,5 +24,23 @@ export async function getOwnerRecipients(ownerId: string): Promise<LetterOwnerWi
         console.log(error);
         return {} as LetterOwnerWithFaxAndEmails[];    
     }
+}
+
+export function getLetterOwnerWithSendingInfo(recipient: LetterOwnerWithFaxAndEmails): LetterOwnerWithSendingInformationAndAttachments{
+    const result = {} as LetterOwnerWithSendingInformationAndAttachments;
+    result.id = recipient.id;
+    result.name = recipient.name;
+    result.nameOnly = recipient.nameOnly;
+    result.post = recipient.post;
+    result.ownerType = recipient.ownerType;
+    result.emails = [];
+    if(recipient.emails)
+        recipient.emails.forEach(email=>{
+            result.emails.push(email);
+        });
+    result.shallReceiveSms = false;
+    result.shallReceiveMessageViaMessagingApp = false;
+    result.attachments = [];
+    return result;
 }
 

@@ -3,7 +3,17 @@
         <CartableTitle @on-letter-owner-set="onLetterOwnerSet" class="flex-part-top" />
         <div class="container3 flex-part-middle" id="child-container"  style="flex: 18 1 0%;overflow: hidden;">
             <div style="flex:2;">
-                     <FoldersTree :letterOwnerId="letterOwnerId"></FoldersTree>
+                    <div class="three-part-flexbox">
+                        <div class="flex-part-top" style="flex: 0.5 0 0;display:flex;">
+                                <QuickAccess  @fast-send-clicked="onFastSendBtnClick()"/>
+                        </div>
+                        <div class="flex-part-middle">
+                            <FoldersTree :letterOwnerId="letterOwnerId"></FoldersTree>
+                        </div>
+                        <div class="flex-part-bottom" style="flex: 0.5 0 0;"></div>
+                        
+                    </div>
+                     
             </div>
             <div class="conatiner2" style="flex:3">
                 <router-view @selected-letter-changed="onSelectdLetterChanged($event)"></router-view>
@@ -16,6 +26,7 @@
                 </LetterDetails>
                 <FinalizeLetter v-if="leftSideMode=== 'finalize'" :letter="selectedLetter"  />
                 <ForwardLetter v-if="leftSideMode=== 'forward'" @forward-canceled="onForwardCanceled" :letter="selectedLetter" />
+                <FastSend v-if="leftSideMode=== 'fastSend'"/>
             </div>
             
         </div>
@@ -35,8 +46,10 @@ import LetterDetails from '@/components/Cartable/LetterDetails/LetterDetails.vue
 import FinalizeLetter from '@/components/Cartable/LetterDetails/FinalizeLetter/FinalizeLetter.vue';
 import { Letter } from '@/store/models/Letter/Letter';
 import ForwardLetter from '@/components/Cartable/ForwardLetter/ForwardLetter.vue';
+import QuickAccess from '@/components/Cartable/QuickAccess/QuickAccess.vue';
+import FastSend from '@/components/Cartable/FastSend/FastSend.vue';
 @Component({
-    components: { FoldersTree, LetterDetails, CartableTitle,FinalizeLetter, ForwardLetter}
+    components: { FoldersTree, LetterDetails, CartableTitle,FinalizeLetter, ForwardLetter, QuickAccess, FastSend}
 })
 export default class MainWindow extends Vue {
     selectedLetter?: Letter = {} as Letter;
@@ -64,6 +77,9 @@ export default class MainWindow extends Vue {
     }
     onForwardCanceled(){
         this.leftSideMode = 'details'
+    }
+    onFastSendBtnClick(){
+        this.leftSideMode = 'fastSend';
     }
 }
 </script>

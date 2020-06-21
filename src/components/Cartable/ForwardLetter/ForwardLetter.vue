@@ -10,14 +10,12 @@
            <RecipientLookup :recipients="recipients" @recipient-selected="selectMainRecipient($event)"/>
            <RecipientSelector :recipients="selectedMainRecipients" 
            @recipient-removed="onMainRecipientRemoved($event)"
-           @paraph="onParaph($event)"
            />
 
             گیرنده رونوشت:
            <RecipientLookup :recipients="recipients" @recipient-selected="selectCopyRecipient($event)"/>
            <RecipientSelector :recipients="selectedCopyRecipients" 
            @recipient-removed="onCopyRecipientRemoved($event)"
-           @paraph="onParaph($event)"
            />
        </div>
        <div class="flex-part-middle" >
@@ -92,34 +90,18 @@ export default class ForwardLetter extends Vue{
         const ownerId = store.state.ownerId;
         this.recipients =   await letterOwnerService.getOwnerRecipients(ownerId);
     }
-    async mounted(){
-        $('#main-recipient-dropdown').dropdown({action:'hide',silent: true ,message: {noResults : 'یافت نشد'}});
-        $('#copy-recipient-dropdown').dropdown({action:'hide',silent: true ,message: {noResults : 'یافت نشد'}});
+    // async mounted(){
+    //     $('#main-recipient-dropdown').dropdown({action:'hide',silent: true ,message: {noResults : 'یافت نشد'}});
+    //     $('#copy-recipient-dropdown').dropdown({action:'hide',silent: true ,message: {noResults : 'یافت نشد'}});
        
-    }
-    getLetterOwnerWithSendingInfo(recipient: LetterOwnerWithFaxAndEmails): LetterOwnerWithSendingInformationAndAttachments{
-        const result = {} as LetterOwnerWithSendingInformationAndAttachments;
-        result.id = recipient.id;
-        result.name = recipient.name;
-        result.nameOnly = recipient.nameOnly;
-        result.post = recipient.post;
-        result.ownerType = recipient.ownerType;
-        result.emails = [];
-        if(recipient.emails)
-            recipient.emails.forEach(email=>{
-                result.emails.push(email);
-            });
-        result.shallReceiveSms = false;
-        result.shallReceiveMessageViaMessagingApp = false;
-        result.attachments = [];
-        return result;
-    }
+    // }
+    
     selectMainRecipient(recipient: LetterOwnerWithFaxAndEmails){
         let addedItem =  this.selectedMainRecipients.find(item=>item.id === recipient.id);
         if(!addedItem) 
             addedItem = this.selectedCopyRecipients.find(item=>item.id === recipient.id);
         if(!addedItem)
-            this.selectedMainRecipients.push(this.getLetterOwnerWithSendingInfo(recipient));
+            this.selectedMainRecipients.push(letterOwnerService.getLetterOwnerWithSendingInfo(recipient));
     }
     onMainRecipientRemoved(id: string){
         const removedItem =  this.selectedMainRecipients.find(item=>item.id === id);
@@ -132,7 +114,7 @@ export default class ForwardLetter extends Vue{
         if(!addedItem) 
             addedItem = this.selectedMainRecipients.find(item=>item.id === recipient.id);
         if(!addedItem)
-            this.selectedCopyRecipients.push(this.getLetterOwnerWithSendingInfo(recipient));
+            this.selectedCopyRecipients.push(letterOwnerService.getLetterOwnerWithSendingInfo(recipient));
     }
     onCopyRecipientRemoved(id: string){
         const removedItem =  this.selectedCopyRecipients.find(item=>item.id === id);
