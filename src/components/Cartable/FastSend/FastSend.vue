@@ -1,7 +1,8 @@
 <template>
-    <div class="single-column">
-        <!-- <button @click="test()">test</button> -->
-        <div>
+    <div class="three-part-flexbox">
+        <div class="flex-part-top" style="flex:0.01"></div>
+        <div class="flex-part-middle" style="flex:7">
+            <div>
             <div class="symmetric-grid" style="margin-bottom: 5px">
                 <div style="flex:1; margin-left:5px;">
                     گیرنده پیش نویس:  
@@ -37,9 +38,17 @@
                     <input type="text"  class="fc1" style="width:100%;background-color:transparent;border:none">
                 </div>
             </div>
+            </div>
+            <div class="flex-part-bottom container chamfer fc1" style="min-height: 150px;margin-left:0;display:flex;flex-direction:column">
+                <div>
+                    متن نامه:
+                </div>
+                <div>
+                    <textarea cols="30" rows="10"  class="fc1 bg1"   style="resize:vertical;width:100%;flex:1;padding:5px;" ></textarea>
+                </div>
+            </div>
         </div>
-        <div class="container1 chamfer" style="margin-left:0">
-
+        <div class="flex-part-bottom container1" style="flex:0.5; margin-left:0">
         </div>
     </div>
 </template>
