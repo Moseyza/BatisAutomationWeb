@@ -1,41 +1,44 @@
 <template>
-    <div>
-        <div class="symmetric-grid" style="margin-bottom: 5px">
-            <div style="flex:1; margin-left:5px;">
-                گیرنده پیش نویس:  
+    <div class="single-column">
+        <!-- <button @click="test()">test</button> -->
+        <div>
+            <div class="symmetric-grid" style="margin-bottom: 5px">
+                <div style="flex:1; margin-left:5px;">
+                    گیرنده پیش نویس:  
+                </div>
+                <div style="flex:5">
+                    <RecipientLookup   :recipients="recipients" @recipient-selected="selectRecipient($event, 'draft')"   />    
+                </div>
             </div>
-            <div style="flex:5">
-                <RecipientLookup  :recipients="recipients" @recipient-selected="selectRecipient($event, 'draft')"   />    
+            <FastSendRecipientSelector  :autoCompleteDataType="'draft'" :recipients="selectedDraftRecipients" @recipient-removed="onRecipientRemoved($event,'draft')"/>
+            <div class="symmetric-grid" style="margin-bottom: 5px">
+                <div style="flex:1;margin-left:5px">
+                    گیرنده اصلی:  
+                </div>
+                <div style="flex:5">
+                    <RecipientLookup  :recipients="recipients" @recipient-selected="selectRecipient($event,'main')"   />    
+                </div>
+            </div>
+            <FastSendRecipientSelector :autoCompleteDataType="'all'" :recipients="selectedMainRecipients" @recipient-removed="onRecipientRemoved($event,'main')"/>
+            <div class="symmetric-grid" style="margin-bottom: 5px">
+                <div style="flex:1;margin-left:5px">
+                    گیرنده رونوشت:  
+                </div>
+                <div style="flex:5">
+                    <RecipientLookup   :recipients="recipients" @recipient-selected="selectRecipient($event,'copy')"   />    
+                </div>
+            </div>
+            <FastSendRecipientSelector :autoCompleteDataType="'copy'"  :recipients="selectedCopyRecipients" @recipient-removed="onRecipientRemoved($event,'copy')"/>
+            <div class="symmetric-grid" style="margin-bottom: 5px">
+                <div style="flex:1;margin-left:5px">
+                    عنوان:
+                </div>
+                <div style="flex:5; width:100%; padding: 5px; margin-right:2px;border-radius:5px" class="bg1" >
+                    <input type="text"  class="fc1" style="width:100%;background-color:transparent;border:none">
+                </div>
             </div>
         </div>
-        <RecipientSelector  :recipients="selectedDraftRecipients" @recipient-removed="onRecipientRemoved($event,'draft')"/>
-        <div class="symmetric-grid" style="margin-bottom: 5px">
-            <div style="flex:1;margin-left:5px">
-                گیرنده اصلی:  
-            </div>
-            <div style="flex:5">
-                <RecipientLookup  :recipients="recipients" @recipient-selected="selectRecipient($event,'main')"   />    
-            </div>
-        </div>
-        <RecipientSelector  :recipients="selectedMainRecipients" @recipient-removed="onRecipientRemoved($event,'main')"/>
-        <div class="symmetric-grid" style="margin-bottom: 5px">
-            <div style="flex:1;margin-left:5px">
-                گیرنده رونوشت:  
-            </div>
-            <div style="flex:5">
-                <RecipientLookup  :recipients="recipients" @recipient-selected="selectRecipient($event,'copy')"   />    
-            </div>
-        </div>
-        <RecipientSelector  :recipients="selectedCopyRecipients" @recipient-removed="onRecipientRemoved($event,'copy')"/>
-        <div class="symmetric-grid" style="margin-bottom: 5px">
-            <div style="flex:1;margin-left:5px">
-                عنوان:
-            </div>
-            <div style="flex:5; width:100%; padding: 5px; margin-right:2px;border-radius:5px" class="bg1" >
-                <input type="text"  class="fc1" style="width:100%;background-color:transparent;border:none">
-            </div>
-        </div>
-        <div class="container1" style="margin-left:0;border-radius:5px">
+        <div class="container1 chamfer" style="margin-left:0">
 
         </div>
     </div>
@@ -44,19 +47,20 @@
 <script lang="ts">
 import {Vue, Component, Prop} from 'vue-property-decorator';
 import RecipientLookup from '@/components/Cartable/ForwardLetter/RecipientLookup/RecipientLookup.vue';
-import RecipientSelector from '@/components/Cartable/ForwardLetter/RecipientSelector/RecipientSelector.vue';
+import FastSendRecipientSelector from '@/components/Cartable/FastSend/FastSendRecipientSelector/FastSendRecipientSelector.vue';
 import { LetterOwnerWithFaxAndEmails } from '@/store/models/LetterOwner/LetterOwnerWithFaxAndEmails';
-import { LetterOwnerWithSendingInformationAndAttachments } from '@/store/models/LetterOwner/LetterOwnerWithSendingInformationAndAttachments';
+
 import * as letterOwnerService from '@/store/Services/letterOwnerService';
 import store from '@/store';
+import { LetterOwnerForSendingFaxAndEmailAndSms } from '../../../store/models/LetterOwner/LetterOwnerForSendingFaxAndEmailAndSms';
 @Component({
-    components:{RecipientLookup, RecipientSelector}
+    components:{RecipientLookup, FastSendRecipientSelector}
 })
 export default class FastSent extends Vue{
     recipients: LetterOwnerWithFaxAndEmails[] = [];
-    selectedMainRecipients:  LetterOwnerWithSendingInformationAndAttachments [] = [];
-    selectedDraftRecipients:  LetterOwnerWithSendingInformationAndAttachments [] = [];
-    selectedCopyRecipients:  LetterOwnerWithSendingInformationAndAttachments [] = [];
+    selectedMainRecipients:  LetterOwnerForSendingFaxAndEmailAndSms [] = [];
+    selectedDraftRecipients:  LetterOwnerForSendingFaxAndEmailAndSms [] = [];
+    selectedCopyRecipients:  LetterOwnerForSendingFaxAndEmailAndSms [] = [];
 
     async created(){
         const ownerId = store.state.ownerId;
@@ -70,13 +74,13 @@ export default class FastSent extends Vue{
             addedItem = this.selectedDraftRecipients.find(item=>item.id === recipient.id);
         if(!addedItem){
             if(listName === 'main'){
-                this.selectedMainRecipients.push(letterOwnerService.getLetterOwnerWithSendingInfo(recipient));
+                this.selectedMainRecipients.push(letterOwnerService.getLetterOwnerForSendingFaxAndEmailAndSms(recipient));
             }
             else if(listName === 'copy'){
-                this.selectedCopyRecipients.push(letterOwnerService.getLetterOwnerWithSendingInfo(recipient));
+                this.selectedCopyRecipients.push(letterOwnerService.getLetterOwnerForSendingFaxAndEmailAndSms(recipient));
             }
             else if(listName === 'draft'){
-                this.selectedDraftRecipients.push(letterOwnerService.getLetterOwnerWithSendingInfo(recipient));
+                this.selectedDraftRecipients.push(letterOwnerService.getLetterOwnerForSendingFaxAndEmailAndSms(recipient));
             }
             
         }
@@ -84,7 +88,7 @@ export default class FastSent extends Vue{
     }
     onRecipientRemoved(id: string, listName: string){
 
-        let list = [] as LetterOwnerWithSendingInformationAndAttachments[];
+        let list = [] as LetterOwnerForSendingFaxAndEmailAndSms[];
         if(listName == 'main'){
             list = this.selectedMainRecipients;
         }
@@ -98,6 +102,9 @@ export default class FastSent extends Vue{
         if(!removedItem)return;
         const index =  list.indexOf(removedItem);
         list.splice(index,1);        
+    }
+    test(){
+        console.log(this.selectedDraftRecipients);
     }
     }
 

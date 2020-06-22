@@ -21,3 +21,25 @@ export async function getForwardingAutoCompleteData(): Promise<AutoCompleteData[
         return {} as AutoCompleteData[];    
     }
 }
+
+export async function getSendCopyAutoCompleteData(): Promise<AutoCompleteData[]>{
+    try {
+        const serverResult =  await api.batisAutomationApi.post("/AutoCompleteData/SendCopy");
+        return serverResult.data as AutoCompleteData[];
+    } 
+    catch (error) {
+        console.log(error);
+        return {} as AutoCompleteData[];    
+    }
+}
+
+export  async function getSendDraftAutoCompleteData(): Promise<AutoCompleteData[]>{
+    try {
+        const serverResult =   await api.batisAutomationApi.post("/AutoCompleteData/SendDraft");
+        return serverResult.data as AutoCompleteData[];
+    } 
+    catch (error) {
+        console.log(error);
+        return {} as AutoCompleteData[];    
+    }
+}

@@ -8,13 +8,13 @@
        <div class="flex-part-top">
             گیرنده اصلی:
            <RecipientLookup :recipients="recipients" @recipient-selected="selectMainRecipient($event)"/>
-           <RecipientSelector :recipients="selectedMainRecipients" 
+           <RecipientSelector :autoCompleteDataType="'all'" :recipients="selectedMainRecipients" 
            @recipient-removed="onMainRecipientRemoved($event)"
            />
 
             گیرنده رونوشت:
            <RecipientLookup :recipients="recipients" @recipient-selected="selectCopyRecipient($event)"/>
-           <RecipientSelector :recipients="selectedCopyRecipients" 
+           <RecipientSelector :autoCompleteDataType="'copy'" :recipients="selectedCopyRecipients" 
            @recipient-removed="onCopyRecipientRemoved($event)"
            />
        </div>
@@ -28,7 +28,7 @@
                     >
                     </LetterAttachment>
             </div>
-            <div class="container3">
+            <div class="container3 chamfer">
                 <div>{{letter.title}}</div>
                 <div>{{letter.abstract}}</div>
             </div>

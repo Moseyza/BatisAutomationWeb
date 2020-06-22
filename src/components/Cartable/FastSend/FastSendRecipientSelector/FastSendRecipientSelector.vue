@@ -1,11 +1,10 @@
 <template>
     <div id="selection-area">
-        <SingleSelectedRecipient
+        <FastSendSelectedRecipient
         v-for="recipient in recipients"
         :key="recipient.id"
         :recipient="recipient"
         @recipient-removed="onRecipientRemoved($event)"
-        @paraph="onParaph($event)"
         :autoCompleteDataType="autoCompleteDataType"
         />
     </div>
@@ -13,20 +12,20 @@
 
 <script lang="ts">
 import {Vue, Component, Prop} from 'vue-property-decorator';
-import SingleSelectedRecipient from './SingleSelectedRecipient/SingleSelectedRecipient.vue';
-import { LetterOwnerWithSendingInformationAndAttachments } from '@/store/models/LetterOwner/LetterOwnerWithSendingInformationAndAttachments';
 import { AutoCompleteData } from '@/store/models/Letter/AutoCompleteData';
+import FastSendSelectedRecipient from './FastSendSelectedRecipient/FastSendSelectedRecipient.vue';
+import { LetterOwnerForSendingFaxAndEmailAndSms } from '../../../../store/models/LetterOwner/LetterOwnerForSendingFaxAndEmailAndSms';
 
-@Component({components: {SingleSelectedRecipient}})
-export default class RecipientSelector extends Vue{
-    @Prop() recipients?: LetterOwnerWithSendingInformationAndAttachments;
+@Component({
+    name:"FastSendRecipientSelector",
+    components: {FastSendSelectedRecipient}
+})
+export default class FastSendRecipientSelector extends Vue{
+    @Prop() recipients?: LetterOwnerForSendingFaxAndEmailAndSms;
     @Prop() autoCompleteDataType?: string;
     autoCompleteData: AutoCompleteData[] = [];
     onRecipientRemoved(id: string){
         this.$emit("recipient-removed",id);
-    }
-    onParaph(recipientId: string){
-        this.$emit('paraph',recipientId);
     }
     
   

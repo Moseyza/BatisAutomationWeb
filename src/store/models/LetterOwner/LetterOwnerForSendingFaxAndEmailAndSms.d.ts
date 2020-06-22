@@ -3,12 +3,12 @@ import { CompanyLetterOwnerPhoneNumber } from "@/store/models/LetterOwner/Compan
 import { LetterOwner } from "@/store/models/LetterOwner/LetterOwner";
 
 export class LetterOwnerForSendingFaxAndEmailAndSms extends LetterOwner {
-  childMainReceivers?: (LetterOwnerForSendingFaxAndEmailAndSms | null)[] | null;
-  childCopyReceivers?: (LetterOwnerForSendingFaxAndEmailAndSms | null)[] | null;
-  childDraftReceivers?: (LetterOwnerForSendingFaxAndEmailAndSms | null)[] | null;
+  childMainReceivers?: LetterOwnerForSendingFaxAndEmailAndSms[];
+  childCopyReceivers?: LetterOwnerForSendingFaxAndEmailAndSms[];
+  childDraftReceivers?: LetterOwnerForSendingFaxAndEmailAndSms[];
   shallSendSms: boolean;
   trySendToRandomEmail: boolean;
-  emails?: (LetterOwnerEmail | null)[] | null;
+  emails?: LetterOwnerEmail[];
   trySendToRandomFax: boolean;
   faxes?: (CompanyLetterOwnerPhoneNumber | null)[] | null;
   parentRemoteLetterPossessionId: string;

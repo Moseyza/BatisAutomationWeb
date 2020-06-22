@@ -12,8 +12,8 @@
         </div>
         <div class="item-block xxsmall-text">
             
-            هامش:   <input type="text" list="items"  v-model="recipient.forwardingComment" >
-                    <datalist id="items">
+            هامش:   <input type="text" :list="dataListId"  v-model="recipient.forwardingComment" >
+                    <datalist :id="dataListId">
                         <option v-for="item in autoCompleteData" :key="item.id" :value="item.name" />
                     </datalist> 
                     <!-- <label v-if="!loadingFile" :for="fileInputId">
@@ -56,6 +56,7 @@ import LetterAttachment from '@/components/Cartable/LetterDetails/LetterAttachme
 import * as util from '@/util/utils.ts';
 import * as $ from 'jquery';
 import FileSelector from '@/components/UiComponents/FileSelector.vue';
+import * as autoCompleteDataService from '@/store/Services/autoCompleteDataService.ts';
 @Component({
     components: { LetterAttachment, FileSelector }
 })
@@ -71,12 +72,23 @@ export default class SingleSelectedRecipient extends Vue{
             return 'file-' + this.recipient.id;
         return '';
     }
+
+    get dataListId(){
+         if(this.recipient)
+            return 'list-' + this.recipient.id;
+        return '';
+    }
     
     @Prop() recipient?: LetterOwnerWithSendingInformationAndAttachments;
-    @Prop() autoCompleteData?: AutoCompleteData[];
-    mounted(){
-
-        //$('#'+this.fileInputId).change(this.onFileChanged.bind(this));
+    autoCompleteData = [] as AutoCompleteData[];
+    @Prop() autoCompleteDataType?: string;
+    async mounted(){
+           if(this.autoCompleteDataType === 'all')
+            this.autoCompleteData =  await autoCompleteDataService.getForwardingAutoCompleteData();
+         else if(this.autoCompleteDataType === 'copy')
+            this.autoCompleteData = await autoCompleteDataService.getSendCopyAutoCompleteData();
+         else if(this.autoCompleteDataType === 'draft')
+            this.autoCompleteData = await autoCompleteDataService.getSendDraftAutoCompleteData();
     }
     remove(){
         if(this.recipient)

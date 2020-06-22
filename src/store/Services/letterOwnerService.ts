@@ -3,6 +3,7 @@ import { OwnerFolder } from '@/store/models/LetterOwner/OwnerFolder';
 import { LetterOwner } from '@/store/models/LetterOwner/LetterOwner';
 import { LetterOwnerWithFaxAndEmails } from '@/store/models/LetterOwner/LetterOwnerWithFaxAndEmails';
 import { LetterOwnerWithSendingInformationAndAttachments } from '../models/LetterOwner/LetterOwnerWithSendingInformationAndAttachments';
+import { LetterOwnerForSendingFaxAndEmailAndSms } from '../models/LetterOwner/LetterOwnerForSendingFaxAndEmailAndSms';
 
 export async function getArchiveFolders(ownerId: string): Promise<OwnerFolder[]>{
     try {
@@ -43,4 +44,25 @@ export function getLetterOwnerWithSendingInfo(recipient: LetterOwnerWithFaxAndEm
     result.attachments = [];
     return result;
 }
+export function getLetterOwnerForSendingFaxAndEmailAndSms(recipient: LetterOwnerWithFaxAndEmails): LetterOwnerForSendingFaxAndEmailAndSms{
+    const result = {} as LetterOwnerForSendingFaxAndEmailAndSms;
+    result.id = recipient.id;
+    result.name = recipient.name;
+    result.nameOnly = recipient.nameOnly;
+    result.post = recipient.post;
+    result.ownerType = recipient.ownerType;
+    result.emails = [];
+    if(recipient.emails )
+        recipient.emails.forEach(email=>{
+            if(result.emails)
+                result.emails.push(email);
+        });
+    result.shallSendSms = false;
+    result.shallSendViaMessagingApp = false;
+    result.childDraftReceivers = [];
+    result.childCopyReceivers = [];
+    result.childMainReceivers = [];
+    return result;
+}
+
 
