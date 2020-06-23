@@ -12,7 +12,7 @@
         </div>
         <div class="item-block xxsmall-text">
             
-            هامش:   <input type="text" :list="dataListId"  v-model="recipient.forwardingComment" >
+            هامش:   <input type="text" :list="dataListId"  v-model="recipient.sendingComment" >
                     <datalist :id="dataListId">
                         <option v-for="item in autoCompleteData" :key="item.id" :value="item.name" />
                     </datalist> 

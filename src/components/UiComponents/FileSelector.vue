@@ -1,9 +1,9 @@
 <template>
     <div>
         
-        <label >
-                        <i class="icon icon-paperclip action-icon"></i>
-                        <input type="file" @change="onFileChanged($event)"  style="display:none">
+        <label>
+                <i class="xlarg-text icon icon-paperclip action-icon" style="font-size:large"></i>
+                <input type="file" @change="onFileChanged($event)"  style="display:none">
         </label>
     </div>
 </template>

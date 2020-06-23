@@ -2,7 +2,7 @@
     <div class="ui page dimmer message-box">
         <div class="content">
             <div class="message-box-frame bg4">
-                <div style="flex:1;padding:10px">
+                <div style="flex:1;padding:10px" :class="{success: messageType=='success',fail: messageType=='fail'}">
                     {{message}}
                 </div>
                 <div class="message-box-buttons">
@@ -21,7 +21,9 @@ import {Vue, Component, Prop, Watch} from 'vue-property-decorator';
 import * as $ from 'jquery';
 @Component
 export default class MessageBox extends Vue{
+
     @Prop() message?: string;
+    @Prop() messageType = '';
     @Prop() buttons?: string;
     @Prop() isActive?: boolean;
     @Watch('isActive')
@@ -80,5 +82,11 @@ export default class MessageBox extends Vue{
 }
 .message-box-buttons>button{
     flex: 1;
+}
+.success{
+    color:#69b578;
+}
+.fail{
+    color: #ff6b6b;
 }
 </style>

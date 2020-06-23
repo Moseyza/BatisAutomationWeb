@@ -57,7 +57,7 @@ export function GetFileUrl(data: Blob, fileName: string)
   return url;
 }
 
-export function base64ToArrayBuffer(base64: any) {
+export function base64RemovePrefix(base64: any) {
   base64 = (base64 as string).substring((base64 as string).indexOf(',')+1);
   return base64;
   // alert(base64);

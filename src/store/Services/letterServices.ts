@@ -19,8 +19,6 @@ export async function GetLetterTrial(letterPossessionId: string): Promise<Letter
         console.log(error);
         return {} as LetterTrail;
     }
-   
-
 }
 
 export async function GetArchiveFolderLetters(folderId: string): Promise<Letter[]>{
@@ -76,5 +74,16 @@ export async function ForwardLetter(letterPossessionId: string, mainRecipients: 
     } catch (error) {
         console.log(error);
         return {} as SentLetterInformation
+    }
+}
+
+
+export async function SendLetterFast(sendLetterFastDto: any): Promise<SentLetterInformation>{
+    try {
+        const result = await api.batisAutomationApi.post('/letters/SendLetterFast',sendLetterFastDto);
+        return result.data;
+    } catch (error) {
+        console.log(error);
+        return {} as SentLetterInformation;
     }
 }

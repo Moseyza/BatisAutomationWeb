@@ -140,7 +140,7 @@ export default class ForwardLetter extends Vue{
                 recipient.emails.splice(index,1);
             });
             recipient.attachments.forEach(file=>{
-                file.content = util.base64ToArrayBuffer(file.content);
+                file.content = util.base64RemovePrefix(file.content);
             });   
         });
         this.selectedCopyRecipients.forEach(recipient=>{
