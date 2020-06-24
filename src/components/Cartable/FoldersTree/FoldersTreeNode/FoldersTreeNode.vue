@@ -3,8 +3,8 @@
         <div class="node">
             <div class="node-title">
                 <div class="leaf-node" v-if="data.children.length == 0" ></div>
-                <i v-if="data.children.length >0" class="node-icon" @click="toggle()" :class="{'icon-nodeClose':!isOpen , 'icon-nodeOpen':isOpen}" ></i>
-                <i style="flex:1;padding-top:5px" :class="data.iconClass"></i>
+                <i v-if="data.children.length >0" class="icon-nodeIconOpen node-icon" @click="toggle()" :class="{'icon-nodeIcon':!isOpen , 'icon-nodeIconOpen':isOpen}" ></i>
+                <i style="flex:1;padding-top:5px;" :class="data.iconClass"></i>
                 <h5 style="flex:5;text-align:right;padding-top:10px" v-if="data.isRoot">{{data.name}}</h5>
                 <router-link style="flex:5;cursor:pointer;padding-top:10px" v-else tag="div" :to="data.url" >{{data.name}}</router-link>
                 <input type="checkbox" v-if="isSelectable" v-model="isSelected"/>
@@ -154,6 +154,13 @@ export interface FoldersTreeNodeData {
         flex: 1;
         cursor: pointer;
     }
+    // .node-icon::before{
+    //     content: "";
+    //     padding:5px;
+    //     height: 50%;
+    //     border-bottom: 1px solid gray;
+    //     position: relative;
+    // }
     .node-icon:hover{
         color: #ff6b6b;
     }
@@ -163,6 +170,16 @@ export interface FoldersTreeNodeData {
     .node-child .node{
         margin-right: 30px;
     }
+    .node-icon{
+       
+        font-size: smaller;
+    }
+    .node-icon:hover{
+        font-size: medium;
+         color: #ff6b6b;
+         left: 5px;
+    }
+
 
 </style>
 

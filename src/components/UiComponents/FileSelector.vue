@@ -2,7 +2,7 @@
     <div>
         
         <label>
-                <i class="xlarg-text icon icon-paperclip action-icon" style="font-size:large"></i>
+                <i class="xlarg-text icon icon-addAttachment action-icon" style="font-size:large"></i>
                 <input type="file" @change="onFileChanged($event)"  style="display:none">
         </label>
     </div>

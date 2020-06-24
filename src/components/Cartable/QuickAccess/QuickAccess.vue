@@ -1,8 +1,9 @@
 <template>
     <div class=" container2 symmetric-grid" style="justify-content:space-around">
-        <i class="action-icon icon-letterFast" @click="fastSend()" style="font-size:32pt"></i>
+         <i class="action-icon icon-allDraft" @click="fastSend('draft')" style="font-size:22pt"></i>
+        <i class="action-icon icon-SendLetterFast" @click="fastSend('send')" style="font-size:30pt"></i>
         <div id="options-dropdown"  class="ui icon top left dropdown">
-  		<i class="action-icon icon-form" style="font-size:17pt"></i>
+  		<i class="action-icon icon-enterpriseForm" style="font-size:17pt"></i>
   		<div class="menu">
     	<div class="item menu-item" @click="finalizeLetter()" ><div style="padding-left:5px">اختتام</div> <i class="fixed-icon icon-stamp"></i> </div>
     	<div class="item menu-item"><div style="padding-left:5px">چاپ</div> <i class="fixed-icon icon-print"></i></div>
@@ -18,8 +19,8 @@ import {Vue, Prop , Component} from 'vue-property-decorator';
 
 @Component
 export default class QuickAccess extends Vue{
-    fastSend(){
-        this.$emit('fast-send-clicked');
+    fastSend(mode: string){
+        this.$emit('fast-send-clicked',mode);
     }
 }
 </script>

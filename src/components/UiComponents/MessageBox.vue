@@ -23,7 +23,7 @@ import * as $ from 'jquery';
 export default class MessageBox extends Vue{
 
     @Prop() message?: string;
-    @Prop() messageType = '';
+    @Prop() messageType?: string;
     @Prop() buttons?: string;
     @Prop() isActive?: boolean;
     @Watch('isActive')

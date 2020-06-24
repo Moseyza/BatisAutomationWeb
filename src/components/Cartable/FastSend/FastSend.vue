@@ -4,46 +4,63 @@
         <div class="flex-part-top" style="flex:0.01"></div>
         <div class="flex-part-middle" style="flex:7">
             <div>
-            <div class="symmetric-grid" style="margin-bottom: 5px">
-                <div style="flex:1; margin-left:5px;">
-                    گیرنده پیش نویس:  
+            <div v-if="mode=='draft'" class="symmetric-grid" style="margin-bottom: 5px">
+                <div  style="flex:1; margin-left:5px;">
+                 پیش نویس 
                 </div>
-                <div style="flex:5">
+                <div style="flex:10">
                     <RecipientLookup   :recipients="recipients" @recipient-selected="selectRecipient($event, 'draft')"   />    
                 </div>
             </div>
-            <FastSendRecipientSelector  :autoCompleteDataType="'draft'" :recipients="selectedDraftRecipients" @recipient-removed="onRecipientRemoved($event,'draft')"/>
+             <div v-if="mode=='draft'" class="symmetric-grid">
+                <div style="flex:1">
+
+                </div>
+            <FastSendRecipientSelector style="flex:10"  :autoCompleteDataType="'draft'" :recipients="selectedDraftRecipients" @recipient-removed="onRecipientRemoved($event,'draft')"/>
+            </div>
             <div class="symmetric-grid" style="margin-bottom: 5px">
                 <div style="flex:1;margin-left:5px">
-                    گیرنده اصلی:  
+                 اصلی
                 </div>
-                <div style="flex:5">
+                <div style="flex:10">
                     <RecipientLookup  :recipients="recipients" @recipient-selected="selectRecipient($event,'main')"   />    
                 </div>
             </div>
-            <FastSendRecipientSelector :autoCompleteDataType="'all'" :recipients="selectedMainRecipients" @recipient-removed="onRecipientRemoved($event,'main')"/>
+            <div class="symmetric-grid">
+                <div style="flex:1">
+
+                </div>
+                <FastSendRecipientSelector  style="flex:10" :autoCompleteDataType="'all'" :recipients="selectedMainRecipients" @recipient-removed="onRecipientRemoved($event,'main')"/>
+            </div>
+            
+
             <div class="symmetric-grid" style="margin-bottom: 5px">
                 <div style="flex:1;margin-left:5px">
-                    گیرنده رونوشت:  
+                 رونوشت 
                 </div>
-                <div style="flex:5">
+                <div style="flex:10">
                     <RecipientLookup   :recipients="recipients" @recipient-selected="selectRecipient($event,'copy')"   />    
                 </div>
             </div>
-            <FastSendRecipientSelector :autoCompleteDataType="'copy'"  :recipients="selectedCopyRecipients" @recipient-removed="onRecipientRemoved($event,'copy')"/>
+            <div class="symmetric-grid">
+                <div style="flex:1">
+
+                </div>
+            <FastSendRecipientSelector style="flex:10" :autoCompleteDataType="'copy'"  :recipients="selectedCopyRecipients" @recipient-removed="onRecipientRemoved($event,'copy')"/>
+            </div>
             <div class="symmetric-grid" style="margin-bottom: 5px">
                 <div style="flex:1;margin-left:5px">
-                    عنوان:
+                    عنوان
                 </div>
-                <div style="flex:5; width:100%; padding: 5px; margin-right:2px;border-radius:5px" class="bg1" >
+                <div style="flex:10; width:100%; padding: 5px; margin-right:2px;border-radius:5px" class="bg1" >
                     <input v-model="title" type="text"  class="fc1" style="width:100%;background-color:transparent;border:none">
                 </div>
             </div>
             <div class="symmetric-grid" style="margin-bottom: 5px">
                 <div style="flex:1;margin-left:5px">
-                    پیوست:
+                    پیوست
                 </div>
-                <div style="flex:5; display:flex; width:100%;border-radius:5px;background-color:transparent;"  >
+                <div style="flex:10; display:flex; width:100%;border-radius:5px;background-color:transparent;"  >
                     
                     <div style="flex:5;justify-content:flex-start;overflow: auto" class="symmetric-grid" >
                         <LetterAttachment v-for="(file,index) in attachments" 
@@ -64,20 +81,25 @@
                 </div>
                 
             </div>
+            <div class="symmetric-grid" style="margin-bottom: 5px">
+                <div style="flex:1;margin-left:5px">
+                    متن
+                </div>
+                <div style="flex:10;" class="bg1" >
+                    
+                </div>
+            </div>
             </div>
             <div class="flex-part-bottom container chamfer fc1" style="min-height: 150px;margin-left:0;display:flex;flex-direction:column">
-                <div>
-                    متن نامه:
-                </div>
-                <div>
+                
                     <textarea v-model="content" cols="30" rows="10"  class="fc1 bg1"   style="resize:vertical;width:100%;flex:1;padding:5px;" ></textarea>
-                </div>
+                
             </div>
         </div>
         <div class="flex-part-bottom container1" style="flex:0.3; margin-left:0">
             <div style="display:flex">
-                    <div @click="cancel" class="action-icon bg1" style="flex:1;text-align:center"><i style="color:inherit" class="icon icon-x"></i></div>
-                    <div @click="send" class="action-icon bg1" style="flex:1;text-align:center"><i style="color:inherit" class="icon icon-telegram"></i></div>
+                    <div @click="cancel" class="action-icon bg1" style="flex:1;text-align:center"><i style="color:inherit" class="icon icon-cancel"></i></div>
+                    <div @click="send" class="action-icon bg1" style="flex:1;text-align:center"><i style="color:inherit" class="icon icon-send"></i></div>
             </div>
         </div>
         <MessageBox 
@@ -126,6 +148,7 @@ export default class FastSent extends Vue{
     currentAttachedFileName = '';
     isLetterSent = false;
     attachments = [] as File[];
+    @Prop() mode?: string;
 
     async created(){
         const ownerId = store.state.ownerId;

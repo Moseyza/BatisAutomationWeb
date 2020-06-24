@@ -5,11 +5,11 @@
                 <div style="flex:3">
                     <h4>{{letter.title}}</h4>
                 </div>
-                <div style="flex:1" class="symmetric-grid">
-                    <i class="action-icon icon-comment"></i>
-                    <i class="action-icon icon-stampFast"></i>
+                <div style="flex:1;justify-content:space-around" class="symmetric-grid">
+                    <i class="action-icon icon-comment" style="font-size: x-large"></i>
+                    <i class="action-icon icon-closeFast"></i>
                     <div id="options-dropdown"  class="ui icon top left dropdown">
-  		                <i class="action-icon icon-threeDots"></i>
+  		                <i class="action-icon icon-threeDots" style="font-size: x-large"></i>
   		                <div class="menu">
     		                <div class="item menu-item" @click="finalizeLetter()" ><div style="padding-left:5px">اختتام</div> <i class="fixed-icon icon-stamp"></i> </div>
     		                <div class="item menu-item"><div style="padding-left:5px">چاپ</div> <i class="fixed-icon icon-print"></i></div>
@@ -58,7 +58,7 @@
                     <div style="margin: 10px 0">هامش: {{letter.comment}}</div>
                     <div class="symmetric-grid" style="padding:20px">
                         <div style="flex:1"></div>
-                        <div style="flex:2;border-bottom:2px #e7e7e7 solid;"></div>
+                        <!-- <div style="flex:2;border-bottom:2px #e7e7e7 solid;"></div> -->
                         <div style="flex:1"></div>
                     </div>
                 </div>
@@ -80,7 +80,7 @@
             <div style="flex:1; display:flex;justify-content:space-around" class="container1">
                 <div style="flex:1;text-align: center;" class="action-icon "><i class=" icon-replay xlarg-text"></i></div>
                 <div style="flex:1;text-align: center;" class="action-icon"><i class=" icon-replayAll xlarg-text"></i></div>
-                <div style="flex:1;text-align: center;" @click="forwardLetter()"  class=" action-icon"><i class=" icon-forward xlarg-text"></i></div>
+                <div style="flex:1;text-align: center;" @click="forwardLetter()"  class=" action-icon"><i class=" icon-ForwardLetter xlarg-text"></i></div>
             </div>
         </div>
     </div>

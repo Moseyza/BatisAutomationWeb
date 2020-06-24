@@ -35,8 +35,8 @@
        </div>
        <div class="flex-part-bottom" style="flex:0" >
                <div style="display:flex">
-                    <div @click="cancel" class="action-icon bg1" style="flex:1;text-align:center"><i style="color:inherit" class="icon icon-x"></i></div>
-                    <div @click="send" class="action-icon bg1" style="flex:1;text-align:center"><i style="color:inherit" class="icon icon-telegram"></i></div>
+                    <div @click="cancel" class="action-icon bg1" style="flex:1;text-align:center"><i style="color:inherit" class="icon icon-cancel"></i></div>
+                    <div @click="send" class="action-icon bg1" style="flex:1;text-align:center"><i style="color:inherit" class="icon icon-send"></i></div>
                </div>
            
         </div>

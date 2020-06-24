@@ -4,10 +4,10 @@
             <div class="xsmall-text nowrap" style="flex:3">{{recipient.nameOnly}}</div>
             <div class="xxsmall-text nowrap" style="flex:4">{{recipient.post}}</div>
             <div class="symmetric-grid" style="flex:2">
-                <div @click="toggleMail()" > <i class="icon-mail icon" :class="{active: isMailActive}"></i> </div>
+                <div @click="toggleMail()" > <i class="icon-email icon" :class="{active: isMailActive}"></i> </div>
                 <div @click="toggleTelegram()"> <i class="icon-telegram icon" :class="{active: this.recipient.shallReceiveMessageViaMessagingApp}"></i> </div>
                 <div @click="toggleSms()" > <i   class="icon-sms icon" :class="{active: this.recipient.shallReceiveSms}"></i> </div>
-                <div @click="remove()"> <i class="icon-x icon action-icon"></i> </div>
+                <div @click="remove()"> <i class="icon-removeFile icon action-icon"></i> </div>
             </div>
         </div>
         <div class="item-block xxsmall-text">

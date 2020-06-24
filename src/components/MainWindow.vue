@@ -26,7 +26,7 @@
                 </LetterDetails>
                 <FinalizeLetter v-if="leftSideMode=== 'finalize'" :letter="selectedLetter"  />
                 <ForwardLetter v-if="leftSideMode=== 'forward'" @forward-canceled="onForwardCanceled" :letter="selectedLetter" />
-                <FastSend v-if="leftSideMode=== 'fastSend'" @fastsend-canceled="onFastSendCanceled"/>
+                <FastSend :mode="fastSendMode" v-if="leftSideMode=== 'fastSend'" @fastsend-canceled="onFastSendCanceled($event)"/>
             </div>
             
         </div>
@@ -81,9 +81,11 @@ export default class MainWindow extends Vue {
     onFastSendCanceled(){
         this.leftSideMode = 'details';
     }
-    onFastSendBtnClick(){
+    onFastSendBtnClick(mode: string){
+        this.fastSendMode = mode;
         this.leftSideMode = 'fastSend';
     }
+    fastSendMode = '';
 }
 </script>
 
