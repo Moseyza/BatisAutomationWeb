@@ -87,3 +87,13 @@ export async function SendLetterFast(sendLetterFastDto: any): Promise<SentLetter
         return {} as SentLetterInformation;
     }
 }
+
+export async function SaveDraft(sendLetterFastDto: any): Promise<string[]>{
+    try {
+        const result = await api.batisAutomationApi.post('/letters/SaveDraft',sendLetterFastDto);
+        return result.data;
+    } catch (error) {
+        console.log(error);
+        return {} as string[];
+    }
+}

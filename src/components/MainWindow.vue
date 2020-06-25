@@ -5,7 +5,7 @@
             <div style="flex:2;">
                     <div class="three-part-flexbox">
                         <div class="flex-part-top" style="flex: 0.5 0 0;display:flex;">
-                                <QuickAccess  @fast-send-clicked="onFastSendBtnClick()"/>
+                                <QuickAccess  @fast-send-clicked="onFastSendBtnClick($event)"/>
                         </div>
                         <div class="flex-part-middle">
                             <FoldersTree :letterOwnerId="letterOwnerId"></FoldersTree>

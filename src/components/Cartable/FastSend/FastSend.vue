@@ -18,7 +18,7 @@
                 </div>
             <FastSendRecipientSelector style="flex:10"  :autoCompleteDataType="'draft'" :recipients="selectedDraftRecipients" @recipient-removed="onRecipientRemoved($event,'draft')"/>
             </div>
-            <div class="symmetric-grid" style="margin-bottom: 5px">
+            <div v-if="mode=='send'" class="symmetric-grid" style="margin-bottom: 5px">
                 <div style="flex:1;margin-left:5px">
                  اصلی
                 </div>
@@ -26,7 +26,7 @@
                     <RecipientLookup  :recipients="recipients" @recipient-selected="selectRecipient($event,'main')"   />    
                 </div>
             </div>
-            <div class="symmetric-grid">
+            <div v-if="mode=='send'" class="symmetric-grid">
                 <div style="flex:1">
 
                 </div>
@@ -34,7 +34,7 @@
             </div>
             
 
-            <div class="symmetric-grid" style="margin-bottom: 5px">
+            <div v-if="mode=='send'" class="symmetric-grid" style="margin-bottom: 5px">
                 <div style="flex:1;margin-left:5px">
                  رونوشت 
                 </div>
@@ -42,7 +42,7 @@
                     <RecipientLookup   :recipients="recipients" @recipient-selected="selectRecipient($event,'copy')"   />    
                 </div>
             </div>
-            <div class="symmetric-grid">
+            <div v-if="mode=='send'" class="symmetric-grid">
                 <div style="flex:1">
 
                 </div>
@@ -108,11 +108,12 @@
        :message="message"
        :messageType="messageType"
        @button-clicked="onMessageBoxBtnClicked($event)"/>
+       <FullPageLoader :isActive="loading"/>
     </div>
 </template>
 
 <script lang="ts">
-import {Vue, Component, Prop} from 'vue-property-decorator';
+import {Vue, Component, Prop, Watch} from 'vue-property-decorator';
 import RecipientLookup from '@/components/Cartable/ForwardLetter/RecipientLookup/RecipientLookup.vue';
 import FastSendRecipientSelector from '@/components/Cartable/FastSend/FastSendRecipientSelector/FastSendRecipientSelector.vue';
 import { LetterOwnerWithFaxAndEmails } from '@/store/models/LetterOwner/LetterOwnerWithFaxAndEmails';
@@ -128,9 +129,9 @@ import { LetterOwner } from '../../../store/models/LetterOwner/LetterOwner';
 import * as letterService from '@/store/Services/letterServices';
 import { isMoment } from 'moment';
 import * as util from '@/util/utils';
-
+import FullPageLoader from '@/components/UiComponents/FullPageLoader.vue';
 @Component({
-    components:{RecipientLookup, FastSendRecipientSelector, MessageBox, FileSelector, LetterAttachment}
+    components:{RecipientLookup, FastSendRecipientSelector, MessageBox, FileSelector, LetterAttachment, FullPageLoader}
 })
 export default class FastSent extends Vue{
     recipients: LetterOwnerWithFaxAndEmails[] = [];
@@ -148,8 +149,16 @@ export default class FastSent extends Vue{
     currentAttachedFileName = '';
     isLetterSent = false;
     attachments = [] as File[];
+    loading = false;
     @Prop() mode?: string;
-
+    @Watch('mode') 
+    onModeChanged(n: string, o: string){
+        this.selectedMainRecipients.length = 0;
+        this.selectedCopyRecipients.length = 0;
+        this.selectedDraftRecipients.length = 0;
+        this.title = '';
+        this.content = '';
+    }
     async created(){
         const ownerId = store.state.ownerId;
         this.recipients =   await letterOwnerService.getOwnerRecipients(ownerId);
@@ -237,6 +246,8 @@ export default class FastSent extends Vue{
             this.shallShowMessageBox = true;
             return;
         }
+        this.shallShowMessageBox = true;
+        this.loading = true;
         const dto = {} as any;
         dto.stringContent = this.content;
         dto.abstract = this.content;
@@ -255,15 +266,30 @@ export default class FastSent extends Vue{
         dto.copyRecievers = this.selectedCopyRecipients;
         dto.draftRecievers = this.selectedDraftRecipients;
         dto.priority = 0;
-        const info = await letterService.SendLetterFast(dto);
-        if(info.letterNumber){
-            this.message = `نامه با شماره ${info.letterNumber} ارسال شد.`
-            this.msgBoxBtns = 'ok';
-            this.messageType = 'success';
-            this.shallShowMessageBox = true;
-            this.isLetterSent = true;
+        if(this.mode == 'send'){
+            const info = await letterService.SendLetterFast(dto);
+            if(info.letterNumber){
+                this.message = `نامه با شماره ${info.letterNumber} ارسال شد.`
+                this.msgBoxBtns = 'ok';
+                this.messageType = 'success';
+                this.shallShowMessageBox = true;
+                this.isLetterSent = true;
+            }
         }
-    
+        else{
+            const request = {} as any;
+            request.dto = dto;
+            const info = await letterService.SaveDraft(request);
+            console.log(info);
+            if(info && info.length >0){
+                this.messageType = 'success';
+                this.message = 'پیش نویس ارسال شد';
+                this.msgBoxBtns = 'ok';
+                this.shallShowMessageBox = true;
+                this.isLetterSent = true;
+            }
+        }
+        this.loading = false;
 
     }
     cancel(){

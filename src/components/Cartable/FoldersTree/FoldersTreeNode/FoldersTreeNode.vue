@@ -80,6 +80,9 @@ export interface FoldersTreeNodeData {
         justify-content: space-between;
         align-items: center;
         white-space: nowrap;
+        max-width: 200px;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
     router-link{
         cursor: pointer;
