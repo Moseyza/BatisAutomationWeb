@@ -2,7 +2,7 @@
     <div class=" container2 symmetric-grid" style="justify-content:space-around">
         <div class="popup"  data-content="ارسال پیشنویس" > <i class="action-icon icon-allDraft" @click="fastSend('draft')" style="font-size:22pt"></i></div>
         <div class="popup"  data-content="ارسال سریع"><i  class="action-icon icon-SendLetterFast" @click="fastSend('send')" style="font-size:30pt"></i></div>
-        <div id="options-dropdown"  class="ui icon top left dropdown" data-content="فرم های اداری">
+        <div id="forms-dropdown"  class="ui icon top left dropdown" data-content="فرم های اداری">
   		<i class="action-icon icon-enterpriseForm " style="font-size:17pt"></i>
   		<div class="menu">
     	<div class="item menu-item" @click="finalizeLetter()" ><div style="padding-left:5px">اختتام</div> <i class="fixed-icon icon-stamp"></i> </div>
@@ -22,8 +22,10 @@ export default class QuickAccess extends Vue{
     fastSend(mode: string){
         this.$emit('fast-send-clicked',mode);
     }
+    
     mounted(){
-        $('.popup').popup()
+        $('.popup').popup();
+        $('#forms-dropdown').dropdown().popup();
     }
 }
 </script>

@@ -105,7 +105,8 @@
             />
             <div v-else style="display:flex">
                     <div @click="cancel" class="action-icon bg1" style="flex:1;text-align:center"><i style="color:inherit" class="icon icon-cancel"></i></div>
-                    <div @click="send" class="action-icon bg1" style="flex:1;text-align:center"><i style="color:inherit" class="icon icon-send"></i></div>
+                     <div v-if="mode === 'send'" @click="send(true)" class="action-icon bg1" style="flex:1;text-align:center"><i style="color:inherit;font-size:x-large" class="icon icon-saveDraft"></i></div>
+                    <div @click="send(false)" class="action-icon bg1" style="flex:1;text-align:center"><i style="color:inherit" class="icon icon-send"></i></div>
             </div>
         </div>
         <!-- <MessageBox 
@@ -234,7 +235,7 @@ export default class FastSent extends Vue{
     onAttachmentRemoved(index: number){
             this.attachments.splice(index,1);
     }
-    async send(){
+    async send(shallSaveforSender: boolean){
         this.msgBoxBtns = 'ok';
         this.messageType = 'fail';
         if(this.title.trim() === ''){
@@ -273,7 +274,7 @@ export default class FastSent extends Vue{
         dto.copyRecievers = this.selectedCopyRecipients;
         dto.draftRecievers = this.selectedDraftRecipients;
         dto.priority = 0;
-        if(this.mode == 'send'){
+        if(this.mode == 'send' && !shallSaveforSender){
             const info = await letterService.SendLetterFast(dto);
             if(info.letterNumber){
                 this.message = `نامه با شماره ${info.letterNumber} ارسال شد.`
@@ -284,10 +285,12 @@ export default class FastSent extends Vue{
             }
         }
         else{
+            if(!shallSaveforSender){
+                dto.sener = null;
+            }
             const request = {} as any;
             request.dto = dto;
             const info = await letterService.SaveDraft(request);
-            console.log(info);
             if(info && info.length >0){
                 this.messageType = 'success';
                 this.message = 'پیش نویس ارسال شد';
