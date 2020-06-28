@@ -97,17 +97,23 @@
             </div>
         </div>
         <div class="flex-part-bottom container1" style="flex:0.3; margin-left:0">
-            <div style="display:flex">
+            <InPlaceMessageBox v-if="shallShowMessageBox"
+            :buttons="msgBoxBtns" 
+            :message="message"
+            :messageType="messageType"
+            @button-clicked="onMessageBoxBtnClicked($event)"
+            />
+            <div v-else style="display:flex">
                     <div @click="cancel" class="action-icon bg1" style="flex:1;text-align:center"><i style="color:inherit" class="icon icon-cancel"></i></div>
                     <div @click="send" class="action-icon bg1" style="flex:1;text-align:center"><i style="color:inherit" class="icon icon-send"></i></div>
             </div>
         </div>
-        <MessageBox 
+        <!-- <MessageBox 
        :isActive="shallShowMessageBox" 
        :buttons="msgBoxBtns" 
        :message="message"
        :messageType="messageType"
-       @button-clicked="onMessageBoxBtnClicked($event)"/>
+       @button-clicked="onMessageBoxBtnClicked($event)"/> -->
        <FullPageLoader :isActive="loading"/>
     </div>
 </template>
@@ -122,6 +128,7 @@ import store from '@/store';
 import { LetterOwnerForSendingFaxAndEmailAndSms } from '../../../store/models/LetterOwner/LetterOwnerForSendingFaxAndEmailAndSms';
 import MessageBox from '@/components/UiComponents/MessageBox.vue';
 import FileSelector from '@/components/UiComponents/FileSelector.vue';
+import InPlaceMessageBox from '@/components/UiComponents/InPlaceMessageBox.vue';
 import File from '../../../store/models/Letter/File';
 import LetterAttachment from '@/components/Cartable/LetterDetails/LetterAttachment/LetterAttachment.vue';
 import Parts from '../../../store/models/Letter/Parts';
@@ -131,7 +138,7 @@ import { isMoment } from 'moment';
 import * as util from '@/util/utils';
 import FullPageLoader from '@/components/UiComponents/FullPageLoader.vue';
 @Component({
-    components:{RecipientLookup, FastSendRecipientSelector, MessageBox, FileSelector, LetterAttachment, FullPageLoader}
+    components:{RecipientLookup, FastSendRecipientSelector, MessageBox, FileSelector, LetterAttachment, FullPageLoader, InPlaceMessageBox}
 })
 export default class FastSent extends Vue{
     recipients: LetterOwnerWithFaxAndEmails[] = [];
