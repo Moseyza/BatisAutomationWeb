@@ -46,7 +46,7 @@ import LetterFilter from './LetterFilter/LetterFilter.vue';
 import LetterSearch from './LetterSearch/LetterSearch.vue';
 import LetterTypeSelector from './LetterTypeSelector/LetterTypeSelector.vue';
 import * as workflowService from '@/store/Services/workflowService';
-import { Workflow, EnterpriseForm } from '../../../store/models/workflow/workflow';
+import { Workflow } from '../../../store/models/workflow/workflow';
 import store from '@/store'
 
 @Component({
