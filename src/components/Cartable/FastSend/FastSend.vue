@@ -56,6 +56,16 @@
                     <input v-model="title" type="text"  class="fc1" style="width:100%;background-color:transparent;border:none">
                 </div>
             </div>
+            
+            <div class="symmetric-grid" style="margin-bottom: 5px">
+                <div style="flex:1;margin-left:5px">
+                    فوریت
+                </div>
+                <div style="flex:10; width:100%; padding: 5px; margin-right:2px;border-radius:5px" class="bg1" >
+                    <PrioritySelector @priority-changed="onPriorityChanged($event)"/>
+                </div>
+            </div>
+
             <div class="symmetric-grid" style="margin-bottom: 5px">
                 <div style="flex:1;margin-left:5px">
                     پیوست
@@ -81,6 +91,7 @@
                 </div>
                 
             </div>
+            
             <div class="symmetric-grid" style="margin-bottom: 5px">
                 <div style="flex:1;margin-left:5px">
                     متن
@@ -104,9 +115,9 @@
             @button-clicked="onMessageBoxBtnClicked($event)"
             />
             <div v-else style="display:flex">
-                    <div @click="cancel" class="action-icon bg1" style="flex:1;text-align:center"><i style="color:inherit" class="icon icon-cancel"></i></div>
-                     <div v-if="mode === 'send'" @click="send(true)" class="action-icon bg1" style="flex:1;text-align:center"><i style="color:inherit;font-size:x-large" class="icon icon-saveDraft"></i></div>
-                    <div @click="send(false)" class="action-icon bg1" style="flex:1;text-align:center"><i style="color:inherit" class="icon icon-send"></i></div>
+                    <div @click="cancel" class="action-icon bg1" style="flex:1;text-align:center"><i style="color:inherit" class="icon icon-removeFile"></i></div>
+                     <div v-if="mode === 'send'" @click="send(true)" class="action-icon bg1" style="flex:1;text-align:center"><i style="color:inherit;" class="icon icon-saveDraft"></i></div>
+                    <div @click="send(false)" class="action-icon bg1" style="flex:1;text-align:center"><i style="color:inherit;" class="icon icon-forwardedLetter"></i></div>
             </div>
         </div>
         <!-- <MessageBox 
@@ -138,8 +149,10 @@ import * as letterService from '@/store/Services/letterServices';
 import { isMoment } from 'moment';
 import * as util from '@/util/utils';
 import FullPageLoader from '@/components/UiComponents/FullPageLoader.vue';
+import PrioritySelector from './PrioritySelector/PrioritySelector.vue';
+import { LetterOwnerEmail } from '@/store/models/LetterOwner/LetterOwnerEmail';
 @Component({
-    components:{RecipientLookup, FastSendRecipientSelector, MessageBox, FileSelector, LetterAttachment, FullPageLoader, InPlaceMessageBox}
+    components:{RecipientLookup, FastSendRecipientSelector, MessageBox, FileSelector, LetterAttachment, FullPageLoader, InPlaceMessageBox,PrioritySelector}
 })
 export default class FastSent extends Vue{
     recipients: LetterOwnerWithFaxAndEmails[] = [];
@@ -158,6 +171,7 @@ export default class FastSent extends Vue{
     isLetterSent = false;
     attachments = [] as File[];
     loading = false;
+    priority = 1;
     @Prop() mode?: string;
     @Watch('mode') 
     onModeChanged(n: string, o: string){
@@ -235,6 +249,19 @@ export default class FastSent extends Vue{
     onAttachmentRemoved(index: number){
             this.attachments.splice(index,1);
     }
+    removeNotSelectedEmails(list: LetterOwnerForSendingFaxAndEmailAndSms[]){
+        list.forEach(recipient=>{
+            const emailsToRemove = [] as LetterOwnerEmail[];
+            for(let i = 0;i<recipient.emails.length; i++ ){
+                if(!recipient.emails[i].canBeUsedForSending)
+                    emailsToRemove.push(recipient.emails[i]);
+            }
+            emailsToRemove.forEach(removingEmail=>{
+                const index =  recipient.emails.indexOf(removingEmail);
+                recipient.emails.splice(index,1);
+            }); 
+        });
+    }
     async send(shallSaveforSender: boolean){
         this.msgBoxBtns = 'ok';
         this.messageType = 'fail';
@@ -254,7 +281,7 @@ export default class FastSent extends Vue{
             this.shallShowMessageBox = true;
             return;
         }
-        this.shallShowMessageBox = true;
+        //this.shallShowMessageBox = true;
         this.loading = true;
         const dto = {} as any;
         dto.stringContent = this.content;
@@ -270,10 +297,14 @@ export default class FastSent extends Vue{
         const sender = {} as LetterOwner;
         sender.id = store.state.ownerId;
         dto.sender = sender;
+        this.removeNotSelectedEmails(this.selectedMainRecipients);
+        this.removeNotSelectedEmails(this.selectedCopyRecipients);
+        this.removeNotSelectedEmails(this.selectedDraftRecipients);
         dto.recievers = this.selectedMainRecipients;
         dto.copyRecievers = this.selectedCopyRecipients;
         dto.draftRecievers = this.selectedDraftRecipients;
-        dto.priority = 0;
+        
+        dto.priority = this.priority;
         if(this.mode == 'send' && !shallSaveforSender){
             const info = await letterService.SendLetterFast(dto);
             if(info.letterNumber){
@@ -317,6 +348,14 @@ export default class FastSent extends Vue{
             this.shallShowMessageBox = false;
             this.$emit('fastsend-canceled');
         }
+    }
+    onPriorityChanged(priority: string){
+        if(priority === 'low')
+            this.priority = 1;
+        else if(priority === 'med')
+            this.priority = 5;
+        else if(priority === 'high')
+            this.priority = 10;
     }
     }
 
