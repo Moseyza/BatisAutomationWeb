@@ -11,11 +11,13 @@ import {Vue, Prop, Component, Watch} from 'vue-property-decorator';
 import LetterTrailTreeNode from './LetterTrailTreeNode/LetterTrailTreeNode.vue';
 import { LetterTrail } from '@/store/models/Letter/LetterTrail';
 import * as letterService  from '@/store/Services/letterServices.ts';
+import store from '@/store';
+import { LetterTrailWithAttachments } from '../../../../store/models/Letter/LetterTrailWithAttachment';
 @Component({
     components: {LetterTrailTreeNode}
 })
 export default class LetterTrailTree extends Vue {
-    data?: LetterTrail;
+    data?: LetterTrailWithAttachments;
     loading = false;
     @Prop() letterId?: string;
 
@@ -31,8 +33,10 @@ export default class LetterTrailTree extends Vue {
     async getLetterTrail(){
         if(this.letterId === undefined)return;
         this.loading = true;
-        this.data =  await  letterService.GetLetterTrial(this.letterId);
+        const ownerId =  store.state.ownerId;
+        this.data =  await  letterService.GetLetterTrialWithAttachment(this.letterId,ownerId);
         this.loading = false;
+
     }
 }
 </script>

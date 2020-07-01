@@ -5,6 +5,7 @@ import LetterListerWithPaginationResult from '@/store/models/Letter/LetterLister
 import store from '@/store';
 import { LetterOwnerWithSendingInformationAndAttachments } from '@/store/models/LetterOwner/LetterOwnerWithSendingInformationAndAttachments';
 import SentLetterInformation from '@/store/models/Letter/SentLetterInformation';
+import { LetterTrailWithAttachments } from '../models/Letter/LetterTrailWithAttachment';
 
 export async function OpenLetter(letterPossessionId: string){
     const serverResult =  await api.batisAutomationApi.post("/Letters/OpenLetter",{letterPossessionId: letterPossessionId});
@@ -20,6 +21,18 @@ export async function GetLetterTrial(letterPossessionId: string): Promise<Letter
         return {} as LetterTrail;
     }
 }
+
+export async function GetLetterTrialWithAttachment(letterPossessionId: string,letterOwnerId: string): Promise<LetterTrailWithAttachments>{
+    try {
+
+        const serverResult =  await api.batisAutomationApi.post("/Letters/LetterTrailWithAttachment",{letterPossessionId: letterPossessionId, currentOwnerId: letterOwnerId});
+        return serverResult.data as LetterTrailWithAttachments;
+    } catch (error) {
+        console.log(error);
+        return {} as LetterTrailWithAttachments;
+    }
+}
+
 
 export async function GetArchiveFolderLetters(folderId: string): Promise<Letter[]>{
     try {

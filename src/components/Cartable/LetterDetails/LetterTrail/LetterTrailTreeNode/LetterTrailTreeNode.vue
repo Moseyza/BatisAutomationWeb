@@ -1,11 +1,12 @@
 <template>
     <ul>
         <li>
-                <div>
-                    <i v-if="isOpened" class="icon-openedLetter"></i>
-                    <i v-else class="icon-notOpenedLetter"></i>
-                    <span> {{nodeData.sender.nameOnly}} </span>  
-                    <span style="font-size:8pt; color:#939393">{{nodeData.sender.letterOwnerCompanyNameOnly}}</span>
+                <div style="display:flex;align-items:center">
+                    <i v-if="nodeData.isOwnerCompanyAndIsAPeer" class="icon-InterCompanyTrace xlarg-text" style="flex:0.1"></i>
+                    <i v-if="!nodeData.isOwnerCompanyAndIsAPeer && isOpened" class="icon-openLetter xlarg-text" style="flex:0.1"></i>
+                    <i v-if="!nodeData.isOwnerCompanyAndIsAPeer && !isOpened" class="icon-notOpenLetter xlarg-text" style="flex:0.1"></i>
+                    <span style="flex:1" > {{nodeData.sender.nameOnly}} </span>  
+                    <span style="font-size:8pt; color:#939393;flex:1">{{nodeData.sender.letterOwnerCompanyNameOnly}}</span>
                 </div>
             <div>
             <LetterTrailTreeNode
@@ -21,12 +22,12 @@
 <script lang="ts">
 
 import {Vue, Prop, Component, Watch} from 'vue-property-decorator';
-import { LetterTrail } from '@/store/models/Letter/LetterTrail';
 import { getPersianDate } from '@/util/utils';
+import { LetterTrailWithAttachments } from '../../../../../store/models/Letter/LetterTrailWithAttachment';
 @Component
 export default class LetterTrailTreeNode extends Vue {
     
-    @Prop() nodeData?: LetterTrail;
+    @Prop() nodeData?: LetterTrailWithAttachments;
 
     get isOpened(){
         //console.log("test");
@@ -39,6 +40,8 @@ export default class LetterTrailTreeNode extends Vue {
         else
             return true;
     }
+
+    
 
 }
 

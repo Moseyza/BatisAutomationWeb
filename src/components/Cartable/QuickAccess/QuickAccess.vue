@@ -5,10 +5,22 @@
         <div @click="onFormsIconClicked()" id="forms-dropdown"  class="ui icon top left dropdown" data-content="فرم های اداری">
   		<i class="action-icon icon-enterpriseForm " style="font-size:17pt"></i>
         
-  		<div class="left menu" style="max-height:200px !important;overflow:auto">
-        <div style="padding:5px" ><input type="text" v-model="formSearchTxt" style="width:100%"/></div>
-        <div v-for="(form) in filteredForms" :key="form.id" class="item menu-item" :style="{'background-color':getFromColor(form.selectionColor), 'color':'black' }"><div style="padding-left:5px">{{form.name}}</div></div>
-    	
+  		<div class="left menu" >
+            <div style="padding:5px" ><input type="text" v-model="formSearchTxt" style="width:100%"/></div>
+            <div v-if="isLoading" class="item"><div class="ui active inline centered loader"></div></div> 
+            <div style="max-height:200px !important;overflow:auto;width:300px">
+                <div v-for="(form) in filteredForms" :key="form.id" class="item menu-item" :style="{'background-color':getFromColor(form.selectionColor), 'color':'black' ,'border':'1px solid black' , 'max-height':'30px','cursor':'pointer' }">
+                    <div style="padding-left:5px;">{{form.name}}</div>
+                </div>
+            </div>
+            <!-- <div id="test" class="ui icon top left dropdown">
+                <i class="action-icon icon-enterpriseForm " style="font-size:17pt"></i>
+    	        <div class="menu">
+                    <div v-for="(form) in filteredForms" :key="form.id" class="item menu-item" :style="{'background-color':getFromColor(form.selectionColor), 'color':'black' ,'border':'1px solid black' , 'max-height':'21px' }">
+                        <div style="padding-left:5px;">{{form.name}}</div>
+                    </div>
+                </div>
+            </div> -->
   		</div>
 	    </div>
     </div>
@@ -26,6 +38,7 @@ export default class QuickAccess extends Vue{
     formSearchTxt = '';
     isFirstClickDone = false;
     ownerId = '';
+    isLoading = false;
     get filteredForms(){
         return this.enterpriseForms.filter(x=>x.name.includes(this.formSearchTxt));
     }
@@ -36,6 +49,7 @@ export default class QuickAccess extends Vue{
     mounted(){
         $('.popup').popup();
         $('#forms-dropdown').dropdown({action:'nothing'}).popup();
+        $('#test').dropdown();
 
     }
 
@@ -48,16 +62,16 @@ export default class QuickAccess extends Vue{
     }
 
     getFromColor(color: number){
-        if(color ===0) return '#eeeeee'
+        if(color === 0) return '#939393';
         const result =  '#' + color.toString(16).substring(2);
         return result;
     }
     async loadEnterpriseForms()
     {
+        this.isLoading = true;
         this.enterpriseForms =  await enterpriseFromService.getOwnerEnterpriseForms(this.ownerId);
         this.enterpriseForms = this.enterpriseForms.sort((x,y)=> y.selectionColor - x.selectionColor);
-        console.log("asdfasdfasdfasdf");
-        console.log(this.enterpriseForms);
+        this.isLoading = false;
     }
 
 

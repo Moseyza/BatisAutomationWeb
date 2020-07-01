@@ -79,7 +79,7 @@ export default class SingleLetter extends Vue{
             api.OpenLetter(this.letterData.letterPossessionId);
         }
         this.letterData.isOpenned = true;
-        //alert(this.letterData.letterPossessionId);
+        alert(this.letterData.letterPossessionId);
         this.$emit("letterselected",this.letterData.letterPossessionId);
         
     }
