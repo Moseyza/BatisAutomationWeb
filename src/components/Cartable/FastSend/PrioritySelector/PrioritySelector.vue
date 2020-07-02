@@ -1,14 +1,14 @@
 <template>
-    <div class="prty-slctr container1 chamfer">
-        <label @click="select('low')"  class="container" >
+    <div class="prty-slctr bg1 chamfer">
+        <label @click="select('low')"  class="chk-container" >
             <input  type="checkbox" :checked="isLow" disabled>
             <span class="checkmark" style="background-color:#69b578"></span>
         </label>
-        <label @click="select('med')"  class="container">
+        <label @click="select('med')"  class="chk-container">
             <input  type="checkbox" :checked="isMed" disabled>
             <span class="checkmark" style="background-color:#e9c46a" ></span>
         </label>
-        <label @click="select('high')" class="container">
+        <label @click="select('high')" class="chk-container">
             <input  type="checkbox" :checked="isHigh" disabled>
             <span class="checkmark" style="background-color:#ff6b6b" ></span>
         </label>
@@ -22,24 +22,31 @@ export default class PrioritySelector extends Vue{
     isLow = true;
     isMed = false;
     isHigh = false;
+    @Prop() isNullable?: boolean;
     select(mode: string){
         if(mode === 'high')
         {
-            this.isHigh = true;
+            if(this.isNullable) this.isHigh = !this.isHigh;
+            else this.isHigh = true;
             this.isMed = false;
             this.isLow = false;
         }
         else if(mode === 'med'){
             this.isHigh = false;
-            this.isMed = true;
+            if(this.isNullable) this.isMed = !this.isMed;
+            else this.isMed = true;
             this.isLow = false;
         }
         else if(mode === 'low'){
             this.isHigh = false;
             this.isMed = false;
-            this.isLow = true;
+            if(this.isNullable) this.isLow = !this.isLow;
+            else this.isLow = true;
         }
-        this.$emit('priority-changed',mode);
+        if(!this.isMed && !this.isLow && !this.isHigh)
+          this.$emit('priority-changed',null);
+        else  
+          this.$emit('priority-changed',mode);
     }
 }
 </script>
@@ -51,11 +58,11 @@ export default class PrioritySelector extends Vue{
 }
 
 /* The container */
-.container {
+.chk-container {
   display: block;
   position: relative;
-  padding-left: 30px;
-  margin-bottom: 15px;
+ // padding-left: 30px;
+  //margin-bottom: 15px;
   cursor: pointer;
   font-size: 22px;
   -webkit-user-select: none;
@@ -66,7 +73,7 @@ export default class PrioritySelector extends Vue{
 }
 
 /* Hide the browser's default checkbox */
-.container input {
+.chk-container input {
   position: absolute;
   opacity: 0;
   cursor: pointer;
@@ -79,20 +86,20 @@ export default class PrioritySelector extends Vue{
   position: absolute;
   top: 0;
   left: 0;
-  height: 20px;
-  width: 20px;
+  height: 18px;
+  width: 18px;
   background-color: #eee;
   border-radius: 3px
 }
 
 /* On mouse-over, add a grey background color */
-.container:hover input ~ .checkmark {
+.chk-container:hover input ~ .checkmark {
   background-color: #ccc;
   border-radius: 3px
 }
 
 /* When the checkbox is checked, add a blue background */
-.container input:checked ~ .checkmark {
+.chk-container input:checked ~ .checkmark {
   
   border-radius: 3px
 }
@@ -105,13 +112,13 @@ export default class PrioritySelector extends Vue{
 }
 
 /* Show the checkmark when checked */
-.container input:checked ~ .checkmark:after {
+.chk-container input:checked ~ .checkmark:after {
   display: block;
 }
 
 /* Style the checkmark/indicator */
-.container .checkmark:after {
-  left: 8px;
+.chk-container .checkmark:after {
+  left: 7px;
   top: 3px;
   width: 5px;
   height: 10px;

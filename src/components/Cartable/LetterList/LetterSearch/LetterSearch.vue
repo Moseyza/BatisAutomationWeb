@@ -2,7 +2,14 @@
     <div id="search-container" class="symmetric-grid" >
         <input type="text" v-model="searchText">
         <div style="padding:3px 3px">
-            <i id="search-icon"  class="icon-search"></i>
+            <div style="padding:3px 3px" id="search-dropdown" class="ui icon top left dropdown" >
+              <i id="search-icon"  class="icon-search action-icon icon-filter helper-icon-medium"></i>
+  		        <div class=" menu" >
+    		        <div style="background-color:#3f3f3f" class="item menu-item"> 
+                        <AdvancedSearch/>
+                    </div> 
+  		        </div>
+	    </div>
         </div>
          <div style="padding:3px 3px" id="filter-dropdown" class="ui icon top left dropdown" >
               <i id="search-icon"  class="icon-filter action-icon icon-filter helper-icon-medium"></i>
@@ -29,7 +36,7 @@
                             </div>
                             <div class="item menu-item scrolling"><div style="padding-left:5px">ماه</div>
                          
-                                <div class="left menu "  >
+                                <div class="left menu ">
                                         <div v-for="month in months" :key="month.id" class="item menu-item " > <div style="padding-left:5px"> {{month.name}} </div> <ToggleSwitch isReadOnly= true :checkedProp="month.isSelected" @click="monthSelected(month.id)"  /> </div>
                                 </div>
                                
@@ -54,9 +61,10 @@ import {Vue, Component, Prop, Watch} from 'vue-property-decorator';
 import ToggleSwitch from '@/components/UiComponents/ToggleSwitch.vue';
 import * as $ from 'jquery';
 import { Workflow } from '../../../../store/models/workflow/workflow';
+import AdvancedSearch from './AdvancedSearch/AdvancedSearch.vue';
 
 @Component({
-    components: {ToggleSwitch}
+    components: {ToggleSwitch, AdvancedSearch}
 })
 export default class LetterSearch extends Vue {
     searchText = '';
@@ -73,6 +81,8 @@ export default class LetterSearch extends Vue {
 
     mounted(){
          $('#filter-dropdown').dropdown({action: 'nothing'});
+         $('#search-dropdown').dropdown({action: 'nothing'});
+
     }
 
 
@@ -171,6 +181,7 @@ export default class LetterSearch extends Vue {
     formFilterSelection(checked: boolean, formId: string){
         this.$emit("form-selection",{isSelected: checked , formId: formId});
     }
+
 
     
 }

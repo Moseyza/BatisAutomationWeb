@@ -61,7 +61,7 @@
                 <div style="flex:1;margin-left:5px">
                     فوریت
                 </div>
-                <div style="flex:10; width:100%; padding: 5px; margin-right:2px;border-radius:5px" class="bg1" >
+                <div style="flex:10; width:100%;min-height: 26px;padding-top:3px; border-radius:5px" class="bg1" >
                     <PrioritySelector @priority-changed="onPriorityChanged($event)"/>
                 </div>
             </div>
@@ -115,9 +115,9 @@
             @button-clicked="onMessageBoxBtnClicked($event)"
             />
             <div v-else style="display:flex">
-                    <div @click="cancel" class="action-icon bg1" style="flex:1;text-align:center"><i style="color:inherit" class="icon icon-removeFile"></i></div>
-                     <div v-if="mode === 'send'" @click="send(true)" class="action-icon bg1" style="flex:1;text-align:center"><i style="color:inherit;" class="icon icon-saveDraft"></i></div>
-                    <div @click="send(false)" class="action-icon bg1" style="flex:1;text-align:center"><i style="color:inherit;" class="icon icon-forwardedLetter"></i></div>
+                    <div @click="cancel" class="action-icon bg1" style="flex:1;text-align:center"><i style="color:inherit" class=" icon-removeFile xlarg-text"></i></div>
+                     <div v-if="mode === 'send'" @click="send(true)" class="action-icon bg1" style="flex:1;text-align:center"><i style="color:inherit;" class=" icon-saveDraft xlarg-text"></i></div>
+                    <div @click="send(false)" class="action-icon bg1" style="flex:1;text-align:center"><i style="color:inherit;" class=" icon-forwardedLetter xlarg-text"></i></div>
             </div>
         </div>
         <!-- <MessageBox 
