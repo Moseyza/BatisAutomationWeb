@@ -10,7 +10,7 @@
                 <div class="search-field-title">خلاصه:</div>
                 <div class="search-field-value"> <input type="text"/></div>
                 <div class="search-field-title">حاضر در گردش:</div>
-                <div class="search-field-value"> <input type="text"/></div>
+                <div class="search-field-value"><LetterOwnerLookup :letterOwnersProp="allLetterOwners"/></div>
         </div>
         <div class="fields-row"> 
                 <div class="search-field-title">شماره نامه:</div>
@@ -71,12 +71,18 @@
 import {Vue,Prop,Component} from 'vue-property-decorator';
 import TriStateCheckbox from '@/components/UiComponents/TriStateCheckBox.vue';
 import PrioritySelector from '@/components/Cartable/FastSend/PrioritySelector/PrioritySelector.vue';
+import LetterOwnerLookup from './LetterOwnerLookup/LetterOwnerLookup.vue';
+import * as letterOwnerService from '@/store/Services/letterOwnerService';
+import { LetterOwner } from '@/store/models/LetterOwner/LetterOwner';
 @Component({
-        components: {TriStateCheckbox, PrioritySelector}
+        components: {TriStateCheckbox, PrioritySelector, LetterOwnerLookup}
 })
 export default class AdvancedSerach extends Vue
-{
-
+{       
+        allLetterOwners = [] as LetterOwner[];
+        async created(){
+                this.allLetterOwners = await letterOwnerService.getAllLetterOwners();
+        }
 }
 </script>
 

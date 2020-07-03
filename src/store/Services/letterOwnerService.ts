@@ -27,6 +27,17 @@ export async function getOwnerRecipients(ownerId: string): Promise<LetterOwnerWi
     }
 }
 
+export async function getAllLetterOwners(): Promise<LetterOwner[]>{
+    try {
+        const serverResult =  await api.batisAutomationApi.post("/LetterOwners/All",{});
+        return serverResult.data as LetterOwner[];
+    } 
+    catch (error) {
+        console.log(error);
+        return {} as LetterOwner[];    
+    }
+}
+
 export function getLetterOwnerWithSendingInfo(recipient: LetterOwnerWithFaxAndEmails): LetterOwnerWithSendingInformationAndAttachments{
     const result = {} as LetterOwnerWithSendingInformationAndAttachments;
     result.id = recipient.id;
