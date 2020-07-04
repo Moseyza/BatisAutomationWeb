@@ -13,7 +13,8 @@ export default new Vuex.Store({
     ownerId: '',
     ownerIds: [],
     branchIds:  [],
-    workflows: []
+    workflows: [],
+    canSeeAllLetters: false
 
 
   },
@@ -46,6 +47,9 @@ export default new Vuex.Store({
     },
     setWorkflows(state,workflows){
       state.workflows = workflows;
+    },
+    setCanSeeAllLetters(state,canSeeAllLetters){
+      state.canSeeAllLetters = canSeeAllLetters;
     }
 
   },

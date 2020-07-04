@@ -4,25 +4,25 @@
                 <div class="search-field-title">عنوان:</div>
                 <div class="search-field-value"> <input type="text"/></div>
                 <div class="search-field-title">جستجو در کارتابل:</div>
-                <div class="search-field-value"> <input type="text"/></div>
+                <div class="search-field-value"><LetterOwnerLookup  :index=4 :selectedValueProp="cartableOwnerId" :letterOwnersProp="allLetterOwners" @letterowner-selected="onLetterOwnerSelected($event,'cartable')" :style="{'pointer-events': canSeeAllLetters?'unset':'none'}" /></div>
         </div>
         <div class="fields-row"> 
                 <div class="search-field-title">خلاصه:</div>
                 <div class="search-field-value"> <input type="text"/></div>
                 <div class="search-field-title">حاضر در گردش:</div>
-                <div class="search-field-value"><LetterOwnerLookup :letterOwnersProp="allLetterOwners"/></div>
+                <div class="search-field-value"><LetterOwnerLookup :index=1 :letterOwnersProp="allLetterOwners" @letterowner-selected="onLetterOwnerSelected($event,'present')" /></div>
         </div>
         <div class="fields-row"> 
                 <div class="search-field-title">شماره نامه:</div>
                 <div class="search-field-value"> <input type="text"/></div>
                 <div class="search-field-title">دریافت شده از:</div>
-                <div class="search-field-value"> <input type="text"/></div>
+                <div class="search-field-value"> <LetterOwnerLookup :index=2 :letterOwnersProp="allLetterOwners" @letterowner-selected="onLetterOwnerSelected($event,'from')" /> </div>
         </div>
         <div class="fields-row"> 
                 <div class="search-field-title">شماره نامه فرستنده:</div>
                 <div class="search-field-value"> <input type="text"/></div>
                 <div class="search-field-title">ارسال شده به:</div>
-                <div class="search-field-value"> <input type="text"/></div>
+                <div class="search-field-value"> <LetterOwnerLookup :index=3 :letterOwnersProp="allLetterOwners" @letterowner-selected="onLetterOwnerSelected($event,'to')" /></div>
         </div>
         <div class="fields-row"> 
                 <div class="search-field-title">زمان از:</div>
@@ -74,14 +74,26 @@ import PrioritySelector from '@/components/Cartable/FastSend/PrioritySelector/Pr
 import LetterOwnerLookup from './LetterOwnerLookup/LetterOwnerLookup.vue';
 import * as letterOwnerService from '@/store/Services/letterOwnerService';
 import { LetterOwner } from '@/store/models/LetterOwner/LetterOwner';
+import store from '@/store';
 @Component({
         components: {TriStateCheckbox, PrioritySelector, LetterOwnerLookup}
 })
 export default class AdvancedSerach extends Vue
 {       
         allLetterOwners = [] as LetterOwner[];
+        canSeeAllLetters = false;
+        cartableOwnerId = ''; //store.state.ownerId;
         async created(){
-                this.allLetterOwners = await letterOwnerService.getAllLetterOwners();
+               this.allLetterOwners = await letterOwnerService.getAllLetterOwners(); 
+               this.canSeeAllLetters = store.state.canSeeAllLetters;
+               while(this.cartableOwnerId === ''){
+                       this.cartableOwnerId = store.state.ownerId;
+               }
+        }
+        onLetterOwnerSelected(ownerId: string, mode: string){
+                //alert(ownerId);
+                console.log();
+                
         }
 }
 </script>

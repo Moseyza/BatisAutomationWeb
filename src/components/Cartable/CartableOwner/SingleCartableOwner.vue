@@ -22,6 +22,7 @@ export default class SingleCartableOwner extends Vue{
         this.ownerName = currentLetterOwner.nameOnly;
         this.ownerImage = 'data:image/png;base64, ' + currentLetterOwner.picture;
         this.$store.commit("setOwnerId",currentLetterOwner.id);
+        this.$store.commit("setCanSeeAllLetters",currentLetterOwner.canSeeSecuredLetters);
         this.$emit('on-letter-owner-set');
         this.$router.replace("ReceivedLetters");
     }
