@@ -26,9 +26,9 @@
         </div>
         <div class="fields-row"> 
                 <div class="search-field-title">زمان از:</div>
-                <div class="search-field-value"> <input type="text"/></div>
+                <div class="search-field-value"> <input type="text" v-model="dateFrom" id='dateFrom'> <VuePersianDatetimePicker :clearable="true" element="dateFrom" v-model="dateFrom" /></div>
                 <div class="search-field-title">زمان تا:</div>
-                <div class="search-field-value"> <input type="text"/></div>
+                <div class="search-field-value"> <VuePersianDatetimePicker :clearable="true"  /></div>
         </div>
         <div class="fields-row"> 
                 <div class="search-field-title">توضیحات ارجاع:</div>
@@ -75,14 +75,16 @@ import LetterOwnerLookup from './LetterOwnerLookup/LetterOwnerLookup.vue';
 import * as letterOwnerService from '@/store/Services/letterOwnerService';
 import { LetterOwner } from '@/store/models/LetterOwner/LetterOwner';
 import store from '@/store';
+import VuePersianDatetimePicker from 'vue-persian-datetime-picker';
 @Component({
-        components: {TriStateCheckbox, PrioritySelector, LetterOwnerLookup}
+        components: {TriStateCheckbox, PrioritySelector, LetterOwnerLookup, VuePersianDatetimePicker}
 })
 export default class AdvancedSerach extends Vue
 {       
         allLetterOwners = [] as LetterOwner[];
         canSeeAllLetters = false;
         cartableOwnerId = ''; //store.state.ownerId;
+        dateFrom = '';
         async created(){
                this.allLetterOwners = await letterOwnerService.getAllLetterOwners(); 
                this.canSeeAllLetters = store.state.canSeeAllLetters;
@@ -119,5 +121,6 @@ export default class AdvancedSerach extends Vue
         justify-content: space-between;
         margin-bottom: 10px;
     }
+    
 </style>
 
