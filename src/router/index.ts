@@ -59,6 +59,11 @@ const routes = [
         props: (route: any) => ({folderId: route.query.folderId})
       },
       {
+        path: 'SearchResults',
+        name: 'SearchResults',
+        component: () => import('@/components/Cartable/SearchResultList/SearchResultList.vue'),
+      },
+      {
         path: 'IncomingClosedLetters',
         name: 'IncomingClosedLetters',
         component: () => import('@/components/Cartable/ClosedLetters/Incoming/IncomingClosedLetters.vue'),

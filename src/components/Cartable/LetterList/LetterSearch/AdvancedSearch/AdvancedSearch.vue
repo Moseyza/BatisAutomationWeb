@@ -164,8 +164,10 @@ export default class AdvancedSerach extends Vue
                 searchDto.searchInLetterOwnerDashboard = {} as LetterOwner;
                 searchDto.searchInLetterOwnerDashboard.id = this.cartableOwnerId;
                 searchDto.isConjunctive = true;
-                const result =  await letterService.SearchAll(searchDto);
-                console.log(result);
+                //const result =  await letterService.SearchAll(searchDto);
+                store.commit("setAdvancedSearchSettings",searchDto);
+                this.$router.replace({name: "SearchResults"});
+                //console.log(result);
 
                 //searchDto.
         }

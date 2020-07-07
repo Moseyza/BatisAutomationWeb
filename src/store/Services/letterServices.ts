@@ -6,6 +6,7 @@ import store from '@/store';
 import { LetterOwnerWithSendingInformationAndAttachments } from '@/store/models/LetterOwner/LetterOwnerWithSendingInformationAndAttachments';
 import SentLetterInformation from '@/store/models/Letter/SentLetterInformation';
 import { LetterTrailWithAttachments } from '../models/Letter/LetterTrailWithAttachment';
+import { LetterSearchResult } from '../models/Letter/LetterSearchResult';
 
 export async function OpenLetter(letterPossessionId: string){
     const serverResult =  await api.batisAutomationApi.post("/Letters/OpenLetter",{letterPossessionId: letterPossessionId});
@@ -111,7 +112,7 @@ export async function SaveDraft(sendLetterFastDto: any): Promise<string[]>{
     }
 }
 
-export async function SearchAll(sendLetterFastDto: any){
+export async function SearchAll(sendLetterFastDto: any): Promise<LetterSearchResult[]>{
     try {
         const result = await api.batisAutomationApi.post('/letters/SearchAll',sendLetterFastDto);
         return result.data;

@@ -18,13 +18,21 @@
         <div class="flex-part-middle">
             <div v-if="loading" class="ui active inline centered loader"></div>
             <div v-else>
-                <div  id="letter-list">
+                <div v-if="lettersProp && lettersProp.length >0"  id="letter-list">
                     <SingleLetter 
                     v-for="(letter,index) in filteredLetters"
                     :key="letter.letterPossessionId"
                     :index="index"
                     :letterData ="letter" @letterselected="onLetterSelected($event)"
                     ></SingleLetter>
+                </div>
+                <div v-if="searchResultsProp && searchResultsProp.length >0"  id="letter-list">
+                    <SearchResultItem 
+                    v-for="(letter,index) in searchResultsProp"
+                    :key="letter.possessionId"
+                    :index="index"
+                    :letterData ="letter" @letterselected="onLetterSelected($event)"
+                    ></SearchResultItem>
                 </div>
             </div>
         </div>
@@ -48,12 +56,15 @@ import LetterTypeSelector from './LetterTypeSelector/LetterTypeSelector.vue';
 import * as workflowService from '@/store/Services/workflowService';
 import { Workflow } from '../../../store/models/workflow/workflow';
 import store from '@/store'
+import { LetterSearchResult } from '../../../store/models/Letter/LetterSearchResult';
+import SearchResultItem  from '@/components/Cartable/SearchResultList/SearchResultItem/SearchResultItem.vue';
 
 @Component({
-    components:{SingleLetter, LetterFilter, LetterSearch,LetterTypeSelector}
+    components:{SingleLetter,SearchResultItem, LetterFilter, LetterSearch,LetterTypeSelector}
 })
 export default class LetterList extends Vue{
     @Prop() lettersProp?: Letter[];
+    @Prop() searchResultsProp?: LetterSearchResult[];
     @Prop() loading?: boolean;
     @Prop() mode?: string;
     @Prop() years?: number[];

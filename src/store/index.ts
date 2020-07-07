@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import {userModule} from '@/store/moduels/userModule'
+import {userModule} from '@/store/moduels/userModule';
+import LetterSearch from './models/Letter/letterSearch';
+import letterSearch from './models/Letter/letterSearch';
 
 
 Vue.use(Vuex)
@@ -14,7 +16,8 @@ export default new Vuex.Store({
     ownerIds: [],
     branchIds:  [],
     workflows: [],
-    canSeeAllLetters: false
+    canSeeAllLetters: false,
+    advancedSearchSettings: {} as LetterSearch
 
 
   },
@@ -50,6 +53,9 @@ export default new Vuex.Store({
     },
     setCanSeeAllLetters(state,canSeeAllLetters){
       state.canSeeAllLetters = canSeeAllLetters;
+    },
+    setAdvancedSearchSettings(state,advancedSearchSettings: letterSearch){
+      state.advancedSearchSettings = advancedSearchSettings;
     }
 
   },
