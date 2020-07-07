@@ -1,10 +1,11 @@
 import moment from 'moment';
 import * as persianDate from 'persian-date';
+import * as letterService from '@/store/Services/letterServices';
 
 class Result 
 {
     toString(){
-        return '56565';
+        return '';
     }
 }
 class NowResult extends Result{
@@ -80,8 +81,9 @@ class YearsMonthDayResult extends Result{
 export class DateConverter{
     dateTimeNow = ()=> new Date();
     convertToString(date: Date,now: Date){
+        
         if(now === new Date())
-            now = this.dateTimeNow();
+            now =  this.dateTimeNow();
         
         const nowPersian =  new persianDate(now)
         const datePersian = new  persianDate(date);
@@ -198,10 +200,12 @@ export class DateConverter{
 
 export class DateBaseOnCurrentTimeConverter{
   
-    getDateString(d: Date)
+     getDateString(d: Date, serverTime: string)
     {
+
         const dateConverter = new DateConverter();
-        const result =   dateConverter.convertToString(d, new Date());
+        //const serverTime = await letterService.getServerTime();
+        const result =    dateConverter.convertToString(d, new Date(serverTime));
         if(result)
         return result.toString();
         return '';

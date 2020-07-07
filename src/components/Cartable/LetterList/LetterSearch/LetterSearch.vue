@@ -100,6 +100,7 @@ export default class LetterSearch extends Vue {
     yearsArray =  [] as any[];
     @Watch('years')
     onYearsChanged(newVal: number[],oldVal: number[] ){
+        this.yearsArray.length = 0;
         newVal.forEach(year=>{
             this.yearsArray.push({value: year, isSelected: this.defaultDate.year === year});
         });
@@ -125,6 +126,7 @@ export default class LetterSearch extends Vue {
     
 
     monthSelected(monthId: number){
+        this.months.length = 0;
         this.months.forEach(month=>{month.isSelected = false;});
         const selectedMonth =  this.months.find(month=>month.id === monthId);
         if(selectedMonth)

@@ -8,7 +8,7 @@
                                 <QuickAccess  @fast-send-clicked="onFastSendBtnClick($event)"/>
                         </div>
                         <div class="flex-part-middle">
-                            <FoldersTree :letterOwnerId="letterOwnerId"></FoldersTree>
+                            <FoldersTree :letterOwnerId="letterOwnerId" @folder-clicked="onFolderClicked()"></FoldersTree>
                         </div>
                         <div class="flex-part-bottom" style="flex: 0.5 0 0;"></div>
                         
@@ -16,7 +16,7 @@
                      
             </div>
             <div class="conatiner2" style="flex:3">
-                <router-view @selected-letter-changed="onSelectdLetterChanged($event)"></router-view>
+                <router-view @selected-letter-changed="onSelectdLetterChanged($event)" ref='letterlist'></router-view>
             </div>
             <div class="container2" style="flex:6">
                 <LetterDetails v-if="noLetterSelected == false && leftSideMode==='details'" :letter="selectedLetter" 
@@ -57,6 +57,7 @@ export default class MainWindow extends Vue {
     noLetterSelected = true;
     letterOwnerId = '';
     leftSideMode = 'details';
+    firstLoad = false;
     onSelectdLetterChanged(letter: Letter){
         this.leftSideMode = 'details';
         this.noLetterSelected = false;
@@ -64,7 +65,8 @@ export default class MainWindow extends Vue {
         Object.assign(temp,letter)
         this.selectedLetter = temp;
     }
-
+    
+    
     onLetterOwnerSet(){
         this.letterOwnerId = this.$store.state.ownerId;
     }
@@ -84,6 +86,9 @@ export default class MainWindow extends Vue {
     onFastSendBtnClick(mode: string){
         this.fastSendMode = mode;
         this.leftSideMode = 'fastSend';
+    }
+    async onFolderClicked(){
+         await (this.$refs.letterlist as any).refresh();
     }
     fastSendMode = '';
 }

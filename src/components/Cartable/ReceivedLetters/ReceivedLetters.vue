@@ -18,7 +18,11 @@ export default class ReceivedLetters extends Vue {
     years?: number[] = [];
     defaultDate: any = {};
     loading = false;
-    async created(){
+     async created(){
+         await this.refresh();
+      
+    }
+    async refresh(){
         this.loading = true;
         const serverResult = await api.getReceivedLetters();
         this.loading = false;
@@ -26,7 +30,6 @@ export default class ReceivedLetters extends Vue {
         this.letters =  serverResult.letterList;
         this.years  =   api.getCartableYears(serverResult.from,serverResult.to);
         this.defaultDate = api.getDefaultDate(serverResult.to);
-      
     }
     onSelectedLetterChanged(letter: Letter){
         this.$emit('selected-letter-changed',letter);

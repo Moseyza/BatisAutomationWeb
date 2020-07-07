@@ -110,3 +110,23 @@ export async function SaveDraft(sendLetterFastDto: any): Promise<string[]>{
         return {} as string[];
     }
 }
+
+export async function SearchAll(sendLetterFastDto: any){
+    try {
+        const result = await api.batisAutomationApi.post('/letters/SearchAll',sendLetterFastDto);
+        return result.data;
+    } catch (error) {
+        console.log(error);
+        return {} as any;
+    }
+}
+
+export async function getServerTime(){
+    try {
+        const result = await api.batisAutomationApi.get('/letters/ServerTime');
+        return result.data;
+    } catch (error) {
+        console.log(error);
+        return '';
+    }
+}

@@ -5,9 +5,14 @@
 </template>
 
 <script lang="ts">
-import {Vue, Component, Prop} from 'vue-property-decorator';
+import {Vue, Component, Prop, Watch} from 'vue-property-decorator';
 @Component
 export default class TriStateCheckBox extends Vue{
+    @Prop() stateProp?: string;
+    @Watch('stateProp')
+    onStatePropChanged(nVal: string, oVal: string){
+        this.state = nVal;
+    }
     state = 'dontCare';
     changeState(){
         if(this.state === 'dontCare')

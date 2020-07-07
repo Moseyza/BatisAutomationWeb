@@ -40,19 +40,21 @@ import {Letter} from "@/store/models/Letter/Letter";
 import {getPersianDate} from "@/util/utils";
 import * as api from '@/store/Services/letterServices';
 import { DateBaseOnCurrentTimeConverter } from '@/util/dateConverter';
-
+import * as letterService from '@/store/Services/letterServices';
 
 @Component
 export default class SingleLetter extends Vue{
     @Prop() letterData?: Letter 
     isSent = false;
+    serverTime = '';
     
-    created(){
+    async created(){
     if(this.letterData === undefined) return;
          if(this.letterData.sender === null || this.letterData.sender === undefined){
              this.isSent = true;
          }
-      
+
+    this.serverTime = await letterService.getServerTime();
     }
 
     get priorityColor(){
@@ -65,11 +67,11 @@ export default class SingleLetter extends Vue{
             return {'background-color':'#ff6b6b'};
     }
 
-    get sendTime(){
+    get  sendTime(){
         if(this.letterData === undefined) return '';
         //return getPersianDate(this.letterData.sendTime,'MM/DD',false);
         const dateConverter = new  DateBaseOnCurrentTimeConverter();
-        return dateConverter.getDateString(new Date(this.letterData.sendTime.substring(0,this.letterData.sendTime.length -1)))
+        return   dateConverter.getDateString(new Date(this.letterData.sendTime.substring(0,this.letterData.sendTime.length -1)),this.serverTime)
     }
 
     select(){
@@ -83,6 +85,8 @@ export default class SingleLetter extends Vue{
         this.$emit("letterselected",this.letterData.letterPossessionId);
         
     }
+
+    
 
 }
 

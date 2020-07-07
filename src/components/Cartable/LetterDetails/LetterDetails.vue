@@ -33,7 +33,7 @@
                         <div v-for="(receiver,index) in letter.recievers" :key="index"><h4 class="highlight">{{receiver.nameOnly}}</h4> <br/></div>
                     </div>
                     <div style="flex:1; text-align:end">
-                        <i @click="downloadLetterPdf()" class="helper-icon-large icon-pdf"></i>
+                        <i @click="downloadLetterPdf()" class="helper-icon-large icon-file-pdf"></i>
                     </div>
                 </div>
                 <div>

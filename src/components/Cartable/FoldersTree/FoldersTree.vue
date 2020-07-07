@@ -4,6 +4,7 @@
         v-for="folder in folders"
         :data="folder"
         :key="folder.url"
+        @folder-clicked="onFolderClicked()"
         >
         </FoldersTreeNode>
     </div>
@@ -130,7 +131,10 @@ export default class FoldersTree extends Vue {
                 this.addArchiveFolder(childNode,folder.childFolders);
         });
     }
-
+    
+    onFolderClicked(){
+        this.$emit('folder-clicked');
+    }
     folders: FoldersTreeNodeData[] = [];
 
     // created(){

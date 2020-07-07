@@ -6,7 +6,7 @@
                 <i v-if="data.children.length >0" class="icon-nodeIconOpen node-icon" @click="toggle()" :class="{'icon-nodeIcon':!isOpen , 'icon-nodeIconOpen':isOpen}" ></i>
                 <i style="flex:1;padding-top:5px;" :class="data.iconClass"></i>
                 <h5 style="flex:5;text-align:right;padding-top:10px" v-if="data.isRoot">{{data.name}}</h5>
-                <router-link style="flex:5;cursor:pointer;padding-top:10px" v-else tag="div" :to="data.url" >{{data.name}}</router-link>
+                <router-link style="flex:5;cursor:pointer;padding-top:10px" v-else tag="div" :to="data.url" @click.native="onFolderClicked" >{{data.name}}</router-link>
                 <input type="checkbox" v-if="isSelectable" v-model="isSelected"/>
             </div>
             <div class="node-child" :class="{hide:!isOpen}">
@@ -16,6 +16,7 @@
                 :key="child.url"
                 :isSelectable= "isSelectable"
                 @selected-changed="onChildSelectionChanged($event)"
+                @folder-clicked="onChildFolderClicked($event)"
                 >
                 </FoldersTreeNode>
             </div>
@@ -53,6 +54,16 @@ export default class FoldersTreeNode extends Vue {
     created(){
         if(this.data === undefined) return;
         if(this.data.children.length === 0 || this.data.children === undefined) this.isOpen = true;
+    }
+
+    onFolderClicked(){
+        if(this.data)
+        {
+            this.$emit('folder-clicked',this.data.name);
+        }
+    }
+    onChildFolderClicked(name: string){
+        this.$emit('folder-clicked',name);
     }
 }
 
