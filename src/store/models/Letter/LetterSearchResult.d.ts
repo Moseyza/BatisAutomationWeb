@@ -31,4 +31,5 @@ export interface LetterSearchResult{
     dueDate : string;
     enterpriseFormId : string;
     enterpriseFormName : string;
+    isSelected: boolean;
 }

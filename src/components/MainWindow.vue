@@ -16,17 +16,23 @@
                      
             </div>
             <div class="conatiner2" style="flex:3">
-                <router-view @selected-letter-changed="onSelectdLetterChanged($event)" ref='letterlist'></router-view>
+                <router-view @selected-letter-changed="onSelectdLetterChanged($event)" @selected-searchresult-changed="onSelectdSearchResultChanged($event)" ref='letterlist'></router-view>
             </div>
             <div class="container2" style="flex:6">
                 <LetterDetails v-if="noLetterSelected == false && leftSideMode==='details'" :letter="selectedLetter" 
+                :searchResult="selectedSearchResult"
                 @finalize-letter="onFinalizeLetter($event)"
                 @forward-letter="onForwardLetter($event)"
                 >
                 </LetterDetails>
-                <FinalizeLetter v-if="leftSideMode=== 'finalize'" :letter="selectedLetter"  />
-                <ForwardLetter v-if="leftSideMode=== 'forward'" @forward-canceled="onForwardCanceled" :letter="selectedLetter" />
-                <FastSend :mode="fastSendMode" v-if="leftSideMode=== 'fastSend'" @fastsend-canceled="onFastSendCanceled($event)"/>
+                <SearchResultDetails v-else-if="noLetterSelected == false && leftSideMode==='searchResultDetails'" :searchResult="selectedSearchResult"
+                @finalize-letter="onFinalizeLetter($event)"
+                @forward-letter="onForwardLetter($event)"
+                 >
+                </SearchResultDetails>
+                <FinalizeLetter v-else-if="leftSideMode=== 'finalize'" :letter="selectedLetter"  />
+                <ForwardLetter v-else-if="leftSideMode=== 'forward'" @forward-canceled="onForwardCanceled" :letter="selectedLetter" />
+                <FastSend :mode="fastSendMode" v-else-if="leftSideMode=== 'fastSend'" @fastsend-canceled="onFastSendCanceled($event)"/>
             </div>
             
         </div>
@@ -43,29 +49,38 @@ import SingleCartableOwner from '@/components/Cartable/CartableOwner/SingleCarta
 import CartableTitle from '@/components/Cartable/CartableTitle/CartableTitle.vue';
 import FoldersTree from '@/components/Cartable/FoldersTree/FoldersTree.vue';
 import LetterDetails from '@/components/Cartable/LetterDetails/LetterDetails.vue';
+import SearchResultDetails from '@/components/Cartable/LetterDetails/SearchResultDetails.vue';
 import FinalizeLetter from '@/components/Cartable/LetterDetails/FinalizeLetter/FinalizeLetter.vue';
 import { Letter } from '@/store/models/Letter/Letter';
 import ForwardLetter from '@/components/Cartable/ForwardLetter/ForwardLetter.vue';
 import QuickAccess from '@/components/Cartable/QuickAccess/QuickAccess.vue';
 import FastSend from '@/components/Cartable/FastSend/FastSend.vue';
+import {LetterSearchResult } from '@/store/models/Letter/LetterSearchResult';
 @Component({
-    components: { FoldersTree, LetterDetails, CartableTitle,FinalizeLetter, ForwardLetter, QuickAccess, FastSend}
+    components: { FoldersTree, LetterDetails, CartableTitle,FinalizeLetter, ForwardLetter, QuickAccess, FastSend, SearchResultDetails}
 })
 export default class MainWindow extends Vue {
-    selectedLetter?: Letter = {} as Letter;
-    letterTitle1 = '';
+    selectedLetter: Letter = {} as Letter;
+    selectedSearchResult: LetterSearchResult = {} as LetterSearchResult;
     noLetterSelected = true;
     letterOwnerId = '';
     leftSideMode = 'details';
     firstLoad = false;
-    onSelectdLetterChanged(letter: Letter){
+    onSelectdLetterChanged(letter: Letter ){
+        
         this.leftSideMode = 'details';
         this.noLetterSelected = false;
         const temp: any = {};
         Object.assign(temp,letter)
         this.selectedLetter = temp;
     }
-    
+    onSelectdSearchResultChanged(searchResult: LetterSearchResult){
+        this.leftSideMode = 'searchResultDetails';
+        this.noLetterSelected = false;
+        const temp: any = {};
+        Object.assign(temp,searchResult)
+        this.selectedSearchResult = temp;
+    }
     
     onLetterOwnerSet(){
         this.letterOwnerId = this.$store.state.ownerId;

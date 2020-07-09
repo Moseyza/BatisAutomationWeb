@@ -9,10 +9,10 @@
                 <div style="flex:2">
                     <div style="display:inline;" class="letter-audience">
                         <div v-if="isSent == false" class="small-text">
-                            {{letterData.sender.nameOnly}}
+                            {{letterData.from.nameOnly}}
                         </div>
                         <div v-if="isSent" style="max-height:20px;overflow:auto">
-                            <span class="small-text" v-for="(receiver,index) in letterData.recievers" :key="index+receiver.id" > {{receiver.nameOnly}} <br> </span>
+                            <span class="small-text" v-for="(receiver,index) in letterData.to" :key="index+receiver.id" > {{receiver.nameOnly}} <br> </span>
                         </div>
                     </div>
                 </div>
@@ -70,7 +70,6 @@ export default class SearchResultItem extends Vue{
 
     get  sendTime(){
         if(this.letterData === undefined) return '';
-        //return getPersianDate(this.letterData.sendTime,'MM/DD',false);
         const dateConverter = new  DateBaseOnCurrentTimeConverter();
         return   dateConverter.getDateString(new Date(this.letterData.sendTime.substring(0,this.letterData.sendTime.length -1)),this.serverTime)
     }
@@ -78,11 +77,6 @@ export default class SearchResultItem extends Vue{
     select(){
         
         if(this.letterData === undefined)return;
-        if(this.letterData.isOpenned === false){
-            api.OpenLetter(this.letterData.possessionId);
-        }
-        this.letterData.isOpenned = true;
-        //alert(this.letterData.letterPossessionId);
         this.$emit("letterselected",this.letterData.possessionId);
         
     }

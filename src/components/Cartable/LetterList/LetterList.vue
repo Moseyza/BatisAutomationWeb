@@ -28,7 +28,7 @@
                 </div>
                 <div v-if="searchResultsProp && searchResultsProp.length >0"  id="letter-list">
                     <SearchResultItem 
-                    v-for="(letter,index) in searchResultsProp"
+                    v-for="(letter,index) in filteredSearchResults"
                     :key="letter.possessionId"
                     :index="index"
                     :letterData ="letter" @letterselected="onLetterSelected($event)"
@@ -72,11 +72,13 @@ export default class LetterList extends Vue{
     currentLetterType = 'all';
     currentSearchText = '';
     letters: Letter[] = [];
+    searchResults: LetterSearchResult[] = [];
     usedWorkFlows: Workflow[] = [];
     filteredFormIds: string[] = [];
     curretnFilterMode = 'all';
     counts = {all: 0,notRead: 0 , notForwarded: 0 , forms: 0 , notForms: 0 };
     filter = (x: Letter) => {return true;};
+    searchResultsFilter = (x: LetterSearchResult) => {return true;};
 
     @Watch('letters')
     onLettersChanged(){
@@ -84,15 +86,33 @@ export default class LetterList extends Vue{
         this.calcCounts();
     }
 
+    @Watch('searchResults')
+    onSearchResultsChanged(){
+        this.setUsedEnterpriseForms();
+        this.calcCounts();
+    }
+
     calcCounts(){
-        const all =  this.letters.length;
-        const notRead = this.letters.filter(l=>!l.isOpenned).length;
-        const notForwarded = this.letters.filter(l=>!l.isForwarded).length;
-        const forms = this.letters.filter(l=>l.isEnterpriseForm).length;
-        const notForms = all - forms;
-        const obj = {all: all,notRead: notRead , notForwarded: notForwarded , forms: forms , notForms: notForms };
-        this.$emit('count-calcuted', obj)
-        this.counts = obj;
+        if(this.letters.length >0){
+            const all =  this.letters.length;
+            const notRead = this.letters.filter(l=>!l.isOpenned).length;
+            const notForwarded = this.letters.filter(l=>!l.isForwarded).length;
+            const forms = this.letters.filter(l=>l.isEnterpriseForm).length;
+            const notForms = all - forms;
+            const obj = {all: all,notRead: notRead , notForwarded: notForwarded , forms: forms , notForms: notForms };
+            this.$emit('count-calcuted', obj)
+            this.counts = obj;
+        }
+        else if(this.searchResults.length >0){
+            const all =  this.searchResults.length;
+            const notRead = this.searchResults.filter(l=>!l.isOpenned).length;
+            const notForwarded = this.searchResults.filter(l=>!l.isForwarded).length;
+            const forms = this.searchResults.filter(l=>l.isEnterpriseForm).length;
+            const notForms = all - forms;
+            const obj = {all: all,notRead: notRead , notForwarded: notForwarded , forms: forms , notForms: notForms };
+            this.$emit('count-calcuted', obj)
+            this.counts = obj;
+        }
     }
 
     @Watch('lettersProp')
@@ -100,20 +120,44 @@ export default class LetterList extends Vue{
         this.letters.length = 0;
         this.letters.push(...newVal);
     }
+    @Watch('searchResultsProp')
+    onSearchResultsPropChanged(newVal: LetterSearchResult[],oldVal: LetterSearchResult[]){
+        this.searchResults.length = 0;
+        this.searchResults.push(...newVal);
+    }
+
     onLetterSelected(id: string){
         let index = 0;
         const tempLetter: any = {};
-        this.letters.forEach((item,i)=>{
-            item.isSelected = false;
-            if(item.letterPossessionId === id){
-                index = i;
-                Object.assign(tempLetter,item);
-                
-            }
-        });
-        tempLetter.isSelected = true;
-        this.$set(this.letters,index,tempLetter);
-        const selectedLetter =  this.letters.find(item=>item.letterPossessionId === id);
+        let selectedLetter: any = {};
+        if(this.letters && this.letters.length > 0){
+            this.letters.forEach((item,i)=>{
+                item.isSelected = false;
+                if(item.letterPossessionId === id){
+                    index = i;
+                    Object.assign(tempLetter,item);
+
+                }
+            });
+
+            tempLetter.isSelected = true;
+            this.$set(this.letters,index,tempLetter);
+            selectedLetter =  this.letters.find(item=>item.letterPossessionId === id);
+        }
+        if(this.searchResultsProp && this.searchResultsProp.length >0){
+            this.searchResultsProp.forEach((item,i)=>{
+                item.isSelected = false;
+                if(item.possessionId === id){
+                    index = i;
+                    Object.assign(tempLetter,item);
+                    
+                }
+            });
+    
+            tempLetter.isSelected = true;
+            this.$set(this.searchResultsProp,index,tempLetter);
+            selectedLetter =  this.searchResultsProp.find(item=>item.possessionId === id);
+        }
         this.$emit("selected-letter-changed",selectedLetter);
         
         
@@ -145,6 +189,14 @@ export default class LetterList extends Vue{
         
     }
 
+    SearchResultsFilterForSearch(searchResult: LetterSearchResult): boolean{
+        return searchResult.letterNo.includes(this.currentSearchText) 
+        || this.replaceChars(searchResult.title).includes(this.currentSearchText) 
+        || this.replaceChars(searchResult.abstract).includes(this.currentSearchText) 
+        || (searchResult.from !== undefined && searchResult.from !== null && this.replaceChars(searchResult.from.name).includes(this.currentSearchText) )
+        || (searchResult.to !== null && searchResult.to !== undefined && searchResult.to.filter(item=>this.replaceChars(item.name).includes(this.currentSearchText)).length>0)
+    }
+
     filterForLetterState(letter: Letter): boolean {
         if(this.currentLetterType === 'notRead'){
             return  !letter.isOpenned;
@@ -168,7 +220,7 @@ export default class LetterList extends Vue{
         
     }
 
-    filterForLetterType(letter: Letter): boolean {
+    filterForLetterType(letter: any): boolean {
           if(this.curretnFilterMode === 'forms'){
             if(this.filteredFormIds.length > 0){
                 return letter.isEnterpriseForm && (this.filteredFormIds.indexOf(letter.enterpriseFormId) > -1) ;
@@ -183,6 +235,8 @@ export default class LetterList extends Vue{
         }
         return true;
     }
+
+    
 
     replaceChars(inputStr: string): string{
         
@@ -208,9 +262,16 @@ export default class LetterList extends Vue{
         
     }
 
+    get filteredSearchResults(){
+        return this.searchResults.filter(this.searchResultsFilter);
+    }
+
     updateFilter(){
         this.filter = (letter) =>  this.FilterForSearch(letter) && this.filterForLetterState(letter) && this.filterForLetterType(letter);
-    }
+        this.searchResultsFilter = (searchResult) => this.SearchResultsFilterForSearch(searchResult) && this.filterForLetterType(searchResult);
+     }
+
+   
 
     onLetterTypeChanged(mode: string){
         this.currentLetterType = mode;
@@ -227,7 +288,7 @@ export default class LetterList extends Vue{
     async created(){
         if(store.state.workflows.length === 0)
         {
-             const workflows =  await workflowService.getAllWorkflowsWithEnterpriseForms();
+            const workflows =  await workflowService.getAllWorkflowsWithEnterpriseForms();
             store.commit("setWorkflows",workflows);
         }
         

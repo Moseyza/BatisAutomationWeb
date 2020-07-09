@@ -5,17 +5,18 @@
 </template>
 
 <script lang="ts">
-import {Vue, Component, Prop} from 'vue-property-decorator'
+import {Vue, Component, Prop, Watch} from 'vue-property-decorator'
 import LetterList from '@/components/Cartable/LetterList/LetterList.vue';
 import * as persianDate from 'persian-date';
 import { LetterSearchResult } from '../../../store/models/Letter/LetterSearchResult';
 import { Letter } from '@/store/models/Letter/Letter';
 import * as letterService from '@/store/Services/letterServices';
 import store from '@/store';
+import letterSearch from '../../../store/models/Letter/letterSearch';
 @Component({
     components:{LetterList}
 })
-export default class ReceivedLetters extends Vue {
+export default class SearchResultList extends Vue {
     searchResults?: LetterSearchResult[] = [];
     years?: number[] = [];
     defaultDate: any = {};
@@ -31,10 +32,17 @@ export default class ReceivedLetters extends Vue {
         if(!serverResult) return;
         this.searchResults =  serverResult;
     }
-    onSelectedLetterChanged(letter: Letter){
-        this.$emit('selected-letter-changed',letter);
+    onSelectedLetterChanged(letter: any){
+        this.$emit('selected-searchresult-changed',letter);
     }
 
+    get advancedSearchSettings(): letterSearch{
+        return store.state.advancedSearchSettings;
+    }
+    @Watch('advancedSearchSettings')
+    async onSearchSettingsChanged(nVal: letterSearch, oVal: letterSearch){
+        await this.refresh();
+    }
     // async onDateFilterChanged(date: any){
     //     const startDate = new persianDate([date.year,date.month,1]);
     //     const endDate = startDate.add('month',1);

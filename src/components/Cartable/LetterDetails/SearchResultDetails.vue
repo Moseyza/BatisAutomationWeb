@@ -3,7 +3,7 @@
             <div style="flex:1"  class="flex-part-top" >
                 <div class="symmetric-grid">
                 <div style="flex:3">
-                    <h4>{{letter.title}}</h4>
+                    <h4>{{searchResult.title}}</h4>
                 </div>
                 <div style="flex:1;justify-content:space-around" class="symmetric-grid">
                     <i class="action-icon icon-comment" style="font-size: x-large"></i>
@@ -28,9 +28,9 @@
            
             <div class="container3">
                 <div class="symmetric-grid" >
-                    <h4 class="highlight" v-if="isReceived">{{letter.sender.nameOnly}}</h4>
+                    <h4 class="highlight" v-if="isReceived">{{searchResult.from.nameOnly}}</h4>
                     <div v-else style="max-height: 20px; overflow: auto; flex:1">
-                        <div v-for="(receiver,index) in letter.recievers" :key="index"><h4 class="highlight">{{receiver.nameOnly}}</h4> <br/></div>
+                        <div v-for="(receiver,index) in searchResult.to" :key="index"><h4 class="highlight">{{receiver.nameOnly}}</h4> <br/></div>
                     </div>
                     <div style="flex:1; text-align:end">
                         <i @click="downloadLetterPdf()" class="helper-icon-large icon-file-pdf"></i>
@@ -41,7 +41,7 @@
                         {{letterTime}}
                     </div>
                     <div>
-                        <LetterTrailTree :letterId="letter.letterPossessionId"></LetterTrailTree>
+                        <LetterTrailTree :letterId="searchResult.possessionId"></LetterTrailTree>
                     </div>
                 </div>
                 <div class="wrap-grid">
@@ -54,8 +54,8 @@
                 </div>
             </div>
             <div style="height: 100%">
-                <div v-if="letter.comment !==''">
-                    <div style="margin: 10px 0">هامش: {{letter.comment}}</div>
+                <div v-if="searchResult.comment !==''">
+                    <div style="margin: 10px 0">هامش: {{searchResult.comment}}</div>
                     <div class="symmetric-grid" style="padding:20px">
                         <div style="flex:1"></div>
                         <!-- <div style="flex:2;border-bottom:2px #e7e7e7 solid;"></div> -->
@@ -68,11 +68,6 @@
                         <div style="padding:5px;flex:1" class="ng-scope pdfobject-container">
                             <iframe :src="pdfSrc" type="application/pdf" width="100%" height="100%" style="overflow: auto;"></iframe>
                         </div>
-
-                        <!-- <object :data="pdfSrc" type="application/pdf" width="100%" >
-                            <p><b>Example fallback content</b>: This browser does not support PDFs. Please download the PDF to view it: <a href="/pdf/sample.pdf">Download PDF</a>.</p>
-                        </object> -->
-                    <!-- </p> -->
                 </div>
             </div>
             </div>
@@ -88,7 +83,6 @@
 
 <script lang="ts">
 import {Vue, Component, Prop, Watch} from 'vue-property-decorator';
-import { Letter } from '@/store/models/Letter/Letter';
 import { saveFile, converBase64toBlob, getPersianDate } from '@/util/utils';
 import LetterAttachment from '@/components/Cartable/LetterDetails/LetterAttachment/LetterAttachment.vue';
 import * as fileService from '@/store/Services/fileService';
@@ -101,16 +95,16 @@ import FinalizeLetter from './FinalizeLetter/FinalizeLetter.vue';
 import * as util from '@/util/utils.ts';
 import { LetterSearchResult } from '../../../store/models/Letter/LetterSearchResult';
 @Component({
-    name:"LetterDetails",
+    name:"SearchResultDetails",
     components:{LetterAttachment, LetterTrailTree, FinalizeLetter}
 })
-export default class LetterDetails extends Vue {
+export default class SearchResultDetails extends Vue {
 
     isReceived = true;
     pdfSrc = {} as any;
-    @Prop() letter?: Letter;
+    @Prop() searchResult?: LetterSearchResult;
     @Watch("letter")
-    onLetterChanged(newVal: Letter, oldVal: Letter){
+    onLetterChanged(newVal: LetterSearchResult, oldVal: LetterSearchResult){
         this.setIsReceived();
         this.setPdfUrl();
     }
@@ -122,18 +116,18 @@ export default class LetterDetails extends Vue {
     get attachments(){
         
         const result: Parts[] = [];
-        if(this.letter === undefined)return result;
-        if(this.letter.parts === undefined || this.letter.parts === null)return result;
-        for(let i = 1;i<this.letter.parts.length;i++){
-            result.push(this.letter.parts[i]);
+        if(this.searchResult === undefined)return result;
+        if(this.searchResult.parts === undefined || this.searchResult.parts === null)return result;
+        for(let i = 1;i<this.searchResult.parts.length;i++){
+            result.push(this.searchResult.parts[i]);
         }
         return result;
     }
 
     get letterTime(){
         
-        if(!this.letter) return '';
-        const date = new Date( this.letter.sendTime.substring(0,this.letter.sendTime.length -1));
+        if(!this.searchResult) return '';
+        const date = new Date( this.searchResult.sendTime.substring(0,this.searchResult.sendTime.length -1));
         return (date).toLocaleTimeString();
     }
 
@@ -141,22 +135,22 @@ export default class LetterDetails extends Vue {
     
     setIsReceived(){
         this.isReceived = false;
-        if(this.letter == undefined)return;
-        if(this.letter.recievers === null)
+        if(this.searchResult == undefined)return;
+        if(this.searchResult.to === null)
             this.isReceived = true;
     }
 
     async downloadLetterPdf(){
-        if(this.letter === undefined)return;
-        if(this.letter.parts === undefined || this.letter.parts === null)return;
-        const file = await fileService.getFile(this.letter.parts[0].file.id);
+        if(this.searchResult === undefined)return;
+        if(this.searchResult.parts === undefined || this.searchResult.parts === null)return;
+        const file = await fileService.getFile(this.searchResult.parts[0].file.id);
         const blob =  converBase64toBlob(file.content||"",'');
         saveFile(blob,file.extension);
     }
     async setPdfUrl(){
-         if(this.letter === undefined)return;
-        if(this.letter.parts === undefined || this.letter.parts === null)return;
-            const file = await fileService.getFile(this.letter.parts[0].file.id);
+         if(this.searchResult === undefined)return;
+        if(this.searchResult.parts === undefined || this.searchResult.parts === null)return;
+            const file = await fileService.getFile(this.searchResult.parts[0].file.id);
             // const blob =  converBase64toBlob(file.content,file.extension);
             // this.pdfSrc = blob;
             // console.log(blob);
@@ -170,12 +164,12 @@ export default class LetterDetails extends Vue {
     }
 
     finalizeLetter(){
-        if(this.letter === undefined || this.letter === null) return;
-        this.$emit('finalize-letter',this.letter.id);
+        if(this.searchResult === undefined || this.searchResult === null) return;
+        this.$emit('finalize-letter',this.searchResult.letterId);
     }
     forwardLetter(){
-        if(this.letter)
-            this.$emit('forward-letter',this.letter.id);
+        if(this.searchResult)
+            this.$emit('forward-letter',this.searchResult.letterId);
     }
 
 }

@@ -14,13 +14,13 @@
         </div>
         <div class="fields-row"> 
                 <div class="search-field-title">شماره نامه:</div>
-                <div class="search-field-value"> <input type="text"/></div>
+                <div class="search-field-value"> <input type="text" v-model="letterNo"/></div>
                 <div class="search-field-title">دریافت شده از:</div>
                 <div class="search-field-value"> <LetterOwnerLookup :index=2 :selectedValueProp="fromOwnerId" :letterOwnersProp="allLetterOwners" @letterowner-selected="onLetterOwnerSelected($event,'from')" /> </div>
         </div>
         <div class="fields-row"> 
                 <div class="search-field-title">شماره نامه فرستنده:</div>
-                <div class="search-field-value"> <input type="text"/></div>
+                <div class="search-field-value"> <input type="text" v-model="senderLetterNo"/></div>
                 <div class="search-field-title">ارسال شده به:</div>
                 <div class="search-field-value"> <LetterOwnerLookup :index=3 :selectedValueProp="toOwnerId" :letterOwnersProp="allLetterOwners" @letterowner-selected="onLetterOwnerSelected($event,'to')" /></div>
         </div>
@@ -38,9 +38,9 @@
         </div>
         <div class="fields-row"> 
                 <div class="search-field-title">توضیحات اختتام:</div>
-                <div class="search-field-value"> <input type="text"/></div>
+                <div class="search-field-value"> <input type="text" v-model="finalizeComment"/></div>
                 <div class="search-field-title">فوریت:</div>
-                <div class="search-field-value"> <PrioritySelector  :isNullable='true' /></div>
+                <div class="search-field-value"> <PrioritySelector  :isNullable='true' @priority-changed="onPriorityChanged($event)" ref="prioSelector" /></div>
         </div>
         <div class="fields-row"> 
                 <div class="search-field-title">زمان پاسخ از:</div>
@@ -82,6 +82,7 @@ import { LetterOwner } from '@/store/models/LetterOwner/LetterOwner';
 import store from '@/store';
 import VuePersianDatetimePicker from 'vue-persian-datetime-picker';
 import letterSearch from '@/store/models/Letter/letterSearch';
+import persianDate from 'persian-date';
 
 @Component({
         components: {TriStateCheckbox, PrioritySelector, LetterOwnerLookup, VuePersianDatetimePicker}
@@ -152,25 +153,94 @@ export default class AdvancedSerach extends Vue
                 this.abstract = '';
                 this.letterNo = '';
                 this.senderLetterNo = '';
+                this.forwardComment = '';
+                this.finalizeComment = '';
+                (this.$refs.prioSelector as any).clear();
 
         }
 
         async doSearch(){
                 const searchDto = {} as letterSearch ;
-                searchDto.title = this.title;
-                searchDto.abstract = this.abstract;
+                if(this.title !=='')searchDto.title = this.title;
+                if(this.abstract !=='') searchDto.abstract = this.abstract;
+                if(this.letterNo !=='') searchDto.letterNumberSequence = this.letterNo;
+                if(this.senderLetterNo !== '') searchDto.IncomingLetterNumberReferenceNumber = this.senderLetterNo;
+                if(this.forwardComment !== '') searchDto.comment = this.forwardComment;
+                if(this.finalizeComment !== '') searchDto.closingComment = this.finalizeComment;
                 searchDto.SearchingOwner = {} as LetterOwner;
                 searchDto.SearchingOwner.id = store.state.ownerId;
                 searchDto.searchInLetterOwnerDashboard = {} as LetterOwner;
                 searchDto.searchInLetterOwnerDashboard.id = this.cartableOwnerId;
+                
+                if(this.toOwnerId !== '')
+                {
+                        searchDto.sendTo = {} as LetterOwner;
+                        searchDto.sendTo.id = this.toOwnerId;
+                }
+                if(this.fromOwnerId !==''){
+                        searchDto.sendFrom = {} as LetterOwner;
+                        searchDto.sendFrom.id = this.fromOwnerId;
+                }
+                if(this.presentInId != ''){
+                        searchDto.OwnerParticipateInTrail = {} as LetterOwner;
+                        searchDto.OwnerParticipateInTrail.id = this.presentInId;
+                }
+                if(this.isFinalized === 'checked' || this.isFinalized === 'unChecked')
+                        searchDto.isClosed = this.isFinalized === 'checked';
+                if(this.isReturned === 'checked' || this.isReturned === 'unChecked')
+                        searchDto.SearchInReturnedLetters = this.isReturned === 'checked';
+                if(this.isSecret === 'checked' || this.isSecret === 'unChecked')
+                        searchDto.isSecured = this.isSecret === 'checked';
+                if(this.dateFrom !== '')
+                        searchDto.sentTimeFrom = this.getDateFrom(this.dateFrom);
+                if(this.dateTo !== '')
+                        searchDto.sentTimeTo = this.getDateTo(this.dateTo);
+                if(this.responseDateFrom !== '')
+                        searchDto.answerTimeFrom = this.getDateFrom(this.responseDateFrom);
+                if(this.responseDateTo !== '')
+                        searchDto.answerTimeTo = this.getDateTo(this.responseDateTo);
                 searchDto.isConjunctive = true;
-                //const result =  await letterService.SearchAll(searchDto);
+                if(this.priority){
+                        searchDto.priorityFrom = this.priority;
+                        searchDto.priorityTo = this.priority;
+                }
                 store.commit("setAdvancedSearchSettings",searchDto);
-                this.$router.replace({name: "SearchResults"});
-                //console.log(result);
-
-                //searchDto.
+                this.$router.push({name: "SearchResults"}).catch(err=>{ console.log('')});
+             
         }
+
+        getDateFrom(dateStr: string){
+                try {
+                        const splited = dateStr.split('/');
+                        const datePersian = new persianDate([parseInt(splited[0]),parseInt(splited[1]),parseInt(splited[2])]);
+                        return datePersian.toDate();
+                
+                } catch (error) {
+                        return null;       
+                }
+        }
+
+        getDateTo(dateStr: string){
+                try {
+                        const splited = dateStr.split('/');
+                        const datePersian = new persianDate([parseInt(splited[0]),parseInt(splited[1]),parseInt(splited[2]),23,59,59]);
+                        return datePersian.toDate();
+                
+                } catch (error) {
+                        return null;
+                }
+        }
+        priority?: number = undefined;
+        onPriorityChanged(priority: any){
+                if(priority){
+                        if(priority === 'low')this.priority = 1;
+                        if(priority === 'med')this.priority = 5;
+                        if(priority === 'high')this.priority = 10;
+                }
+                else
+                        this.priority = undefined;
+        }
+
 }
 </script>
 

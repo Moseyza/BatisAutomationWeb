@@ -48,6 +48,11 @@ export default class PrioritySelector extends Vue{
         else  
           this.$emit('priority-changed',mode);
     }
+    clear(){
+      this.isLow = false;
+      this.isHigh = false;
+      this.isMed = false;
+    }
     created(){
         if(this.isNullable){
             this.isLow = false;

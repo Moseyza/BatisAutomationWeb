@@ -4,10 +4,10 @@ export default interface letterSearch{
     title: string;
     sendTo: LetterOwner;
     sendFrom: LetterOwner;
-    sentTiemFrom: string;
-    sentTimeTo: string;
-    answerTimeFrom: string;
-    answerTimeTo: string;
+    sentTimeFrom: Date | null;
+    sentTimeTo: Date | null;
+    answerTimeFrom: Date | null;
+    answerTimeTo: Date | null;
     abstract: string;
     comment: string;
     closingComment: string;
@@ -17,6 +17,7 @@ export default interface letterSearch{
     searchInLetterOwnerDashboard: LetterOwner;
     isSecured: boolean | null;
     priorityFrom: number | null;
+    priorityTo: number | null;
     isClosed: boolean | null;
     isNotLastInWorkflow: boolean | null;
     allStrings: string; 
@@ -25,7 +26,7 @@ export default interface letterSearch{
     SearchingOwner: LetterOwner
     IncludePersonalComment: boolean;
     PersonalComment: string;
-    EnterpriseForm: string;
+    EnterpriseForm: string | null;
     //EnterpriseFormFilters:EnterpriseFormFilterDto[]
     //SendFromCompany
     //SendToCompany
@@ -36,5 +37,6 @@ export default interface letterSearch{
     //CompanyParticipateInTrail
     //NextEnterpriseForm
     SearchInReturnedLetters: boolean | null;
+    isSelected: boolean;
 
 }
