@@ -66,7 +66,7 @@
                     <!-- <p> -->
                         <!-- {{letter.abstract}} -->
                         <div style="padding:5px;flex:1" class="ng-scope pdfobject-container">
-                            <iframe :src="pdfSrc" type="application/pdf" width="100%" height="100%" style="overflow: auto;"></iframe>
+                            <iframe v-if="pdfLoaded" :src="pdfSrc" type="application/pdf" width="100%" height="100%" style="overflow: auto;"></iframe>
                         </div>
                 </div>
             </div>
@@ -147,14 +147,17 @@ export default class SearchResultDetails extends Vue {
         const blob =  converBase64toBlob(file.content||"",'');
         saveFile(blob,file.extension);
     }
+    pdfLoaded = false;
     async setPdfUrl(){
          if(this.searchResult === undefined)return;
         if(this.searchResult.parts === undefined || this.searchResult.parts === null)return;
+            this.pdfLoaded = false;
             const file = await fileService.getFile(this.searchResult.parts[0].file.id);
             // const blob =  converBase64toBlob(file.content,file.extension);
             // this.pdfSrc = blob;
             // console.log(blob);
             this.pdfSrc = "data:application/pdf;base64," + file.content;
+            this.pdfLoaded = true;
 
         
     }

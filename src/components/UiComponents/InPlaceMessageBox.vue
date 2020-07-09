@@ -6,8 +6,8 @@
         <div class="message-box-buttons">
             <div class="dialog-button" @click="ok()" v-if="buttons === 'ok' || buttons === 'okCancel' ">تائید</div>
             <div class="dialog-button" @click="cancel()" v-if="buttons  === 'okCancel' ">انصراف</div>
-            <div class="dialog-button" @click="yes()" v-if="buttons  === 'yesNo' ">بله</div>
             <div class="dialog-button" @click="no()" v-if="buttons  === 'yesNo' ">خیر</div>
+            <div class="dialog-button" @click="yes()" v-if="buttons  === 'yesNo' ">بله</div>
         </div>
     </div>
 </template>

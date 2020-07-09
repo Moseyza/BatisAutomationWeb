@@ -80,6 +80,11 @@ export default class MainWindow extends Vue {
         const temp: any = {};
         Object.assign(temp,searchResult)
         this.selectedSearchResult = temp;
+        this.selectedLetter = {} as Letter;
+        this.selectedLetter.id = this.selectedSearchResult.letterId;
+        this.selectedLetter.title = this.selectedSearchResult.title;
+        this.selectedLetter.abstract = this.selectedSearchResult.abstract;
+        this.selectedLetter.letterPossessionId = this.selectedSearchResult.possessionId;
     }
     
     onLetterOwnerSet(){

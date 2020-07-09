@@ -38,13 +38,13 @@ export default class LetterTypeSelector extends Vue {
         if(p === 1){
             this.firstSelected = true;
             if(this.mode === 'received')
-                this.$emit('letter-type-changed',"notRead");
+                this.$emit('letter-type-changed',"notForwarded");
             else if(this.mode === 'drafts')
                 this.$emit('letter-type-changed',"sent");
         }else if(p === 2){
             this.secondSelected = true;
             if(this.mode === 'received')
-                this.$emit('letter-type-changed','notForwarded');
+                this.$emit('letter-type-changed','notRead');
             else if(this.mode === 'drafts')
                 this.$emit('letter-type-changed',"notSent");
         }else{
@@ -58,8 +58,8 @@ export default class LetterTypeSelector extends Vue {
 
     setButtonsText(){
         if(this.mode === 'received'){
-            this.firstButtonTxt = `خوانده نشده (${this.counts.notRead})`;
-            this.secondButtonTxt = `ارجاع نشده (${this.counts.notForwarded})`;
+            this.firstButtonTxt = `ارجاع نشده (${this.counts.notForwarded})`;
+            this.secondButtonTxt = `خوانده نشده (${this.counts.notRead})`;
             this.thirdButtonTxt = `همه (${this.counts.all})`;
 
         }

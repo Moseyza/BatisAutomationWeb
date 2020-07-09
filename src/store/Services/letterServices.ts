@@ -79,6 +79,23 @@ export async function CloseLetter(letterPossessionId: string,comment: string, ac
     }
 }
 
+export async function CloseLetterFast(letterPossessionId: string){
+    try {
+        const serverResult =  await api.batisAutomationApi.post("/letters/CloseFast",{letterPossessionId: letterPossessionId});
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export async function RestoreLetter(letterPossessionId: string){
+    try {
+        const serverResult =  await api.batisAutomationApi.post("/letters/RestoreLetter",{letterPossessionId: letterPossessionId});
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
 export async function ForwardLetter(letterPossessionId: string, mainRecipients: LetterOwnerWithSendingInformationAndAttachments[], copyRecipients: LetterOwnerWithSendingInformationAndAttachments[]): Promise<SentLetterInformation>
 {
    

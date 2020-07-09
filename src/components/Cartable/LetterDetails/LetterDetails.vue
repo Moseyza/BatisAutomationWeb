@@ -7,7 +7,9 @@
                 </div>
                 <div style="flex:1;justify-content:space-around" class="symmetric-grid">
                     <i class="action-icon icon-comment" style="font-size: x-large"></i>
-                    <i class="action-icon icon-closeFast"></i>
+                    <div class="popup" v-if="canFinalize" data-content='اختتام سریع' @click="finalizeLetterFast" > <i  class="action-icon icon-closeFast" ></i></div>
+                    <div v-if="finalizing" class="ui active inline small loader"></div>
+                    <div style="padding-top:5px" class="popup" v-if="canReject" data-content='بازگردانی نامه' @click="restoreLetter" > <i  style="font-size:20pt" class="action-icon icon-rejectClose" ></i></div>
                     <div id="options-dropdown"  class="ui icon top left dropdown">
   		                <i class="action-icon icon-threeDots" style="font-size: x-large"></i>
   		                <div class="menu">
@@ -66,7 +68,7 @@
                     <!-- <p> -->
                         <!-- {{letter.abstract}} -->
                         <div style="padding:5px;flex:1" class="ng-scope pdfobject-container">
-                            <iframe :src="pdfSrc" type="application/pdf" width="100%" height="100%" style="overflow: auto;"></iframe>
+                            <iframe v-if="pdfLoaded" :src="pdfSrc" type="application/pdf" width="100%" height="100%" style="overflow: auto;"></iframe>
                         </div>
 
                         <!-- <object :data="pdfSrc" type="application/pdf" width="100%" >
@@ -113,6 +115,8 @@ export default class LetterDetails extends Vue {
     onLetterChanged(newVal: Letter, oldVal: Letter){
         this.setIsReceived();
         this.setPdfUrl();
+        this.canFinalize = true;
+        this.canReject = false;
     }
     
        
@@ -153,25 +157,50 @@ export default class LetterDetails extends Vue {
         const blob =  converBase64toBlob(file.content||"",'');
         saveFile(blob,file.extension);
     }
+    pdfLoaded = false;
     async setPdfUrl(){
          if(this.letter === undefined)return;
+         this.pdfLoaded = false;
         if(this.letter.parts === undefined || this.letter.parts === null)return;
             const file = await fileService.getFile(this.letter.parts[0].file.id);
             // const blob =  converBase64toBlob(file.content,file.extension);
             // this.pdfSrc = blob;
             // console.log(blob);
+            
             this.pdfSrc = "data:application/pdf;base64," + file.content;
+            this.pdfLoaded = true;
 
         
     }
     async mounted(){
         $("#options-dropdown").dropdown({action: 'hide',silent: true});
+        $(".popup").popup();
         await this.setPdfUrl();
     }
 
     finalizeLetter(){
         if(this.letter === undefined || this.letter === null) return;
         this.$emit('finalize-letter',this.letter.id);
+    }
+    canFinalize = true;
+    canReject = false;
+    finalizing = false;
+    async finalizeLetterFast(){
+        if(!this.letter)return
+        this.finalizing = true;
+        this.canFinalize = false;
+        const result =  await letterService.CloseLetterFast(this.letter.letterPossessionId);
+        this.finalizing = false;
+        this.canReject = true;
+      
+    }
+    async restoreLetter(){
+        if(!this.letter)return
+        this.finalizing = true;
+        this.canReject = false;
+        const result =  await letterService.RestoreLetter(this.letter.letterPossessionId);
+        this.finalizing = false;
+        this.canFinalize = true;
     }
     forwardLetter(){
         if(this.letter)

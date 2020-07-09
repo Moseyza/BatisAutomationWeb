@@ -1,7 +1,7 @@
 <template>
     <!-- <ul> -->
         <div class="node">
-            <div class="node-title">
+            <div @dblclick="titleDblClick()" class="node-title">
                 <div class="leaf-node" v-if="data.children.length == 0" ></div>
                 <i v-if="data.children.length >0" class="icon-nodeIconOpen node-icon" @click="toggle()" :class="{'icon-nodeIcon':!isOpen , 'icon-nodeIconOpen':isOpen}" ></i>
                 <i style="flex:1;padding-top:5px;" :class="data.iconClass"></i>
@@ -65,6 +65,9 @@ export default class FoldersTreeNode extends Vue {
     onChildFolderClicked(name: string){
         this.$emit('folder-clicked',name);
     }
+    titleDblClick(){
+        this.isOpen = !this.isOpen;
+    }
 }
 
 
@@ -94,6 +97,7 @@ export interface FoldersTreeNodeData {
         max-width: 200px;
         overflow: hidden;
         text-overflow: ellipsis;
+        cursor: pointer;
     }
     router-link{
         cursor: pointer;
