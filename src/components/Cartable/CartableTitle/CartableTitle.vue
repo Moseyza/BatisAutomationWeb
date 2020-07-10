@@ -27,6 +27,7 @@ export default class CartableTitle extends Vue{
     branch = '';
     async created(){
         const serverTime = new Date(await letterService.getServerTime());
+        
         this.clock = setInterval(()=>{
             const d =  serverTime;//new Date();
             this.currentTime = d.toLocaleTimeString();

@@ -115,8 +115,8 @@ export default class LetterDetails extends Vue {
     onLetterChanged(newVal: Letter, oldVal: Letter){
         this.setIsReceived();
         this.setPdfUrl();
-        this.canFinalize = true;
-        this.canReject = false;
+        this.canFinalize = !newVal.isClosed;
+        this.canReject = newVal.isClosed;
     }
     
        
@@ -190,6 +190,7 @@ export default class LetterDetails extends Vue {
         this.finalizing = true;
         this.canFinalize = false;
         const result =  await letterService.CloseLetterFast(this.letter.letterPossessionId);
+        this.letter.isClosed = true;
         this.finalizing = false;
         this.canReject = true;
       
@@ -199,6 +200,7 @@ export default class LetterDetails extends Vue {
         this.finalizing = true;
         this.canReject = false;
         const result =  await letterService.RestoreLetter(this.letter.letterPossessionId);
+        this.letter.isClosed = false;
         this.finalizing = false;
         this.canFinalize = true;
     }

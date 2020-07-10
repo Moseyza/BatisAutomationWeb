@@ -24,9 +24,10 @@
                 <div  class="letter-date small-text" >
                     {{sendTime}}
                 </div>
-                <div>
-                    <span v-if="letterData.isOpenned || isSent" class="fixed-icon icon-openLetter"></span>
-                    <span v-else class="fixed-icon icon-notOpenLetter"></span>
+                <div class="symmetric-grid" style="justify-content:flex-end  ">
+                    <div v-if="letterData.isOpenned || isSent"> <span  class="fixed-icon icon-openLetter"></span></div>
+                    <div v-else> <span  class="fixed-icon icon-notOpenLetter"></span></div>
+                    <div v-if="letterData.isClosed"> <i class="fixed-icon icon-closedIcon"></i> </div>
                 </div>
             </div>
         </div>
