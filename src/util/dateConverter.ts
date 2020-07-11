@@ -63,6 +63,7 @@ class MonthWithNoYearResult extends Result{
     month = '';
     day = '';
     monthName = '';
+    
     toString(){
         return `${this.day} ${this.monthName} (${this.daysAgo} روز پیش)`;
     }
@@ -200,11 +201,10 @@ export class DateConverter{
 
 export class DateBaseOnCurrentTimeConverter{
   
-     getDateString(d: Date, serverTime: string)
+    getDateString(d: Date, serverTime: string)
     {
-
+        if(serverTime === '')return '';
         const dateConverter = new DateConverter();
-        //const serverTime = await letterService.getServerTime();
         const result =    dateConverter.convertToString(d, new Date(serverTime));
         if(result)
         return result.toString();

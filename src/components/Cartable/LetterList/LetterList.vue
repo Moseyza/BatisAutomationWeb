@@ -342,6 +342,28 @@ export default class LetterList extends Vue{
             return l1.sender.name.localeCompare(l2.sender.name);
         });
     }
+
+    closeLetter(possessionId: string){
+
+        const letter =  this.letters.find(item=>item.letterPossessionId === possessionId);
+        if(!letter)return;
+        this.letters[this.letters.indexOf(letter)].isClosed = true;
+
+    }
+
+     rejectCloseLetter(possessionId: string){
+
+        const letter =  this.letters.find(item=>item.letterPossessionId === possessionId);
+        if(!letter)return;
+        this.letters[this.letters.indexOf(letter)].isClosed = false;
+
+    }
+
+    forwardLetter(possessionId: string){
+         const letter =  this.letters.find(item=>item.letterPossessionId === possessionId);
+        if(!letter)return;
+        this.letters[this.letters.indexOf(letter)].isForwarded = true;
+    }
    
 }
 

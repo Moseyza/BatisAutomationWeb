@@ -24,10 +24,12 @@
                 <div  class="letter-date small-text" >
                     {{sendTime}}
                 </div>
-                <div class="symmetric-grid" style="justify-content:flex-end  ">
-                    <div v-if="letterData.isOpenned || isSent"> <span  class="fixed-icon icon-openLetter"></span></div>
-                    <div v-else> <span  class="fixed-icon icon-notOpenLetter"></span></div>
-                    <div v-if="letterData.isClosed"> <i class="fixed-icon icon-closedIcon"></i> </div>
+                <div  style="display:flex; justify-content:space-around ">
+                    <div style="flex:1;margin:5px" v-if="letterData.isForwarded"> <i class="fixed-icon icon-forwardedLetter"></i> </div>
+                    <div style="flex:1;margin:5px" v-if="letterData.isClosed"> <i class="fixed-icon icon-closedLetter"></i> </div>
+                    <div style="flex:1;margin:5px" v-if="letterData.isOpenned || isSent"> <span  class="fixed-icon icon-openLetter"></span></div>
+                    <div style="flex:1;margin:5px" v-else> <span  class="fixed-icon icon-notOpenLetter"></span></div>
+                    
                 </div>
             </div>
         </div>
@@ -82,7 +84,6 @@ export default class SingleLetter extends Vue{
             api.OpenLetter(this.letterData.letterPossessionId);
         }
         this.letterData.isOpenned = true;
-        //alert(this.letterData.letterPossessionId);
         this.$emit("letterselected",this.letterData.letterPossessionId);
         
     }

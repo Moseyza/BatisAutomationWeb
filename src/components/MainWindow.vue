@@ -23,6 +23,8 @@
                 :searchResult="selectedSearchResult"
                 @finalize-letter="onFinalizeLetter($event)"
                 @forward-letter="onForwardLetter($event)"
+                @letter-closed-fast="onLetterClosedFast($event)"
+                @closed-letter-rejected="onClosedLetterRejected($event)"
                 >
                 </LetterDetails>
                 <SearchResultDetails v-else-if="noLetterSelected == false && leftSideMode==='searchResultDetails'" :searchResult="selectedSearchResult"
@@ -94,8 +96,9 @@ export default class MainWindow extends Vue {
         this.leftSideMode = 'finalize';
     }
 
-    onForwardLetter(){
+    onForwardLetter(possessionId: string){
         this.leftSideMode = 'forward';
+        (this.$refs.letterlist as any).forwardLetter(possessionId);
     }
     onForwardCanceled(){
         this.leftSideMode = 'details';
@@ -109,6 +112,13 @@ export default class MainWindow extends Vue {
     }
     async onFolderClicked(){
          await (this.$refs.letterlist as any).refresh();
+    }
+
+    onLetterClosedFast(possessionId: string){
+         (this.$refs.letterlist as any).closeLetter(possessionId);
+    }
+    onClosedLetterRejected(possessionId: string){
+        (this.$refs.letterlist as any).rejectCloseLetter(possessionId);
     }
     fastSendMode = '';
 }

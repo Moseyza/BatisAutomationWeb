@@ -87,9 +87,9 @@ export async function CloseLetterFast(letterPossessionId: string){
     }
 }
 
-export async function RestoreLetter(letterPossessionId: string){
+export async function RejectClosedLetter(letterPossessionId: string){
     try {
-        const serverResult =  await api.batisAutomationApi.post("/letters/RestoreLetter",{letterPossessionId: letterPossessionId});
+        const serverResult =  await api.batisAutomationApi.post("/letters/RejectClosedLetter",{letterPossessionId: letterPossessionId});
     } catch (error) {
         console.log(error);
     }

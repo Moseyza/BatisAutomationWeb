@@ -190,6 +190,7 @@ export default class LetterDetails extends Vue {
         this.finalizing = true;
         this.canFinalize = false;
         const result =  await letterService.CloseLetterFast(this.letter.letterPossessionId);
+        this.$emit('letter-closed-fast',this.letter.letterPossessionId);
         this.letter.isClosed = true;
         this.finalizing = false;
         this.canReject = true;
@@ -199,14 +200,15 @@ export default class LetterDetails extends Vue {
         if(!this.letter)return
         this.finalizing = true;
         this.canReject = false;
-        const result =  await letterService.RestoreLetter(this.letter.letterPossessionId);
+        const result =  await letterService.RejectClosedLetter(this.letter.letterPossessionId);
+        this.$emit('closed-letter-rejected',this.letter.letterPossessionId);
         this.letter.isClosed = false;
         this.finalizing = false;
         this.canFinalize = true;
     }
     forwardLetter(){
         if(this.letter)
-            this.$emit('forward-letter',this.letter.id);
+            this.$emit('forward-letter',this.letter.letterPossessionId);
     }
 
 }

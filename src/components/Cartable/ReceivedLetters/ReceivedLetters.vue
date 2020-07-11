@@ -1,6 +1,15 @@
 <template>
     <div style="height:100%">
-        <LetterList :lettersProp="letters" :years="years" :mode="'received'" :loading="loading" @selected-letter-changed="onSelectedLetterChanged($event)" :defaultDate="defaultDate" @date-filter-changed="onDateFilterChanged($event)" ></LetterList>
+        <LetterList 
+        :lettersProp="letters" 
+        :years="years" 
+        :mode="'received'" 
+        :loading="loading" 
+        @selected-letter-changed="onSelectedLetterChanged($event)" 
+        :defaultDate="defaultDate" 
+        @date-filter-changed="onDateFilterChanged($event)" 
+        ref="letterList"
+        ></LetterList>
     </div>
 </template>
 
@@ -44,6 +53,20 @@ export default class ReceivedLetters extends Vue {
         this.letters = serverResult.letterList;
         this.loading = false;
     }
+
+    closeLetter(possessionId: string)
+    {
+        (this.$refs.letterList as any).closeLetter(possessionId);
+    }
+    rejectCloseLetter(possessionId: string)
+    {
+        (this.$refs.letterList as any).rejectCloseLetter(possessionId);
+    }
+
+    forwardLetter(possessionId: string){
+         (this.$refs.letterList as any).forwardLetter(possessionId);
+    }
+    
 }
 </script>
 
