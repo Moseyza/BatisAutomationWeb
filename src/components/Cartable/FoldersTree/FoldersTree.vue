@@ -14,9 +14,11 @@
 import { Vue, Component, Prop, Watch} from 'vue-property-decorator';
 import * as api from '@/store/api';
 import * as letterOwnerService from '@/store/Services/letterOwnerService.ts';
+import * as announcementBoardService from '@/store/Services/announcementBoardService.ts';
 import {FoldersTreeNodeData} from './FoldersTreeNode/FoldersTreeNode.vue';
 import FoldersTreeNode from './FoldersTreeNode/FoldersTreeNode.vue';
 import { OwnerFolder } from '@/store/models/LetterOwner/OwnerFolder';
+import { AnnouncementBoard } from '../../../store/models/AnnouncementBoard/AnnouncementBoard';
 
 @Component({
     components:{FoldersTreeNode}
@@ -27,8 +29,9 @@ export default class FoldersTree extends Vue {
     async onLetterOwnerChanged(){
         if(this.letterOwnerId === undefined) return;
         const archiveFolders =  await letterOwnerService.getArchiveFolders(this.letterOwnerId);
+        const announcementBoards = await announcementBoardService.getAccessibleAnnouncementBoards(this.letterOwnerId);
 
-         const cartableFolder = {} as FoldersTreeNodeData;
+        const cartableFolder = {} as FoldersTreeNodeData;
         cartableFolder.name = "کارتابل نامه ها";
         cartableFolder.isRoot = true;
         cartableFolder.url = "Cartable";
@@ -112,9 +115,17 @@ export default class FoldersTree extends Vue {
         closedOutgoingLetters.iconClass = {'icon-outgoingClosed':true,'fixed-icon':true};
         closedOutgoingLetters.children = [];
 
+        const announcementBoardsNode = {} as FoldersTreeNodeData;
+        announcementBoardsNode.name = 'برد اعلانات و اسناد';
+        announcementBoardsNode.isRoot = true;
+        announcementBoardsNode.url = 'AnnouncementBoards';
+        announcementBoardsNode.iconClass = {'icon-AnnouncementBoard':true,'fixed-icon':true }
+        announcementBoardsNode.children = [];
+        this.addAnnouncementBoard(announcementBoardsNode,announcementBoards);
+
         colosedLettersNode.children.push(closedIncomingLetters,closedOutgoingLetters);
 
-        this.folders.push(cartableFolder,draftFolder,archiveFoldersNode,faxesNode,colosedLettersNode);
+        this.folders.push(cartableFolder,draftFolder,archiveFoldersNode,faxesNode,announcementBoardsNode,colosedLettersNode);
       
     }
 
@@ -129,6 +140,20 @@ export default class FoldersTree extends Vue {
             parent.children.push(childNode);
             if(folder.childFolders !== null && folder.childFolders != undefined)
                 this.addArchiveFolder(childNode,folder.childFolders);
+        });
+    }
+
+    addAnnouncementBoard(parent: FoldersTreeNodeData, announcementBoards: AnnouncementBoard[]){
+        announcementBoards.forEach(board=>{
+            const childNode = {} as FoldersTreeNodeData;
+            childNode.name = board.name;
+            childNode.isRoot = false;
+            childNode.iconClass = {'icon-AnnouncementBoardChild':true,'fixed-icon':true};
+            childNode.url = `AnnouncementBoard?boardId=${board.id}`;
+            childNode.children = [];
+            parent.children.push(childNode);
+            if(board.children !== null && board.children != undefined)
+                this.addAnnouncementBoard(childNode,board.children);
         });
     }
     

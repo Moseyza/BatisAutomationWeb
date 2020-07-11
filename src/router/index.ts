@@ -59,6 +59,12 @@ const routes = [
         props: (route: any) => ({folderId: route.query.folderId})
       },
       {
+        path: 'AnnouncementBoard',
+        name: 'AnnouncementBoard',
+        component: () => import('@/components/Cartable/Announcements/Announcements.vue'),
+        props: (route: any) => ({boardId: route.query.boardId})
+      },
+      {
         path: 'SearchResults',
         name: 'SearchResults',
         component: () => import('@/components/Cartable/SearchResultList/SearchResultList.vue'),
