@@ -24,7 +24,9 @@
 import {Vue, Prop, Component, Watch} from 'vue-property-decorator';
 import { getPersianDate } from '@/util/utils';
 import { LetterTrailWithAttachments } from '../../../../../store/models/Letter/LetterTrailWithAttachment';
-@Component
+@Component({
+    name:'LetterTrailTreeNode'
+})
 export default class LetterTrailTreeNode extends Vue {
     
     @Prop() nodeData?: LetterTrailWithAttachments;

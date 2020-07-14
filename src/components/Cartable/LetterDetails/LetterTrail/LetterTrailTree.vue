@@ -14,6 +14,7 @@ import * as letterService  from '@/store/Services/letterServices.ts';
 import store from '@/store';
 import { LetterTrailWithAttachments } from '../../../../store/models/Letter/LetterTrailWithAttachment';
 @Component({
+    name:"LetterTrailTree",
     components: {LetterTrailTreeNode}
 })
 export default class LetterTrailTree extends Vue {

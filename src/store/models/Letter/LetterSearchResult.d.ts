@@ -19,7 +19,7 @@ export interface LetterSearchResult{
     comment : string;
     letterNo : string;
     isForwarded : boolean;
-    letterReferences : LetterReferencesToOtherLetters;
+    letterReferences?: LetterReferencesToOtherLetters[];
     page: string;
     doesHasComment : boolean;
     incomingLetterNumberReferenceNumber : string

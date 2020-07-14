@@ -346,23 +346,40 @@ export default class LetterList extends Vue{
     closeLetter(possessionId: string){
 
         const letter =  this.letters.find(item=>item.letterPossessionId === possessionId);
-        if(!letter)return;
-        this.letters[this.letters.indexOf(letter)].isClosed = true;
-
+        if(letter)
+            this.letters[this.letters.indexOf(letter)].isClosed = true;
+        else{
+            const searchResult = this.searchResults.find(item=>item.possessionId === possessionId);
+            if(searchResult)
+                this.searchResults[this.searchResults.indexOf(searchResult)].isClosed = true;
+                
+        }
+        
     }
 
      rejectCloseLetter(possessionId: string){
 
         const letter =  this.letters.find(item=>item.letterPossessionId === possessionId);
-        if(!letter)return;
-        this.letters[this.letters.indexOf(letter)].isClosed = false;
+        if(letter)
+            this.letters[this.letters.indexOf(letter)].isClosed = false;
+        else{
+            const searchResult = this.searchResults.find(item=>item.possessionId === possessionId);
+            if(searchResult)
+                this.searchResults[this.searchResults.indexOf(searchResult)].isClosed = false;
+        }
+        
 
     }
 
     forwardLetter(possessionId: string){
          const letter =  this.letters.find(item=>item.letterPossessionId === possessionId);
-        if(!letter)return;
-        this.letters[this.letters.indexOf(letter)].isForwarded = true;
+        if(letter)
+            this.letters[this.letters.indexOf(letter)].isForwarded = true;
+        else{
+            const searchResult = this.searchResults.find(item=>item.possessionId === possessionId);
+            if(searchResult)
+                this.searchResults[this.searchResults.indexOf(searchResult)].isForwarded = true;
+        }
     }
    
 }

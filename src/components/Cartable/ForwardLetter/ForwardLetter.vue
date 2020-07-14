@@ -1,10 +1,6 @@
 <template>
     <div class="three-part-flexbox">
-       <MessageBox 
-       :isActive="shallShowMessageBox" 
-       :buttons="msgBoxBtns" 
-       :message="message" 
-       @button-clicked="onMessageBoxBtnClicked($event)"/>
+       
        <div class="flex-part-top">
             گیرنده اصلی:
            <RecipientLookup :recipients="recipients" @recipient-selected="selectMainRecipient($event)"/>
@@ -34,12 +30,19 @@
             </div>
        </div>
        <div class="flex-part-bottom" style="flex:0" >
-               <div style="display:flex">
+                <InPlaceMessageBox 
+                v-if="shallShowMessageBox" 
+               :buttons="msgBoxBtns" 
+               :message="message" 
+               :messageType="messageType"
+               @button-clicked="onMessageBoxBtnClicked($event)"/>
+               <div v-else style="display:flex">
                     <div @click="cancel" class="action-icon bg1" style="flex:1;text-align:center"><i style="color:inherit" class="icon icon-cancel"></i></div>
                     <div @click="send" class="action-icon bg1" style="flex:1;text-align:center"><i style="color:inherit" class="icon icon-send"></i></div>
                </div>
-           
+              
         </div>
+        <FullPageLoader :isActive="loading"/>
     </div>
    
 </template>
@@ -62,9 +65,10 @@ import * as util from '@/util/utils';
 import RecipientLookup from './RecipientLookup/RecipientLookup.vue';
 import Parts from '@/store/models/Letter/Parts';
 import LetterAttachment from '@/components/Cartable/LetterDetails/LetterAttachment/LetterAttachment.vue';
-import MessageBox from '@/components/UiComponents/MessageBox.vue';
+import InPlaceMessageBox from '@/components/UiComponents/InPlaceMessageBox.vue';
+import FullPageLoader from '@/components/UiComponents/FullPageLoader.vue';
 @Component({
-    components: {RecipientSelector, ToggleSwitch, RecipientLookup, LetterAttachment,MessageBox}
+    components: {RecipientSelector, ToggleSwitch, RecipientLookup, LetterAttachment,InPlaceMessageBox , FullPageLoader}
 })
 export default class ForwardLetter extends Vue{
     recipients: LetterOwnerWithFaxAndEmails[] = [];
@@ -73,8 +77,10 @@ export default class ForwardLetter extends Vue{
     autoCompleteData: AutoCompleteData[] = [];
     msgBoxBtns = 'ok';
     message = '';
+    messageType = '';
     shallShowMessageBox = false;
     isDone = false;
+    loading = false;
     @Prop() letter?: Letter;
     get attachments(){
         
@@ -125,6 +131,7 @@ export default class ForwardLetter extends Vue{
     
     async send(){
         if(this.selectedMainRecipients.length === 0 && this.selectedCopyRecipients.length === 0){
+            this.messageType = 'fail';
             this.message = 'هیچ گیرنده اصلی یا رونوشت انتخاب نشده است';
             this.shallShowMessageBox = true;
             return;
@@ -155,14 +162,16 @@ export default class ForwardLetter extends Vue{
             });   
         });
         if(!this.letter)return;
+        this.loading = true;
         const result = await letterService.ForwardLetter(this.letter.letterPossessionId,this.selectedMainRecipients,this.selectedCopyRecipients)
-      
+        this.loading = false;
         if(result != null){
             this.message = "ارجاع انجام شد";
+            this.messageType = 'success';
             this.shallShowMessageBox = true;
             this.isDone = true;
         }
-        this.$emit("forward-done");
+        this.$emit("forward-done",this.letter.letterPossessionId);
     }
 
     cancel(){

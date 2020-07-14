@@ -25,7 +25,7 @@ export  class Letter  {
     letterNo: string;
     transferType: number;
     isForwarded: boolean;
-    letterReferences?: (LetterReferencesToOtherLetters | null)[] | null;
+    letterReferences?: LetterReferencesToOtherLetters[];
     doesHasComment: boolean;
     incomingLetterNumberReferenceNumber: string;
     isEnterpriseForm: boolean;

@@ -1,6 +1,13 @@
 <template>
     <div style="height:100%">
-        <LetterList :searchResultsProp="searchResults"   :loading="loading" @selected-letter-changed="onSelectedLetterChanged($event)" :defaultDate="defaultDate" @date-filter-changed="onDateFilterChanged($event)" ></LetterList>
+        <LetterList 
+        :searchResultsProp="searchResults"   
+        :loading="loading" 
+        @selected-letter-changed="onSelectedLetterChanged($event)" 
+        :defaultDate="defaultDate" 
+        @date-filter-changed="onDateFilterChanged($event)" 
+        ref="letterList"
+        ></LetterList>
     </div>
 </template>
 
@@ -42,6 +49,18 @@ export default class SearchResultList extends Vue {
     @Watch('advancedSearchSettings')
     async onSearchSettingsChanged(nVal: letterSearch, oVal: letterSearch){
         await this.refresh();
+    }
+    closeLetter(possessionId: string)
+    {
+        (this.$refs.letterList as any).closeLetter(possessionId);
+    }
+    rejectCloseLetter(possessionId: string)
+    {
+        (this.$refs.letterList as any).rejectCloseLetter(possessionId);
+    }
+
+    forwardLetter(possessionId: string){
+         (this.$refs.letterList as any).forwardLetter(possessionId);
     }
     // async onDateFilterChanged(date: any){
     //     const startDate = new persianDate([date.year,date.month,1]);

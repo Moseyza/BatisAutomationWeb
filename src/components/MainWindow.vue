@@ -33,7 +33,7 @@
                  >
                 </SearchResultDetails>
                 <FinalizeLetter v-else-if="leftSideMode=== 'finalize'" :letter="selectedLetter"  />
-                <ForwardLetter v-else-if="leftSideMode=== 'forward'" @forward-canceled="onForwardCanceled" :letter="selectedLetter" />
+                <ForwardLetter v-else-if="leftSideMode=== 'forward'" @forward-canceled="onForwardCanceled" @forward-done="onLetterForwarded($event)" :letter="selectedLetter" />
                 <FastSend :mode="fastSendMode" v-else-if="leftSideMode=== 'fastSend'" @fastsend-canceled="onFastSendCanceled($event)"/>
             </div>
             
@@ -77,7 +77,7 @@ export default class MainWindow extends Vue {
         this.selectedLetter = temp;
     }
     onSelectdSearchResultChanged(searchResult: LetterSearchResult){
-        this.leftSideMode = 'searchResultDetails';
+        //this.leftSideMode = 'searchResultDetails';
         this.noLetterSelected = false;
         const temp: any = {};
         Object.assign(temp,searchResult)
@@ -87,6 +87,17 @@ export default class MainWindow extends Vue {
         this.selectedLetter.title = this.selectedSearchResult.title;
         this.selectedLetter.abstract = this.selectedSearchResult.abstract;
         this.selectedLetter.letterPossessionId = this.selectedSearchResult.possessionId;
+        this.selectedLetter.sender = this.selectedSearchResult.from;
+        this.selectedLetter.recievers = this.selectedSearchResult.to;
+        this.selectedLetter.comment = this.selectedSearchResult.comment;
+        this.selectedLetter.isOpenned = this.selectedSearchResult.isOpenned;
+        this.selectedLetter.letterNo = this.selectedSearchResult.letterNo;
+        this.selectedLetter.isForwarded = this.selectedSearchResult.isForwarded;
+        this.selectedLetter.letterReferences = this.selectedSearchResult.letterReferences;
+        this.selectedLetter.sendTime = this.selectedSearchResult.sendTime;
+        
+        
+        this.leftSideMode = 'details';
     }
     
     onLetterOwnerSet(){
@@ -98,6 +109,9 @@ export default class MainWindow extends Vue {
 
     onForwardLetter(possessionId: string){
         this.leftSideMode = 'forward';
+        //(this.$refs.letterlist as any).forwardLetter(possessionId);
+    }
+    onLetterForwarded(possessionId: string){
         (this.$refs.letterlist as any).forwardLetter(possessionId);
     }
     onForwardCanceled(){
