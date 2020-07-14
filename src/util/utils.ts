@@ -14,6 +14,12 @@ export function getPersianDate(date: string,format: string, formatPersian = true
   
 }
 
+export function getPersianFullFormatDate(date: string){
+  const persianDate =  require('@/../public/persian-date.js');
+      const pd = new persianDate(new Date(date));
+      return pd.format("dddd, MMMM DD YYYY, h:mm:ss ");
+}
+
 export function converBase64toBlob(content: string, contentType: string) {
   contentType = contentType || '';
   const sliceSize = 512;

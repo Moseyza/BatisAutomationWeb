@@ -1,7 +1,7 @@
 <template>
     <div>
         <div v-if="loading" class="ui active inline centered loader"></div>
-        <LetterTrailTreeNode v-else :nodeData="data"></LetterTrailTreeNode>
+        <LetterTrailTreeNode v-else :nodeData="data" :serverTime="serverTime"></LetterTrailTreeNode>
     </div>
     
 </template>
@@ -20,14 +20,16 @@ import { LetterTrailWithAttachments } from '../../../../store/models/Letter/Lett
 export default class LetterTrailTree extends Vue {
     data?: LetterTrailWithAttachments;
     loading = false;
+    serverTime = '';
     @Prop() letterId?: string;
-
+    
     @Watch('letterId')
     async onLetterIdChanged(){
         await this.getLetterTrail();
     }
 
     async created(){
+        this.serverTime = await letterService.getServerTime();
         await this.getLetterTrail();
     }
 
@@ -36,6 +38,8 @@ export default class LetterTrailTree extends Vue {
         this.loading = true;
         const ownerId =  store.state.ownerId;
         this.data =  await  letterService.GetLetterTrialWithAttachment(this.letterId,ownerId);
+        alert("######");
+        console.log(this.data);
         this.loading = false;
 
     }
