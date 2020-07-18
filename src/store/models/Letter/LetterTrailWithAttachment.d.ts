@@ -28,13 +28,14 @@ export interface LetterTrailWithAttachments {
     closingAttorner?: null;
     possessionId: string;
     sendTime: string;
-    recievers?: (LetterTrailWithAttachments)[] | null;
+    recievers?: (LetterTrailWithAttachments)[];
     isMainPossession: boolean;
     openTime?: null;
     closeTime?: null;
     isClosed: boolean;
     closingComment?: null;
     comment?: null;
+    isSender: boolean;
   }
   
   

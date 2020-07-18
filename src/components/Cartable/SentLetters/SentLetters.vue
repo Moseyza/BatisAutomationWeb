@@ -1,6 +1,11 @@
 <template>
     <div style="height:100%">
-        <LetterList :lettersProp="letters" :loading="loading" @selected-letter-changed="onSelectedLetterChanged($event)" ></LetterList>
+        <LetterList 
+        :lettersProp="letters" 
+        :loading="loading" 
+        @selected-letter-changed="onSelectedLetterChanged($event)" 
+        ref="letterList"
+        ></LetterList>
     </div>
 </template>
 
@@ -16,6 +21,9 @@ export default class ReceivedLetters extends Vue {
     letters?: Letter[] = [];
     loading = false;
     async created(){
+        await this.refresh();
+    }
+    async refresh(){
         this.loading = true;
         const serverResult = await api.getSentLetters(undefined,undefined);
         this.loading = false;
@@ -25,6 +33,19 @@ export default class ReceivedLetters extends Vue {
     onSelectedLetterChanged(letter: Letter){
         this.$emit('selected-letter-changed',letter);
     }
+    closeLetter(possessionId: string)
+    {
+        (this.$refs.letterList as any).closeLetter(possessionId);
+    }
+    rejectCloseLetter(possessionId: string)
+    {
+        (this.$refs.letterList as any).rejectCloseLetter(possessionId);
+    }
+
+    forwardLetter(possessionId: string){
+         (this.$refs.letterList as any).forwardLetter(possessionId);
+    }
+    
 }
 </script>
 

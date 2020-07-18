@@ -11,8 +11,8 @@
                         <div v-if="isSent == false" class="small-text">
                             {{letterData.sender.nameOnly}}
                         </div>
-                        <div v-if="isSent" style="max-height:20px;overflow:auto">
-                            <span class="small-text" v-for="(receiver,index) in letterData.recievers" :key="index+receiver.id" > {{receiver.nameOnly}} <br> </span>
+                        <div v-if="isSent" >
+                            {{receiverStr}}
                         </div>
                     </div>
                 </div>
@@ -86,6 +86,13 @@ export default class SingleLetter extends Vue{
         this.letterData.isOpenned = true;
         this.$emit("letterselected",this.letterData.letterPossessionId);
         
+    }
+
+    get receiverStr(){
+        if(!this.letterData)return '';
+        if(!this.letterData.recievers)return '';
+        if(this.letterData.recievers.length > 1) return this.letterData.recievers[0].nameOnly + ' و بیشتر...';
+        return this.letterData.recievers[0].nameOnly;
     }
 
     

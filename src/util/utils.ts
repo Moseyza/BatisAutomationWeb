@@ -1,3 +1,4 @@
+import * as persianDate from 'persian-date';
 export function getNewGuid() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
       const r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
@@ -7,7 +8,7 @@ export function getNewGuid() {
 
 
 export function getPersianDate(date: string,format: string, formatPersian = true){
-      const persianDate =  require('@/../public/persian-date.js');
+      //const persianDate =  require('@/../public/persian-date.js');
       const pd = new persianDate(new Date(date));
       pd.formatPersian = formatPersian;
       return pd.format(format);
@@ -15,9 +16,9 @@ export function getPersianDate(date: string,format: string, formatPersian = true
 }
 
 export function getPersianFullFormatDate(date: string){
-  const persianDate =  require('@/../public/persian-date.js');
-      const pd = new persianDate(new Date(date));
-      return pd.format("dddd, MMMM DD YYYY, h:mm:ss ");
+  //const persianDate =  require('@/../public/persian-date.js');
+      const pd = new persianDate(new Date(date.substring(0,date.length -1)));
+      return pd.format("dddd DD MMMM  YYYY ساعت HH:mm ");
 }
 
 export function converBase64toBlob(content: string, contentType: string) {

@@ -31,10 +31,10 @@
             <div class="container3">
                 <div class="symmetric-grid" >
                     <h4 class="highlight" v-if="isReceived">{{letter.sender.nameOnly}}</h4>
-                    <div v-else style="max-height: 20px; overflow: auto; flex:1">
-                        <div v-for="(receiver,index) in letter.recievers" :key="index"><h4 class="highlight">{{receiver.nameOnly}}</h4> <br/></div>
+                    <div class="ld-rcvs" v-else style="flex:1 0 auto">
+                        <h5 class="ld-rcvs highlight">{{receiversStr}}</h5>
                     </div>
-                    <div style="flex:1; text-align:end">
+                    <div style="flex:0 1 auto; text-align:end;">
                         <i @click="downloadLetterPdf()" class="helper-icon-large icon-file-pdf"></i>
                     </div>
                 </div>
@@ -43,7 +43,7 @@
                         {{letterTime}}
                     </div>
                     <div>
-                        <LetterTrailTree :letterId="letter.letterPossessionId"></LetterTrailTree>
+                        <LetterTrailTree :letterId="letter.letterPossessionId" :letterNo="letter.letterNo"></LetterTrailTree>
                     </div>
                 </div>
                 <div class="wrap-grid">
@@ -56,8 +56,8 @@
                 </div>
             </div>
             <div style="height: 100%">
-                <div v-if="letter.comment !==''">
-                    <div style="margin: 10px 0">هامش: {{letter.comment}}</div>
+                <div v-if="letter.comment">
+                    <div  style="margin: 10px 0">هامش: {{letter.comment}}</div>
                     <div class="symmetric-grid" style="padding:20px">
                         <div style="flex:1"></div>
                         <!-- <div style="flex:2;border-bottom:2px #e7e7e7 solid;"></div> -->
@@ -67,7 +67,7 @@
                 <div style="display:flex; height:100%">
                     <!-- <p> -->
                         <!-- {{letter.abstract}} -->
-                        <div style="padding:5px;flex:1" class="ng-scope pdfobject-container">
+                        <div style="padding:5px;flex:1;min-height:400px" class="ng-scope pdfobject-container">
                             <iframe v-if="pdfLoaded" :src="pdfSrc" type="application/pdf" width="100%" height="100%" style="overflow: auto;"></iframe>
                         </div>
 
@@ -211,8 +211,25 @@ export default class LetterDetails extends Vue {
             this.$emit('forward-letter',this.letter.letterPossessionId);
     }
 
+    get receiversStr()
+    {
+        if(!this.letter)return '';
+        if(!this.letter.recievers) return '';
+        let result = '';
+        this.letter.recievers.forEach(x=>{
+            if(result !== '') result = result + ' | ' + x.nameOnly;
+            else result = x.nameOnly;
+        });
+        return result;
+    }
+
 }
 </script>
 <style lang="less" scoped>
+.ld-rcvs{
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 </style>
 

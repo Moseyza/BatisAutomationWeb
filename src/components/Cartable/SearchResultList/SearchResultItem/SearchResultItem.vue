@@ -11,8 +11,8 @@
                         <div v-if="isSent == false" class="small-text">
                             {{letterData.from.nameOnly}}
                         </div>
-                        <div v-if="isSent" style="max-height:20px;overflow:auto">
-                            <span class="small-text" v-for="(receiver,index) in letterData.to" :key="index+receiver.id" > {{receiver.nameOnly}} <br> </span>
+                        <div v-if="isSent" >
+                            {{receiverStr}}
                         </div>
                     </div>
                 </div>
@@ -81,6 +81,13 @@ export default class SearchResultItem extends Vue{
         if(this.letterData === undefined)return;
         this.$emit("letterselected",this.letterData.possessionId);
         
+    }
+
+      get receiverStr(){
+        if(!this.letterData)return '';
+        if(!this.letterData.to)return '';
+        if(this.letterData.to.length > 1) return this.letterData.to[0].nameOnly + ' و بیشتر...';
+        return this.letterData.to[0].nameOnly;
     }
 
     

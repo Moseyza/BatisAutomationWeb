@@ -1,7 +1,7 @@
 <template>
     <div>
         <div v-if="loading" class="ui active inline centered loader"></div>
-        <LetterTrailTreeNode v-else :nodeData="data" :serverTime="serverTime"></LetterTrailTreeNode>
+        <LetterTrailTreeNode v-else :nodeData="data" :serverTime="serverTime" :isRoot="true"></LetterTrailTreeNode>
     </div>
     
 </template>
@@ -13,6 +13,7 @@ import { LetterTrail } from '@/store/models/Letter/LetterTrail';
 import * as letterService  from '@/store/Services/letterServices.ts';
 import store from '@/store';
 import { LetterTrailWithAttachments } from '../../../../store/models/Letter/LetterTrailWithAttachment';
+import { LetterOwner } from '../../../../store/models/LetterOwner/LetterOwner';
 @Component({
     name:"LetterTrailTree",
     components: {LetterTrailTreeNode}
@@ -22,6 +23,7 @@ export default class LetterTrailTree extends Vue {
     loading = false;
     serverTime = '';
     @Prop() letterId?: string;
+    @Prop() letterNo?: string;
     
     @Watch('letterId')
     async onLetterIdChanged(){
@@ -29,19 +31,25 @@ export default class LetterTrailTree extends Vue {
     }
 
     async created(){
-        this.serverTime = await letterService.getServerTime();
         await this.getLetterTrail();
+        this.serverTime = await letterService.getServerTime();
     }
 
     async getLetterTrail(){
         if(this.letterId === undefined)return;
         this.loading = true;
         const ownerId =  store.state.ownerId;
-        this.data =  await  letterService.GetLetterTrialWithAttachment(this.letterId,ownerId);
-        alert("######");
-        console.log(this.data);
-        this.loading = false;
+        const  trailData =  await  letterService.GetLetterTrialWithAttachment(this.letterId,ownerId);
+        trailData.isSender = true;
+        const root = {} as LetterTrailWithAttachments;
+        root.sender = {} as LetterOwner;
+        root.sender.nameOnly = `پیگیری نامه ${this.letterNo}`;
+        root.recievers = [];
+        root.sendTime = '';
+        root.recievers[0] = trailData;
+        this.data = root;
 
+        this.loading = false;
     }
 }
 </script>
