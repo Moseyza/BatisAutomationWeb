@@ -49,7 +49,7 @@ import { LetterSearchResult } from '../../../../store/models/Letter/LetterSearch
 export default class SearchResultItem extends Vue{
     @Prop() letterData?: LetterSearchResult 
     isSent = false;
-    serverTime = '';
+    @Prop() serverTime?: string;
     
     async created(){
     if(this.letterData === undefined) return;
@@ -57,7 +57,7 @@ export default class SearchResultItem extends Vue{
              this.isSent = true;
          }
 
-        this.serverTime = await letterService.getServerTime();
+        
     }
 
     get priorityColor(){
@@ -72,6 +72,7 @@ export default class SearchResultItem extends Vue{
 
     get  sendTime(){
         if(this.letterData === undefined) return '';
+        if(!this.serverTime)return '';
         const dateConverter = new  DateBaseOnCurrentTimeConverter();
         return   dateConverter.getDateString(new Date(this.letterData.sendTime.substring(0,this.letterData.sendTime.length -1)),this.serverTime)
     }

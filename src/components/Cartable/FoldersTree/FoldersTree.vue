@@ -31,12 +31,12 @@ export default class FoldersTree extends Vue {
         const archiveFolders =  await letterOwnerService.getArchiveFolders(this.letterOwnerId);
         const announcementBoards = await announcementBoardService.getAccessibleAnnouncementBoards(this.letterOwnerId);
 
-        const cartableFolder = {} as FoldersTreeNodeData;
-        cartableFolder.name = "کارتابل نامه ها";
-        cartableFolder.isRoot = true;
-        cartableFolder.url = "Cartable";
-        cartableFolder.children = [];
-        cartableFolder.iconClass = {'icon-dashbord':true,'fixed-icon':true }
+        //const cartableFolder = {} as FoldersTreeNodeData;
+        //cartableFolder.name = "کارتابل نامه ها";
+        //cartableFolder.isRoot = true;
+        //cartableFolder.url = "Cartable";
+        //cartableFolder.children = [];
+        //cartableFolder.iconClass = {'icon-dashbord':true,'fixed-icon':true }
         const receiveLetters = {} as FoldersTreeNodeData;
         receiveLetters.name = 'نامه های دریافتی';
         receiveLetters.url = "ReceivedLetters"
@@ -49,21 +49,21 @@ export default class FoldersTree extends Vue {
         sentLetters.isRoot = false;
         sentLetters.iconClass = {'icon-outbox':true,'fixed-icon':true }
         sentLetters.children = [];
-        cartableFolder.children.push(receiveLetters,sentLetters);
+        //cartableFolder.children.push(receiveLetters,sentLetters);
 
-        const draftFolder = {} as FoldersTreeNodeData;
-        draftFolder.name = 'پیش نویس ها';
-        draftFolder.isRoot = true;
-        draftFolder.url = 'Drafts';
-        draftFolder.children = [];
-        draftFolder.iconClass = {'icon-allDraft':true,'fixed-icon':true};
+        //const draftFolder = {} as FoldersTreeNodeData;
+        //draftFolder.name = 'پیش نویس ها';
+        //draftFolder.isRoot = true;
+        //draftFolder.url = 'Drafts';
+        //draftFolder.children = [];
+        //draftFolder.iconClass = {'icon-allDraft':true,'fixed-icon':true};
         const savedDraft = {} as FoldersTreeNodeData;
         savedDraft.isRoot = false;
         savedDraft.name = 'پیش نویس های ثبت شده';
         savedDraft.url = 'DraftLetters';
         savedDraft.iconClass = {'icon-drafts xxlarg-text':true,'fixed-icon':true};
         savedDraft.children = [];
-        draftFolder.children.push(savedDraft);
+        //draftFolder.children.push(savedDraft);
 
         const archiveFoldersNode = {} as FoldersTreeNodeData;
         archiveFoldersNode.name = 'پوشه های طبقه بندی';
@@ -125,7 +125,7 @@ export default class FoldersTree extends Vue {
 
         colosedLettersNode.children.push(closedIncomingLetters,closedOutgoingLetters);
 
-        this.folders.push(cartableFolder,draftFolder,archiveFoldersNode,faxesNode,announcementBoardsNode,colosedLettersNode);
+        this.folders.push(receiveLetters,sentLetters,savedDraft,archiveFoldersNode,faxesNode,announcementBoardsNode,colosedLettersNode);
       
     }
 

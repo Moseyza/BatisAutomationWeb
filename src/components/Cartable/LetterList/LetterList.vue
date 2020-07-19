@@ -24,6 +24,7 @@
                     :key="letter.letterPossessionId"
                     :index="index"
                     :letterData ="letter" @letterselected="onLetterSelected($event)"
+                    :serverTime="serverTime"
                     ></SingleLetter>
                 </div>
                 <div v-if="searchResultsProp && searchResultsProp.length >0"  id="letter-list">
@@ -32,12 +33,13 @@
                     :key="letter.possessionId"
                     :index="index"
                     :letterData ="letter" @letterselected="onLetterSelected($event)"
+                    :serverTime="serverTime"
                     ></SearchResultItem>
                 </div>
             </div>
         </div>
         <div style="display:flex; flex-direction:column; flex: 0.5 0 0;"  class="flex-part-bottom">
-            <LetterTypeSelector  v-if="mode !== '' && mode !== undefined" :mode="mode" @letter-type-changed="onLetterTypeChanged($event)" style="align-items: stretch;" :counts="counts" ></LetterTypeSelector>
+            <LetterTypeSelector  v-if="mode !== '' && mode !== undefined" :mode="mode" @letter-type-changed="onLetterTypeChanged($event)" style="align-items: stretch;" :counts="counts" ref="typeSelector" ></LetterTypeSelector>
         </div>
         
     </div>
@@ -58,6 +60,7 @@ import { Workflow } from '../../../store/models/workflow/workflow';
 import store from '@/store'
 import { LetterSearchResult } from '../../../store/models/Letter/LetterSearchResult';
 import SearchResultItem  from '@/components/Cartable/SearchResultList/SearchResultItem/SearchResultItem.vue';
+import * as letterService from '@/store/Services/letterServices';
 
 @Component({
     components:{SingleLetter,SearchResultItem, LetterFilter, LetterSearch,LetterTypeSelector}
@@ -69,6 +72,7 @@ export default class LetterList extends Vue{
     @Prop() mode?: string;
     @Prop() years?: number[];
     @Prop() defaultDate?: any;
+    serverTime = '';
     currentLetterType = 'all';
     currentSearchText = '';
     letters: Letter[] = [];
@@ -84,6 +88,7 @@ export default class LetterList extends Vue{
     onLettersChanged(){
         this.setUsedEnterpriseForms();
         this.calcCounts();
+        (this.$refs.typeSelector as any).selectAllMode();
     }
 
     @Watch('searchResults')
@@ -291,7 +296,7 @@ export default class LetterList extends Vue{
             const workflows =  await workflowService.getAllWorkflowsWithEnterpriseForms();
             store.commit("setWorkflows",workflows);
         }
-        
+        this.serverTime = await letterService.getServerTime();
         
     }
 

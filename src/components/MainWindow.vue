@@ -125,6 +125,7 @@ export default class MainWindow extends Vue {
         this.leftSideMode = 'fastSend';
     }
     async onFolderClicked(){
+        this.leftSideMode = "";
          await (this.$refs.letterlist as any).refresh();
     }
 

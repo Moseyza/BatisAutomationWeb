@@ -2,15 +2,15 @@
     <div class="prty-slctr bg1 chamfer">
         <label @click="select('low')"  class="chk-container" >
             <input  type="checkbox" :checked="isLow" disabled>
-            <span class="checkmark" style="background-color:#69b578"></span>
+            <span class="checkmark" style="background-color:#69b578" :class="{'blurred':!isLow }"></span>
         </label>
         <label @click="select('med')"  class="chk-container">
             <input  type="checkbox" :checked="isMed" disabled>
-            <span class="checkmark" style="background-color:#e9c46a" ></span>
+            <span class="checkmark" style="background-color:#e9c46a" :class="{'blurred':!isMed }" ></span>
         </label>
         <label @click="select('high')" class="chk-container">
             <input  type="checkbox" :checked="isHigh" disabled>
-            <span class="checkmark" style="background-color:#ff6b6b" ></span>
+            <span class="checkmark" style="background-color:#ff6b6b" :class="{'blurred':!isHigh }" ></span>
         </label>
     </div>
 </template>
@@ -137,5 +137,8 @@ export default class PrioritySelector extends Vue{
   -webkit-transform: rotate(45deg);
   -ms-transform: rotate(45deg);
   transform: rotate(45deg);
+}
+.blurred{
+  background-color: gray !important;
 }
 </style>

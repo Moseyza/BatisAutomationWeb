@@ -69,6 +69,10 @@ export default class LetterTypeSelector extends Vue {
             this.thirdButtonTxt = 'همه';
         }
     }
+
+    selectAllMode(){
+        this.select(3);
+    }
 }
 </script>
 

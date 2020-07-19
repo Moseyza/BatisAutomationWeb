@@ -3,13 +3,13 @@
         <li style="margin-top:5px">
             <div style="display:flex;flex-direction:column">
                 <div class="trail-node-title" :class="{'flex-start': isRoot}">
-                    <div v-if="nodeData.recievers.length > 0 && isHide" @click="toggleNode" ><i  class="icon icon-nodeIcon nodeIcon"></i></div>
-                    <div v-else @click="toggleNode" ><i  class="icon icon-nodeIconOpen nodeIcon"></i></div>
+                    <div v-if="nodeData.recievers.length > 0 && isHide" @click="toggleNode" style="padding-top: 5px;" ><i  class="icon icon-nodeIcon nodeIcon"></i></div>
+                    <div v-else @click="toggleNode" style="padding-top: 5px;" ><i  class="icon icon-nodeIconOpen nodeIcon"></i></div>
                     <div v-if="isRoot"><i class="icon-letterTrail xlarg-text"></i></div>
-                    <div v-if="!isRoot"> <i v-if="nodeData.isOwnerCompanyAndIsAPeer" class="icon-InterCompanyTrace xlarg-text" ></i></div>
-                    <div v-if="!isRoot"> <i v-if="!nodeData.isOwnerCompanyAndIsAPeer && nodeData.openTime && !nodeData.isClosed" class="icon-openLetter xlarg-text" ></i></div>
-                    <div v-if="!isRoot"> <i v-if="!nodeData.isOwnerCompanyAndIsAPeer && !nodeData.openTime && !nodeData.isClosed" class="icon-notOpenLetter xlarg-text" ></i></div>
-                    <div v-if="!isRoot"> <i v-if="!nodeData.isOwnerCompanyAndIsAPeer && nodeData.isClosed" class="icon-allClosed xlarg-text" ></i></div>
+                    <div v-if="!isRoot && nodeData.isOwnerCompanyAndIsAPeer"> <i  class="icon-InterCompanyTrace xlarg-text" ></i></div>
+                    <div v-if="!isRoot && !nodeData.isOwnerCompanyAndIsAPeer && nodeData.openTime && !nodeData.isClosed"> <i  class="icon-openLetter xlarg-text" ></i></div>
+                    <div v-if="!isRoot && !nodeData.isOwnerCompanyAndIsAPeer && !nodeData.openTime && !nodeData.isClosed"> <i  class="icon-notOpenLetter xlarg-text" ></i></div>
+                    <div v-if="!isRoot && !nodeData.isOwnerCompanyAndIsAPeer && nodeData.isClosed"> <i  class="icon-allClosed xlarg-text" ></i></div>
                     <div> 
                         <span>{{nodeData.sender.nameOnly}} </span> 
                         <span v-if="nodeData.sender.post" class="dark-text small-text">[{{nodeData.sender.post}}]</span> 
