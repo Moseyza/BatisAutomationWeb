@@ -13,9 +13,9 @@
                 </div>
             </div>
              <div v-if="mode=='draft'" class="symmetric-grid">
-                <div style="flex:1">
+            <div style="flex:1">
 
-                </div>
+            </div>
             <FastSendRecipientSelector style="flex:10"  :autoCompleteDataType="'draft'" :recipients="selectedDraftRecipients" @recipient-removed="onRecipientRemoved($event,'draft')"/>
             </div>
             <div v-if="mode=='send'" class="symmetric-grid" style="margin-bottom: 5px">

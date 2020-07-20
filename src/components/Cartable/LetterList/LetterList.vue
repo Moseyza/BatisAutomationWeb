@@ -25,6 +25,7 @@
                     :index="index"
                     :letterData ="letter" @letterselected="onLetterSelected($event)"
                     :serverTime="serverTime"
+                    :isDraft="mode==='drafts'"
                     ></SingleLetter>
                 </div>
                 <div v-if="searchResultsProp && searchResultsProp.length >0"  id="letter-list">

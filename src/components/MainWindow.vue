@@ -16,7 +16,12 @@
                      
             </div>
             <div class="conatiner2" style="flex:3">
-                <router-view @selected-letter-changed="onSelectdLetterChanged($event)" @selected-searchresult-changed="onSelectdSearchResultChanged($event)" ref='letterlist'></router-view>
+                <router-view 
+                @selected-letter-changed="onSelectdLetterChanged($event)" 
+                @selected-draft-changed="onSelectdDraftChanged($event)"
+                @selected-searchresult-changed="onSelectdSearchResultChanged($event)" 
+                ref='letterlist'>
+                </router-view>
             </div>
             <div class="container2" style="flex:6">
                 <LetterDetails v-if="noLetterSelected == false && leftSideMode==='details'" :letter="selectedLetter" 
@@ -28,6 +33,8 @@
                 @send-fast-dependon="sendFastDependOn($event)"
                 >
                 </LetterDetails>
+                <DraftDetails v-if="noLetterSelected == false && leftSideMode==='draftDetails'" :letter="selectedLetter" >
+                </DraftDetails>
                 <SearchResultDetails v-else-if="noLetterSelected == false && leftSideMode==='searchResultDetails'" :searchResult="selectedSearchResult"
                 @finalize-letter="onFinalizeLetter($event)"
                 @forward-letter="onForwardLetter($event)"
@@ -52,6 +59,7 @@ import SingleCartableOwner from '@/components/Cartable/CartableOwner/SingleCarta
 import CartableTitle from '@/components/Cartable/CartableTitle/CartableTitle.vue';
 import FoldersTree from '@/components/Cartable/FoldersTree/FoldersTree.vue';
 import LetterDetails from '@/components/Cartable/LetterDetails/LetterDetails.vue';
+import DraftDetails from '@/components/Cartable/DraftDetails/DraftDetails.vue';
 import SearchResultDetails from '@/components/Cartable/LetterDetails/SearchResultDetails.vue';
 import FinalizeLetter from '@/components/Cartable/LetterDetails/FinalizeLetter/FinalizeLetter.vue';
 import { Letter } from '@/store/models/Letter/Letter';
@@ -60,8 +68,9 @@ import QuickAccess from '@/components/Cartable/QuickAccess/QuickAccess.vue';
 import FastSend from '@/components/Cartable/FastSend/FastSend.vue';
 import {LetterSearchResult } from '@/store/models/Letter/LetterSearchResult';
 import { DependentLetter } from '../store/models/Letter/DependentLetter';
+import { DraftLetter } from '../store/models/Letter/DraftLetter';
 @Component({
-    components: { FoldersTree, LetterDetails, CartableTitle,FinalizeLetter, ForwardLetter, QuickAccess, FastSend, SearchResultDetails}
+    components: { FoldersTree, LetterDetails, DraftDetails , CartableTitle,FinalizeLetter, ForwardLetter, QuickAccess, FastSend, SearchResultDetails}
 })
 export default class MainWindow extends Vue {
     selectedLetter: Letter = {} as Letter;
@@ -73,6 +82,14 @@ export default class MainWindow extends Vue {
     onSelectdLetterChanged(letter: Letter ){
         
         this.leftSideMode = 'details';
+        this.noLetterSelected = false;
+        const temp: any = {};
+        Object.assign(temp,letter)
+        this.selectedLetter = temp;
+    }
+    onSelectdDraftChanged(letter: DraftLetter ){
+        
+        this.leftSideMode = 'draftDetails';
         this.noLetterSelected = false;
         const temp: any = {};
         Object.assign(temp,letter)

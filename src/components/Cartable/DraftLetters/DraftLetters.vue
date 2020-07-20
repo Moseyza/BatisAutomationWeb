@@ -7,23 +7,26 @@
 <script lang="ts">
 import {Vue, Component, Prop } from 'vue-property-decorator';
 import LetterList from '@/components/Cartable/LetterList/LetterList.vue';
-import {Letter} from '@/store/models/Letter/Letter'
 import * as api from '@/store/api'
+import { DraftLetter } from '../../../store/models/Letter/DraftLetter';
 @Component({
     components:{LetterList}
 })
 export default class DraftLetters extends Vue {
-    letters?: Letter[] = [];
+    letters?: DraftLetter[] = [];
     loading = false;
     async created(){
+        await this.refresh();
+    }
+    async refresh(){
         this.loading = true;
         const draftLetters = await api.getDraftLetters(undefined,undefined);
         this.loading = false;
         if(!draftLetters) return;
         this.letters =  draftLetters;
     }
-     onSelectedLetterChanged(letter: Letter){
-        this.$emit('selected-letter-changed',letter);
+     onSelectedLetterChanged(letter: DraftLetter){
+        this.$emit('selected-draft-changed',letter);
     }
 }
 

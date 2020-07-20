@@ -27,7 +27,8 @@
                 <div  style="display:flex; justify-content:space-around ">
                     <div style="flex:1;margin:5px" v-if="letterData.isForwarded"> <i class="fixed-icon icon-forwardedLetter"></i> </div>
                     <div style="flex:1;margin:5px" v-if="letterData.isClosed"> <i class="fixed-icon icon-closedLetter"></i> </div>
-                    <div style="flex:1;margin:5px" v-if="letterData.isOpenned || isSent"> <span  class="fixed-icon icon-openLetter"></span></div>
+                    <div style="flex:1;margin:5px" v-if="isDraft"> <span  class="fixed-icon icon-allDraft"></span></div>
+                    <div style="flex:1;margin:5px" v-else-if="letterData.isOpenned || isSent"> <span  class="fixed-icon icon-openLetter"></span></div>
                     <div style="flex:1;margin:5px" v-else> <span  class="fixed-icon icon-notOpenLetter"></span></div>
                     
                 </div>
@@ -50,7 +51,7 @@ export default class SingleLetter extends Vue{
     @Prop() letterData?: Letter 
     isSent = false;
     @Prop() serverTime?: string;
-    
+    @Prop() isDraft?: boolean;
     async created(){
     if(this.letterData === undefined) return;
          if(this.letterData.sender === null || this.letterData.sender === undefined){
@@ -81,12 +82,16 @@ export default class SingleLetter extends Vue{
     select(){
         
         if(this.letterData === undefined)return;
-        if(this.letterData.isOpenned === false){
-            api.OpenLetter(this.letterData.letterPossessionId);
+        if(this.isDraft){
+           this.$emit("letterselected",this.letterData.letterPossessionId);
         }
-        this.letterData.isOpenned = true;
-        this.$emit("letterselected",this.letterData.letterPossessionId);
-        
+        else{
+            if(this.letterData.isOpenned === false){
+                api.OpenLetter(this.letterData.letterPossessionId);
+            }
+            this.letterData.isOpenned = true;
+            this.$emit("letterselected",this.letterData.letterPossessionId);
+        }
     }
 
     get receiverStr(){
