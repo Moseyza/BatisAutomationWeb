@@ -36,7 +36,7 @@
                             </div>
                             <div class="item menu-item scrolling"><div style="padding-left:5px">ماه</div>
                          
-                                <div class="left menu ">
+                                <div class="left menu " style="max-height:300px;overflow:auto">
                                         <div v-for="month in months" :key="month.id" class="item menu-item " > <div style="padding-left:5px"> {{month.name}} </div> <ToggleSwitch isReadOnly= true :checkedProp="month.isSelected" @click="monthSelected(month.id)"  /> </div>
                                 </div>
                                
@@ -82,6 +82,21 @@ export default class LetterSearch extends Vue {
     mounted(){
          $('#filter-dropdown').dropdown({action: 'nothing'});
          $('#search-dropdown').dropdown({action: 'nothing'});
+         this.months.push(...
+         [
+            {isSelected:false, name: "فروردین", id: 1},
+            {isSelected:false, name: "اردیبهشت", id: 2},
+            {isSelected:false, name: "خرداد", id: 3},
+            {isSelected:false, name: "تیر", id: 4},
+            {isSelected:false, name: "مرداد", id: 5},
+            {isSelected:false, name: "شهریور", id: 6},
+            {isSelected:false, name: "مهر", id: 7},
+            {isSelected:false, name: "آبان", id: 8},
+            {isSelected:false, name: "آذر", id: 9},
+            {isSelected:false, name: "دی", id: 10},
+            {isSelected:false, name: "بهمن", id: 11},
+            {isSelected:false, name: "اسفند", id: 12},
+        ]);
 
     }
 
@@ -107,26 +122,12 @@ export default class LetterSearch extends Vue {
     }
 
 
-    months =  [
-            {isSelected:false, name: "فروردین", id: 1},
-            {isSelected:false, name: "اردیبهشت", id: 2},
-            {isSelected:false, name: "خرداد", id: 3},
-            {isSelected:false, name: "تیر", id: 4},
-            {isSelected:false, name: "مرداد", id: 5},
-            {isSelected:false, name: "شهریور", id: 6},
-            {isSelected:false, name: "مهر", id: 7},
-            {isSelected:false, name: "آبان", id: 8},
-            {isSelected:false, name: "آذر", id: 9},
-            {isSelected:false, name: "دی", id: 10},
-            {isSelected:false, name: "بهمن", id: 11},
-            {isSelected:false, name: "اسفند", id: 12},
-        ];
+    months: any[] = [];  
     
 
-    
 
     monthSelected(monthId: number){
-        this.months.length = 0;
+        //this.months.length = 0;
         this.months.forEach(month=>{month.isSelected = false;});
         const selectedMonth =  this.months.find(month=>month.id === monthId);
         if(selectedMonth)
@@ -184,7 +185,7 @@ export default class LetterSearch extends Vue {
         this.$emit("form-selection",{isSelected: checked , formId: formId});
     }
 
-
+   
     
 }
 </script>

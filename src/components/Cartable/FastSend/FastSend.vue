@@ -68,18 +68,34 @@
 
             <div class="symmetric-grid" style="margin-bottom: 5px">
                 <div style="flex:1;margin-left:5px">
+                    وابستگی
+                </div>
+                <div style="flex:10; display:flex; width:100%;border-radius:5px;background-color:transparent;"  >
+                    <div style="display:flex;flex-direction:column; width:100%" >
+                       <DependentItem  
+                        :letter="item"
+                        v-for="(item,index) in dependentLetters" 
+                        :key="index"
+                       />
+                    </div>
+                </div>
+                
+            </div>
+
+            <div class="symmetric-grid" style="margin-bottom: 5px">
+                <div style="flex:1;margin-left:5px">
                     پیوست
                 </div>
                 <div style="flex:10; display:flex; width:100%;border-radius:5px;background-color:transparent;"  >
                     
-                    <div style="flex:5;justify-content:flex-start;overflow: auto" class="symmetric-grid" >
+                    <div style="flex:5;justify-content:flex-start;flex-wrap:wrap" class="symmetric-grid" >
                         <LetterAttachment v-for="(file,index) in attachments" 
                         :key="index"
                         :canRemove=true
                         :file ="file"
                         :index ="index"
                         @remove="onAttachmentRemoved($event)"
-                        style="margin:0 2px"
+                        style="margin:2px"
                         />
                     </div>
                     
@@ -107,7 +123,7 @@
                 
             </div>
         </div>
-        <div class="flex-part-bottom container1" style="flex:0.3; margin-left:0">
+        <div class="flex-part-bottom container1" style="flex:0 1 auto; margin-left:0">
             <InPlaceMessageBox v-if="shallShowMessageBox"
             :buttons="msgBoxBtns" 
             :message="message"
@@ -115,7 +131,7 @@
             @button-clicked="onMessageBoxBtnClicked($event)"
             />
             <div v-else style="display:flex">
-                    <div @click="cancel" class="action-icon bg1" style="flex:1;text-align:center"><i style="color:inherit" class=" icon-removeFile xlarg-text"></i></div>
+                    <div @click="cancel" class="action-icon bg1" style="flex:1;text-align:center"><i style="color:inherit;font-size:xx-large" class=" icon-close"></i></div>
                      <div v-if="mode === 'send'" @click="send(true)" class="action-icon bg1" style="flex:1;text-align:center"><i style="color:inherit;" class=" icon-saveDraft xlarg-text"></i></div>
                     <div @click="send(false)" class="action-icon bg1" style="flex:1;text-align:center"><i style="color:inherit;" class=" icon-forwardedLetter xlarg-text"></i></div>
             </div>
@@ -151,14 +167,37 @@ import * as util from '@/util/utils';
 import FullPageLoader from '@/components/UiComponents/FullPageLoader.vue';
 import PrioritySelector from './PrioritySelector/PrioritySelector.vue';
 import { LetterOwnerEmail } from '@/store/models/LetterOwner/LetterOwnerEmail';
+import { Letter } from '../../../store/models/Letter/Letter';
+import DependentItem from './DependentItem/DependentItem.vue';
+import {DependentLetter} from '@/store/models/Letter/DependentLetter';
+import LetterReferencesToOtherLetters from '../../../store/models/Letter/LetterReferencesToOtherLetters';
+
 @Component({
-    components:{RecipientLookup, FastSendRecipientSelector, MessageBox, FileSelector, LetterAttachment, FullPageLoader, InPlaceMessageBox,PrioritySelector}
+    components:{RecipientLookup, FastSendRecipientSelector, MessageBox, FileSelector, LetterAttachment, FullPageLoader, InPlaceMessageBox,PrioritySelector , DependentItem}
 })
 export default class FastSent extends Vue{
     recipients: LetterOwnerWithFaxAndEmails[] = [];
     selectedMainRecipients:  LetterOwnerForSendingFaxAndEmailAndSms [] = [];
     selectedDraftRecipients:  LetterOwnerForSendingFaxAndEmailAndSms [] = [];
     selectedCopyRecipients:  LetterOwnerForSendingFaxAndEmailAndSms [] = [];
+    @Prop() dependentLetters?: DependentLetter[];
+    @Watch('dependentLetters')
+    onDependentLettersChanged(){
+        this.addDependentLettersAttachments();
+    }
+    addDependentLettersAttachments(){
+        if(!this.dependentLetters)return;
+        this.dependentLetters.forEach(dependent => {
+            if(dependent.dependencyType === 'attaching'){
+                
+                if(dependent.parts){
+                    dependent.parts.forEach(part => {
+                        this.attachments.push(part.file);
+                    });
+                }
+            }
+        });
+    }
     shallShowMessageBox = false;
     msgBoxBtns = 'ok';
     messageType = 'success';
@@ -173,6 +212,7 @@ export default class FastSent extends Vue{
     loading = false;
     priority = 1;
     @Prop() mode?: string;
+    
     @Watch('mode') 
     onModeChanged(n: string, o: string){
         this.selectedMainRecipients.length = 0;
@@ -184,6 +224,7 @@ export default class FastSent extends Vue{
     async created(){
         const ownerId = store.state.ownerId;
         this.recipients =   await letterOwnerService.getOwnerRecipients(ownerId);
+        this.addDependentLettersAttachments();
     }
     selectRecipient(recipient: LetterOwnerWithFaxAndEmails, listName: string){
         let addedItem =  this.selectedMainRecipients.find(item=>item.id === recipient.id);
@@ -303,8 +344,27 @@ export default class FastSent extends Vue{
         dto.recievers = this.selectedMainRecipients;
         dto.copyRecievers = this.selectedCopyRecipients;
         dto.draftRecievers = this.selectedDraftRecipients;
-        
         dto.priority = this.priority;
+        if(this.dependentLetters){
+            const tempArray = [] as LetterReferencesToOtherLetters[];
+            this.dependentLetters.forEach(x=>{
+                const dependencyItem = {} as LetterReferencesToOtherLetters;
+                dependencyItem.letterId = x.id;
+                dependencyItem.letterTitle = x.title;
+                dependencyItem.letterNo = x.letterNo;
+                if(x.dependencyType === 'bending')//refrence
+                    dependencyItem.dependencyType = 2
+                else if(x.dependencyType === 'following')//follow
+                    dependencyItem.dependencyType = 1
+                else if(x.dependencyType === 'returning')//answer
+                    dependencyItem.dependencyType = 0
+                else if(x.dependencyType === 'attaching')//attach
+                    dependencyItem.dependencyType = 3
+                tempArray.push(dependencyItem);
+                
+            });
+            dto.letterRefrences = tempArray;
+        }
         if(this.mode == 'send' && !shallSaveforSender){
             const info = await letterService.SendLetterFast(dto);
             if(info.letterNumber){
@@ -357,6 +417,11 @@ export default class FastSent extends Vue{
         else if(priority === 'high')
             this.priority = 10;
     }
-    }
+    // setDependentLetters(letters: DependentLetter[]){
+    //     alert('%%%%%%%%%%%%');
+    //     this.dependentLetters.length = 0;
+    //     this.dependentLetters.push(...letters);
+    // }
+}
 
 </script>

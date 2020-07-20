@@ -78,18 +78,19 @@
                 </div>
             </div>
             </div>
-        <div  style="flex:.5 1 0;display:flex;flex-direction:column;align-items:strech" class="flex-part-bottom">
+        <div  style="flex:0 1 auto;display:flex;flex-direction:column;align-items:strech" class="flex-part-bottom">
             <div style="flex:1; display:flex;justify-content:space-around" class="container1">
-                <div style="flex:1" id="return-dropdown"  class="ui icon top left dropdown">
-  		                <div style="flex:1;text-align: end;" class="action-icon"><i class=" icon-replay xlarg-text"></i></div>
+                <div style="flex:1;text-align: center;" class="action-icon">
+                    <div style="flex:1" id="return-dropdown"  class="ui icon top left dropdown">
+  		                <i class=" icon-replay xlarg-text"></i>
   		                <div class="menu">
-    		                <div class="item menu-item"><div style="padding-left:5px">عطف</div> <i class="action-icon icon-SendLetterFast"></i> </div>
-    		                <div class="item menu-item"><div style="padding-left:5px">پیرو</div> <i class="action-icon icon-SendLetterFast"></i></div>
-    		                <div class="item menu-item"><div style="padding-left:5px">بازگشت</div> <i class="action-icon icon-SendLetterFast"></i></div>
-                            <div class="item menu-item"><div style="padding-left:5px">پیوست به</div> <i class="action-icon icon-SendLetterFast"></i></div>
+    		                <div class="item menu-item" style="max-height:10px !important;padding:0 5px !important"><div style="padding-left:5px">عطف</div> <i class="action-icon icon-SendLetterFast" @click="sendFastDependOn('bending')"></i> </div>
+    		                <div class="item menu-item" style="max-height:10px !important;padding:0 5px !important"><div style="padding-left:5px">پیرو</div> <i class="action-icon icon-SendLetterFast"  @click="sendFastDependOn('following')"></i></div>
+    		                <div class="item menu-item" style="max-height:10px !important;padding:0 5px !important"><div style="padding-left:5px">بازگشت</div> <i class="action-icon icon-SendLetterFast"  @click="sendFastDependOn('returning')"></i></div>
+                            <div class="item menu-item" style="max-height:10px !important;padding:0 5px !important"><div style="padding-left:5px">پیوست به</div> <i class="action-icon icon-SendLetterFast"  @click="sendFastDependOn('attaching')"></i></div>
   		                </div>
 	            </div>
-                <!-- <div style="flex:1;text-align: center;" class="action-icon"><i class=" icon-replay xlarg-text"></i></div> -->
+                </div>
                 <div style="flex:1;text-align: center;" @click="forwardLetter()"  class=" action-icon">
                     <i class=" icon-ForwardLetter xlarg-text"></i>
                 </div>
@@ -232,6 +233,10 @@ export default class LetterDetails extends Vue {
             else result = x.nameOnly;
         });
         return result;
+    }
+
+    sendFastDependOn(mode: string){
+        this.$emit('send-fast-dependon',mode);
     }
 
 }

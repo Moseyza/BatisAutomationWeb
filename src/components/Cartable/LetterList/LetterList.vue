@@ -38,7 +38,7 @@
                 </div>
             </div>
         </div>
-        <div style="display:flex; flex-direction:column; flex: 0.5 0 0;"  class="flex-part-bottom">
+        <div style="display:flex; flex-direction:column; flex: 0 1 auto;"  class="flex-part-bottom">
             <LetterTypeSelector  v-if="mode !== '' && mode !== undefined" :mode="mode" @letter-type-changed="onLetterTypeChanged($event)" style="align-items: stretch;" :counts="counts" ref="typeSelector" ></LetterTypeSelector>
         </div>
         
