@@ -114,6 +114,12 @@ export default class FastSendSelectedRecipient extends Vue{
     //selectedMainRecipients:  LetterOwnerForSendingFaxAndEmailAndSms [] = [];
     //selectedDraftRecipients:  LetterOwnerForSendingFaxAndEmailAndSms [] = [];
     //selectedCopyRecipients:  LetterOwnerForSendingFaxAndEmailAndSms [] = [];
+    created(){
+        if(this.recipient){
+            const activeEmail = this.recipient.emails.find(x=>x.canBeUsedForSending);
+            if(activeEmail)this.isMailActive = true;
+        }
+    }
     async mounted(){
         if(this.autoCompleteDataType === 'all')
             this.autoCompleteData =  await autoCompleteDataService.getForwardingAutoCompleteData();
@@ -192,6 +198,7 @@ export default class FastSendSelectedRecipient extends Vue{
         list.splice(index,1);        
     }
     
+   
 
     
    

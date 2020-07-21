@@ -4,6 +4,14 @@
         <div class="flex-part-top" style="flex:0.01"></div>
         <div class="flex-part-middle" style="flex:7">
             <div>
+            <div class="symmetric-grid" style="margin-bottom: 5px">
+                <div style="flex:1;margin-left:5px">
+                    عنوان
+                </div>
+                <div style="flex:10; width:100%; padding: 5px; margin-right:2px;border-radius:5px" class="bg1" >
+                    <input v-model="title" type="text"  class="fc1" style="width:100%;background-color:transparent;border:none">
+                </div>
+            </div>
             <div v-if="mode=='draft'" class="symmetric-grid" style="margin-bottom: 5px">
                 <div  style="flex:1; margin-left:5px;">
                  پیش نویس 
@@ -48,14 +56,7 @@
                 </div>
             <FastSendRecipientSelector style="flex:10" :autoCompleteDataType="'copy'"  :recipients="selectedCopyRecipients" @recipient-removed="onRecipientRemoved($event,'copy')"/>
             </div>
-            <div class="symmetric-grid" style="margin-bottom: 5px">
-                <div style="flex:1;margin-left:5px">
-                    عنوان
-                </div>
-                <div style="flex:10; width:100%; padding: 5px; margin-right:2px;border-radius:5px" class="bg1" >
-                    <input v-model="title" type="text"  class="fc1" style="width:100%;background-color:transparent;border:none">
-                </div>
-            </div>
+            
             
             <div class="symmetric-grid" style="margin-bottom: 5px">
                 <div style="flex:1;margin-left:5px">
@@ -417,11 +418,6 @@ export default class FastSent extends Vue{
         else if(priority === 'high')
             this.priority = 10;
     }
-    // setDependentLetters(letters: DependentLetter[]){
-    //     alert('%%%%%%%%%%%%');
-    //     this.dependentLetters.length = 0;
-    //     this.dependentLetters.push(...letters);
-    // }
 }
 
 </script>

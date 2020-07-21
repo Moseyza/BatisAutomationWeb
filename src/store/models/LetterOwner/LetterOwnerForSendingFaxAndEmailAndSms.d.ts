@@ -8,7 +8,7 @@ export class LetterOwnerForSendingFaxAndEmailAndSms extends LetterOwner {
   childDraftReceivers?: LetterOwnerForSendingFaxAndEmailAndSms[];
   shallSendSms: boolean;
   trySendToRandomEmail: boolean;
-  emails: LetterOwnerEmail[];
+  emails: (LetterOwnerEmail)[];
   trySendToRandomFax: boolean;
   faxes?: (CompanyLetterOwnerPhoneNumber | null)[] | null;
   parentRemoteLetterPossessionId: string;

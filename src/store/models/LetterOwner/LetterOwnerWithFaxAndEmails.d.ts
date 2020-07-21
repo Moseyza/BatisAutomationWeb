@@ -3,7 +3,7 @@ import { LetterOwner } from "@/store/models/LetterOwner/LetterOwner";
 import { LetterOwnerEmail } from "@/store/models/LetterOwner/LetterOwnerEmail";
 
 export interface LetterOwnerWithFaxAndEmails {
-    emails?: (LetterOwnerEmail)[] | null;
+    emails: (LetterOwnerEmail)[];
     faxes?: (null)[] | null;
     companyName: string;
     canUserSend: boolean;

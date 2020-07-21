@@ -27,5 +27,5 @@ export class LetterOwner {
     notificationShowPeriod: number;
     // mailSenderId: string;
     // selectedFaxId: string;
-    // selectedEmails?: null;
+    selectedEmails: string[];
   }
