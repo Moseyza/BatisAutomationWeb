@@ -8,3 +8,9 @@ export default interface SentLetterInformation{
     //EnterpriseFormValidatorResultDto EnterpriseFormValidatorResult;    
     shallCloseLastLetter: boolean;
 }
+
+
+export interface SendLetterAndSaveDraftResults{
+    letterNo: string;
+    isAnyDraftSaved: boolean|null;
+}

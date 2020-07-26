@@ -5,11 +5,14 @@
                 <div class="trail-node-title" :class="{'flex-start': isRoot}">
                     <div v-if="nodeData.recievers.length > 0 && isHide" @click="toggleNode" style="padding-top: 5px;" ><i  class="icon icon-nodeIcon nodeIcon"></i></div>
                     <div v-else @click="toggleNode" style="padding-top: 5px;" ><i  class="icon icon-nodeIconOpen nodeIcon"></i></div>
-                    <div v-if="isRoot"><i class="icon-letterTrail xlarg-text"></i></div>
-                    <div v-if="!isRoot && nodeData.isOwnerCompanyAndIsAPeer"> <i  class="icon-InterCompanyTrace xlarg-text" ></i></div>
-                    <div v-if="!isRoot && !nodeData.isOwnerCompanyAndIsAPeer && nodeData.openTime && !nodeData.isClosed"> <i  class="icon-openLetter xlarg-text" ></i></div>
-                    <div v-if="!isRoot && !nodeData.isOwnerCompanyAndIsAPeer && !nodeData.openTime && !nodeData.isClosed"> <i  class="icon-notOpenLetter xlarg-text" ></i></div>
-                    <div v-if="!isRoot && !nodeData.isOwnerCompanyAndIsAPeer && nodeData.isClosed"> <i  class="icon-allClosed xlarg-text" ></i></div>
+                    <div >
+                        <i class="xlarg-text" :class="{ 'icon-letterTrail':isRoot , 'icon-InterCompanyTrace':isInterCompany , 'icon-openLetter':isOpen , 'icon-notOpenLetter':isNotOpen , 'icon-allClosed':isClosed , 'icon-allDraft':isDraft}"></i>
+                    </div>
+                    <!-- <div v-if="isRoot"><i class="icon-letterTrail xlarg-text"></i></div>
+                    <div v-if=""> <i  class="icon-InterCompanyTrace xlarg-text" ></i></div>
+                    <div v-if=""> <i  class="icon-openLetter xlarg-text" ></i></div>
+                    <div v-if=""> <i  class="icon-notOpenLetter xlarg-text" ></i></div>
+                    <div v-if=""> <i  class="icon-allClosed xlarg-text" ></i></div> -->
                     <div> 
                         <span :class="{red: currentPossession === nodeData.possessionId}">{{nodeData.sender.nameOnly}} </span> 
                         <span v-if="nodeData.sender.post" class="dark-text small-text">[{{nodeData.sender.post}}]</span> 
@@ -106,6 +109,32 @@ export default class LetterTrailTreeNode extends Vue {
         return   dateConverter.getDateString(new Date(this.nodeData.sendTime.substring(0,this.nodeData.sendTime.length -1)),this.serverTime)
     }
 
+    get isInterCompany(){
+        if(!this.nodeData) return false;
+        return !this.isRoot && this.nodeData.isOwnerCompanyAndIsAPeer
+    }
+
+    get isOpen(){
+        if(!this.nodeData) return false;
+        return !this.isRoot && !this.nodeData.isOwnerCompanyAndIsAPeer && this.nodeData.openTime && !this.nodeData.isClosed && !this.isDraft
+
+    }
+
+    get isNotOpen(){
+        if(!this.nodeData) return false;
+        return !this.isRoot && !this.nodeData.isOwnerCompanyAndIsAPeer && !this.nodeData.openTime && !this.nodeData.isClosed && !this.isDraft
+
+    }
+
+    get isClosed(){
+        if(!this.nodeData) return false;
+        return !this.isRoot && !this.nodeData.isOwnerCompanyAndIsAPeer && this.nodeData.isClosed && !this.isDraft
+    }
+
+    get isDraft(){
+        if(!this.nodeData) return false;
+        return this.nodeData.isDraft;
+    }
     
 
 }

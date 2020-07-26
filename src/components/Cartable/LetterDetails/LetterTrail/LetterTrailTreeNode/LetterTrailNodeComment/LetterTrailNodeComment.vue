@@ -1,7 +1,7 @@
 <template>
     <div class="bg5 comment-container"  >
-        <div class="bg4" style="border-radius:5px 5px  0 0">{{type}}</div>
-        <div>تاریخ: {{formattedTime}}</div>
+        <div class="bg4" style="border-radius:5px 5px  0 0;text-align:right">{{type}}</div>
+        <div style="text-align:right">تاریخ: {{formattedTime}}</div>
         <div v-if="comment">{{label}} {{comment}}</div>
         <div v-if="attachments && attachments.length>0" style="overflow: hidden;display:flex; justify-content:flex-start"  >
             <div style="flex:0 1 auto;white-space:nowrap">اصل و پیوست ها:</div>

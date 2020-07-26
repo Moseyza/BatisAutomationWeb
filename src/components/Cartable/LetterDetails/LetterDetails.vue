@@ -34,8 +34,8 @@
                     <div class="ld-rcvs" v-else style="flex:1 0 auto">
                         <h5 class="ld-rcvs highlight">{{receiversStr}}</h5>
                     </div>
-                    <div style="flex:0 1 auto; text-align:end;">
-                        <i @click="downloadLetterPdf()" class="helper-icon-large icon-file-pdf"></i>
+                    <div class="popup" data-content='دانلود_فایل_اصلی' style="flex:0 1 auto; text-align:end;">
+                        <i @click="downloadLetterPdf()" class="helper-icon-large icon-download"></i>
                     </div>
                 </div>
                 <div>
@@ -69,7 +69,7 @@
                         <!-- {{letter.abstract}} -->
                         <div style="padding:5px;flex:1;min-height:400px" class="ng-scope pdfobject-container">
                             <iframe v-if="pdfLoaded" :src="pdfSrc" type="application/pdf" width="100%" height="100%" style="overflow: auto;"></iframe>
-                            <img v-else :src="pdfSrc" width="100%" height="100%" style="overflow: auto;"/>
+                            <img v-else :src="pdfSrc" width="100%" height="100%" alt="پیش نمایش وجود ندارد" style="overflow: auto;color:#ff6b6b;min-height:100px"/>
                         </div>
 
                         <!-- <object :data="pdfSrc" type="application/pdf" width="100%" >

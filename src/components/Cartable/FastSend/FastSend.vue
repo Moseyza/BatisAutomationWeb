@@ -386,7 +386,7 @@ export default class FastSent extends Vue{
             
             request.dto = dto;
             const info = await letterService.SaveDraft(request);
-            if(info && info.length >0){
+            if(info && info.isAnyDraftSaved){
                 this.messageType = 'success';
                 this.message = 'پیش نویس ارسال شد';
                 this.msgBoxBtns = 'ok';

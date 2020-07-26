@@ -4,7 +4,7 @@
             <div style="flex:1;" class="endalign-grid">
                 <div class="popup"  data-content='حذف پیش نویس' @click="deleteDraft()"> <i class="action-icon icon-Deleted" style="font-size:x-large"></i></div>
                 <div class="popup"  data-content='یادداشت شخصی'> <i class="action-icon icon-comment" style="font-size:x-large"></i></div>
-                <div class="popup"  data-content='پیگیری نامه'> <i class="action-icon icon-letterTrail" style="font-size:x-large"></i></div>
+                <div class="popup"  data-content='پیگیری نامه' @click="showTrail()"> <i class="action-icon icon-letterTrail" style="font-size:x-large"></i></div>
             </div>
         </div>
         <div style="flex:6" class="flex-part-middle">   
@@ -96,7 +96,14 @@
             </div>
         </div>
         <div style="flex:0 1 auto;display:flex;flex-direction:column;align-items:strech" class="flex-part-bottom">
-            <div style="flex:1; display:flex;justify-content:space-around" class="container1">
+            <InPlaceMessageBox 
+            :message="message"
+            :messageType="messageType"
+            :buttons="msgBoxBtns"
+            v-if="shallShowInPlaceMessageBox"
+            @button-clicked="onMessageBoxButtonClick($event)"
+            />
+            <div v-else style="flex:1; display:flex;justify-content:space-around" class="container1">
                 <div style="flex:1;text-align: center;" class=" action-icon">
                     <i class=" icon-saveDraft xlarg-text"></i>
                 </div>
@@ -113,6 +120,7 @@
         :isActive="shallShowMessageBox"
         @button-clicked="onMessageBoxButtonClick($event)"
         />
+        <FullPageTrail  :isActive="shallShowTrail" @close="onLetterTrailClose" :letterPossessionId="letter.letterPossessionId" :letterNo="letter.letterNo" />
         <FullPageLoader :isActive="loading"/>
     </div>
 </template>
@@ -146,9 +154,11 @@ import { LetterOwner } from '@/store/models/LetterOwner/LetterOwner';
 import { LetterOwnerEmail } from '@/store/models/LetterOwner/LetterOwnerEmail';
 import LetterReferencesToOtherLetters from '@/store/models/Letter/LetterReferencesToOtherLetters';
 import MessageBox from '@/components/UiComponents/MessageBox.vue';
+import InPlaceMessageBox from '@/components/UiComponents/InPlaceMessageBox.vue';
+import FullPageTrail from '@/components/UiComponents/FullPageTrail.vue'
 @Component({
     name: "DraftDetails",
-    components: { LetterAttachment, LetterTrailTree, RecipientLookup, FastSendRecipientSelector , PrioritySelector, FileSelector, FullPageLoader, MessageBox}
+    components: { LetterAttachment, LetterTrailTree, RecipientLookup, FastSendRecipientSelector , PrioritySelector, FileSelector, FullPageLoader, MessageBox, FullPageTrail,InPlaceMessageBox}
 })
 export default class DraftDetails extends Vue {
 
@@ -159,6 +169,8 @@ export default class DraftDetails extends Vue {
     priority = 0;
     loadingFile = false;
     loading = false;
+    shallShowTrail = false;
+    shallShowInPlaceMessageBox = false;
     @Prop() letter?: DraftLetter;
     @Watch("letter")
     async onLetterChanged(newVal: DraftLetter, oldVal: DraftLetter) {
@@ -438,6 +450,7 @@ export default class DraftDetails extends Vue {
     messageType = '';
     message = '';
     shallShowMessageBox = false;
+    
     isLetterSent = false;
     mode = 'send';
     async send(){
@@ -446,13 +459,13 @@ export default class DraftDetails extends Vue {
         this.messageType = 'fail';
         if(this.letter.title.trim() === ''){
             this.message = 'عنوان نامه وارد نشده است';
-            this.shallShowMessageBox = true;
+            this.shallShowInPlaceMessageBox = true;
             return;
         }
         if(this.selectedMainRecipients.length === 0  && this.selectedDraftRecipients.length === 0)
         {
             this.message = 'هیچ گیرنده اصلی یا پیش نویس انتخاب نشده است';
-            this.shallShowMessageBox = true;
+            this.shallShowInPlaceMessageBox = true;
             return;
         }
       
@@ -463,12 +476,24 @@ export default class DraftDetails extends Vue {
         
         if(this.mode == 'send'){
             const info = await letterService.SendLetter(dto);
-            if(info.letterNumber){
-                this.message = `نامه با شماره ${info.letterNumber} ارسال شد.`
+            if(info.letterNo !== '') this.message = `نامه با شماره ${info.letterNo} ارسال شد.`
+            if(info.isAnyDraftSaved) 
+            {
+                if(this.message !== '') this.message = this.message + '\n';
+                this.message = this.message + 'پیش نویس ارسال شد';
+            }
+            if(this.message != ''){
                 this.msgBoxBtns = 'ok';
                 this.messageType = 'success';
-                this.shallShowMessageBox = true;
+                this.shallShowInPlaceMessageBox = true;
                 this.isLetterSent = true;
+            }
+            else{
+                this.message = 'خطایی رخ داده است';
+                this.msgBoxBtns = 'ok';
+                this.messageType = 'fail';
+                this.shallShowInPlaceMessageBox = true;
+
             }
         }
         else{
@@ -478,11 +503,11 @@ export default class DraftDetails extends Vue {
             const request = {} as any;
             request.dto = dto;
             const info = await letterService.SaveDraft(request);
-            if(info && info.length >0){
+            if(info && info.isAnyDraftSaved){
                 this.messageType = 'success';
                 this.message = 'پیش نویس ارسال شد';
                 this.msgBoxBtns = 'ok';
-                this.shallShowMessageBox = true;
+                this.shallShowInPlaceMessageBox = true;
                 this.isLetterSent = true;
             }
         }
@@ -514,11 +539,20 @@ export default class DraftDetails extends Vue {
     }
     async onMessageBoxButtonClick(button: string){
         this.shallShowMessageBox = false;          
+        this.shallShowInPlaceMessageBox = false;
         if(button === 'yes'){
             this.shallShowMessageBox = false;
             letterService.deleteLetter(this.letter as Letter);
             this.$emit('delete-letter',this.letter);
         }
+    }
+
+    showTrail(){
+        this.shallShowTrail = true;
+    }
+
+    onLetterTrailClose(){
+        this.shallShowTrail = false;
     }
 }
 </script>

@@ -4,7 +4,7 @@ import { Letter } from '@/store/models/Letter/Letter';
 import LetterListerWithPaginationResult from '@/store/models/Letter/LetterListerWithPaginationResult';
 import store from '@/store';
 import { LetterOwnerWithSendingInformationAndAttachments } from '@/store/models/LetterOwner/LetterOwnerWithSendingInformationAndAttachments';
-import SentLetterInformation from '@/store/models/Letter/SentLetterInformation';
+import SentLetterInformation, { SendLetterAndSaveDraftResults } from '@/store/models/Letter/SentLetterInformation';
 import { LetterTrailWithAttachments } from '../models/Letter/LetterTrailWithAttachment';
 import { LetterSearchResult } from '../models/Letter/LetterSearchResult';
 
@@ -119,23 +119,23 @@ export async function SendLetterFast(sendLetterFastDto: any): Promise<SentLetter
     }
 }
 
-export async function SendLetter(sendLetterFastDto: any): Promise<SentLetterInformation>{
+export async function SendLetter(sendLetterFastDto: any): Promise<SendLetterAndSaveDraftResults>{
     try {
         const result = await api.batisAutomationApi.post('/letters/SendLetter',sendLetterFastDto);
         return result.data;
     } catch (error) {
         console.log(error);
-        return {} as SentLetterInformation;
+        return {} as SendLetterAndSaveDraftResults;
     }
 }
 
-export async function SaveDraft(sendLetterFastDto: any): Promise<string[]>{
+export async function SaveDraft(sendLetterFastDto: any): Promise<SendLetterAndSaveDraftResults>{
     try {
         const result = await api.batisAutomationApi.post('/letters/SaveDraft',sendLetterFastDto);
         return result.data;
     } catch (error) {
         console.log(error);
-        return {} as string[];
+        return {} as SendLetterAndSaveDraftResults;
     }
 }
 
