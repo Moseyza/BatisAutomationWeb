@@ -1,5 +1,5 @@
 <template>
-    <div id="letter-container" @click="select">
+    <div class="letter-container" @click="select">
         <div style="flex:0 0 3px" :style="priorityColor"></div>
         <div style="flex:1 0 0" class="single-letter" :class="{'selected-letter': letterData.isSelected}">
             <div class="letter-title">
@@ -25,7 +25,7 @@
                     {{sendTime}}
                 </div>
                 <div  style="display:flex; justify-content:space-around ">
-                    <div style="flex:1;margin:5px" v-if="letterData.isForwarded"> <i class="fixed-icon icon-forwardedLetter"></i> </div>
+                    <div style="flex:1;margin:5px" v-if="letterData.isForwarded || isSentDraft"> <i class="fixed-icon icon-forwardedLetter"></i> </div>
                     <div style="flex:1;margin:5px" v-if="letterData.isClosed"> <i class="fixed-icon icon-closedLetter"></i> </div>
                     <div style="flex:1;margin:5px" v-if="isDraft"> <span  class="fixed-icon icon-allDraft"></span></div>
                     <div style="flex:1;margin:5px" v-else-if="letterData.isOpenned || isSent"> <span  class="fixed-icon icon-openLetter"></span></div>
@@ -45,6 +45,7 @@ import {getPersianDate} from "@/util/utils";
 import * as api from '@/store/Services/letterServices';
 import { DateBaseOnCurrentTimeConverter } from '@/util/dateConverter';
 import * as letterService from '@/store/Services/letterServices';
+import { DraftLetter } from '../../../../store/models/Letter/DraftLetter';
 
 @Component
 export default class SingleLetter extends Vue{
@@ -101,6 +102,13 @@ export default class SingleLetter extends Vue{
         return this.letterData.recievers[0].nameOnly;
     }
 
+    get isSentDraft(){
+        if(!this.letterData) return false;
+        const draftLetter = this.letterData as DraftLetter;
+        if(!draftLetter)return false;
+        if(!draftLetter.childLetters)return false;
+        return draftLetter.childLetters.length > 0 ;
+    }
     
 
 }
@@ -110,12 +118,16 @@ export default class SingleLetter extends Vue{
 
   <style lang="less">
     @import './../../../../assets/styles/colors.less';
-    #letter-container{
+    .letter-container{
         display: flex;
         flex-direction: row;
         align-content: stretch;
         margin: 3px;
         overflow: hidden;
+        cursor: pointer;
+    }
+    .letter-container:hover{
+        border: .5px solid @color-primary;
     }
      .single-letter{
         height: 80px;

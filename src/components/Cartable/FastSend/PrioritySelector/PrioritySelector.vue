@@ -16,13 +16,27 @@
 </template>
 
 <script lang="ts">
-import {Vue, Component, Prop } from 'vue-property-decorator';
+import {Vue, Component, Prop, Watch } from 'vue-property-decorator';
 @Component
 export default class PrioritySelector extends Vue{
     isLow = true;
     isMed = false;
     isHigh = false;
     @Prop() isNullable?: boolean;
+    @Prop() priority?: number;
+
+    @Watch('priority')
+    onPriorityChanged(nVal: number, oVal: number){
+       if(this.priority){
+          if(this.priority<5)
+            this.select('low');
+          else if(this.priority=== 5)
+            this.select('med');
+          else
+            this.select('high');
+        }
+    }
+
     select(mode: string){
         if(mode === 'high')
         {
@@ -57,6 +71,15 @@ export default class PrioritySelector extends Vue{
         if(this.isNullable){
             this.isLow = false;
         }
+        if(this.priority){
+          if(this.priority<5)
+            this.select('low');
+          else if(this.priority == 5)
+            this.select('med');
+          else
+            this.select('high');
+        }
+        
     }
 }
 </script>

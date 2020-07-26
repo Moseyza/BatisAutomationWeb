@@ -1,7 +1,7 @@
 <template>
     <div>
         <div v-if="loading" class="ui active inline centered loader"></div>
-        <LetterTrailTreeNode v-else :nodeData="data" :serverTime="serverTime" :isRoot="true"></LetterTrailTreeNode>
+        <LetterTrailTreeNode v-else :nodeData="data" :serverTime="serverTime" :isRoot="true" :currentPossession="letterId"></LetterTrailTreeNode>
     </div>
     
 </template>

@@ -11,7 +11,7 @@
                     <div v-if="!isRoot && !nodeData.isOwnerCompanyAndIsAPeer && !nodeData.openTime && !nodeData.isClosed"> <i  class="icon-notOpenLetter xlarg-text" ></i></div>
                     <div v-if="!isRoot && !nodeData.isOwnerCompanyAndIsAPeer && nodeData.isClosed"> <i  class="icon-allClosed xlarg-text" ></i></div>
                     <div> 
-                        <span>{{nodeData.sender.nameOnly}} </span> 
+                        <span :class="{red: currentPossession === nodeData.possessionId}">{{nodeData.sender.nameOnly}} </span> 
                         <span v-if="nodeData.sender.post" class="dark-text small-text">[{{nodeData.sender.post}}]</span> 
                         <span v-else-if="nodeData.sender.letterOwnerCompanyNameOnly" class="dark-text small-text">[{{nodeData.sender.letterOwnerCompanyNameOnly}}]</span>   
                     </div>
@@ -49,6 +49,7 @@
             :key="item.sendTime + index"
             :nodeData="item"
             :serverTime="serverTime"
+            :currentPossession="currentPossession"
             ></LetterTrailTreeNode>
             </div>
         </li>
@@ -72,6 +73,7 @@ import LetterTrailNodeComment from './LetterTrailNodeComment/LetterTrailNodeComm
 export default class LetterTrailTreeNode extends Vue {
     
     @Prop() nodeData?: LetterTrailWithAttachments;
+    @Prop() currentPossession?: string;
     isHide = true;
     shallShowComment = false;
     @Prop() serverTime?: string;
@@ -140,6 +142,9 @@ export default class LetterTrailTreeNode extends Vue {
     }
     .flex-start{
         justify-content: flex-start;
+    }
+    .red{
+        color:#ff6b6b;
     }
 </style>
 

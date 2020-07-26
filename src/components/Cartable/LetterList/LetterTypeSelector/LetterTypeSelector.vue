@@ -64,14 +64,17 @@ export default class LetterTypeSelector extends Vue {
 
         }
         else if(this.mode === 'drafts'){
-            this.firstButtonTxt = 'ارسال شده';
-            this.secondButtonTxt = 'ارسال نشده';
-            this.thirdButtonTxt = 'همه';
+            this.firstButtonTxt = `ارسال شده (${this.counts.draftSent})`;
+            this.secondButtonTxt = `ارسال نشده (${this.counts.draftNotSent})`;
+            this.thirdButtonTxt = `همه (${this.counts.all})`;
         }
     }
 
     selectAllMode(){
         this.select(3);
+    }
+    selectNotSentMode(){
+        this.select(2);
     }
 }
 </script>

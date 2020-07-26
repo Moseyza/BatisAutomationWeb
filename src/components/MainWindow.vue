@@ -33,7 +33,11 @@
                 @send-fast-dependon="sendFastDependOn($event)"
                 >
                 </LetterDetails>
-                <DraftDetails v-if="noLetterSelected == false && leftSideMode==='draftDetails'" :letter="selectedLetter" >
+                <DraftDetails 
+                v-if="noLetterSelected == false && leftSideMode==='draftDetails'" 
+                :letter="selectedLetter" 
+                @delete-letter="onDeleteLetter($event)"
+                >
                 </DraftDetails>
                 <SearchResultDetails v-else-if="noLetterSelected == false && leftSideMode==='searchResultDetails'" :searchResult="selectedSearchResult"
                 @finalize-letter="onFinalizeLetter($event)"
@@ -88,7 +92,6 @@ export default class MainWindow extends Vue {
         this.selectedLetter = temp;
     }
     onSelectdDraftChanged(letter: DraftLetter ){
-        
         this.leftSideMode = 'draftDetails';
         this.noLetterSelected = false;
         const temp: any = {};
@@ -175,6 +178,11 @@ export default class MainWindow extends Vue {
 
     }
     fastSendMode = '';
+    onDeleteLetter(){
+        this.leftSideMode = '';
+        (this.$refs.letterlist as  any).refresh();
+        
+    }
 }
 </script>
 

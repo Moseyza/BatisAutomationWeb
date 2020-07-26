@@ -119,6 +119,16 @@ export async function SendLetterFast(sendLetterFastDto: any): Promise<SentLetter
     }
 }
 
+export async function SendLetter(sendLetterFastDto: any): Promise<SentLetterInformation>{
+    try {
+        const result = await api.batisAutomationApi.post('/letters/SendLetter',sendLetterFastDto);
+        return result.data;
+    } catch (error) {
+        console.log(error);
+        return {} as SentLetterInformation;
+    }
+}
+
 export async function SaveDraft(sendLetterFastDto: any): Promise<string[]>{
     try {
         const result = await api.batisAutomationApi.post('/letters/SaveDraft',sendLetterFastDto);
@@ -146,5 +156,14 @@ export async function getServerTime(){
     } catch (error) {
         console.log(error);
         return '';
+    }
+}
+
+export async function deleteLetter(letter: Letter){
+    try {
+        await api.batisAutomationApi.post('/letters/DeleteLetter', letter);
+        
+    } catch (error) {
+        console.log(error);
     }
 }

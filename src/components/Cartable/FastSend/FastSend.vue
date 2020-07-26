@@ -347,6 +347,7 @@ export default class FastSent extends Vue{
         dto.draftRecievers = this.selectedDraftRecipients;
         dto.priority = this.priority;
         if(this.dependentLetters){
+        
             const tempArray = [] as LetterReferencesToOtherLetters[];
             this.dependentLetters.forEach(x=>{
                 const dependencyItem = {} as LetterReferencesToOtherLetters;
@@ -377,10 +378,12 @@ export default class FastSent extends Vue{
             }
         }
         else{
-            if(!shallSaveforSender){
-                dto.sener = null;
-            }
             const request = {} as any;
+            if(shallSaveforSender){
+                dto.sener = null;
+                request.isForSender = true;
+            }
+            
             request.dto = dto;
             const info = await letterService.SaveDraft(request);
             if(info && info.length >0){

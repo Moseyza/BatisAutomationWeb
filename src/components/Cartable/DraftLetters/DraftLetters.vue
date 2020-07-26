@@ -1,6 +1,6 @@
 <template>
      <div style="height:100%">
-        <LetterList :lettersProp="letters" :mode="'drafts'" :loading="loading" @selected-letter-changed="onSelectedLetterChanged($event)" ></LetterList>
+        <LetterList :lettersProp="letters" :mode="'drafts'" :loading="loading" @selected-letter-changed="onSelectedLetterChanged($event)" ref="letterList" ></LetterList>
     </div>
 </template>
 
@@ -24,6 +24,7 @@ export default class DraftLetters extends Vue {
         this.loading = false;
         if(!draftLetters) return;
         this.letters =  draftLetters;
+        (this.$refs.letterList as any).resetTypeSelector();
     }
      onSelectedLetterChanged(letter: DraftLetter){
         this.$emit('selected-draft-changed',letter);

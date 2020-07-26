@@ -69,6 +69,7 @@
                         <!-- {{letter.abstract}} -->
                         <div style="padding:5px;flex:1;min-height:400px" class="ng-scope pdfobject-container">
                             <iframe v-if="pdfLoaded" :src="pdfSrc" type="application/pdf" width="100%" height="100%" style="overflow: auto;"></iframe>
+                            <img v-else :src="pdfSrc" width="100%" height="100%" style="overflow: auto;"/>
                         </div>
 
                         <!-- <object :data="pdfSrc" type="application/pdf" width="100%" >
@@ -96,6 +97,7 @@
                 </div>
             </div>
         </div>
+      
     </div>
 </template>
 
@@ -113,6 +115,7 @@ import * as $ from 'jquery';
 import FinalizeLetter from './FinalizeLetter/FinalizeLetter.vue';
 import * as util from '@/util/utils.ts';
 import { LetterSearchResult } from '../../../store/models/Letter/LetterSearchResult';
+
 @Component({
     name:"LetterDetails",
     components:{LetterAttachment, LetterTrailTree, FinalizeLetter}
@@ -130,6 +133,8 @@ export default class LetterDetails extends Vue {
         this.canReject = newVal.isClosed;
     }
     
+
+   
        
     created(){
         this.setIsReceived();
@@ -177,9 +182,12 @@ export default class LetterDetails extends Vue {
             // const blob =  converBase64toBlob(file.content,file.extension);
             // this.pdfSrc = blob;
             // console.log(blob);
-            
-            this.pdfSrc = "data:application/pdf;base64," + file.content;
-            this.pdfLoaded = true;
+            if(this.letter.parts[0].file.extension.toLowerCase().includes('.pdf')){
+                this.pdfSrc = "data:application/pdf;base64," + file.content;
+                this.pdfLoaded = true;
+            }else{
+                this.pdfSrc = "data:image/png;base64," + file.content;
+            }
 
         
     }
@@ -238,6 +246,8 @@ export default class LetterDetails extends Vue {
     sendFastDependOn(mode: string){
         this.$emit('send-fast-dependon',mode);
     }
+
+   
 
 }
 </script>

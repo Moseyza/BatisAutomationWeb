@@ -2,7 +2,7 @@
     <div class="three-part-flexbox">
         <div style="flex:0 1 auto" class="flex-part-top">
             <div style="flex:1;" class="endalign-grid">
-                <div class="popup"  data-content='حذف پیش نویس'> <i class="action-icon icon-Deleted" style="font-size:x-large"></i></div>
+                <div class="popup"  data-content='حذف پیش نویس' @click="deleteDraft()"> <i class="action-icon icon-Deleted" style="font-size:x-large"></i></div>
                 <div class="popup"  data-content='یادداشت شخصی'> <i class="action-icon icon-comment" style="font-size:x-large"></i></div>
                 <div class="popup"  data-content='پیگیری نامه'> <i class="action-icon icon-letterTrail" style="font-size:x-large"></i></div>
             </div>
@@ -61,7 +61,7 @@
                         فوریت
                     </div>
                     <div style="flex:10; width:100%;min-height: 26px;padding-top:3px; border-radius:5px" class="bg1">
-                        <PrioritySelector @priority-changed="onPriorityChanged($event)" />
+                        <PrioritySelector @priority-changed="onPriorityChanged($event)" :priority="letter.priority" />
                     </div>
                 </div>
                 <div class="symmetric-grid" style="margin-bottom: 5px">
@@ -88,18 +88,32 @@
                         </div>
                     </div>
                 </div>
+                <div style="display:flex; height:100%">
+                    <div style="padding:5px;flex:1;min-height:400px" class="ng-scope pdfobject-container">
+                            <iframe v-if="pdfLoaded" :src="pdfSrc" type="application/pdf" width="100%" height="100%" style="overflow: auto;"></iframe>
+                    </div>
+                </div>
             </div>
         </div>
         <div style="flex:0 1 auto;display:flex;flex-direction:column;align-items:strech" class="flex-part-bottom">
             <div style="flex:1; display:flex;justify-content:space-around" class="container1">
-                <div style="flex:1;text-align: center;" @click="forwardLetter()" class=" action-icon">
+                <div style="flex:1;text-align: center;" class=" action-icon">
                     <i class=" icon-saveDraft xlarg-text"></i>
                 </div>
-                <div style="flex:1;text-align: center;" @click="forwardLetter()" class=" action-icon">
+                <div style="flex:1;text-align: center;" @click="send()" class=" action-icon">
                     <i class=" icon-send xlarg-text"></i>
                 </div>
             </div>
         </div>
+        
+        <MessageBox 
+        :message="message"
+        :messageType="messageType"
+        :buttons="msgBoxBtns"
+        :isActive="shallShowMessageBox"
+        @button-clicked="onMessageBoxButtonClick($event)"
+        />
+        <FullPageLoader :isActive="loading"/>
     </div>
 </template>
 
@@ -127,9 +141,14 @@ import * as letterOwnerService from '@/store/Services/letterOwnerService';
 import { DependentLetter } from '@/store/models/Letter/DependentLetter';
 import FileSelector from '@/components/UiComponents/FileSelector.vue';
 import File from '../../../store/models/Letter/File';
+import FullPageLoader from '@/components/UiComponents/FullPageLoader.vue';
+import { LetterOwner } from '@/store/models/LetterOwner/LetterOwner';
+import { LetterOwnerEmail } from '@/store/models/LetterOwner/LetterOwnerEmail';
+import LetterReferencesToOtherLetters from '@/store/models/Letter/LetterReferencesToOtherLetters';
+import MessageBox from '@/components/UiComponents/MessageBox.vue';
 @Component({
     name: "DraftDetails",
-    components: { LetterAttachment, LetterTrailTree, RecipientLookup, FastSendRecipientSelector , PrioritySelector, FileSelector}
+    components: { LetterAttachment, LetterTrailTree, RecipientLookup, FastSendRecipientSelector , PrioritySelector, FileSelector, FullPageLoader, MessageBox}
 })
 export default class DraftDetails extends Vue {
 
@@ -139,11 +158,21 @@ export default class DraftDetails extends Vue {
     attachments = [] as File[];
     priority = 0;
     loadingFile = false;
+    loading = false;
     @Prop() letter?: DraftLetter;
     @Watch("letter")
-    onLetterChanged(newVal: DraftLetter, oldVal: DraftLetter) {
-        this.setPdfUrl();
+    async onLetterChanged(newVal: DraftLetter, oldVal: DraftLetter) {
+        const ownerId = store.state.ownerId;
+        this.recipients = [];
+        this.loading = true;
+        this.recipients = await letterOwnerService.getOwnerRecipients(ownerId);
         this.loadSelectedRecipients();
+        this.setPdfUrl();
+        this.setAttachments();
+        this.loading = false;
+        // console.log("_____________________________________");
+        // console.log(newVal);
+        // console.log("_____________________________________");
     }
 
     recipients: LetterOwnerWithFaxAndEmails[] = [];
@@ -154,7 +183,12 @@ export default class DraftDetails extends Vue {
 
     async created() {
         const ownerId = store.state.ownerId;
+        this.loading = true;
         this.recipients = await letterOwnerService.getOwnerRecipients(ownerId);
+        this.loadSelectedRecipients();
+        this.setPdfUrl();
+        this.setAttachments();
+        this.loading = false;
     }
  
 
@@ -176,8 +210,8 @@ export default class DraftDetails extends Vue {
         if (this.letter === undefined) return;
         this.pdfLoaded = false;
         if (this.letter.parts === undefined || this.letter.parts === null) return;
-        const file = await fileService.getFile(this.letter.parts[0].file.id);
-
+        const letterInfo =  this.getSendLetterDto();
+        const file = await fileService.convertWordToPdf(this.letter.parts[0].file.id,letterInfo);
         this.pdfSrc = "data:application/pdf;base64," + file.content;
         this.pdfLoaded = true;
 
@@ -284,7 +318,7 @@ export default class DraftDetails extends Vue {
         if(!this.letter)return;
         this.selectedMainRecipients = [];
         this.selectedCopyRecipients = [];
-        this.selectedDraftRecipients = [];
+        this.selectedDraftRecipients= [];
         if(this.letter.draftReceivers && this.letter.draftReceivers.childMainReceivers){
             this.letter.draftReceivers.childMainReceivers.forEach(element => {
                 const recipient =  this.recipients.find(x=>x.id === element.id);
@@ -326,17 +360,165 @@ export default class DraftDetails extends Vue {
             draftReceivers.forEach(element => {
                     const recipient =  this.recipients.find(x=>x.id === element.id);
                     if(recipient){
-                    element.nameOnly = recipient.nameOnly;
-                    element.post = recipient.post;
-                    element.emails = recipient.emails;
-                    element.emails.forEach(email=>{
-                        if(element.selectedEmails.find(x=>x === email.id)) email.canBeUsedForSending = true;
-                    });
+                        element.nameOnly = recipient.nameOnly;
+                        element.post = recipient.post;
+                        element.emails = recipient.emails;
+                        element.emails.forEach(email=>{
+                            if(element.selectedEmails.find(x=>x === email.id)) email.canBeUsedForSending = true;
+                        });
                     if(element.childDraftReceivers)
                         this.setDraftReceiversRecursive(element.childDraftReceivers)
                 }
                 
             });
+    }
+    removeNotSelectedEmails(list: LetterOwnerForSendingFaxAndEmailAndSms[]){
+        list.forEach(recipient=>{
+            const emailsToRemove = [] as LetterOwnerEmail[];
+            for(let i = 0;i<recipient.emails.length; i++ ){
+                if(!recipient.emails[i].canBeUsedForSending)
+                    emailsToRemove.push(recipient.emails[i]);
+            }
+            emailsToRemove.forEach(removingEmail=>{
+                const index =  recipient.emails.indexOf(removingEmail);
+                recipient.emails.splice(index,1);
+            }); 
+        });
+    }
+    getSendLetterDto(){
+        if(!this.letter)return
+        const dto = {} as any;
+        dto.title = this.letter.title;
+        dto.abstract = this.letter.abstract;
+        dto.parts = [] as Parts[];
+        if(this.letter.parts)
+            dto.parts[0] = this.letter.parts[0];
+        this.attachments.forEach((attachedItem,index)=>{
+            const part = {} as Parts;
+            part.partIndex = index;
+            part.file = attachedItem;
+            dto.parts.push(part);
+        });
+        const sender = {} as LetterOwner;
+        sender.id = store.state.ownerId;
+        dto.sender = sender;
+        this.removeNotSelectedEmails(this.selectedMainRecipients);
+        this.removeNotSelectedEmails(this.selectedCopyRecipients);
+        this.removeNotSelectedEmails(this.selectedDraftRecipients);
+        dto.recievers = this.selectedMainRecipients;
+        dto.copyRecievers = this.selectedCopyRecipients;
+        dto.draftRecievers = this.selectedDraftRecipients;
+        dto.priority = this.priority;
+         const tempArray = [] as LetterReferencesToOtherLetters[];
+        if(this.dependentLetters){
+           
+            this.dependentLetters.forEach(x=>{
+                const dependencyItem = {} as LetterReferencesToOtherLetters;
+                dependencyItem.letterId = x.id;
+                dependencyItem.letterTitle = x.title;
+                dependencyItem.letterNo = x.letterNo;
+                if(x.dependencyType === 'bending')//refrence
+                    dependencyItem.dependencyType = 2
+                else if(x.dependencyType === 'following')//follow
+                    dependencyItem.dependencyType = 1
+                else if(x.dependencyType === 'returning')//answer
+                    dependencyItem.dependencyType = 0
+                else if(x.dependencyType === 'attaching')//attach
+                    dependencyItem.dependencyType = 3
+                tempArray.push(dependencyItem);
+                
+            });
+            dto.letterRefrences = tempArray;
+        }
+        //dto.transferType = this.letter.transferType;
+        
+        return dto;
+    }
+    msgBoxBtns = '';
+    messageType = '';
+    message = '';
+    shallShowMessageBox = false;
+    isLetterSent = false;
+    mode = 'send';
+    async send(){
+        if(!this.letter)return;
+        this.msgBoxBtns = 'ok';
+        this.messageType = 'fail';
+        if(this.letter.title.trim() === ''){
+            this.message = 'عنوان نامه وارد نشده است';
+            this.shallShowMessageBox = true;
+            return;
+        }
+        if(this.selectedMainRecipients.length === 0  && this.selectedDraftRecipients.length === 0)
+        {
+            this.message = 'هیچ گیرنده اصلی یا پیش نویس انتخاب نشده است';
+            this.shallShowMessageBox = true;
+            return;
+        }
+      
+        this.loading = true;
+        let dto = {} as any;
+        dto = this.getSendLetterDto();
+        dto.parentDraftLetterId = this.letter.id;
+        
+        if(this.mode == 'send'){
+            const info = await letterService.SendLetter(dto);
+            if(info.letterNumber){
+                this.message = `نامه با شماره ${info.letterNumber} ارسال شد.`
+                this.msgBoxBtns = 'ok';
+                this.messageType = 'success';
+                this.shallShowMessageBox = true;
+                this.isLetterSent = true;
+            }
+        }
+        else{
+            // if(!shallSaveforSender){
+            //     dto.sener = null;
+            // }
+            const request = {} as any;
+            request.dto = dto;
+            const info = await letterService.SaveDraft(request);
+            if(info && info.length >0){
+                this.messageType = 'success';
+                this.message = 'پیش نویس ارسال شد';
+                this.msgBoxBtns = 'ok';
+                this.shallShowMessageBox = true;
+                this.isLetterSent = true;
+            }
+        }
+        this.loading = false;
+
+    }
+    setAttachments(){
+        this.attachments = [];
+        if(!this.letter)return;
+        if(!this.letter.parts)return;
+        for (let index = 1; index < this.letter.parts.length; index++) {
+            this.attachments.push(this.letter.parts[index].file);
+        }
+    }
+    deleteDraft(){
+        if(!this.letter) return;
+        if(this.letter.childLetters && this.letter.childLetters.length >0)
+        {
+            this.message = "حذف این نامه امکان پذیر نیست";
+            this.messageType = "fail";
+            this.msgBoxBtns = "ok";
+            this.shallShowMessageBox = true;
+            return;
+        }
+        this.messageType = "";
+        this.message = 'آیا از حذف نامه اطمینان دارید؟';
+        this.msgBoxBtns = 'yesNo';
+        this.shallShowMessageBox = true;
+    }
+    async onMessageBoxButtonClick(button: string){
+        this.shallShowMessageBox = false;          
+        if(button === 'yes'){
+            this.shallShowMessageBox = false;
+            letterService.deleteLetter(this.letter as Letter);
+            this.$emit('delete-letter',this.letter);
+        }
     }
 }
 </script>

@@ -62,6 +62,7 @@ import store from '@/store'
 import { LetterSearchResult } from '../../../store/models/Letter/LetterSearchResult';
 import SearchResultItem  from '@/components/Cartable/SearchResultList/SearchResultItem/SearchResultItem.vue';
 import * as letterService from '@/store/Services/letterServices';
+import { DraftLetter } from '../../../store/models/Letter/DraftLetter';
 
 @Component({
     components:{SingleLetter,SearchResultItem, LetterFilter, LetterSearch,LetterTypeSelector}
@@ -81,7 +82,7 @@ export default class LetterList extends Vue{
     usedWorkFlows: Workflow[] = [];
     filteredFormIds: string[] = [];
     curretnFilterMode = 'all';
-    counts = {all: 0,notRead: 0 , notForwarded: 0 , forms: 0 , notForms: 0 };
+    counts = {all: 0,notRead: 0 , notForwarded: 0  , forms: 0 , notForms: 0 , draftSent: 0 , draftNotSent: 0 };
     filter = (x: Letter) => {return true;};
     searchResultsFilter = (x: LetterSearchResult) => {return true;};
 
@@ -89,7 +90,7 @@ export default class LetterList extends Vue{
     onLettersChanged(){
         this.setUsedEnterpriseForms();
         this.calcCounts();
-        (this.$refs.typeSelector as any).selectAllMode();
+       
     }
 
     @Watch('searchResults')
@@ -105,7 +106,20 @@ export default class LetterList extends Vue{
             const notForwarded = this.letters.filter(l=>!l.isForwarded).length;
             const forms = this.letters.filter(l=>l.isEnterpriseForm).length;
             const notForms = all - forms;
-            const obj = {all: all,notRead: notRead , notForwarded: notForwarded , forms: forms , notForms: notForms };
+            
+            const obj = {all: all,notRead: notRead , notForwarded: notForwarded , forms: forms , notForms: notForms, draftNotSent: 0 , draftSent: 0 };
+            if(this.mode === 'drafts'){
+                obj.draftSent = this.letters.filter(l=>{
+                    const dLetter =  (l as DraftLetter)
+                    if(dLetter.childLetters){
+                        return dLetter.childLetters.length > 0
+                    }
+                    else{
+                        return false;
+                    }
+                }).length;
+                obj.draftNotSent = obj.all - obj.draftSent;
+            }
             this.$emit('count-calcuted', obj)
             this.counts = obj;
         }
@@ -115,7 +129,7 @@ export default class LetterList extends Vue{
             const notForwarded = this.searchResults.filter(l=>!l.isForwarded).length;
             const forms = this.searchResults.filter(l=>l.isEnterpriseForm).length;
             const notForms = all - forms;
-            const obj = {all: all,notRead: notRead , notForwarded: notForwarded , forms: forms , notForms: notForms };
+            const obj = {all: all,notRead: notRead , notForwarded: notForwarded , forms: forms , notForms: notForms, draftSent: 0 , draftNotSent: 0};
             this.$emit('count-calcuted', obj)
             this.counts = obj;
         }
@@ -212,11 +226,15 @@ export default class LetterList extends Vue{
             return  !letter.isForwarded;
         }
         else if(this.currentLetterType === 'sent'){
-            return  letter.isForwarded;
+            const draftLetter =  letter as DraftLetter;
+            if(draftLetter.childLetters)return draftLetter.childLetters.length >0;
+            else return false;
 
         }
         else if(this.currentLetterType === 'notSent'){
-            return   !letter.isForwarded;
+            const draftLetter =  letter as DraftLetter;
+            if(draftLetter.childLetters)return draftLetter.childLetters.length === 0;
+            else return false;
         }
         else if(this.currentLetterType === 'all'){
             return  true;
@@ -386,6 +404,13 @@ export default class LetterList extends Vue{
             if(searchResult)
                 this.searchResults[this.searchResults.indexOf(searchResult)].isForwarded = true;
         }
+    }
+
+    resetTypeSelector(){
+        if(this.mode === 'drafts')
+        (this.$refs.typeSelector as any).selectNotSentMode();
+        else if(this.mode === 'received')
+        (this.$refs.typeSelector as any).selectAllMode();
     }
    
 }

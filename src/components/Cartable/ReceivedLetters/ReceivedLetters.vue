@@ -39,6 +39,9 @@ export default class ReceivedLetters extends Vue {
         this.letters =  serverResult.letterList;
         this.years  =   api.getCartableYears(serverResult.from,serverResult.to);
         this.defaultDate = api.getDefaultDate(serverResult.to);
+        const list =  this.$refs.letterList as any;
+        if(list)
+            list.resetTypeSelector();
     }
     onSelectedLetterChanged(letter: Letter){
         this.$emit('selected-letter-changed',letter);
