@@ -34,7 +34,7 @@ export default class LetterTrailTree extends Vue {
         await this.getLetterTrail();
         this.serverTime = await letterService.getServerTime();
     }
-
+   
     async getLetterTrail(){
         if(this.letterId === undefined)return;
         this.loading = true;
@@ -48,7 +48,6 @@ export default class LetterTrailTree extends Vue {
         root.sendTime = '';
         root.recievers[0] = trailData;
         this.data = root;
-
         this.loading = false;
     }
 }

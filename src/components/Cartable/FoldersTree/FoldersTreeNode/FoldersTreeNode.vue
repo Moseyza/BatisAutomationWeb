@@ -5,8 +5,8 @@
                 <div class="leaf-node" v-if="data.children.length == 0" ></div>
                 <i v-if="data.children.length >0" class="icon-nodeIconOpen node-icon" @click="toggle()" :class="{'icon-nodeIcon':!isOpen , 'icon-nodeIconOpen':isOpen}" ></i>
                 <i style="flex:1;padding-top:5px;" :class="data.iconClass"></i>
-                <h5 style="flex:5;text-align:right;padding-top:10px" v-if="data.isRoot">{{data.name}}</h5>
-                <router-link style="flex:5;cursor:pointer;padding-top:10px" v-else tag="div" :to="data.url" @click.native="onFolderClicked" >{{data.name}}</router-link>
+                <h5 style="flex:5;text-align:right;padding-top:10px" v-if="data.isRoot" :class="{'highlight': data.isSelected }">{{data.name}}</h5>
+                <router-link style="flex:5;cursor:pointer;padding-top:10px" v-else tag="div" :to="data.url" @click.native="onFolderClicked"  :class="{'highlight': data.isSelected}" >{{data.name}}</router-link>
                 <input type="checkbox" v-if="isSelectable" v-model="isSelected"/>
             </div>
             <div class="node-child" :class="{hide:!isOpen}">
@@ -35,6 +35,7 @@ export default class FoldersTreeNode extends Vue {
     @Prop() data?: FoldersTreeNodeData;
     @Prop() isSelectable?: boolean;
     
+   
     isSelected = false;
     @Watch('isSelected')
     onSelectionChanged(nVal: boolean, oVal: boolean){
@@ -56,18 +57,21 @@ export default class FoldersTreeNode extends Vue {
         if(this.data.children.length === 0 || this.data.children === undefined) this.isOpen = true;
     }
 
-    onFolderClicked(){
+    async onFolderClicked(){
         if(this.data)
         {
-            this.$emit('folder-clicked',this.data.name);
+            //this.data.isSelected = true;
+           await  this.$emit('folder-clicked',this.data.name);
         }
     }
-    onChildFolderClicked(name: string){
-        this.$emit('folder-clicked',name);
+    async onChildFolderClicked(name: string){
+        await this.$emit('folder-clicked',name);
     }
     titleDblClick(){
         this.isOpen = !this.isOpen;
     }
+
+   
 }
 
 
@@ -78,6 +82,7 @@ export interface FoldersTreeNodeData {
     iconClass: any;
     url: string;
     children: FoldersTreeNodeData[];
+    isSelected: boolean;
 }
 
 
@@ -196,6 +201,10 @@ export interface FoldersTreeNodeData {
         font-size: medium;
          color: #ff6b6b;
          left: 5px;
+    }
+    .highlight{
+        color: #69b578;
+        font-weight: bolder;
     }
 
 

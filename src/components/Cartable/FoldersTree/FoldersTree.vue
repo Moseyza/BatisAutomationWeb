@@ -4,7 +4,7 @@
         v-for="folder in folders"
         :data="folder"
         :key="folder.url"
-        @folder-clicked="onFolderClicked()"
+        @folder-clicked="onFolderClicked($event)"
         >
         </FoldersTreeNode>
     </div>
@@ -19,6 +19,7 @@ import {FoldersTreeNodeData} from './FoldersTreeNode/FoldersTreeNode.vue';
 import FoldersTreeNode from './FoldersTreeNode/FoldersTreeNode.vue';
 import { OwnerFolder } from '@/store/models/LetterOwner/OwnerFolder';
 import { AnnouncementBoard } from '../../../store/models/AnnouncementBoard/AnnouncementBoard';
+import { SendLetter } from '../../../store/Services/letterServices';
 
 @Component({
     components:{FoldersTreeNode}
@@ -39,6 +40,7 @@ export default class FoldersTree extends Vue {
         //cartableFolder.iconClass = {'icon-dashbord':true,'fixed-icon':true }
         const receiveLetters = {} as FoldersTreeNodeData;
         receiveLetters.name = 'نامه های دریافتی';
+        receiveLetters.isSelected = true;
         receiveLetters.url = "ReceivedLetters"
         receiveLetters.isRoot = false;
         receiveLetters.children = [];
@@ -48,6 +50,7 @@ export default class FoldersTree extends Vue {
         sentLetters.url = "SentLetters"
         sentLetters.isRoot = false;
         sentLetters.iconClass = {'icon-outbox':true,'fixed-icon':true }
+        sentLetters.isSelected = false;
         sentLetters.children = [];
         //cartableFolder.children.push(receiveLetters,sentLetters);
 
@@ -63,6 +66,7 @@ export default class FoldersTree extends Vue {
         savedDraft.url = 'DraftLetters';
         savedDraft.iconClass = {'icon-drafts xxlarg-text':true,'fixed-icon':true};
         savedDraft.children = [];
+        savedDraft.isSelected = false;
         //draftFolder.children.push(savedDraft);
 
         const archiveFoldersNode = {} as FoldersTreeNodeData;
@@ -71,6 +75,7 @@ export default class FoldersTree extends Vue {
         archiveFoldersNode.url = 'ArchiveFolders';
         archiveFoldersNode.iconClass = {'icon-allFolders':true,'fixed-icon':true }
         archiveFoldersNode.children = [];
+        archiveFoldersNode.isSelected = false;
         this.addArchiveFolder(archiveFoldersNode,archiveFolders);
 
         const faxesNode = {} as FoldersTreeNodeData;
@@ -78,19 +83,21 @@ export default class FoldersTree extends Vue {
         faxesNode.isRoot = true;
         faxesNode.children = [];
         faxesNode.iconClass = {'icon-allFaxes':true,'fixed-icon':true};
+        faxesNode.isSelected = false;
         const incommingFaxes = {} as FoldersTreeNodeData;
         incommingFaxes.name = 'فکس های دریافتی';
         incommingFaxes.isRoot = false;
         incommingFaxes.url = "IncommingFaxes";
         incommingFaxes.children = [];
         incommingFaxes.iconClass = {'icon-incommingFaxes':true,'fixed-icon':true};
-
+        incommingFaxes.isSelected = false;
         const outgoingFaxes = {} as FoldersTreeNodeData;
         outgoingFaxes.name = 'فکس های دریافتی';
         outgoingFaxes.isRoot = false;
         outgoingFaxes.url = "OutgoingFaxes";
         outgoingFaxes.children = [];
         outgoingFaxes.iconClass = {'icon-outgoingFaxes':true,'fixed-icon':true};
+        outgoingFaxes.isSelected = false;
 
         faxesNode.children.push(incommingFaxes,outgoingFaxes);
        
@@ -100,13 +107,14 @@ export default class FoldersTree extends Vue {
         colosedLettersNode.url = 'ClosedLetters';
         colosedLettersNode.children = [];
         colosedLettersNode.iconClass = {'icon-allClosed':true,'fixed-icon':true};
-
+        colosedLettersNode.isSelected =  false;
         const closedIncomingLetters = {} as FoldersTreeNodeData;
         closedIncomingLetters.name = 'نامه های مختومه دریافتی';
         closedIncomingLetters.isRoot = false;
         closedIncomingLetters.url = 'IncomingClosedLetters';
         closedIncomingLetters.iconClass = {'icon-incommingClosed':true,'fixed-icon':true};
-        closedIncomingLetters.children = [];
+        closedIncomingLetters.children = [];    
+        closedIncomingLetters.isSelected = false;
 
         const closedOutgoingLetters = {} as FoldersTreeNodeData;
         closedOutgoingLetters.name = 'نامه های مختومه ارسالی';
@@ -114,7 +122,7 @@ export default class FoldersTree extends Vue {
         closedOutgoingLetters.url = 'OutgoingClosedLetters';
         closedOutgoingLetters.iconClass = {'icon-outgoingClosed':true,'fixed-icon':true};
         closedOutgoingLetters.children = [];
-
+        closedIncomingLetters.isSelected = false;
         const announcementBoardsNode = {} as FoldersTreeNodeData;
         announcementBoardsNode.name = 'برد اعلانات و اسناد';
         announcementBoardsNode.isRoot = true;
@@ -137,6 +145,7 @@ export default class FoldersTree extends Vue {
             childNode.iconClass = {'icon-folder':true,'fixed-icon':true};
             childNode.url = `FolderLetters?folderId=${folder.id}`;
             childNode.children = [];
+            childNode.isSelected = false;
             parent.children.push(childNode);
             if(folder.childFolders !== null && folder.childFolders != undefined)
                 this.addArchiveFolder(childNode,folder.childFolders);
@@ -150,6 +159,7 @@ export default class FoldersTree extends Vue {
             childNode.isRoot = false;
             childNode.iconClass = {'icon-AnnouncementBoardChild':true,'fixed-icon':true};
             childNode.url = `AnnouncementBoard?boardId=${board.id}`;
+            childNode.isSelected = false;
             childNode.children = [];
             parent.children.push(childNode);
             if(board.children !== null && board.children != undefined)
@@ -157,8 +167,17 @@ export default class FoldersTree extends Vue {
         });
     }
     
-    onFolderClicked(){
+    onFolderClicked(name: string){
+        this.unSelectRecursive(this.folders,name);
         this.$emit('folder-clicked');
+    }
+    unSelectRecursive(folders: FoldersTreeNodeData[], name: string){
+        folders.forEach(x=>
+        {   if(x.name === name) {x.isSelected = true}
+            else
+                x.isSelected = false;   
+            this.unSelectRecursive(x.children, name);
+        });
     }
     folders: FoldersTreeNodeData[] = [];
 

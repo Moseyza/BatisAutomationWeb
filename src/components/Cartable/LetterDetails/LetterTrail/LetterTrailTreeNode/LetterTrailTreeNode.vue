@@ -25,7 +25,7 @@
                         <i class="action-icon small-text" :class="{'icon-comboboxArrow':!shallShowComment, 'icon-arrowUp': shallShowComment}"></i>
                     </div>
                 </div>
-                 <div v-if="shallShowComment">
+                <div v-if="shallShowComment">
                            <LetterTrailNodeComment 
                            :mode="nodeData.isSender?'send':'forward'" 
                            :sendTime="nodeData.sendTime"
@@ -47,12 +47,14 @@
                 
             </div>
             <div>
-            <LetterTrailTreeNode :class="{'hide':isHide}"
+            <LetterTrailTreeNode 
+            :class="{'hide':isHide}"
             v-for="(item,index) in nodeData.recievers"
             :key="item.sendTime + index"
             :nodeData="item"
             :serverTime="serverTime"
             :currentPossession="currentPossession"
+            :isHideProp="isHide"
             ></LetterTrailTreeNode>
             </div>
         </li>
@@ -78,6 +80,12 @@ export default class LetterTrailTreeNode extends Vue {
     @Prop() nodeData?: LetterTrailWithAttachments;
     @Prop() currentPossession?: string;
     isHide = true;
+    @Prop() isHideProp?: boolean;
+    @Watch('isHideProp')
+    onIsHidePropChanged(newVal: boolean , oldVal: boolean){
+        
+        this.isHide = newVal;
+    }
     shallShowComment = false;
     @Prop() serverTime?: string;
     @Prop() isRoot?: boolean;
@@ -94,8 +102,12 @@ export default class LetterTrailTreeNode extends Vue {
     }
 
     toggleNode(){
+        
         this.isHide = !this.isHide;
+
     }
+    
+    
 
     toggleComment(){
         this.shallShowComment = !this.shallShowComment;

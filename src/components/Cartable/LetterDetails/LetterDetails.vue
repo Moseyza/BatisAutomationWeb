@@ -1,12 +1,12 @@
 <template>
     <div class="three-part-flexbox">
-            <div style="flex:1"  class="flex-part-top" >
+            <div style="flex:0 1 auto"  class="flex-part-top" >
                 <div class="symmetric-grid">
                 <div style="flex:3">
-                    <h4>{{letter.title}}</h4>
+                    <h4 style="margin-right:5px">{{letter.title}}</h4>
                 </div>
                 <div style="flex:1;justify-content:space-around" class="symmetric-grid">
-                    <i class="action-icon icon-comment" style="font-size: x-large"></i>
+                    <div class="popup" data-content='یادداشت شخصی'> <i class="action-icon icon-comment" style="font-size: x-large"></i></div>
                     <div class="popup" v-if="canFinalize" data-content='اختتام سریع' @click="finalizeLetterFast" > <i  class="action-icon icon-closeFast" ></i></div>
                     <div v-if="finalizing" class="ui active inline small loader"></div>
                     <div style="padding-top:5px" class="popup" v-if="canReject" data-content='بازگردانی نامه' @click="restoreLetter" > <i  style="font-size:20pt" class="action-icon icon-rejectClose" ></i></div>
@@ -21,10 +21,10 @@
 	                </div>
                 </div>
                 </div>
-                 <div>
+                 <!-- <div>
                     <div v-if="isReceived">نامه های دریافتی</div>
                     <div v-else>نامه های ارسالی</div>
-                </div>
+                </div> -->
             </div>
             <div style="flex:6" class="flex-part-middle">
            
@@ -69,7 +69,7 @@
                         <!-- {{letter.abstract}} -->
                         <div style="padding:5px;flex:1;min-height:400px" class="ng-scope pdfobject-container">
                             <iframe v-if="pdfLoaded" :src="pdfSrc" type="application/pdf" width="100%" height="100%" style="overflow: auto;"></iframe>
-                            <img v-else :src="pdfSrc" width="100%" height="100%" alt="پیش نمایش وجود ندارد" style="overflow: auto;color:#ff6b6b;min-height:100px"/>
+                            <img v-else :src="pdfSrc" width="100%" height="100%" alt="مشاهده پیش نمایش امکان پذیر نیست" style="overflow: auto;color:#ff6b6b;min-height:100px"/>
                         </div>
 
                         <!-- <object :data="pdfSrc" type="application/pdf" width="100%" >
