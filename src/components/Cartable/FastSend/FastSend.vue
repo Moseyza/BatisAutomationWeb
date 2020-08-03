@@ -80,7 +80,6 @@
                        />
                     </div>
                 </div>
-                
             </div>
 
             <div class="symmetric-grid" style="margin-bottom: 5px">
@@ -267,7 +266,7 @@ export default class FastSent extends Vue{
     test(){
         console.log(this.selectedDraftRecipients);
     }
-     onFileSelectorChanged(file: any){
+    onFileSelectorChanged(file: any){
         const reader = new FileReader();
         reader.addEventListener("progress",(evt)=>{
             this.loadedPercent = (evt.loaded / evt.total) * 100;

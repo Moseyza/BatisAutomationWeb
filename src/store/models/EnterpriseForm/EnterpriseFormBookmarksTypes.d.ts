@@ -1,0 +1,26 @@
+
+export enum EnterpriseFormBookmarksTypes {
+  String,
+  Int,
+  Float,
+  Date,
+  Time,
+  KeyboardTime,
+  Day,
+  Month,
+  Year,
+  ShortString,
+  Currency,
+  OnlyLabel,
+  UserCreatedList,
+  File,
+  PersonnelLetterOwner,
+  Company,
+  CompanyLetterOwner,
+  Personnel,
+  Table,
+  SenderSign,
+  Sign,
+  CustomQuery,
+  DynamicList
+}

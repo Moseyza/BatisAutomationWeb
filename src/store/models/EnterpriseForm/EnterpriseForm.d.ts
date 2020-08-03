@@ -1,6 +1,7 @@
 import File from "../Letter/File";
+import { EnterpriseFormBookmark } from "./EnterpriseFormBookmark";
 
-export interface EnterpriseForm {
+export  interface EnterpriseForm {
   id: string;
   name: string;
   file: File;
@@ -37,43 +38,4 @@ export interface EnterpriseForm {
   openMaximized: boolean;
 }
 
-export interface EnterpriseFormBookmark {
-  id: string;
-  name: string;
-  type: number;
-  defaultValue?: string | null;
-  englishName: string;
-  persianName: string;
-  sequenceNo: number;
-  isMandatory: boolean;
-  comment?: null;
-  validValue?: string | null;
-  isReadOnly: boolean;
-  isVisibleInSend: boolean;
-  isVisibleInTrail: boolean;
-  tableColumns?: (EnterpriseFormTableBookmarkColumn | null)[] | null;
-  canAddNewRow: boolean;
-  shallInheritValueFromLastEnterpriseForm: boolean;
-  defaultFile?: null;
-  columnFormat?: string | null;
-  isHorizontalTable: boolean;
-  validValuesQuery?: string | null;
-  isTransient: boolean;
-}
-export interface EnterpriseFormTableBookmarkColumn {
-  englishName: string;
-  persianName: string;
-  isReadonly: boolean;
-  isVisible: boolean;
-  columnIndex: number;
-  type: number;
-  validValues?: string | null;
-  validValuesQueries?: string | null;
-  isMandatory: boolean;
-  defaultValue?: string | null;
-  color: number;
-  viewTablePosition?: string | null;
-  labelColor: number;
-  isBold: boolean;
-  fontSize: number;
-}
+

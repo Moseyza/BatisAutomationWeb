@@ -1,11 +1,13 @@
 <template>
     <div class="three-part-flexbox" id="main-container">
+        <div ref="formlabel" style="position:absolute">{{maxLengthFormLabel}}</div> 
+        <div ref="tablelabel" style="position:absolute">{{maxLengthTableLabel}}</div> 
         <CartableTitle @on-letter-owner-set="onLetterOwnerSet" class="flex-part-top" />
         <div class="container3 flex-part-middle" id="child-container"  style="flex: 18 1 0%;overflow: hidden;">
             <div style="flex:2;">
                     <div class="three-part-flexbox">
                         <div class="flex-part-top" style="flex: 0 0 auto;display:flex;">
-                                <QuickAccess  @fast-send-clicked="onFastSendBtnClick($event)"/>
+                                <QuickAccess  @fast-send-clicked="onFastSendBtnClick($event)" @enterprise-form-selected="onEnterpriseFormSelected($event)"/>
                         </div>
                         <div class="flex-part-middle">
                             <FoldersTree :letterOwnerId="letterOwnerId" @folder-clicked="onFolderClicked()"></FoldersTree>
@@ -47,6 +49,7 @@
                 <FinalizeLetter v-else-if="leftSideMode=== 'finalize'" :letter="selectedLetter"  />
                 <ForwardLetter v-else-if="leftSideMode=== 'forward'" @forward-canceled="onForwardCanceled" @forward-done="onLetterForwarded($event)" :letter="selectedLetter" />
                 <FastSend :mode="fastSendMode" v-else-if="leftSideMode=== 'fastSend'" @fastsend-canceled="onFastSendCanceled($event)"  :dependentLetters="fastSendDependencies" />
+                <SendEnterpriseForm  v-else-if="leftSideMode=== 'enterpriseForm'" :form="selectedFrom" :tableLblWidth="maxTableLabelWidth" :formLblWidth="maxFormLabelWidth" />
             </div>
             
         </div>
@@ -73,8 +76,10 @@ import FastSend from '@/components/Cartable/FastSend/FastSend.vue';
 import {LetterSearchResult } from '@/store/models/Letter/LetterSearchResult';
 import { DependentLetter } from '../store/models/Letter/DependentLetter';
 import { DraftLetter } from '../store/models/Letter/DraftLetter';
+import { EnterpriseForm } from '../store/models/EnterpriseForm/EnterpriseForm';
+import SendEnterpriseForm from '@/components/Cartable/EnterpriseForm/SendEnterpriseForm.vue';
 @Component({
-    components: { FoldersTree, LetterDetails, DraftDetails , CartableTitle,FinalizeLetter, ForwardLetter, QuickAccess, FastSend, SearchResultDetails}
+    components: { FoldersTree, LetterDetails, DraftDetails , CartableTitle,FinalizeLetter, ForwardLetter, QuickAccess, FastSend, SearchResultDetails, SendEnterpriseForm}
 })
 export default class MainWindow extends Vue {
     selectedLetter: Letter = {} as Letter;
@@ -181,6 +186,49 @@ export default class MainWindow extends Vue {
     onDeleteLetter(){
         this.leftSideMode = '';
         (this.$refs.letterlist as  any).refresh();
+        
+    }
+    selectedFrom: EnterpriseForm = {} as EnterpriseForm;
+    maxLengthFormLabel = '';
+    maxLengthTableLabel = '';
+    maxFormLabelWidth = 0;
+    maxTableLabelWidth = 0;
+    shallShowSendEnterpriseForm = false;
+    onEnterpriseFormSelected(form: EnterpriseForm){
+        if(form.bookmarks){
+            form.bookmarks.forEach(bm=>
+            {
+                if(this.maxLengthFormLabel.length <  bm.persianName.length && bm.isVisibleInSend)
+                    this.maxLengthFormLabel = bm.persianName;
+                if(bm.type === 18 && bm.tableColumns) //bookmark is a table
+                    bm.tableColumns.forEach(tabelColumn => {
+                        if(tabelColumn &&  tabelColumn.persianName.length > this.maxLengthTableLabel.length && tabelColumn.isVisible){
+                            this.maxLengthTableLabel = tabelColumn.persianName;
+                        }
+                    });
+            });
+        }
+        this.selectedFrom = form;
+        this.shallShowSendEnterpriseForm = true;
+        this.leftSideMode = "";
+    }
+
+    updated(){
+        if(this.maxLengthFormLabel !== ''){
+            this.maxFormLabelWidth = (this.$refs.formlabel as any).clientWidth;
+            this.maxLengthFormLabel = '';
+        }
+        if(this.maxLengthTableLabel !==''){
+            this.maxTableLabelWidth = (this.$refs.tablelabel as any).clientWidth;
+            this.maxLengthTableLabel = '';
+            
+        }
+        if(this.shallShowSendEnterpriseForm){
+            this.shallShowSendEnterpriseForm = false;
+            this.leftSideMode = 'enterpriseForm';
+        }
+             
+        
         
     }
 }

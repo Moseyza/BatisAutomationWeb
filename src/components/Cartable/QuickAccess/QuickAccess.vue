@@ -10,7 +10,7 @@
             <div v-if="isLoading" class="item"><div class="ui active inline centered loader"></div></div> 
             <div style="max-height:200px !important;overflow:auto;width:300px">
                 <div v-for="(form) in filteredForms" :key="form.id" class="item menu-item" :style="{'background-color':getFromColor(form.selectionColor), 'color':'black' ,'border':'1px solid black' , 'max-height':'30px','cursor':'pointer' }">
-                    <div style="padding-left:5px;">{{form.name}}</div>
+                    <div @click="showForm(form.id)" style="padding-left:5px;">{{form.name}}</div>
                 </div>
             </div>
             <!-- <div id="test" class="ui icon top left dropdown">
@@ -72,6 +72,11 @@ export default class QuickAccess extends Vue{
         this.enterpriseForms =  await enterpriseFromService.getOwnerEnterpriseForms(this.ownerId);
         this.enterpriseForms = this.enterpriseForms.sort((x,y)=> y.selectionColor - x.selectionColor);
         this.isLoading = false;
+    }
+
+    showForm(id: string){
+        const selectedForm =  this.enterpriseForms.find(x=>x.id === id);
+        this.$emit('enterprise-form-selected',selectedForm);
     }
 
 
