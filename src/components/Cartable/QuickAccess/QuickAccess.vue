@@ -13,14 +13,6 @@
                     <div @click="showForm(form.id)" style="padding-left:5px;">{{form.name}}</div>
                 </div>
             </div>
-            <!-- <div id="test" class="ui icon top left dropdown">
-                <i class="action-icon icon-enterpriseForm " style="font-size:17pt"></i>
-    	        <div class="menu">
-                    <div v-for="(form) in filteredForms" :key="form.id" class="item menu-item" :style="{'background-color':getFromColor(form.selectionColor), 'color':'black' ,'border':'1px solid black' , 'max-height':'21px' }">
-                        <div style="padding-left:5px;">{{form.name}}</div>
-                    </div>
-                </div>
-            </div> -->
   		</div>
 	    </div>
     </div>

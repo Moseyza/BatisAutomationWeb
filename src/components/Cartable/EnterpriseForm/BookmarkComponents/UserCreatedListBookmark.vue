@@ -5,9 +5,7 @@
             <span style="float:left">:</span>
         </div>
         <div style="flex:1;padding:0 5px">
-            <select  :value="value" style="width: 100%" :style="{'background-color': columnColor}" >
-                <option  v-for="(option,index) in options" :key="index" :value="option.trim()" >{{option}}</option>
-            </select>
+            <SimpleLookup :validValues="validValues" :valueProp="defaultValue" />
         </div>
     </div>
 </template>
@@ -15,21 +13,36 @@
 <script lang="ts">
 import {Vue,Component,Prop, Watch,Mixins} from 'vue-property-decorator';
 import BookmarkMixin from './BookmarkMixin';
-@Component
+import SimpleLookup from '@/components/Cartable/EnterpriseForm/SimpleLookup/SimpleLookup.vue';
+import { ValidValues } from '../../../../store/models/EnterpriseForm/EnterpriseFormValidValues';
+
+@Component({
+    components:{SimpleLookup}
+})
 export default  class  UserCreatedListBookmark extends Mixins(BookmarkMixin){
    
     
-    created(){
-        if(this.tableColumnBookmark){
-            if(this.tableColumnBookmark.defaultValue)
-                this.value = this.tableColumnBookmark.defaultValue.trim();
-        }
-
+  
+    get defaultValue(){
+        if(this.tableColumnBookmark)
+            return this.tableColumnBookmark.defaultValue;
+        return '';
     }
     get options(){
         if(this.bookmark)return this.bookmark.validValue;
         else if(this.tableColumnBookmark) return (this.tableColumnBookmark.validValues as string).split('|');
         else return [];
+    }
+
+    get validValues(){
+        if(this.tableColumnBookmark)
+        {
+            const array =  ((this.tableColumnBookmark.validValues) as string).split('|');
+            const result = [] as ValidValues[];
+            array.forEach(item=>result.push({item1: item, item2: item}));
+            return result;
+        }
+        return [];
     }
 }
 </script>

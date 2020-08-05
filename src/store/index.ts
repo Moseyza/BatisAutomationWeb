@@ -16,7 +16,8 @@ export default new Vuex.Store({
     branchIds:  [],
     workflows: [],
     canSeeAllLetters: false,
-    advancedSearchSettings: {} as LetterSearch
+    advancedSearchSettings: {} as LetterSearch,
+    eventHub:  new Vue()
 
 
   },
