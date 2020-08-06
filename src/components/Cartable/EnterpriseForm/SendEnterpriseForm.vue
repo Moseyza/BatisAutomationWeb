@@ -1,6 +1,10 @@
 <template>
-    <div>
-        <EnterpriseFormContainer :formLblWidth="formLblWidth" :tableLblWidth="tableLblWidth"  :form="form"/>
+    <div class="three-part-flexbox">
+        <div class="flex-part-top"></div>
+        <div class="flex-part-middle">
+            <EnterpriseFormContainer :formLblWidth="formLblWidth" :tableLblWidth="tableLblWidth"  :form="form"/>
+        </div>
+        <div class="flex-part-bottom"></div>
     </div>
 </template>
 
@@ -16,7 +20,5 @@ export default class SendEnterpriseForm extends Vue{
     @Prop() form?: EnterpriseForm;
     @Prop() formLblWidth?: number;
     @Prop() tableLblWidth?: number;
-   
-
 }
 </script>

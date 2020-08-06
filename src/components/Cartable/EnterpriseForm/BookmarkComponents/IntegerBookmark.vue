@@ -7,7 +7,6 @@
         <div style="flex:1;padding:0 5px">
             <input type="text" style="width:100%;border:none;outline:none" :style="{'background-color': columnColor}" v-model="value" :readonly="isReadOnly"/>
         </div>
-        
     </div>
 </template>
 

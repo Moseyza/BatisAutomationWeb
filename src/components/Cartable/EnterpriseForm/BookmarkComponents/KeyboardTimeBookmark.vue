@@ -35,6 +35,9 @@ export default  class  StringBookmark extends Mixins(BookmarkMixin){
                 this.value = '';
             }
         }
+        if(this.value.length === 5){
+            this.$emit("value-changed",this.englishName);
+        }
     }
 
 }

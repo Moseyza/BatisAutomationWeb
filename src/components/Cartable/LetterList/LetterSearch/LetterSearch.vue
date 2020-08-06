@@ -28,7 +28,7 @@
                             <div v-for="wf in workflows" :key="wf.id" class="item menu-item" :class="{'disabled': !showForms}">
                                 <div style="padding-left:5px">{{wf.name}}</div>
                                 <div class="left menu">
-                                    <div v-for="item in wf.enterpriseFo" :key="item.id" class="item menu-item">
+                                    <div v-for="item in wf.enterpriseForms" :key="item.id" class="item menu-item">
                                         <div style="padding-left:5px"> {{item.name}} </div>
                                         <ToggleSwitch @checked-changed="formFilterSelection($event,item.id)" /> </div>
                                 </div>

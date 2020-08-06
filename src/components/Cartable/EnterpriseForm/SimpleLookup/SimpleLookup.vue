@@ -2,8 +2,9 @@
     <div  class="ui icon top left dropdown tc-dropdown" style="width:100%">
         <div style="display:flex;background-color:white">
             <input v-if="isDropdownShown" @focus="onFocus()" @blur="onFocusOut()"  type="text" v-model="searchTxt" style="width:100%;border:none;" />
-            <input v-else @focus="onFocus()"  type="text" v-model="selectedValue.item2" style="width:100%;border:none;" readonly />
-            <div><i class="action-icon icon-comboboxArrow" style="font-size:small;margin-left:5px"></i></div>
+            <input v-else @focus="onFocus()"   type="text" v-model="selectedValue.item2" style="width:100%;border:none;" :style="{'background-color': color}" readonly />
+            <div v-if="isDropdownShown"><i class="action-icon icon-comboboxArrow" style="font-size:small;margin-left:5px"></i></div>
+            <!-- <div v-else :style="{'background-color': color}"><i class="action-icon icon-comboboxArrow" style="font-size:small;margin-left:5px"></i></div> -->
         </div>
         <div class="left menu" style="width:100%;background-color:#939393 !important" >
             <div style="max-height:200px !important;overflow:auto;width:100%">
@@ -25,6 +26,7 @@ import * as $ from 'jquery';
 export default class SimpleLookup extends Vue {
     isDropdownShown = false;
     @Prop() valueProp?: string;
+    @Prop() color?: string;
     @Watch('valueProp')
     onValuePropChanged(){
         this.setValueFromProp();
@@ -43,7 +45,7 @@ export default class SimpleLookup extends Vue {
     }
     onFocus(){
         this.searchTxt = '';
-         $(".tc-dropdown").dropdown({action:'hide',onShow:this.onDropdownShow,onHide: this.onDropdownHide});
+        $(".tc-dropdown").dropdown({action:'hide',onShow:this.onDropdownShow,onHide: this.onDropdownHide});
     }
     onDropdownShow(){
         this.isDropdownShown = true;
@@ -58,7 +60,7 @@ export default class SimpleLookup extends Vue {
     }
     selectValue(value: ValidValues){
         this.selectedValue = value;
-        this.$emit
+        this.$emit('value-selected',value);
     }
     onFocusOut(){
         this.searchTxt = '';

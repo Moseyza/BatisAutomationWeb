@@ -19,6 +19,5 @@ export default  class  StringBookmark extends Mixins(BookmarkMixin){
     created(){
         this.value = '';
     }
-
 }
 </script>

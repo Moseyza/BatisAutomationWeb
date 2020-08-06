@@ -83,6 +83,7 @@ export default  class  TableBookmark extends Mixins(BookmarkMixin){
             if(this.maxColumnLabelWidth)
                 props.maxLabelWidth = this.maxColumnLabelWidth;
             const instance = new componentClass({propsData: props});
+            instance.$on("value-changed",(e: any)=>{this.$emit("value-changed",this.englishName)});
             instance.$mount();
             return instance.$el;
         }

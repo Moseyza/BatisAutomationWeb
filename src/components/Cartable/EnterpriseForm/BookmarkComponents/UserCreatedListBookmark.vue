@@ -5,7 +5,7 @@
             <span style="float:left">:</span>
         </div>
         <div style="flex:1;padding:0 5px">
-            <SimpleLookup :validValues="validValues" :valueProp="defaultValue" />
+            <SimpleLookup :validValues="validValues" :valueProp="defaultValue" :color="columnColor" @value-selected="onValueSelected($event)" />
         </div>
     </div>
 </template>
@@ -20,20 +20,14 @@ import { ValidValues } from '../../../../store/models/EnterpriseForm/EnterpriseF
     components:{SimpleLookup}
 })
 export default  class  UserCreatedListBookmark extends Mixins(BookmarkMixin){
-   
-    
-  
     get defaultValue(){
         if(this.tableColumnBookmark)
+        {
             return this.tableColumnBookmark.defaultValue;
+        }
         return '';
     }
-    get options(){
-        if(this.bookmark)return this.bookmark.validValue;
-        else if(this.tableColumnBookmark) return (this.tableColumnBookmark.validValues as string).split('|');
-        else return [];
-    }
-
+    
     get validValues(){
         if(this.tableColumnBookmark)
         {
@@ -43,6 +37,22 @@ export default  class  UserCreatedListBookmark extends Mixins(BookmarkMixin){
             return result;
         }
         return [];
+    }
+
+    created(){
+        const data = {} as any;
+        data.Id = '';
+        data.Value = '';
+        if(this.tableColumnBookmark && this.tableColumnBookmark.defaultValue){
+            data.Id = this.tableColumnBookmark.defaultValue;
+            data.Value = this.tableColumnBookmark.defaultValue;
+        }
+        this.value = data;
+    }
+    onValueSelected(value: ValidValues){
+        this.value.Id = value.item1;
+        this.value.Value = value.item2;
+        this.$emit("value-changed",this.englishName);
     }
 }
 </script>

@@ -76,6 +76,7 @@ export default class EnterpriseFormContainer extends Vue{
                 }
             }
             const instance = new componentClass({propsData: props});
+            instance.$on("value-changed",(e: string)=>{this.onFormParameterChanged(e)});
             instance.$mount();
             (this.$refs.formcontainer as any).appendChild(instance.$el);
         }
@@ -92,6 +93,34 @@ export default class EnterpriseFormContainer extends Vue{
         obj.tableName  = '';
         store.state.eventHub.$emit('form-values-requested',obj);
         console.log(obj);
+    }
+    getFormData(){
+        const formData  = {} as any;
+        formData.tableName  = '';
+        store.state.eventHub.$emit('form-values-requested',formData);
+        return formData;
+    }
+    getFormTableNames(){
+        if(!this.form)return [];
+        if(!this.form.bookmarks) return [];
+        const tableNames =  [] as string[];
+        this.form.bookmarks.forEach(bm => {
+            if(bm.type === 18)//if bookmark is table
+                tableNames.push(bm.englishName);
+        }); 
+        return tableNames;
+    }
+    onFormParameterChanged(parameterName: string){
+        const tableNames = this.getFormTableNames();
+        const formData = this.getFormData();
+        const formParameters = [] as any[];
+        for(const key in formData){
+            if(key!='tableName' && !tableNames.includes(key)){
+                formParameters.push(formData[key]);
+            }
+        }
+        //console.log(formParameters);
+        JSON.stringify(formParameters)
     }
     
 }

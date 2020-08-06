@@ -14,13 +14,18 @@ export default class BookmarkMixin extends Vue{
     valueId = '';
     @Watch('value')
     onValueChanged(newVal: any, oldVal: any){
-        this.$emit('value-changed',this.value);
+        //this must be empty
     }
 
     get persianName(){
-        //if(!this.maxLabelLength)return '';
-        if(this.bookmark)return this.bookmark.persianName;//.padEnd(this.maxLabelLength,' ');
-        else if(this.tableColumnBookmark) return this.tableColumnBookmark.persianName;//.padEnd(this.maxLabelLength,' ');
+        if(this.bookmark)return this.bookmark.persianName;
+        else if(this.tableColumnBookmark) return this.tableColumnBookmark.persianName;
+        else return '';
+    }
+    
+    get englishName(){
+        if(this.bookmark)return this.bookmark.englishName;
+        else if(this.tableColumnBookmark) return this.tableColumnBookmark.englishName;
         else return '';
     }
 
@@ -57,27 +62,17 @@ export default class BookmarkMixin extends Vue{
                 
                 if(!this.tableColumnBookmark)return;
                 if(this.tableRowIndex === undefined)return;
-                data.Id = this.valueId;
-                data.Value = this.value;
-                eventArg.tableData[this.tableRowIndex][this.tableColumnBookmark.englishName] = data;
+                //if(this.tableColumnBookmark.type === 0 || this.tableColumnBookmark.type === 1 ||  this.tableColumnBookmark.type === 15)//integer or string or time or date
+                eventArg.tableData[this.tableRowIndex][this.tableColumnBookmark.englishName] = this.value;    
+                // else{
+                //     data.Id = this.valueId;
+                //     data.Value = this.value;
+                //     eventArg.tableData[this.tableRowIndex][this.tableColumnBookmark.englishName] = data;
+                // }
             }
         }
     }
-    // getObject(){
-    //     const object  = {} as any;
-    //     if(this.bookmark)
-    //     {
-    //         object.Id = this.bookmark.id;
-    //         object.Name = this.bookmark.englishName;
-    //         object.Value = this.value;
-    //     }
-    //     if(this.tableColumnBookmark){
-    //         object.Id = this.valueId;
-    //         object.Value = this.value;
-    //     }
-        
-    //     return object;
-    // }
+    
 }
 
 

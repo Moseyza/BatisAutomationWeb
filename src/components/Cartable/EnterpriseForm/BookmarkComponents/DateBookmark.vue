@@ -8,7 +8,6 @@
             <input style="border:none;outline:none;" type="text" v-model="value" id='dateBookmark' placeholder="__/__/_____"> <VuePersianDatetimePicker :clearable="true" element="dateBookmark" v-model="value" />
             <button @click="clear" class="button"  style="margin-right:5px;padding:1px;" ><i  class="icon-clearSearch"></i></button>
         </div>
-        
     </div>
 </template>
 
