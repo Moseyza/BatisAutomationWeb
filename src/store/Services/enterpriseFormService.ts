@@ -25,3 +25,15 @@ export async function getFormValidValus(formId: string): Promise<EnterpriseFormV
         return {} as EnterpriseFormValidValues;    
     }
 }
+
+export async function getCodeBehindExecutionResult(formId: string,ownerId: string,parametersValue: string, tableParameterValues: string, changedParameterName: string ){
+    try {
+
+        const serverResult =  await api.batisAutomationApi.post("/EnterpriseForms/BehindCodeExecutionResult",{formId: formId,ownerId: ownerId,parametersValue: parametersValue, TableParametersValue: tableParameterValues, ChangedParameterName: changedParameterName });
+        return serverResult.data as string;
+    } 
+    catch (error) {
+        console.log(error);
+        return {} as string;    
+    }
+}

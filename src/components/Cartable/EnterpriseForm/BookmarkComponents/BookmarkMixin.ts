@@ -44,6 +44,14 @@ export default class BookmarkMixin extends Vue{
             return (this.maxLabelWidth + 20).toString() + 'px'
         return '';
     }
+
+    get defaultValue(){ //این باید اصلاح شود احتمالا
+        if(this.bookmark)
+            return this.bookmark.defaultValue;
+        if(this.tableColumnBookmark)
+            return this.tableColumnBookmark.defaultValue;
+        return '';
+    }
     created(){
         store.state.eventHub.$on("form-values-requested",(e: any)=> this.getData(e));
     }

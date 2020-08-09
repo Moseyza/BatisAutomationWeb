@@ -23,6 +23,9 @@ import StringBookmark from './StringBookmark.vue';
 import KeyboardTimeBookmark from './KeyboardTimeBookmark.vue';
 import UserCreatedListBookmark from './UserCreatedListBookmark.vue';
 import CustomQueryListBookmark from './CustomQueryListBookmark.vue';
+import CompanyListBookmark from './CompanyListBookmark.vue';
+import DynamicListBookmark from './DynamicListBookmark.vue';
+import TableRowContainer from '@/components/Cartable/EnterpriseForm/EnterpriseFormContainer/TableRowContainer.vue';
 import * as $ from 'jquery';
 import { ValidValuesForSingleTable } from '../../../../store/models/EnterpriseForm/EnterpriseFormValidValues';
 import store from '@/store';
@@ -30,23 +33,38 @@ import store from '@/store';
 export default  class  TableBookmark extends Mixins(BookmarkMixin){
     @Prop() maxColumnLabelWidth?: number;
     @Prop() validValues?: ValidValuesForSingleTable;
+    invisibleColumns = [] as EnterpriseFormTableBookmarkColumn[];
     rowsCount = 0;
     created(){
         this.value = '';
+        if(!this.bookmark)return;
+        if(!this.bookmark.tableColumns)return;
+        this.bookmark.tableColumns.forEach(x=>{
+            if(x && !x.isVisible)
+                this.invisibleColumns.push(x);
+        });
     }
 
     addRow(){
         if(!this.bookmark)return;
         if(!this.bookmark.tableColumns)return;
         this.rowsCount++;
+        const rowContainerClass = Vue.extend(TableRowContainer);
+        const rowContainerInstance = new rowContainerClass();
+        rowContainerInstance.$mount();
         this.bookmark.tableColumns.forEach(columnBookmark=>{
             if(columnBookmark && columnBookmark.isVisible){
                 const columnComponent = this.getColumnBookmarkComponent(columnBookmark);
                 if(columnComponent){
-                    (this.$refs.tablecontainer as any).appendChild(columnComponent);
+                   
+                    (rowContainerInstance.$refs.tablerow as any).appendChild(columnComponent);
+                    
+                    //(this.$refs.tablecontainer as any).appendChild(columnComponent);
                 }
             }
-        })
+            
+        });
+        (this.$refs.tablecontainer as any).appendChild(rowContainerInstance.$el);
        // $(".tc-dropdown").dropdown({action:'hide'});
     }
     
@@ -67,6 +85,9 @@ export default  class  TableBookmark extends Mixins(BookmarkMixin){
             case 7:
                 componentClass = Vue.extend(UserCreatedListBookmark);
                 break;
+            case 10:
+                componentClass = Vue.extend(CompanyListBookmark);
+                break;
             case 13:
                 componentClass = Vue.extend(CustomQueryListBookmark);
                 if(this.validValues){
@@ -74,6 +95,9 @@ export default  class  TableBookmark extends Mixins(BookmarkMixin){
                     if(currentColumnValues)
                         props.validValues = currentColumnValues.validValues;
                 }
+                break;
+            case 14:
+                componentClass = Vue.extend(DynamicListBookmark);
                 break;
             case 15:
                 componentClass = Vue.extend(KeyboardTimeBookmark);
@@ -97,6 +121,9 @@ export default  class  TableBookmark extends Mixins(BookmarkMixin){
         for(let i =0; i<this.rowsCount;i++)
         {
             const internalObj = {} as any;
+            this.invisibleColumns.forEach(ic=>{
+                internalObj[ic.englishName] = ""; 
+            });
             array.push(internalObj);
         }
         obj.tableData = array;

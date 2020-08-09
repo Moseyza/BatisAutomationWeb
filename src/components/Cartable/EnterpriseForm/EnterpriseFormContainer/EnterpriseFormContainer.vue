@@ -23,6 +23,7 @@ export default class EnterpriseFormContainer extends Vue{
     maxLabelLength = 0;
     currentLabel = '';
     formValidValues = {} as  EnterpriseFormValidValues;
+    invisibleBookmarks = [] as any[];
     @Prop() form?: EnterpriseForm;
     @Prop() tableLblWidth?: number;
     @Prop() formLblWidth?: number;
@@ -30,10 +31,20 @@ export default class EnterpriseFormContainer extends Vue{
     drawForm(){
         if(!this.form)return;
         if(!this.form.bookmarks)return;
+        this.invisibleBookmarks.length = 0;
         this.form.bookmarks.forEach((bookmark,index) => {
             if(bookmark.isVisibleInSend)
                 this.addBookmarkToForm(bookmark,index);    
+            else 
+                this.addToInvisibleBookmarks(bookmark);
         });
+    }
+    addToInvisibleBookmarks(bookmark: EnterpriseFormBookmark){
+        const invisibleItem = {} as any;
+        invisibleItem.Name = bookmark.englishName;
+        invisibleItem.Id = bookmark.id;
+        invisibleItem.Value = bookmark.defaultValue;
+        this.invisibleBookmarks.push(invisibleItem);
     }
     addBookmarkToForm(bookmark: EnterpriseFormBookmark, index: number){
         let componentClass = undefined;
@@ -83,6 +94,7 @@ export default class EnterpriseFormContainer extends Vue{
     }
    
     async mounted(){
+        console.log(this.form);
         if(this.form)
           this.formValidValues = await  enterpriseFormService.getFormValidValus(this.form.id);
         this.drawForm();
@@ -110,17 +122,30 @@ export default class EnterpriseFormContainer extends Vue{
         }); 
         return tableNames;
     }
-    onFormParameterChanged(parameterName: string){
+    async onFormParameterChanged(parameterName: string){
+        if(!this.form)return;
         const tableNames = this.getFormTableNames();
         const formData = this.getFormData();
         const formParameters = [] as any[];
+        
         for(const key in formData){
             if(key!='tableName' && !tableNames.includes(key)){
                 formParameters.push(formData[key]);
             }
         }
-        //console.log(formParameters);
-        JSON.stringify(formParameters)
+
+        //adding invisible values
+        this.invisibleBookmarks.forEach(invisibleItem=>{
+            formParameters.push(invisibleItem);
+        });
+
+        const tablesData = {} as any;
+        tableNames.forEach(tn=>tablesData[tn] = formData[tn]);
+        const ownerId =  store.state.ownerId;
+        const parametersValue =  JSON.stringify(formParameters);
+        const tableParametersValue = JSON.stringify(tablesData);
+        await enterpriseFormService.getCodeBehindExecutionResult(this.form.id,ownerId,parametersValue,tableParametersValue,parameterName);
+
     }
     
 }
