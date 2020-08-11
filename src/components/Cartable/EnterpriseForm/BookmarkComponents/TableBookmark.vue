@@ -65,8 +65,6 @@ export default  class  TableBookmark extends Mixins(BookmarkMixin){
     addRow(){
         if(!this.bookmark)return;
         if(!this.bookmark.tableColumns)return;
-        
-        
         this.rowsCount++;
         const rowContainerClass = Vue.extend(TableRowContainer);
         const rowContainerInstance = new rowContainerClass();
@@ -83,6 +81,7 @@ export default  class  TableBookmark extends Mixins(BookmarkMixin){
             }
         });
         (this.$refs.tablecontainer as any).appendChild(rowContainerInstance.$el);
+        this.$emit("value-changed",this.englishName);
     }
     
     getColumnBookmarkComponent(columnBookmark: EnterpriseFormTableBookmarkColumn){
