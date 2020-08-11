@@ -146,7 +146,6 @@ export default class EnterpriseFormContainer extends Vue{
             }
         }
         return result;
-        
     }
    
     async mounted(){
