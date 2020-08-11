@@ -1,8 +1,5 @@
 <template>
-<div>
     <div  ref="formcontainer">
-    </div>
-    <button @click="test">test</button>
     </div>
 </template>
 
@@ -17,6 +14,7 @@ import { EnterpriseFormBookmark } from '@/store/models/EnterpriseForm/Enterprise
 import * as enterpriseFormService from '@/store/Services/enterpriseFormService';
 import * as $ from 'jquery';
 import { EnterpriseFormValidValues } from '../../../../store/models/EnterpriseForm/EnterpriseFormValidValues';
+import FormFormatRow from '@/components/Cartable/EnterpriseForm/EnterpriseFormContainer/FormFormatRow/FormFormatRow.vue';
 import store from '@/store';
 @Component
 export default class EnterpriseFormContainer extends Vue{
@@ -27,7 +25,21 @@ export default class EnterpriseFormContainer extends Vue{
     @Prop() form?: EnterpriseForm;
     @Prop() tableLblWidth?: number;
     @Prop() formLblWidth?: number;
-
+    formatCells =  [] as any[];
+    formatForm(){
+        if(!this.form)return;
+        const columnFormat = this.getColumnFormat();
+        const rows =  columnFormat.split(',');
+        this.formatCells = [];
+        const FormFormatRowClass = Vue.extend(FormFormatRow);
+        for(let i = 0; i< rows.length; i++){
+            const prop = {rowIndex: i, columnCount: parseInt(rows[i])};
+            const formatRowInstance = new FormFormatRowClass({propsData: prop});
+            formatRowInstance.$mount();
+            this.formatCells.push(formatRowInstance);
+            (this.$refs.formcontainer as any).appendChild(formatRowInstance.$el);
+        }
+    }
     drawForm(){
         if(!this.form)return;
         if(!this.form.bookmarks)return;
@@ -48,7 +60,8 @@ export default class EnterpriseFormContainer extends Vue{
     }
     addBookmarkToForm(bookmark: EnterpriseFormBookmark, index: number){
         let componentClass = undefined;
-        //alert(bookmark.type);
+        const col = this.getCol(index);
+        const formatRowIndex = col.rowIndex;
         switch(bookmark.type)
         {
             case 0://string
@@ -89,23 +102,62 @@ export default class EnterpriseFormContainer extends Vue{
             const instance = new componentClass({propsData: props});
             instance.$on("value-changed",(e: string)=>{this.onFormParameterChanged(e)});
             instance.$mount();
-            (this.$refs.formcontainer as any).appendChild(instance.$el);
+            //console.log(this.formatCells[formatRowIndex].$refs[col.colName]);
+            this.formatCells[formatRowIndex].$refs[col.colName][0].appendChild(instance.$el);
+            //(this.$refs.formcontainer as any).appendChild(instance.$el);
         }
+    }
+
+    getCol(index: number){
+        const result = {} as any;
+        result.colName = "";
+        result.rowIndex = 0;
+        if(!this.form)return result;
+        const order = index +1;
+        const columnFormat = this.getColumnFormat();
+        const rows =  columnFormat.split(',');
+        let rowIndex = 0;
+        let colIndex = 1;
+        let total = 0;
+        while(total < index){
+            total++;
+            
+            if(parseInt(rows[rowIndex])=== colIndex){
+                rowIndex++;
+                colIndex =0;
+            }
+            colIndex++;
+        }
+        result.colName =  `col${rowIndex}${colIndex}`;
+        result.rowIndex = rowIndex;
+        return result;
+    }
+
+    getColumnFormat(){
+        if(!this.form)return '';
+        if(this.form.columnFormat != undefined && this.form.columnFormat != "")return this.form.columnFormat;
+        let result = "";
+        if(!this.form.bookmarks)return '';
+        for(let i = 0;i<this.form.bookmarks.length; i++){
+            if(this.form.bookmarks[i].isVisibleInSend)
+            {
+                if(result != "") result = result + ",1";
+                else result = result + "1";
+            }
+        }
+        return result;
+        
     }
    
     async mounted(){
         console.log(this.form);
         if(this.form)
           this.formValidValues = await  enterpriseFormService.getFormValidValus(this.form.id);
+        this.formatForm();
         this.drawForm();
     }
 
-    test(){
-        const obj  = {} as any;
-        obj.tableName  = '';
-        store.state.eventHub.$emit('form-values-requested',obj);
-        console.log(obj);
-    }
+    
     getFormData(){
         const formData  = {} as any;
         formData.tableName  = '';
@@ -144,7 +196,15 @@ export default class EnterpriseFormContainer extends Vue{
         const ownerId =  store.state.ownerId;
         const parametersValue =  JSON.stringify(formParameters);
         const tableParametersValue = JSON.stringify(tablesData);
-        await enterpriseFormService.getCodeBehindExecutionResult(this.form.id,ownerId,parametersValue,tableParametersValue,parameterName);
+        const behindCodeResultStr =  await enterpriseFormService.getCodeBehindExecutionResult(this.form.id,ownerId,parametersValue,tableParametersValue,parameterName);
+        //console.log("BehindCode====>");
+        const behindCodeResults =  JSON.parse(behindCodeResultStr);
+        const tableParametersStr = behindCodeResults.TableParameterRows;
+        if(tableParametersStr)
+        {
+            const tableParameters = JSON.parse(tableParametersStr);
+            store.state.eventHub.$emit("tabledata-set-request",tableParameters);
+        }
 
     }
     

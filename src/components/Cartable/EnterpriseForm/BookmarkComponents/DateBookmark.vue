@@ -20,7 +20,7 @@ import VuePersianDatetimePicker from 'vue-persian-datetime-picker';
 })
 export default  class  DateBookmark extends Mixins(BookmarkMixin){
     created(){
-        this.value = '';
+        this.value = this.defaultValue;
     }
 
     clear(){

@@ -15,7 +15,7 @@ export interface EnterpriseFormBookmark {
   isReadOnly: boolean;
   isVisibleInSend: boolean;
   isVisibleInTrail: boolean;
-  tableColumns?: (EnterpriseFormTableBookmarkColumn | null)[] | null;
+  tableColumns?: EnterpriseFormTableBookmarkColumn[];
   canAddNewRow: boolean;
   shallInheritValueFromLastEnterpriseForm: boolean;
   defaultFile?: null;

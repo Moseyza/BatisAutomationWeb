@@ -28,6 +28,7 @@ import DynamicListBookmark from './DynamicListBookmark.vue';
 import TableRowContainer from '@/components/Cartable/EnterpriseForm/EnterpriseFormContainer/TableRowContainer.vue';
 import * as $ from 'jquery';
 import { ValidValuesForSingleTable } from '../../../../store/models/EnterpriseForm/EnterpriseFormValidValues';
+import FormFormatRow from '@/components/Cartable/EnterpriseForm/EnterpriseFormContainer/FormFormatRow/FormFormatRow.vue';
 import store from '@/store';
 @Component
 export default  class  TableBookmark extends Mixins(BookmarkMixin){
@@ -43,29 +44,45 @@ export default  class  TableBookmark extends Mixins(BookmarkMixin){
             if(x && !x.isVisible)
                 this.invisibleColumns.push(x);
         });
+        store.state.eventHub.$on("tabledata-set-request",(e: any)=> this.onTableDataSet(e));
     }
-
+    formatCells =  [] as any[];
+    formatRow(rowContainerInstance: any){
+        if(!this.bookmark)return;
+        //if(!this.bookmark.columnFormat)return;
+        const columnFormat = this.getColumnFormat();
+        const rows =  columnFormat.split(',');
+        this.formatCells = [];
+        const FormFormatRowClass = Vue.extend(FormFormatRow);
+        for(let i = 0; i< rows.length; i++){
+            const prop = {rowIndex: i, columnCount: parseInt(rows[i])};
+            const formatRowInstance = new FormFormatRowClass({propsData: prop});
+            formatRowInstance.$mount();
+            this.formatCells.push(formatRowInstance);
+            (rowContainerInstance.$refs.tablerow as any).appendChild(formatRowInstance.$el);
+        }
+    }
     addRow(){
         if(!this.bookmark)return;
         if(!this.bookmark.tableColumns)return;
+        
+        
         this.rowsCount++;
         const rowContainerClass = Vue.extend(TableRowContainer);
         const rowContainerInstance = new rowContainerClass();
         rowContainerInstance.$mount();
-        this.bookmark.tableColumns.forEach(columnBookmark=>{
+        this.formatRow(rowContainerInstance);
+        this.bookmark.tableColumns.forEach((columnBookmark,index)=>{
+        const col = this.getCol(index);
+        const formatRowIndex = col.rowIndex;
             if(columnBookmark && columnBookmark.isVisible){
                 const columnComponent = this.getColumnBookmarkComponent(columnBookmark);
                 if(columnComponent){
-                   
-                    (rowContainerInstance.$refs.tablerow as any).appendChild(columnComponent);
-                    
-                    //(this.$refs.tablecontainer as any).appendChild(columnComponent);
+                    this.formatCells[formatRowIndex].$refs[col.colName][0].appendChild(columnComponent);
                 }
             }
-            
         });
         (this.$refs.tablecontainer as any).appendChild(rowContainerInstance.$el);
-       // $(".tc-dropdown").dropdown({action:'hide'});
     }
     
     getColumnBookmarkComponent(columnBookmark: EnterpriseFormTableBookmarkColumn){
@@ -96,7 +113,7 @@ export default  class  TableBookmark extends Mixins(BookmarkMixin){
                         props.validValues = currentColumnValues.validValues;
                 }
                 break;
-            case 14:
+            case 14://dynamicList
                 componentClass = Vue.extend(DynamicListBookmark);
                 break;
             case 15:
@@ -130,6 +147,62 @@ export default  class  TableBookmark extends Mixins(BookmarkMixin){
         obj.tableName  = this.bookmark.englishName;
         store.state.eventHub.$emit('form-values-requested',obj);
         eventArg[this.bookmark.englishName] = obj.tableData;
+    }
+
+    onTableDataSet(tablesData: any){
+        if(!this.bookmark)return;
+        const data = tablesData[this.bookmark.englishName];
+        if(!data)return;
+        this.setData(data)
+    }
+
+    setData(tableData: any[]){
+        tableData.forEach((row,index) => {
+            const rowData = {} as any;
+            rowData.rowIndex = index;
+            rowData.data = row;
+            store.state.eventHub.$emit("tablerow-set-requested",rowData);
+        });
+    }
+
+    getCol(index: number){
+        const result = {} as any;
+        result.colName = "";
+        result.rowIndex = 0;
+        if(!this.bookmark)return result;
+        const order = index +1;
+        const columnFormat = this.getColumnFormat();
+        const rows =  columnFormat.split(',');
+        let rowIndex = 0;
+        let colIndex = 1;
+        let total = 0;
+        while(total < index){
+            total++;
+            
+            if(parseInt(rows[rowIndex])=== colIndex){
+                rowIndex++;
+                colIndex =0;
+            }
+            colIndex++;
+        }
+        result.colName =  `col${rowIndex}${colIndex}`;
+        result.rowIndex = rowIndex;
+        return result;
+    }
+     getColumnFormat(){
+        if(!this.bookmark)return '';
+        if(this.bookmark.columnFormat != undefined && this.bookmark.columnFormat != "")return this.bookmark.columnFormat;
+        let result = "";
+        if(!this.bookmark.tableColumns)return '';
+        for(let i = 0;i<this.bookmark.tableColumns.length; i++){
+            if(this.bookmark.tableColumns[i].isVisible)
+            {
+                if(result != "") result = result + ",1";
+                else result = result + "1";
+            }
+        }
+        return result;
+        
     }
 }
 </script>

@@ -20,7 +20,7 @@
 
 <script lang="ts">
 import { Vue, Prop, Component, Watch } from 'vue-property-decorator'
-import { ValidValues } from '@/store/models/EnterpriseForm/EnterpriseFormValidValues';
+import { ValidValues, ValidValuesForSingleTable } from '@/store/models/EnterpriseForm/EnterpriseFormValidValues';
 import * as $ from 'jquery';
 @Component
 export default class SimpleLookup extends Vue {
@@ -34,6 +34,11 @@ export default class SimpleLookup extends Vue {
 
     selectedValue = {} as ValidValues;
     @Prop() validValues?: ValidValues[];
+
+    @Watch("validValues")
+    onValidValuesChanged(){
+        this.selectedValue = {} as ValidValues;
+    }
 
     get filteredValues(){
         if(!this.validValues)return [];
@@ -63,12 +68,12 @@ export default class SimpleLookup extends Vue {
         this.$emit('value-selected',value);
     }
     onFocusOut(){
-        this.searchTxt = '';
+        //this.searchTxt = '';
     }
 
     setValueFromProp(){
         if(!this.validValues || !this.valueProp)return;
-        const val =  this.validValues.find(item=>item.item1.trim() === (this.valueProp as string).trim() );
+        const val =  this.validValues.find(item=>item.item2.trim() === (this.valueProp as string).trim() );
         if(val)
             this.selectedValue = val;
     }

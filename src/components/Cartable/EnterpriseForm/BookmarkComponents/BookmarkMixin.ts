@@ -54,6 +54,7 @@ export default class BookmarkMixin extends Vue{
     }
     created(){
         store.state.eventHub.$on("form-values-requested",(e: any)=> this.getData(e));
+        store.state.eventHub.$on("tablerow-set-requested",(e: any)=> this.setValueInTableRow(e));
     }
     
     getData(eventArg: any){
@@ -79,6 +80,14 @@ export default class BookmarkMixin extends Vue{
                 // }
             }
         }
+    }
+
+    setValueInTableRow(eventArg: any){
+        if(this.tableRowIndex === undefined)return;
+        if(eventArg.rowIndex !== this.tableRowIndex)return;
+        if(!this.tableColumnBookmark)return;
+        this.value = eventArg.data[this.tableColumnBookmark.englishName];
+        
     }
     
 }

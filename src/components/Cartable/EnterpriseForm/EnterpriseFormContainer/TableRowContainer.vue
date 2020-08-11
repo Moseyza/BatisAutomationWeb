@@ -1,6 +1,7 @@
 <template>
-    <div class="form-table-row" ref="tablerow">
-
+    <div style="display:flex;align-items: center; border-bottom:1px solid black" class="form-table-row" >
+        <div style="flex:0 1 auto;padding:5px;"> <i class="action-icon icon-removeFile small-text"></i> </div>
+        <div style="flex:1;padding:5px; border-right:1px solid black;" ref="tablerow"  ></div>
     </div>
 </template>
 
@@ -16,7 +17,7 @@ export default class TableRowContainer extends Vue{
 
 <style lang="less" scoped>
     .form-table-row:hover{
-        border: 1px solid #3498db;
-        background-color: grey;
+        border: 1px solid #3498db  !important;
+        background-color: #5f5f5f;
     }
 </style>

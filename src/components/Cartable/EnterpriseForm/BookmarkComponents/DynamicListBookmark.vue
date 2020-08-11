@@ -5,7 +5,7 @@
             <span style="float:left">:</span>
         </div>
         <div style="flex:1;padding:0 5px">
-            <SimpleLookup :validValues="validValues" :valueProp="defaultValue" :color="columnColor" @value-selected="onValueSelected" />
+            <SimpleLookup :validValues="validValues" :valueProp="value.SelectedValue.Value" :color="columnColor" @value-selected="onValueSelected" />
         </div>
     </div>
 </template>
@@ -14,19 +14,16 @@
 import {Vue,Component,Prop, Watch,Mixins} from 'vue-property-decorator';
 import BookmarkMixin from './BookmarkMixin';
 import SimpleLookup from '@/components/Cartable/EnterpriseForm/SimpleLookup/SimpleLookup.vue';
-import { ValidValues } from '../../../../store/models/EnterpriseForm/EnterpriseFormValidValues';
+import { ValidValues, ValidValuesForSingleTable } from '../../../../store/models/EnterpriseForm/EnterpriseFormValidValues';
 
 @Component({
     components:{SimpleLookup}
 })
 export default  class  DynamicListBookmark extends Mixins(BookmarkMixin){
    
-    @Prop() validValues?: ValidValues;
-    get defaultValue(){
-        if(this.tableColumnBookmark)
-            return this.tableColumnBookmark.defaultValue;
-        return '';
-    }
+    //@Prop() validValues?: ValidValues;
+    validValues = [] as ValidValues[];
+   
     created(){
         const data = {} as any;
         data.SqlQuery = "";
@@ -36,9 +33,27 @@ export default  class  DynamicListBookmark extends Mixins(BookmarkMixin){
 
     }
     onValueSelected(value: ValidValues){
-        this.value.Id = value.item1;
-        this.value.Value = value.item2;
+        this.value.SelectedValue.Id = value.item1;
+        this.value.SelectedValue.Value = value.item2;
         this.$emit("value-changed",this.englishName);
+    }
+
+    onValueChanged(newVal: any, oldVal: any){
+      
+        if(oldVal.ValidValues){
+            if(newVal.ValidValues != null && oldVal.ValidValues.length > 0){
+                if(newVal.ValidValues.find((item: any)=> item.Id === oldVal.ValidValues[0].Id))
+                    return;
+            }
+        }
+        this.validValues.length = 0;
+        if(!newVal.ValidValues)return;
+        newVal.ValidValues.forEach((element: any) => {
+            const validVal = {} as ValidValues;
+            validVal.item1 = element.Id;
+            validVal.item2 = element.Value;
+            this.validValues.push(validVal);
+        });
     }
     
 }
