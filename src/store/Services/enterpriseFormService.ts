@@ -2,6 +2,7 @@ import * as api from '@/store/api';
 import { EnterpriseForm } from '../models/EnterpriseForm/EnterpriseForm';
 import { EnterpriseFormValidValues } from '../models/EnterpriseForm/EnterpriseFormValidValues';
 import { LetterOwnerWithFaxAndEmails } from '../models/LetterOwner/LetterOwnerWithFaxAndEmails';
+import SentLetterInformation from '../models/Letter/SentLetterInformation';
 
 
 
@@ -65,14 +66,14 @@ export async function getFormReceivers(formId: string,senderId: string,dependent
     }
 }
 
-export async function sendEnterpriseForm(sendFormDto: any): Promise<string>{
+export async function sendEnterpriseForm(sendFormDto: any): Promise<SentLetterInformation>{
     try {
 
         const serverResult =  await api.batisAutomationApi.post("/EnterpriseForms/send",sendFormDto);
-        return serverResult.data as string;
+        return serverResult.data as SentLetterInformation;
     } 
     catch (error) {
         console.log(error);
-        return {} as string;    
+        return {} as SentLetterInformation;    
     }
 }

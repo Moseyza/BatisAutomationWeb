@@ -59,10 +59,16 @@ export default class BookmarkMixin extends Vue{
         else if(this.tableColumnBookmark)
             return this.tableColumnBookmark.isMandatory;
     }
+
+    get isMandatoryValueSupplied(){
+        if(!this.isMandatory)return true;
+        return this.value !=='' && this.value !== ({} as any);
+    }
     created(){
         store.state.eventHub.$on("form-values-requested",(e: any)=> this.getData(e));
         store.state.eventHub.$on("tablerow-set-requested",(e: any)=> this.setValueInTableRow(e));
         store.state.eventHub.$on("newvalues-set-request",(e: any)=> this.setNewValues(e));
+        store.state.eventHub.$on("mandatory-values-validation",(e: any)=> e.allValuesSupplied = e.allValuesSupplied && this.isMandatoryValueSupplied );
     }
     
     getData(eventArg: any){

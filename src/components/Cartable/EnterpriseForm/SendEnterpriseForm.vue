@@ -1,5 +1,6 @@
 <template>
     <div class="three-part-flexbox">
+        <FullPageLoader :isActive="sending" />
         <div class="flex-part-top">
             
             <div v-if="mainReceivers.length>0" class="symmetric-grid" style="margin-bottom: 5px">
@@ -51,10 +52,11 @@
             <EnterpriseFormContainer :formLblWidth="formLblWidth" :tableLblWidth="tableLblWidth"  :form="form" @errors-exposed="onErrorsExposed($event)" @no-errors="onNoErrors()"/>
         </div>
         <div class="flex-part-bottom container1" style="flex:0 1 auto">
-             <div  style="display:flex">
-                    <!-- <div  class="action-icon bg1" style="flex:1;text-align:center"><i style="color:inherit;font-size:xx-large" class=" icon-close"></i></div> -->
+            <InPlaceMessageBox v-if="shallShowMsgBox" :message="msgBoxMessage" :messageType="msgBoxMessageType" :buttons="msgBoxButtons" @button-clicked="onMsgBoxButtonClicked($event)"/>
+            <div v-else style="display:flex">
+                    <div  @click="cancel()" class="action-icon bg1" style="flex:1;text-align:center"><i style="color:inherit;font-size:xx-large" class=" icon-close"></i></div>
                     
-                    <div  @click="send()" class="action-icon bg1 popup" :data-content="errors" style="flex:1;text-align:center"><i style="color:inherit;" class=" icon-forwardedLetter xlarg-text"></i></div>
+                    <div  @click="send()" class="action-icon bg1 popup" :data-content="errors" style="flex:1;text-align:center"><i style="color:inherit;" class=" icon-forwardedLetter xlarg-text"></i> <span v-if="shallShowError()" style="color:red;">!</span> </div>
             </div>
         </div>
     </div>
@@ -73,13 +75,19 @@ import  FastSendRecipientSelector from '@/components/Cartable/FastSend/FastSendR
 import store from '@/store';
 import * as $ from 'jquery';
 import { LetterOwnerForSendingFaxAndEmailAndSms } from '@/store/models/LetterOwner/LetterOwnerForSendingFaxAndEmailAndSms';
+import InPlaceMessageBox  from '@/components/UiComponents/InPlaceMessageBox.vue';
+import FullPageLoader from '@/components/UiComponents/FullPageLoader.vue';
 @Component({
-    components: {EnterpriseFormContainer,RecipientLookup , FastSendRecipientSelector }
+    components: {EnterpriseFormContainer,RecipientLookup , FastSendRecipientSelector , InPlaceMessageBox, FullPageLoader }
 })
 export default class SendEnterpriseForm extends Vue{
     @Prop() form?: EnterpriseForm;
     @Prop() formLblWidth?: number;
     @Prop() tableLblWidth?: number;
+    msgBoxMessage = '';
+    msgBoxMessageType = '';
+    msgBoxButtons = 'okCancel';
+    shallShowMsgBox = false;
     formReceivers = [] as LetterOwnerWithFaxAndEmails[];
     mainReceivers = [] as LetterOwnerWithFaxAndEmails[];
     copyReceivers = [] as LetterOwnerWithFaxAndEmails[];
@@ -87,7 +95,10 @@ export default class SendEnterpriseForm extends Vue{
     selectedMainRecipients = [] as LetterOwnerForSendingFaxAndEmailAndSms[];
     selectedCopyRecipients = [] as LetterOwnerForSendingFaxAndEmailAndSms[];
     selectedDraftRecipients = [] as LetterOwnerForSendingFaxAndEmailAndSms[];
+    mandatoryValuesErrorMessage = "عدم تامین پارامترهای اجباری";
+    sending = false;
     errors = '';
+    isFormSent = false;
     @Watch("form")
     onFormChanged(){
         this.loadReceivers();
@@ -162,14 +173,52 @@ export default class SendEnterpriseForm extends Vue{
     onNoErrors(){
         this.errors = '';
     }
+    
     async send(){
+        
         if(this.errors != '')return;
+        this.sending = true;
         const sendFormDto = {} as any;
+        const mandatoryValidation = {allValuesSupplied: true} as any;
+        store.state.eventHub.$emit("mandatory-values-validation",mandatoryValidation);
+        if(!mandatoryValidation.allValuesSupplied)
+        {
+            this.errors = this.mandatoryValuesErrorMessage;
+            $('.popup').popup({onShow: this.shallShowError});
+            this.sending = false;
+            return;
+        }
+        else{
+            this.errors = '';
+        }
         store.state.eventHub.$emit('send-enterpriseform',sendFormDto);
         sendFormDto.draftReceivers = this.selectedDraftRecipients;
         sendFormDto.copyReceivers  = this.selectedCopyRecipients;
         sendFormDto.Receivers = this.selectedMainRecipients;
         const sendResults =  await enterpriseFormService.sendEnterpriseForm(sendFormDto);
+        this.sending = false;
+        if(sendResults){
+            if(sendResults.letterNumber != ''){
+                this.msgBoxMessageType = 'success';
+                this.msgBoxButtons = 'ok';
+                this.msgBoxMessage = `نامه با شماره ${sendResults.letterNumber} ارسال گردید.`
+                this.shallShowMsgBox = true;
+                this.isFormSent = true;
+            }
+        }
+    }
+    cancel(){
+        this.msgBoxMessage = 'آیا مطمئن هستید؟';
+        this.msgBoxMessageType = '';
+        this.msgBoxButtons = 'yesNo';
+        this.shallShowMsgBox = true;
+    }
+    onMsgBoxButtonClicked(btn: string){
+        this.shallShowMsgBox = false;
+        if((btn ==='ok' && this.isFormSent) || btn === 'yes'){
+            this.$emit('sendform-close');
+        }
+        
 
     }
 }
