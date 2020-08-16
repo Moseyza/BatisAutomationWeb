@@ -6,6 +6,7 @@
         :recipient="recipient"
         @recipient-removed="onRecipientRemoved($event)"
         :autoCompleteDataType="autoCompleteDataType"
+        :hideComment="hideComment"
         />
     </div>
 </template>
@@ -23,6 +24,7 @@ import { LetterOwnerForSendingFaxAndEmailAndSms } from '../../../../store/models
 export default class FastSendRecipientSelector extends Vue{
     @Prop() recipients?: LetterOwnerForSendingFaxAndEmailAndSms;
     @Prop() autoCompleteDataType?: string;
+    @Prop() hideComment?: boolean;
     autoCompleteData: AutoCompleteData[] = [];
     onRecipientRemoved(id: string){
         this.$emit("recipient-removed",id);

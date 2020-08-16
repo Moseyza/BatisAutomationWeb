@@ -17,7 +17,10 @@ import store from '../../../../store';
 @Component
 export default  class  StringBookmark extends Mixins(BookmarkMixin){
     created(){
-        this.value = this.defaultValue;
+        if(this.defaultValue)
+            this.value = this.defaultValue;
+        else
+            this.value = '';
     }
 }
 </script>

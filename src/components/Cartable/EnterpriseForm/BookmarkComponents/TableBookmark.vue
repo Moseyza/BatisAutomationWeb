@@ -35,16 +35,20 @@ export default  class  TableBookmark extends Mixins(BookmarkMixin){
     @Prop() maxColumnLabelWidth?: number;
     @Prop() validValues?: ValidValuesForSingleTable;
     invisibleColumns = [] as EnterpriseFormTableBookmarkColumn[];
+    invisibleValues = [] as any[];
     rowsCount = 0;
     created(){
         this.value = '';
         if(!this.bookmark)return;
         if(!this.bookmark.tableColumns)return;
+        this.invisibleColumns = [];
+        this.invisibleValues = [];
         this.bookmark.tableColumns.forEach(x=>{
             if(x && !x.isVisible)
                 this.invisibleColumns.push(x);
         });
         store.state.eventHub.$on("tabledata-set-request",(e: any)=> this.onTableDataSet(e));
+        
     }
     formatCells =  [] as any[];
     formatRow(rowContainerInstance: any){
@@ -138,8 +142,12 @@ export default  class  TableBookmark extends Mixins(BookmarkMixin){
         {
             const internalObj = {} as any;
             this.invisibleColumns.forEach(ic=>{
-                internalObj[ic.englishName] = ""; 
+                if(this.invisibleValues.length > i)
+                    internalObj[ic.englishName] = this.invisibleValues[i][ic.englishName];
+                else
+                    internalObj[ic.englishName] = "";
             });
+
             array.push(internalObj);
         }
         obj.tableData = array;
@@ -156,10 +164,16 @@ export default  class  TableBookmark extends Mixins(BookmarkMixin){
     }
 
     setData(tableData: any[]){
+        this.invisibleValues = [];
         tableData.forEach((row,index) => {
             const rowData = {} as any;
             rowData.rowIndex = index;
             rowData.data = row;
+            const obj = {} as any;
+            this.invisibleColumns.forEach(ic=>{
+                obj[ic.englishName] = row[ic.englishName]; 
+            });
+            this.invisibleValues.push(obj);
             store.state.eventHub.$emit("tablerow-set-requested",rowData);
         });
     }
@@ -188,7 +202,7 @@ export default  class  TableBookmark extends Mixins(BookmarkMixin){
         result.rowIndex = rowIndex;
         return result;
     }
-     getColumnFormat(){
+    getColumnFormat(){
         if(!this.bookmark)return '';
         if(this.bookmark.columnFormat != undefined && this.bookmark.columnFormat != "")return this.bookmark.columnFormat;
         let result = "";

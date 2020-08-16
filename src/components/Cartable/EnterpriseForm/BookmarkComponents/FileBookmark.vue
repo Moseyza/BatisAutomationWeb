@@ -31,7 +31,8 @@ export default  class  FileBookmark extends Mixins(BookmarkMixin){
     isFileSelected = false;
     loadedPercent = 0;
     created(){
-        this.value = {} as File;
+        //this.value = {} as File;
+        this.value = '';
     }
     onFileButtonClick(){
         (this.$refs.fileInput as any).click();

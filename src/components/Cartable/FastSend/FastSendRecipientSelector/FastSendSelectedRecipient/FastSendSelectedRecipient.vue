@@ -10,7 +10,7 @@
                 <div @click="remove()"> <i class="icon-removeFile icon action-icon"></i> </div>
             </div>
         </div>
-        <div class="item-block xxsmall-text">
+        <div v-if="!hideComment" class="item-block xxsmall-text">
             
             هامش:   <input type="text" :list="dataListId"  v-model="recipient.sendingComment" >
                     <datalist :id="dataListId">
@@ -110,6 +110,7 @@ export default class FastSendSelectedRecipient extends Vue{
     autoCompleteData = [] as AutoCompleteData[];
     @Prop() autoCompleteDataType?: string;
     @Prop() recipient?: LetterOwnerForSendingFaxAndEmailAndSms;
+    @Prop() hideComment?: boolean;
     recipientRecipients = [] as LetterOwnerWithFaxAndEmails[]
     //selectedMainRecipients:  LetterOwnerForSendingFaxAndEmailAndSms [] = [];
     //selectedDraftRecipients:  LetterOwnerForSendingFaxAndEmailAndSms [] = [];
@@ -137,14 +138,19 @@ export default class FastSendSelectedRecipient extends Vue{
     }
     toggleTelegram(){
         if(!this.recipient)return;
+        if(!this.recipient.canSendViaMessagingApp)return;
         this.recipient.shallSendViaMessagingApp = !this.recipient.shallSendViaMessagingApp;
     }
     toggleSms(){
+        if(!this.recipient)return;
+        if(!this.recipient.canUserSendSms)return;
         if(!this.recipient)return;
         this.recipient.shallSendSms = !this.recipient.shallSendSms
         
     }
     toggleMail(){
+        if(!this.recipient)return;
+        if(!this.recipient.canUserSendEmail)return;
         this.isMailActive = !this.isMailActive;
         if(this.recipient){
             if(this.recipient.emails){

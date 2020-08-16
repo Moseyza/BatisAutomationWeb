@@ -73,6 +73,9 @@ export function getLetterOwnerForSendingFaxAndEmailAndSms(recipient: LetterOwner
     result.childDraftReceivers = [];
     result.childCopyReceivers = [];
     result.childMainReceivers = [];
+    result.canUserSendEmail = recipient.canUserSendEmail;
+    result.canUserSendSms = recipient.canUserSendSms;
+    result.canSendViaMessagingApp = recipient.canSendViaMessagingApp;
     return result;
 }
 

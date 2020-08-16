@@ -1,10 +1,62 @@
 <template>
     <div class="three-part-flexbox">
-        <div class="flex-part-top"></div>
-        <div class="flex-part-middle">
-            <EnterpriseFormContainer :formLblWidth="formLblWidth" :tableLblWidth="tableLblWidth"  :form="form"/>
+        <div class="flex-part-top">
+            
+            <div v-if="mainReceivers.length>0" class="symmetric-grid" style="margin-bottom: 5px">
+                <div style="flex:1;margin-left:5px">
+                 اصلی
+                </div>
+                <div style="flex:10">
+                    <RecipientLookup  :recipients="mainReceivers" @recipient-selected="selectRecipient($event,'main')"   />    
+                </div>
+            </div>
+            <div v-if="mainReceivers.length>0" class="symmetric-grid">
+                <div style="flex:1">
+
+                </div>
+                <FastSendRecipientSelector :hideComment="true"  style="flex:10" :autoCompleteDataType="'all'" :recipients="selectedMainRecipients" @recipient-removed="onRecipientRemoved($event,'main')"/>
+            </div>
+            
+
+            <div v-if="copyReceivers.length>0"  class="symmetric-grid" style="margin-bottom: 5px">
+                <div style="flex:1;margin-left:5px">
+                 رونوشت 
+                </div>
+                <div style="flex:10">
+                    <RecipientLookup   :recipients="copyReceivers" @recipient-selected="selectRecipient($event,'copy')"   />    
+                </div>
+            </div>
+            <div v-if="copyReceivers.length>0" class="symmetric-grid">
+                <div style="flex:1">
+
+                </div>
+            <FastSendRecipientSelector style="flex:10" :autoCompleteDataType="'copy'"  :recipients="selectedCopyRecipients" @recipient-removed="onRecipientRemoved($event,'copy')"/>
+            </div>
+            <div v-if="draftReceivers.length>0" class="symmetric-grid" style="margin-bottom: 5px">
+                <div  style="flex:1; margin-left:5px;">
+                 پیش نویس 
+                </div>
+                <div style="flex:10">
+                    <RecipientLookup   :recipients="draftReceivers" @recipient-selected="selectRecipient($event, 'draft')"   />    
+                </div>
+            </div>
+             <div v-if="draftReceivers.length>0"  class="symmetric-grid">
+            <div style="flex:1">
+
+            </div>
+            <FastSendRecipientSelector style="flex:10"  :autoCompleteDataType="'draft'" :recipients="selectedDraftRecipients" @recipient-removed="onRecipientRemoved($event,'draft')"/>
+            </div>
         </div>
-        <div class="flex-part-bottom"></div>
+        <div class="flex-part-middle">
+            <EnterpriseFormContainer :formLblWidth="formLblWidth" :tableLblWidth="tableLblWidth"  :form="form" @errors-exposed="onErrorsExposed($event)" @no-errors="onNoErrors()"/>
+        </div>
+        <div class="flex-part-bottom container1" style="flex:0 1 auto">
+             <div  style="display:flex">
+                    <!-- <div  class="action-icon bg1" style="flex:1;text-align:center"><i style="color:inherit;font-size:xx-large" class=" icon-close"></i></div> -->
+                    
+                    <div  @click="send()" class="action-icon bg1 popup" :data-content="errors" style="flex:1;text-align:center"><i style="color:inherit;" class=" icon-forwardedLetter xlarg-text"></i></div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -13,12 +65,112 @@ import {Vue,Component,Prop, Watch} from 'vue-property-decorator';
 import StringBookmark from './BookmarkComponents/StringBookmark.vue';
 import EnterpriseFormContainer from './EnterpriseFormContainer/EnterpriseFormContainer.vue';
 import {EnterpriseForm} from '@/store/models/EnterpriseForm/EnterpriseForm';
+import RecipientLookup from '@/components/Cartable/ForwardLetter/RecipientLookup/RecipientLookup.vue';
+import { LetterOwnerWithFaxAndEmails } from '@/store/models/LetterOwner/LetterOwnerWithFaxAndEmails';
+import * as enterpriseFormService from '@/store/Services/enterpriseFormService';
+import * as letterOwnerService from '@/store/Services/letterOwnerService';
+import  FastSendRecipientSelector from '@/components/Cartable/FastSend/FastSendRecipientSelector/FastSendRecipientSelector.vue';
+import store from '@/store';
+import * as $ from 'jquery';
+import { LetterOwnerForSendingFaxAndEmailAndSms } from '@/store/models/LetterOwner/LetterOwnerForSendingFaxAndEmailAndSms';
 @Component({
-    components: {EnterpriseFormContainer}
+    components: {EnterpriseFormContainer,RecipientLookup , FastSendRecipientSelector }
 })
 export default class SendEnterpriseForm extends Vue{
     @Prop() form?: EnterpriseForm;
     @Prop() formLblWidth?: number;
     @Prop() tableLblWidth?: number;
+    formReceivers = [] as LetterOwnerWithFaxAndEmails[];
+    mainReceivers = [] as LetterOwnerWithFaxAndEmails[];
+    copyReceivers = [] as LetterOwnerWithFaxAndEmails[];
+    draftReceivers = [] as LetterOwnerWithFaxAndEmails[];
+    selectedMainRecipients = [] as LetterOwnerForSendingFaxAndEmailAndSms[];
+    selectedCopyRecipients = [] as LetterOwnerForSendingFaxAndEmailAndSms[];
+    selectedDraftRecipients = [] as LetterOwnerForSendingFaxAndEmailAndSms[];
+    errors = '';
+    @Watch("form")
+    onFormChanged(){
+        this.loadReceivers();
+    }
+
+    created(){
+        this.loadReceivers();
+    }
+
+    async loadReceivers(){
+        if(!this.form)return;
+        const senderId =  store.state.ownerId;
+        
+        this.formReceivers =  await enterpriseFormService.getFormReceivers(this.form.id,senderId,'');
+        this.mainReceivers = this.formReceivers.filter(x=>x.canUserSend);
+        this.copyReceivers = this.formReceivers.filter(x=>x.canUserSendCopy);
+        this.draftReceivers = this.formReceivers.filter(x=>x.canUserSendDraft);
+        //setting defaults 
+        const mainDefault =  this.mainReceivers.filter(x=>x.isSendDefault);
+        mainDefault.forEach(d=>this.selectRecipient(d,'main'));
+        const copyDefault =  this.copyReceivers.filter(x=>x.isSendDefault);
+        mainDefault.forEach(d=>this.selectRecipient(d,'copy'));
+        const draftDefault =  this.draftReceivers.filter(x=>x.isSendDefault);
+        mainDefault.forEach(d=>this.selectRecipient(d,'draft'));
+
+    }
+
+    selectRecipient(recipient: LetterOwnerWithFaxAndEmails, listName: string){
+        let addedItem =  this.selectedMainRecipients.find(item=>item.id === recipient.id);
+        if(!addedItem) 
+            addedItem = this.selectedCopyRecipients.find(item=>item.id === recipient.id);
+        if(!addedItem)
+            addedItem = this.selectedDraftRecipients.find(item=>item.id === recipient.id);
+        if(!addedItem){
+            if(listName === 'main'){
+                this.selectedMainRecipients.push(letterOwnerService.getLetterOwnerForSendingFaxAndEmailAndSms(recipient));
+            }
+            else if(listName === 'copy'){
+                this.selectedCopyRecipients.push(letterOwnerService.getLetterOwnerForSendingFaxAndEmailAndSms(recipient));
+            }
+            else if(listName === 'draft'){
+                this.selectedDraftRecipients.push(letterOwnerService.getLetterOwnerForSendingFaxAndEmailAndSms(recipient));
+            }
+            
+        }
+            
+    }
+    onRecipientRemoved(id: string, listName: string){
+
+        let list = [] as LetterOwnerForSendingFaxAndEmailAndSms[];
+        if(listName == 'main'){
+            list = this.selectedMainRecipients;
+        }
+        else if(listName == 'draft'){
+            list = this.selectedDraftRecipients;
+        }
+        else if(listName == 'copy'){
+            list = this.selectedCopyRecipients;
+        }
+        const removedItem =  list.find(item=>item.id === id);
+        if(!removedItem)return;
+        const index =  list.indexOf(removedItem);
+        list.splice(index,1);        
+    }
+    onErrorsExposed(errors: string){
+        this.errors = errors;
+        $('.popup').popup({onShow: this.shallShowError});
+    }
+    shallShowError(){
+        return this.errors != '';
+    }
+    onNoErrors(){
+        this.errors = '';
+    }
+    async send(){
+        if(this.errors != '')return;
+        const sendFormDto = {} as any;
+        store.state.eventHub.$emit('send-enterpriseform',sendFormDto);
+        sendFormDto.draftReceivers = this.selectedDraftRecipients;
+        sendFormDto.copyReceivers  = this.selectedCopyRecipients;
+        sendFormDto.Receivers = this.selectedMainRecipients;
+        const sendResults =  await enterpriseFormService.sendEnterpriseForm(sendFormDto);
+
+    }
 }
 </script>

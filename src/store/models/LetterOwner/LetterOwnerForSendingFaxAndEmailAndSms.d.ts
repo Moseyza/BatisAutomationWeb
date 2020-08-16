@@ -19,6 +19,14 @@ export class LetterOwnerForSendingFaxAndEmailAndSms extends LetterOwner {
   shallSendEmail: boolean;
   mustBecomeSecure: boolean;
   requiresFollowUp: boolean;
+
+  canUserSend: boolean;
+  canUserSendCopy: boolean;
+  canUserSendDraft: boolean;
+  canUserSendEmail: boolean;
+  canUserSendFax: boolean;
+  canUserSendSms: boolean;
+  canSendViaMessagingApp: boolean;
  
 }
 

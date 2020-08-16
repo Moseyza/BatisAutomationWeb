@@ -55,6 +55,7 @@ export default class BookmarkMixin extends Vue{
     created(){
         store.state.eventHub.$on("form-values-requested",(e: any)=> this.getData(e));
         store.state.eventHub.$on("tablerow-set-requested",(e: any)=> this.setValueInTableRow(e));
+        store.state.eventHub.$on("newvalues-set-request",(e: any)=> this.setNewValues(e));
     }
     
     getData(eventArg: any){
@@ -71,13 +72,10 @@ export default class BookmarkMixin extends Vue{
                 
                 if(!this.tableColumnBookmark)return;
                 if(this.tableRowIndex === undefined)return;
-                //if(this.tableColumnBookmark.type === 0 || this.tableColumnBookmark.type === 1 ||  this.tableColumnBookmark.type === 15)//integer or string or time or date
-                eventArg.tableData[this.tableRowIndex][this.tableColumnBookmark.englishName] = this.value;    
-                // else{
-                //     data.Id = this.valueId;
-                //     data.Value = this.value;
-                //     eventArg.tableData[this.tableRowIndex][this.tableColumnBookmark.englishName] = data;
-                // }
+                if(eventArg.tableData)
+                    if(eventArg.tableData[this.tableRowIndex])
+                        eventArg.tableData[this.tableRowIndex][this.tableColumnBookmark.englishName] = this.value;    
+                
             }
         }
     }
@@ -86,7 +84,15 @@ export default class BookmarkMixin extends Vue{
         if(this.tableRowIndex === undefined)return;
         if(eventArg.rowIndex !== this.tableRowIndex)return;
         if(!this.tableColumnBookmark)return;
-        this.value = eventArg.data[this.tableColumnBookmark.englishName];
+        if(eventArg.data)
+            this.value = eventArg.data[this.tableColumnBookmark.englishName];
+        
+    }
+    setNewValues(newValues: any[]){
+        if(!newValues)return;
+        const relatedItem =  newValues.find(item=>item.Name === this.englishName);
+        if(relatedItem)
+            this.value = relatedItem.Value;
         
     }
     

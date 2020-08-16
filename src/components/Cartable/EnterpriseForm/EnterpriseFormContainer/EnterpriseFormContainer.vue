@@ -26,6 +26,9 @@ export default class EnterpriseFormContainer extends Vue{
     @Prop() tableLblWidth?: number;
     @Prop() formLblWidth?: number;
     formatCells =  [] as any[];
+    created(){
+        store.state.eventHub.$on("send-enterpriseform",(e: any)=>this.onFormSend(e))
+    }
     formatForm(){
         if(!this.form)return;
         const columnFormat = this.getColumnFormat();
@@ -173,6 +176,8 @@ export default class EnterpriseFormContainer extends Vue{
         }); 
         return tableNames;
     }
+
+
     async onFormParameterChanged(parameterName: string){
         if(!this.form)return;
         const tableNames = this.getFormTableNames();
@@ -185,7 +190,7 @@ export default class EnterpriseFormContainer extends Vue{
             }
         }
 
-        //adding invisible values
+        //adding invisible values to form parameters
         this.invisibleBookmarks.forEach(invisibleItem=>{
             formParameters.push(invisibleItem);
         });
@@ -195,15 +200,75 @@ export default class EnterpriseFormContainer extends Vue{
         const ownerId =  store.state.ownerId;
         const parametersValue =  JSON.stringify(formParameters);
         const tableParametersValue = JSON.stringify(tablesData);
+       
         const behindCodeResultStr =  await enterpriseFormService.getCodeBehindExecutionResult(this.form.id,ownerId,parametersValue,tableParametersValue,parameterName);
-        //console.log("BehindCode====>");
+        
+        if(behindCodeResultStr === '')return;
         const behindCodeResults =  JSON.parse(behindCodeResultStr);
+        
+        if(behindCodeResults.HasError)
+            this.$emit("errors-exposed",behindCodeResults.Errors);
+        else
+            this.$emit("no-errors");
+        const newValuesStr = behindCodeResults.NewValues;
+        const newValues = JSON.parse(newValuesStr);
+        store.state.eventHub.$emit("newvalues-set-request",newValues);
         const tableParametersStr = behindCodeResults.TableParameterRows;
         if(tableParametersStr)
         {
             const tableParameters = JSON.parse(tableParametersStr);
             store.state.eventHub.$emit("tabledata-set-request",tableParameters);
         }
+
+    }
+
+    getFormDataForSending(){
+        if(!this.form)return;
+        const tableNames = this.getFormTableNames();
+        const formData = this.getFormData();
+        const formParameters = [] as any[];
+        for(const key in formData){
+            if(key!='tableName' && !tableNames.includes(key)){
+                formParameters.push(formData[key]);
+            }
+        }
+        //adding invisible values
+        this.invisibleBookmarks.forEach(invisibleItem=>{
+            formParameters.push(invisibleItem);
+        });
+        const tablesData = {} as any;
+        tableNames.forEach(tn=>tablesData[tn] = formData[tn]);
+        const ownerId =  store.state.ownerId;
+        const parametersValue =  JSON.stringify(formParameters);
+        const tableParametersValue = JSON.stringify(tablesData);
+
+        const result = {} as any;
+        result.parameters = parametersValue;
+        result.tableParameters = tableParametersValue;
+        return result;
+        // this.invisibleValues.forEach((iv,index)=>{
+        //     if(obj.tableData.length > index)
+        //         for (const key in iv) {
+        //             obj.tableData[index][key] = iv[key];
+        //         }
+        // });
+        // alert("test");
+        // console.log("=====================================");
+        // console.log(parametersValue);
+        // console.log(tableParametersValue);
+        // console.log("=====================================");
+    }
+
+    
+
+    onFormSend(sendFormDto: any){
+        if(!this.form)return;
+        sendFormDto.formId = this.form.id;
+        sendFormDto.senderId = store.state.ownerId;
+
+        const formData =  this.getFormDataForSending();
+        sendFormDto.tableBookmarks = formData.tableParameters;
+        sendFormDto.bookmarks = formData.parameters;
 
     }
     
