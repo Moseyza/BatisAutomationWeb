@@ -2,6 +2,7 @@
     <div class="symmetric-grid" style="margin-bottom:5px">
         <div :style="{'width':maxLabelWidthStr}">
             <span style="white-space: break-spaces;">{{persianName}}</span>
+            <span v-if="isMandatory" style="color:red;">*</span>
             <span style="float:left">:</span>
         </div>
         <div style="flex:1;padding:0 5px">
@@ -32,6 +33,12 @@ export default  class  UserCreatedListBookmark extends Mixins(BookmarkMixin){
         if(this.tableColumnBookmark)
         {
             const array =  ((this.tableColumnBookmark.validValues) as string).split('|');
+            const result = [] as ValidValues[];
+            array.forEach(item=>result.push({item1: item, item2: item}));
+            return result;
+        }
+        else if(this.bookmark){
+            const array =  ((this.bookmark.validValue) as string).split('|');
             const result = [] as ValidValues[];
             array.forEach(item=>result.push({item1: item, item2: item}));
             return result;

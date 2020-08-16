@@ -9,6 +9,8 @@ import StringBookmark from '@/components/Cartable/EnterpriseForm/BookmarkCompone
 import DateBookmark from '@/components/Cartable/EnterpriseForm/BookmarkComponents/DateBookmark.vue';
 import FileBookmark from '@/components/Cartable/EnterpriseForm/BookmarkComponents/FileBookmark.vue';
 import TableBookmark from '@/components/Cartable/EnterpriseForm/BookmarkComponents/TableBookmark.vue';
+import UserCreatedListBookmark from '@/components/Cartable/EnterpriseForm/BookmarkComponents/UserCreatedListBookmark.vue';
+import KeyboardTimeBookmark from '@/components/Cartable/EnterpriseForm/BookmarkComponents/KeyboardTimeBookmark.vue';
 import {EnterpriseForm} from '@/store/models/EnterpriseForm/EnterpriseForm';
 import { EnterpriseFormBookmark } from '@/store/models/EnterpriseForm/EnterpriseFormBookmark';
 import * as enterpriseFormService from '@/store/Services/enterpriseFormService';
@@ -16,6 +18,7 @@ import * as $ from 'jquery';
 import { EnterpriseFormValidValues } from '../../../../store/models/EnterpriseForm/EnterpriseFormValidValues';
 import FormFormatRow from '@/components/Cartable/EnterpriseForm/EnterpriseFormContainer/FormFormatRow/FormFormatRow.vue';
 import store from '@/store';
+
 @Component
 export default class EnterpriseFormContainer extends Vue{
     maxLabelLength = 0;
@@ -79,11 +82,17 @@ export default class EnterpriseFormContainer extends Vue{
             case 3://date
                 componentClass = Vue.extend(DateBookmark);
                 break;
+            case 4://time
+                componentClass = Vue.extend(KeyboardTimeBookmark);
+                break;
             case 9://shortString
                 componentClass = Vue.extend(StringBookmark);
                 break;
             case 13://file
                 componentClass = Vue.extend(FileBookmark);
+                break;
+            case 12://userCreated
+                componentClass = Vue.extend(UserCreatedListBookmark);
                 break;
             case 18://table
                 componentClass = Vue.extend(TableBookmark);

@@ -52,6 +52,13 @@ export default class BookmarkMixin extends Vue{
             return this.tableColumnBookmark.defaultValue;
         return '';
     }
+
+    get isMandatory(){
+        if(this.bookmark)
+            return this.bookmark.isMandatory;
+        else if(this.tableColumnBookmark)
+            return this.tableColumnBookmark.isMandatory;
+    }
     created(){
         store.state.eventHub.$on("form-values-requested",(e: any)=> this.getData(e));
         store.state.eventHub.$on("tablerow-set-requested",(e: any)=> this.setValueInTableRow(e));

@@ -2,6 +2,7 @@
     <div class="symmetric-grid" style="margin-bottom:5px">
         <div :style="{'width':maxLabelWidthStr}">
             <span style="white-space: break-spaces;">{{persianName}}</span>
+            <span v-if="isMandatory" style="color:red;">*</span>
             <span style="float:left">:</span>
         </div>
         <div style="flex:1;display:flex;padding:0 5px">
