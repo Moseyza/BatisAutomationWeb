@@ -78,7 +78,11 @@ export default class BookmarkMixin extends Vue{
                 if(!this.bookmark)return;
                 data.Id = this.bookmark.id;
                 data.Name = this.bookmark.englishName;
-                data.Value = this.value;
+                if(this.value.Value){
+                    data.Value = this.value.Value;
+                }
+                else
+                    data.Value = this.value;
                 eventArg[this.bookmark.englishName] = data;
             }
             else{
