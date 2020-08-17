@@ -41,7 +41,7 @@ export default class BookmarkMixin extends Vue{
 
     get maxLabelWidthStr(){
         if(this.maxLabelWidth)
-            return (this.maxLabelWidth + 20).toString() + 'px'
+            return (this.maxLabelWidth + 25).toString() + 'px'
         return '';
     }
 

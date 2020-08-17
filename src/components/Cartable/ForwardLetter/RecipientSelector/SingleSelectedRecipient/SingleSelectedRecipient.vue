@@ -16,10 +16,6 @@
                     <datalist :id="dataListId">
                         <option v-for="item in autoCompleteData" :key="item.id" :value="item.name" />
                     </datalist> 
-                    <!-- <label v-if="!loadingFile" :for="fileInputId">
-                        <i class="icon icon-paperclip action-icon"></i>
-                        <input type="file" :id="fileInputId" style="display:none" >
-                    </label> -->
                     <FileSelector @file-changed="onFileSelectorChanged($event)"/>
                     <progress v-if="loadingFile" :value="loadedPercent" max="100"></progress>
                     

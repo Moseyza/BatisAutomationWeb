@@ -1,7 +1,7 @@
 <template>
     <div  class="ui icon top left dropdown tc-dropdown" style="width:100%">
         <div style="display:flex;background-color:white">
-            <input v-if="isDropdownShown" @focus="onFocus()" @blur="onFocusOut()"  type="text" v-model="searchTxt" style="width:100%;border:none;" />
+            <input v-if="isDropdownShown" @focus="onFocus()" @blur="onFocusOut()" @keydown="onSearch()" type="text" v-model="searchTxt" style="width:100%;border:none;" />
             <input v-else @focus="onFocus()"   type="text" v-model="selectedValue.item2" style="width:100%;border:none;" :style="{'background-color': color}" readonly />
             <div v-if="isDropdownShown"><i class="action-icon icon-comboboxArrow" style="font-size:small;margin-left:5px"></i></div>
             <!-- <div v-else :style="{'background-color': color}"><i class="action-icon icon-comboboxArrow" style="font-size:small;margin-left:5px"></i></div> -->
@@ -11,7 +11,7 @@
                 <div @click="selectValue(value)" v-for="(value) in filteredValues" 
                 :key="value.item1" class="item menu-item" 
                 :style="{'color':'black' ,'border':'1px solid black' , 'max-height':'30px','cursor':'pointer' }">
-                    <div style="padding-left:5px;">{{value.item2}}</div>
+                    <div style="padding-left:5px;">{{value.item2.trim()}}</div>
                 </div>
             </div>
         </div>
@@ -31,25 +31,29 @@ export default class SimpleLookup extends Vue {
     onValuePropChanged(){
         this.setValueFromProp();
     }
-
     selectedValue = {} as ValidValues;
     @Prop() validValues?: ValidValues[];
-
+    filteredValues = [] as ValidValues[];
+    searchTxt = '';
     @Watch("validValues")
     onValidValuesChanged(){
         this.selectedValue = {} as ValidValues;
+        if(this.validValues)
+            this.filteredValues = this.validValues;
     }
-
-    get filteredValues(){
-        if(!this.validValues)return [];
-        return this.validValues.filter(v=>v.item2.includes(this.searchTxt));
+    onSearch(){
+        if(!this.validValues)return;
+        this.filteredValues = this.validValues.filter(v=>v.item2.includes(this.searchTxt));
     }
-    searchTxt = '';
     created(){
         this.setValueFromProp();
+        if(this.validValues)
+        this.filteredValues = this.validValues;   
     }
     onFocus(){
         this.searchTxt = '';
+        if(this.validValues)
+            this.filteredValues = this.validValues;
         $(".tc-dropdown").dropdown({action:'hide',onShow:this.onDropdownShow,onHide: this.onDropdownHide});
     }
     onDropdownShow(){
@@ -68,9 +72,9 @@ export default class SimpleLookup extends Vue {
         this.$emit('value-selected',value);
     }
     onFocusOut(){
-        //this.searchTxt = '';
+        this.searchTxt = '';
+        this.isDropdownShown = false;
     }
-
     setValueFromProp(){
         if(!this.validValues || !this.valueProp)return;
         const val =  this.validValues.find(item=>item.item2.trim() === (this.valueProp as string).trim() );
