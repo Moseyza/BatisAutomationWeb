@@ -214,14 +214,14 @@ export default class FastSendSelectedRecipient extends Vue{
 <style lang="less" scoped>
 
     .single-recipient{
-        margin: 2px 2px 5px 5px;
+        //margin: 2px 2px 5px 5px;
     }
     .item-block{
         display: flex;
         justify-content: space-between;
         min-width: 330px;
         border-radius: 3px;
-        margin: 2px 2px;
+        margin: 1px 1px;
         padding: 2px 5px;
         background-color: #5f5f5f;
     }

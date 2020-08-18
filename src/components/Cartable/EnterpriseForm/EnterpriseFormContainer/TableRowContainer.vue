@@ -1,6 +1,6 @@
 <template>
     <div style="display:flex;align-items: center; border-bottom:1px solid black" class="form-table-row" >
-        <div style="flex:0 1 auto;padding:5px;"> <i class="action-icon icon-removeFile small-text"></i> </div>
+        <div style="flex:0 1 auto;padding:5px;" @click="removeRow()"> <i class="action-icon icon-removeFile small-text"></i> </div>
         <div style="flex:1;padding:5px; border-right:1px solid black;" ref="tablerow"  ></div>
     </div>
 </template>
@@ -10,7 +10,10 @@ import {Vue,Component,Prop} from 'vue-property-decorator';
 
 @Component
 export default class TableRowContainer extends Vue{
-
+    @Prop() rowIndex?: number;
+    removeRow(){
+        alert(this.rowIndex);
+    }
 }
 
 </script>

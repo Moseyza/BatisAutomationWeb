@@ -26,6 +26,7 @@ import UserCreatedListBookmark from './UserCreatedListBookmark.vue';
 import CustomQueryListBookmark from './CustomQueryListBookmark.vue';
 import CompanyListBookmark from './CompanyListBookmark.vue';
 import DynamicListBookmark from './DynamicListBookmark.vue';
+import FileBookmark from './FileBookmark.vue';
 import TableRowContainer from '@/components/Cartable/EnterpriseForm/EnterpriseFormContainer/TableRowContainer.vue';
 import * as $ from 'jquery';
 import { ValidValuesForSingleTable } from '../../../../store/models/EnterpriseForm/EnterpriseFormValidValues';
@@ -72,7 +73,7 @@ export default  class  TableBookmark extends Mixins(BookmarkMixin){
         if(!this.bookmark.tableColumns)return;
         this.rowsCount++;
         const rowContainerClass = Vue.extend(TableRowContainer);
-        const rowContainerInstance = new rowContainerClass();
+        const rowContainerInstance = new rowContainerClass({propsData: {rowIndex:this.rowsCount-1} });
         rowContainerInstance.$mount();
         this.formatRow(rowContainerInstance);
         this.bookmark.tableColumns.forEach((columnBookmark,index)=>{
@@ -122,6 +123,9 @@ export default  class  TableBookmark extends Mixins(BookmarkMixin){
                 break;
             case 15:
                 componentClass = Vue.extend(KeyboardTimeBookmark);
+                break;
+            case 16:
+                componentClass = Vue.extend(FileBookmark);
                 break;
         }
         if(componentClass){

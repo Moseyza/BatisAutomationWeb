@@ -12,10 +12,17 @@
         </div>
         <div class="item-block xxsmall-text">
             
-            هامش:   <input type="text" :list="dataListId"  v-model="recipient.forwardingComment" >
+             هامش: <!--  <input type="text" :list="dataListId"  v-model="recipient.forwardingComment" >
                     <datalist :id="dataListId">
                         <option v-for="item in autoCompleteData" :key="item.id" :value="item.name" />
-                    </datalist> 
+                    </datalist>  -->
+                     <SimpleLookup 
+                    :validValues="autoCompleteValidValues" 
+                    :color="'transparent'"
+                    :allowUserEntry="true" 
+                    @value-selected="onValueSelected($event)" 
+                    @value-cleared="onValueCleared()"
+                    />
                     <FileSelector @file-changed="onFileSelectorChanged($event)"/>
                     <progress v-if="loadingFile" :value="loadedPercent" max="100"></progress>
                     
@@ -53,8 +60,11 @@ import * as util from '@/util/utils.ts';
 import * as $ from 'jquery';
 import FileSelector from '@/components/UiComponents/FileSelector.vue';
 import * as autoCompleteDataService from '@/store/Services/autoCompleteDataService.ts';
+import SimpleLookup from '@/components/Cartable/EnterpriseForm/SimpleLookup/SimpleLookup.vue';
+import { ValidValuesForSingleColumn, ValidValues } from '@/store/models/EnterpriseForm/EnterpriseFormValidValues';
+
 @Component({
-    components: { LetterAttachment, FileSelector }
+    components: { LetterAttachment, FileSelector ,SimpleLookup}
 })
 export default class SingleSelectedRecipient extends Vue{
     isTelegramActive = false;
@@ -85,6 +95,17 @@ export default class SingleSelectedRecipient extends Vue{
             this.autoCompleteData = await autoCompleteDataService.getSendCopyAutoCompleteData();
          else if(this.autoCompleteDataType === 'draft')
             this.autoCompleteData = await autoCompleteDataService.getSendDraftAutoCompleteData();
+    }
+    get autoCompleteValidValues(){
+        const result = [] as ValidValues[];
+        if(!this.autoCompleteData)return result;
+        this.autoCompleteData.forEach(d=>{
+            const validVal = {} as ValidValues;
+            validVal.item1 = d.id;
+            validVal.item2 = d.name;
+            result.push(validVal);
+        });
+        return result;
     }
     remove(){
         if(this.recipient)
@@ -162,6 +183,16 @@ export default class SingleSelectedRecipient extends Vue{
         if(this.recipient){
             this.recipient.attachments.splice(index,1);
         }
+    }
+
+    onValueSelected(val: ValidValues){
+        if(!this.recipient)return;
+        this.recipient.forwardingComment = val.item2;
+    }
+
+    onValueCleared(){
+        if(!this.recipient)return;
+        this.recipient.forwardingComment = "";
     }
    
 }

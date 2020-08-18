@@ -6,7 +6,12 @@
             <span style="float:left">:</span>
         </div>
         <div style="flex:1;padding:0 5px">
-            <SimpleLookup :validValues="validValues" :valueProp="defaultValue" :color="columnColor" @value-selected="onValueSelected($event)" />
+            <SimpleLookup 
+            :validValues="validValues" 
+            :valueProp="defaultValue" 
+            :color="columnColor" 
+            @value-selected="onValueSelected($event)" 
+            @value-cleared="onValueCleared()" />
         </div>
     </div>
 </template>
@@ -59,6 +64,12 @@ export default  class  UserCreatedListBookmark extends Mixins(BookmarkMixin){
     onValueSelected(value: ValidValues){
         this.value.Id = value.item1;
         this.value.Value = value.item2;
+        this.$emit("value-changed",this.englishName);
+    }
+
+    onValueCleared(){
+        this.value.Id = "";
+        this.value.Value = "";
         this.$emit("value-changed",this.englishName);
     }
 }

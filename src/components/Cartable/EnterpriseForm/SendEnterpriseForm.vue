@@ -2,50 +2,32 @@
     <div class="three-part-flexbox">
         <FullPageLoader :isActive="sending" />
         <div class="flex-part-top">
-            
             <div v-if="mainReceivers.length>0" class="symmetric-grid" style="margin-bottom: 5px">
                 <div style="flex:1;margin-left:5px">
                  اصلی
                 </div>
                 <div style="flex:10">
-                    <RecipientLookup  :recipients="mainReceivers" @recipient-selected="selectRecipient($event,'main')"   />    
+                    <RecipientLookup  v-if="shallShowMainLookup" :recipients="mainReceivers" @recipient-selected="selectRecipient($event,'main')"   />    
+                    <FastSendRecipientSelector @additem-requested="onAddRecipientRequest('main')" :hideComment="true"  style="flex:10" :autoCompleteDataType="'all'" :recipients="selectedMainRecipients" @recipient-removed="onRecipientRemoved($event,'main')"/>
                 </div>
             </div>
-            <div v-if="mainReceivers.length>0" class="symmetric-grid">
-                <div style="flex:1">
-
-                </div>
-                <FastSendRecipientSelector :hideComment="true"  style="flex:10" :autoCompleteDataType="'all'" :recipients="selectedMainRecipients" @recipient-removed="onRecipientRemoved($event,'main')"/>
-            </div>
-            
-
             <div v-if="copyReceivers.length>0"  class="symmetric-grid" style="margin-bottom: 5px">
                 <div style="flex:1;margin-left:5px">
                  رونوشت 
                 </div>
                 <div style="flex:10">
-                    <RecipientLookup   :recipients="copyReceivers" @recipient-selected="selectRecipient($event,'copy')"   />    
+                    <RecipientLookup  v-if="shallShowCopyLookup"  :recipients="copyReceivers" @recipient-selected="selectRecipient($event,'copy')"   />    
+                    <FastSendRecipientSelector  @additem-requested="onAddRecipientRequest('copy')" style="flex:10" :autoCompleteDataType="'copy'"  :recipients="selectedCopyRecipients" @recipient-removed="onRecipientRemoved($event,'copy')"/>
                 </div>
-            </div>
-            <div v-if="copyReceivers.length>0" class="symmetric-grid">
-                <div style="flex:1">
-
-                </div>
-            <FastSendRecipientSelector style="flex:10" :autoCompleteDataType="'copy'"  :recipients="selectedCopyRecipients" @recipient-removed="onRecipientRemoved($event,'copy')"/>
             </div>
             <div v-if="draftReceivers.length>0" class="symmetric-grid" style="margin-bottom: 5px">
                 <div  style="flex:1; margin-left:5px;">
                  پیش نویس 
                 </div>
                 <div style="flex:10">
-                    <RecipientLookup   :recipients="draftReceivers" @recipient-selected="selectRecipient($event, 'draft')"   />    
+                    <RecipientLookup  v-if="shallShowDraftLookup" :recipients="draftReceivers" @recipient-selected="selectRecipient($event, 'draft')"   />    
+                    <FastSendRecipientSelector   @additem-requested="onAddRecipientRequest('draft')" style="flex:10"  :autoCompleteDataType="'draft'" :recipients="selectedDraftRecipients" @recipient-removed="onRecipientRemoved($event,'draft')"/>
                 </div>
-            </div>
-             <div v-if="draftReceivers.length>0"  class="symmetric-grid">
-            <div style="flex:1">
-
-            </div>
-            <FastSendRecipientSelector style="flex:10"  :autoCompleteDataType="'draft'" :recipients="selectedDraftRecipients" @recipient-removed="onRecipientRemoved($event,'draft')"/>
             </div>
         </div>
         <div class="flex-part-middle">
@@ -55,8 +37,7 @@
             <InPlaceMessageBox v-if="shallShowMsgBox" :message="msgBoxMessage" :messageType="msgBoxMessageType" :buttons="msgBoxButtons" @button-clicked="onMsgBoxButtonClicked($event)"/>
             <div v-else style="display:flex">
                     <div  @click="cancel()" class="action-icon bg1" style="flex:1;text-align:center"><i style="color:inherit;font-size:xx-large" class=" icon-close"></i></div>
-                    
-                    <div  @click="send()" class="action-icon bg1 popup" :data-content="errors" style="flex:1;text-align:center"><i style="color:inherit;" class=" icon-forwardedLetter xlarg-text"></i> <span v-if="shallShowError()" style="color:red;">!</span> </div>
+                    <div  @click="send()" class="action-icon bg1 popup" :data-content="errors" style="flex:1;text-align:center"><i style="color:inherit;position:absolute" class=" icon-forwardedLetter xlarg-text"></i> <span v-if="shallShowError()" style="color:red;position: absolute;margin: 8px;font-size: larger;">!</span> </div>
             </div>
         </div>
     </div>
@@ -111,7 +92,6 @@ export default class SendEnterpriseForm extends Vue{
     async loadReceivers(){
         if(!this.form)return;
         const senderId =  store.state.ownerId;
-        
         this.formReceivers =  await enterpriseFormService.getFormReceivers(this.form.id,senderId,'');
         this.mainReceivers = this.formReceivers.filter(x=>x.canUserSend);
         this.copyReceivers = this.formReceivers.filter(x=>x.canUserSendCopy);
@@ -127,6 +107,17 @@ export default class SendEnterpriseForm extends Vue{
     }
 
     selectRecipient(recipient: LetterOwnerWithFaxAndEmails, listName: string){
+        switch(listName){
+            case 'main':
+                this.shallShowMainLookup = false;
+                break;
+            case 'copy':
+                this.shallShowCopyLookup = false;
+                break;
+            case 'draft':
+                this.shallShowDraftLookup = false;
+                break;
+        }
         let addedItem =  this.selectedMainRecipients.find(item=>item.id === recipient.id);
         if(!addedItem) 
             addedItem = this.selectedCopyRecipients.find(item=>item.id === recipient.id);
@@ -135,12 +126,15 @@ export default class SendEnterpriseForm extends Vue{
         if(!addedItem){
             if(listName === 'main'){
                 this.selectedMainRecipients.push(letterOwnerService.getLetterOwnerForSendingFaxAndEmailAndSms(recipient));
+                
             }
             else if(listName === 'copy'){
                 this.selectedCopyRecipients.push(letterOwnerService.getLetterOwnerForSendingFaxAndEmailAndSms(recipient));
+                
             }
             else if(listName === 'draft'){
                 this.selectedDraftRecipients.push(letterOwnerService.getLetterOwnerForSendingFaxAndEmailAndSms(recipient));
+                
             }
             
         }
@@ -220,6 +214,22 @@ export default class SendEnterpriseForm extends Vue{
         }
         
 
+    }
+    shallShowMainLookup = false;
+    shallShowCopyLookup = false;
+    shallShowDraftLookup = false;
+    onAddRecipientRequest(mode: string){
+        switch(mode){
+            case 'main':
+                this.shallShowMainLookup = true;
+                break;
+            case 'copy':
+                this.shallShowCopyLookup = true;
+                break;
+            case 'draft':
+                this.shallShowDraftLookup = true;
+                break;
+        }
     }
 }
 </script>
