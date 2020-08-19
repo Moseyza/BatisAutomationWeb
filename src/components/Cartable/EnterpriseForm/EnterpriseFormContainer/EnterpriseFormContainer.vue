@@ -1,6 +1,5 @@
 <template>
     <div  ref="formcontainer">
-        <button @click="test()">test</button>
     </div>
 </template>
 
@@ -13,6 +12,7 @@ import TableBookmark from '@/components/Cartable/EnterpriseForm/BookmarkComponen
 import UserCreatedListBookmark from '@/components/Cartable/EnterpriseForm/BookmarkComponents/UserCreatedListBookmark.vue';
 import KeyboardTimeBookmark from '@/components/Cartable/EnterpriseForm/BookmarkComponents/KeyboardTimeBookmark.vue';
 import CustomQueryListBookmark from '@/components/Cartable/EnterpriseForm/BookmarkComponents/CustomQueryListBookmark.vue';
+import CompanyListBookmark from '@/components/Cartable/EnterpriseForm/BookmarkComponents/CompanyListBookmark.vue';
 import {EnterpriseForm} from '@/store/models/EnterpriseForm/EnterpriseForm';
 import { EnterpriseFormBookmark } from '@/store/models/EnterpriseForm/EnterpriseFormBookmark';
 import * as enterpriseFormService from '@/store/Services/enterpriseFormService';
@@ -98,11 +98,15 @@ export default class EnterpriseFormContainer extends Vue{
             case 9://shortString
                 componentClass = Vue.extend(StringBookmark);
                 break;
+           
+            case 12://userCreated
+                componentClass = Vue.extend(UserCreatedListBookmark);
+                break;
             case 13://file
                 componentClass = Vue.extend(FileBookmark);
                 break;
-            case 12://userCreated
-                componentClass = Vue.extend(UserCreatedListBookmark);
+            case 15://company
+                componentClass = Vue.extend(CompanyListBookmark);
                 break;
             case 18://table
                 componentClass = Vue.extend(TableBookmark);

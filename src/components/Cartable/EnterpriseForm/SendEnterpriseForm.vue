@@ -170,7 +170,7 @@ export default class SendEnterpriseForm extends Vue{
     }
     
     async send(){
-        store.state.eventHub.$emit('test');
+        //store.state.eventHub.$emit('test');
         if(this.errors != '')return;
         this.sending = true;
         const sendFormDto = {} as any;
