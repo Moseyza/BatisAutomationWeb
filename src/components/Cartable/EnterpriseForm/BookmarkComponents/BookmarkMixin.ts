@@ -69,12 +69,23 @@ export default class BookmarkMixin extends Vue{
         e.allValuesSupplied = e.allValuesSupplied && this.isMandatoryValueSupplied;
         
     }
-
+    onTableRowRemoved(rowInfo: any){
+        // alert(rowInfo.tableName);
+        // alert(rowInfo.rowIndex);
+        // alert(this.parentTableName);
+        if(this.tableRowIndex === undefined || !this.parentTableName)return;
+        if(this.parentTableName === rowInfo.tableName && this.tableRowIndex === rowInfo.rowIndex)
+        {
+            this.$destroy();
+            this.$el.remove();
+        }
+    }
     created(){
         store.state.eventHub.$on("form-values-requested", this.getData);
         store.state.eventHub.$on("tablerow-set-requested", this.setValueInTableRow);
         store.state.eventHub.$on("newvalues-set-request",this.setNewValues);
         store.state.eventHub.$on("mandatory-values-validation", this.onMandatoryValueValidation );
+        store.state.eventHub.$on("table-row-removed",this.onTableRowRemoved)
         //store.state.eventHub.$on("mest",(e: any)=> {this.$destroy(); this.$el.remove(); alert("p");} );
         // store.state.eventHub.$on("test", this.sayName );
          store.state.eventHub.$on("remove-all",(e: any)=>{
@@ -135,6 +146,7 @@ export default class BookmarkMixin extends Vue{
         store.state.eventHub.$off("form-values-requested", this.getData);
         store.state.eventHub.$off("tablerow-set-requested", this.setValueInTableRow);
         store.state.eventHub.$off("newvalues-set-request", this.setNewValues);
+        store.state.eventHub.$off("table-row-romoved",this.onTableRowRemoved)
     }
     
 }

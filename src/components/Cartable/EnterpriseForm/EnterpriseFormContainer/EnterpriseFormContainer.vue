@@ -98,7 +98,6 @@ export default class EnterpriseFormContainer extends Vue{
             case 9://shortString
                 componentClass = Vue.extend(StringBookmark);
                 break;
-           
             case 12://userCreated
                 componentClass = Vue.extend(UserCreatedListBookmark);
                 break;

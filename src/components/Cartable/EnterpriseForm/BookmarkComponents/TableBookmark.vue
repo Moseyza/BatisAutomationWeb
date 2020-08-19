@@ -74,7 +74,7 @@ export default  class  TableBookmark extends Mixins(BookmarkMixin){
         if(!this.bookmark.tableColumns)return;
         this.rowsCount++;
         const rowContainerClass = Vue.extend(TableRowContainer);
-        const rowContainerInstance = new rowContainerClass({propsData: {rowIndex:this.rowsCount-1} });
+        const rowContainerInstance = new rowContainerClass({propsData: {rowIndex:this.rowsCount-1,tableName: this.englishName} });
         rowContainerInstance.$mount();
         this.formatRow(rowContainerInstance);
         this.bookmark.tableColumns.forEach((columnBookmark,index)=>{
@@ -95,8 +95,8 @@ export default  class  TableBookmark extends Mixins(BookmarkMixin){
         let componentClass = undefined;
         const props = {} as any;
         props.tableColumnBookmark = columnBookmark;
-        if(this.bookmark)
-            props.parentTableName = this.bookmark.englishName;
+        
+        props.parentTableName = this.englishName;
         props.tableRowIndex = this.rowsCount -1;
         switch(columnBookmark.type){
             case 0:
@@ -224,7 +224,15 @@ export default  class  TableBookmark extends Mixins(BookmarkMixin){
             }
         }
         return result;
-        
+    }
+
+    onTableRowRemoved(rowInfo: any){
+        if(this.englishName !== rowInfo.tableName)return;
+        if(!this.invisibleValues)return;
+        if(this.invisibleValues.length > 0){
+            this.invisibleValues =  this.invisibleValues.splice(rowInfo.rowIndex,1);
+            this.rowsCount--;
+        }
     }
 }
 </script>

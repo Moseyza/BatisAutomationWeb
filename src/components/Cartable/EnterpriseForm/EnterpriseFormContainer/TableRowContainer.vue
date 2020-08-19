@@ -7,12 +7,16 @@
 
 <script lang="ts">
 import {Vue,Component,Prop} from 'vue-property-decorator';
-
+import store from '@/store';
 @Component
 export default class TableRowContainer extends Vue{
     @Prop() rowIndex?: number;
+    @Prop() tableName?: string;
     removeRow(){
-        alert(this.rowIndex);
+        //alert(this.rowIndex);
+        store.state.eventHub.$emit('table-row-removed',{tableName: this.tableName, rowIndex: this.rowIndex});
+        this.$destroy();
+        this.$el.remove();
     }
 }
 
