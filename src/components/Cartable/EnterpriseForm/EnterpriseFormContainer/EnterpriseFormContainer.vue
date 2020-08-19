@@ -1,16 +1,18 @@
 <template>
     <div  ref="formcontainer">
+        <button @click="test()">test</button>
     </div>
 </template>
 
 <script lang="ts">
-import {Vue,Component,Prop} from 'vue-property-decorator';
+import {Vue,Component,Prop, Watch} from 'vue-property-decorator';
 import StringBookmark from '@/components/Cartable/EnterpriseForm/BookmarkComponents/StringBookmark.vue';
 import DateBookmark from '@/components/Cartable/EnterpriseForm/BookmarkComponents/DateBookmark.vue';
 import FileBookmark from '@/components/Cartable/EnterpriseForm/BookmarkComponents/FileBookmark.vue';
 import TableBookmark from '@/components/Cartable/EnterpriseForm/BookmarkComponents/TableBookmark.vue';
 import UserCreatedListBookmark from '@/components/Cartable/EnterpriseForm/BookmarkComponents/UserCreatedListBookmark.vue';
 import KeyboardTimeBookmark from '@/components/Cartable/EnterpriseForm/BookmarkComponents/KeyboardTimeBookmark.vue';
+import CustomQueryListBookmark from '@/components/Cartable/EnterpriseForm/BookmarkComponents/CustomQueryListBookmark.vue';
 import {EnterpriseForm} from '@/store/models/EnterpriseForm/EnterpriseForm';
 import { EnterpriseFormBookmark } from '@/store/models/EnterpriseForm/EnterpriseFormBookmark';
 import * as enterpriseFormService from '@/store/Services/enterpriseFormService';
@@ -26,6 +28,14 @@ export default class EnterpriseFormContainer extends Vue{
     formValidValues = {} as  EnterpriseFormValidValues;
     invisibleBookmarks = [] as any[];
     @Prop() form?: EnterpriseForm;
+    // @Watch('form', { immediate: true, deep: true })
+    // onFormChanged(){
+    //     // if(!this.childComponents)return;
+    //     // alert("Childs:"+this.childComponents.length);
+    //     // this.childComponents.forEach(child=>{child.$destroy();child.$el.remove()});
+       
+    // }
+
     @Prop() tableLblWidth?: number;
     @Prop() formLblWidth?: number;
     formatCells =  [] as any[];
@@ -97,6 +107,9 @@ export default class EnterpriseFormContainer extends Vue{
             case 18://table
                 componentClass = Vue.extend(TableBookmark);
                 break;
+            case 21://customQuery
+                componentClass = Vue.extend(CustomQueryListBookmark);
+                break;
         }
         if(componentClass){
             const props = {} as any; 
@@ -114,12 +127,12 @@ export default class EnterpriseFormContainer extends Vue{
             const instance = new componentClass({propsData: props});
             instance.$on("value-changed",(e: string)=>{this.onFormParameterChanged(e)});
             instance.$mount();
+            this.$children.push(instance);
             //console.log(this.formatCells[formatRowIndex].$refs[col.colName]);
             this.formatCells[formatRowIndex].$refs[col.colName][0].appendChild(instance.$el);
             //(this.$refs.formcontainer as any).appendChild(instance.$el);
         }
     }
-
     getCol(index: number){
         const result = {} as any;
         result.colName = "";
@@ -133,7 +146,6 @@ export default class EnterpriseFormContainer extends Vue{
         let total = 0;
         while(total < index){
             total++;
-            
             if(parseInt(rows[rowIndex])=== colIndex){
                 rowIndex++;
                 colIndex =0;
@@ -161,6 +173,7 @@ export default class EnterpriseFormContainer extends Vue{
     }
    
     async mounted(){
+        
         console.log(this.form);
         if(this.form)
           this.formValidValues = await  enterpriseFormService.getFormValidValus(this.form.id);
@@ -268,7 +281,9 @@ export default class EnterpriseFormContainer extends Vue{
         // console.log("=====================================");
     }
 
-    
+    test(){
+        alert(this.$children.length);
+    }
 
     onFormSend(sendFormDto: any){
         if(!this.form)return;

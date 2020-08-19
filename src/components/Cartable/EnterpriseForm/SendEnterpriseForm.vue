@@ -80,9 +80,10 @@ export default class SendEnterpriseForm extends Vue{
     sending = false;
     errors = '';
     isFormSent = false;
-    @Watch("form")
+    @Watch("form",{ immediate: true, deep: true })
     onFormChanged(){
         this.loadReceivers();
+        store.state.eventHub.$emit('remove-all');
     }
 
     created(){
@@ -169,7 +170,7 @@ export default class SendEnterpriseForm extends Vue{
     }
     
     async send(){
-        
+        store.state.eventHub.$emit('test');
         if(this.errors != '')return;
         this.sending = true;
         const sendFormDto = {} as any;

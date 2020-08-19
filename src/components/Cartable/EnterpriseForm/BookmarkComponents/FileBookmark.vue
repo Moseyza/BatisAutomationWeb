@@ -15,7 +15,6 @@
                 <button v-else  @click="clearFile()"  class="button"><i class="icon-clearSearch"></i></button>
             </div>
         </div>
-        
     </div>
 </template>
 
@@ -52,6 +51,7 @@ export default  class  FileBookmark extends Mixins(BookmarkMixin){
                 attachedFile.content =  util.base64RemovePrefix((x.target as any).result);
                 this.value = attachedFile;
                 this.isFileSelected = true;
+                this.value = attachedFile;
             }
         });
         reader.readAsDataURL(file.target.files[0]);

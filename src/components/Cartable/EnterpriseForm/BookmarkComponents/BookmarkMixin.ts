@@ -62,6 +62,7 @@ export default class BookmarkMixin extends Vue{
 
     get isMandatoryValueSupplied(){
         if(!this.isMandatory)return true;
+        //if(!(this.value !=='' && this.value !== ({} as any)))alert(this.englishName);
         return this.value !=='' && this.value !== ({} as any);
     }
     created(){
@@ -69,6 +70,20 @@ export default class BookmarkMixin extends Vue{
         store.state.eventHub.$on("tablerow-set-requested",(e: any)=> this.setValueInTableRow(e));
         store.state.eventHub.$on("newvalues-set-request",(e: any)=> this.setNewValues(e));
         store.state.eventHub.$on("mandatory-values-validation",(e: any)=> e.allValuesSupplied = e.allValuesSupplied && this.isMandatoryValueSupplied );
+        //store.state.eventHub.$on("mest",(e: any)=> {this.$destroy(); this.$el.remove(); alert("p");} );
+         store.state.eventHub.$on("test", this.sayName );
+         store.state.eventHub.$on("remove-all",(e: any)=>{
+            //alert("test");
+             this.$destroy();
+             this.$el.remove();
+             //(this.$el as any).parentNode.removeChild(this.$el);
+             
+         } );
+         
+    }
+
+    sayName(){
+        alert(this.englishName)
     }
     
     getData(eventArg: any){
@@ -111,6 +126,9 @@ export default class BookmarkMixin extends Vue{
         if(relatedItem)
             this.value = relatedItem.Value;
         
+    }
+    beforeDestroy(){
+        store.state.eventHub.$off('test', this.sayName);
     }
     
 }

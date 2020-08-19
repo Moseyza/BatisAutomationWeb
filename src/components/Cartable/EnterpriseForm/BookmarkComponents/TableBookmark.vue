@@ -27,6 +27,7 @@ import CustomQueryListBookmark from './CustomQueryListBookmark.vue';
 import CompanyListBookmark from './CompanyListBookmark.vue';
 import DynamicListBookmark from './DynamicListBookmark.vue';
 import FileBookmark from './FileBookmark.vue';
+import CurrencyBookmark from './CurrencyBookmark.vue';
 import TableRowContainer from '@/components/Cartable/EnterpriseForm/EnterpriseFormContainer/TableRowContainer.vue';
 import * as $ from 'jquery';
 import { ValidValuesForSingleTable } from '../../../../store/models/EnterpriseForm/EnterpriseFormValidValues';
@@ -103,6 +104,9 @@ export default  class  TableBookmark extends Mixins(BookmarkMixin){
                 break;
             case 1:
                 componentClass = Vue.extend(StringBookmark);
+                break;
+            case 4: 
+                componentClass = Vue.extend(CurrencyBookmark);
                 break;
             case 7:
                 componentClass = Vue.extend(UserCreatedListBookmark);
