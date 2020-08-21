@@ -87,8 +87,6 @@ export default class BookmarkMixin extends Vue{
         attachedFile.fileId = file.id;
         attachedFile.fileContent = file.content;
         attachedFile.fileName = file.extension;
-        console.log("file content>>>>>>>");
-        console.log(attachedFile.fileContent);
         attachedFiles.push(attachedFile);
     }
     created(){
@@ -133,11 +131,8 @@ export default class BookmarkMixin extends Vue{
                 if(this.tableRowIndex === undefined)return;
                 if(eventArg.tableData)
                     if(eventArg.tableData[this.tableRowIndex])
-                        if(this.tableColumnBookmark.type === 16){//column bookmark is a file
-                            eventArg.tableData[this.tableRowIndex][this.tableColumnBookmark.englishName] = JSON.stringify(this.value);    
-                            // console.log("file Val>>>>");
-                            // console.log(this.value);
-                        }
+                        if(this.tableColumnBookmark.type === 16)//column bookmark is a file
+                            eventArg.tableData[this.tableRowIndex][this.tableColumnBookmark.englishName] = {Id: this.value.id,Name:this.value.extension}    
                         else
                             eventArg.tableData[this.tableRowIndex][this.tableColumnBookmark.englishName] = this.value;    
                 

@@ -47,9 +47,9 @@ export default  class  FileBookmark extends Mixins(BookmarkMixin){
             const attachedFile = {} as File;
             if(x.target)
             {
-                attachedFile.id = '00000000-0000-0000-0000-000000000000';
+                attachedFile.id = util.getNewGuid();// '00000000-0000-0000-0000-000000000000';
                 attachedFile.extension = file.target.files[0].name;
-                attachedFile.content =  /*new Uint8Array(x.target.result as ArrayBuffer);*/util.base64RemovePrefix((x.target as any).result);
+                attachedFile.content = file.target.files[0]; ///*new Uint8Array(x.target.result as ArrayBuffer);*/util.base64RemovePrefix((x.target as any).result);
                 this.value = attachedFile;
                 this.isFileSelected = true;
                 this.value = attachedFile;

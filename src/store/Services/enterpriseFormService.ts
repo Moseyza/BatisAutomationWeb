@@ -3,6 +3,7 @@ import { EnterpriseForm } from '../models/EnterpriseForm/EnterpriseForm';
 import { EnterpriseFormValidValues } from '../models/EnterpriseForm/EnterpriseFormValidValues';
 import { LetterOwnerWithFaxAndEmails } from '../models/LetterOwner/LetterOwnerWithFaxAndEmails';
 import SentLetterInformation from '../models/Letter/SentLetterInformation';
+import axios from 'axios';
 
 
 
@@ -68,8 +69,22 @@ export async function getFormReceivers(formId: string,senderId: string,dependent
 
 export async function sendEnterpriseForm(sendFormDto: any): Promise<SentLetterInformation>{
     try {
-
-        const serverResult =  await api.batisAutomationApi.post("/EnterpriseForms/send",sendFormDto);
+        const formData = new FormData();
+        sendFormDto.attachedFiles.forEach((file: any) => {
+            formData.append(file.fileId,file.fileContent);
+        });
+        
+        for(const key in sendFormDto){
+            if(key !== 'attachedFiles'){
+                formData.append(key,JSON.stringify(sendFormDto[key]));
+            }
+        }
+        const serverResult =  await api.batisAutomationApi.post("/EnterpriseForms/send",formData,
+        { 
+            headers: {
+            'Content-Type': 'multipart/form-data; boundary=${form._boundary}'
+            }
+        });
         return serverResult.data as SentLetterInformation;
     } 
     catch (error) {
