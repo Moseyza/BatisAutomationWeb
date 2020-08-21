@@ -2,6 +2,7 @@ import {Component,Vue, Prop, Watch} from 'vue-property-decorator'
 import { EnterpriseFormBookmark } from '@/store/models/EnterpriseForm/EnterpriseFormBookmark';
 import { EnterpriseFormTableBookmarkColumn } from '@/store/models/EnterpriseForm/EnterpriseFormTableBookmarkColumn';
 import store from '@/store';
+import File from '@/store/models/Letter/File';
 
 @Component
 export default class BookmarkMixin extends Vue{
@@ -80,12 +81,24 @@ export default class BookmarkMixin extends Vue{
             this.$el.remove();
         }
     }
+    onAddFileRequested(attachedFiles: any[]){
+        const file = this.value as File;
+        const attachedFile = {} as any;
+        attachedFile.fileId = file.id;
+        attachedFile.fileContent = file.content;
+        attachedFile.fileName = file.extension;
+        console.log("file content>>>>>>>");
+        console.log(attachedFile.fileContent);
+        attachedFiles.push(attachedFile);
+    }
     created(){
         store.state.eventHub.$on("form-values-requested", this.getData);
         store.state.eventHub.$on("tablerow-set-requested", this.setValueInTableRow);
         store.state.eventHub.$on("newvalues-set-request",this.setNewValues);
         store.state.eventHub.$on("mandatory-values-validation", this.onMandatoryValueValidation );
-        store.state.eventHub.$on("table-row-removed",this.onTableRowRemoved)
+        store.state.eventHub.$on("table-row-removed",this.onTableRowRemoved);
+        if((this.bookmark && this.bookmark.type === 13) || (this.tableColumnBookmark && this.tableColumnBookmark.type === 16))
+        store.state.eventHub.$on("add-file-requested",this.onAddFileRequested);
         //store.state.eventHub.$on("mest",(e: any)=> {this.$destroy(); this.$el.remove(); alert("p");} );
         // store.state.eventHub.$on("test", this.sayName );
          store.state.eventHub.$on("remove-all",(e: any)=>{
@@ -120,7 +133,13 @@ export default class BookmarkMixin extends Vue{
                 if(this.tableRowIndex === undefined)return;
                 if(eventArg.tableData)
                     if(eventArg.tableData[this.tableRowIndex])
-                        eventArg.tableData[this.tableRowIndex][this.tableColumnBookmark.englishName] = this.value;    
+                        if(this.tableColumnBookmark.type === 16){//column bookmark is a file
+                            eventArg.tableData[this.tableRowIndex][this.tableColumnBookmark.englishName] = JSON.stringify(this.value);    
+                            // console.log("file Val>>>>");
+                            // console.log(this.value);
+                        }
+                        else
+                            eventArg.tableData[this.tableRowIndex][this.tableColumnBookmark.englishName] = this.value;    
                 
             }
         }
@@ -146,7 +165,9 @@ export default class BookmarkMixin extends Vue{
         store.state.eventHub.$off("form-values-requested", this.getData);
         store.state.eventHub.$off("tablerow-set-requested", this.setValueInTableRow);
         store.state.eventHub.$off("newvalues-set-request", this.setNewValues);
-        store.state.eventHub.$off("table-row-romoved",this.onTableRowRemoved)
+        store.state.eventHub.$off("table-row-romoved",this.onTableRowRemoved);
+        if((this.bookmark && this.bookmark.type === 13) || (this.tableColumnBookmark && this.tableColumnBookmark.type === 16))
+            store.state.eventHub.$off("add-file-requested",this.onAddFileRequested);
     }
     
 }

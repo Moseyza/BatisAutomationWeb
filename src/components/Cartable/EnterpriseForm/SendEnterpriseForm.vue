@@ -171,6 +171,7 @@ export default class SendEnterpriseForm extends Vue{
     
     async send(){
         //store.state.eventHub.$emit('test');
+        
         if(this.errors != '')return;
         this.sending = true;
         const sendFormDto = {} as any;
@@ -187,6 +188,11 @@ export default class SendEnterpriseForm extends Vue{
             this.errors = '';
         }
         store.state.eventHub.$emit('send-enterpriseform',sendFormDto);
+        //*****************************
+        const attachedFiles = [] as any[];
+        store.state.eventHub.$emit('add-file-requested',attachedFiles);
+        sendFormDto.attachedFiles = attachedFiles;
+        //*****************************
         sendFormDto.draftReceivers = this.selectedDraftRecipients;
         sendFormDto.copyReceivers  = this.selectedCopyRecipients;
         sendFormDto.Receivers = this.selectedMainRecipients;
@@ -213,8 +219,6 @@ export default class SendEnterpriseForm extends Vue{
         if((btn ==='ok' && this.isFormSent) || btn === 'yes'){
             this.$emit('sendform-close');
         }
-        
-
     }
     shallShowMainLookup = false;
     shallShowCopyLookup = false;

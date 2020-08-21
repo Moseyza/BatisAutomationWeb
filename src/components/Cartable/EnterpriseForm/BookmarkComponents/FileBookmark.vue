@@ -33,6 +33,7 @@ export default  class  FileBookmark extends Mixins(BookmarkMixin){
     created(){
         //this.value = {} as File;
         this.value = '';
+
     }
     onFileButtonClick(){
         (this.$refs.fileInput as any).click();
@@ -48,12 +49,13 @@ export default  class  FileBookmark extends Mixins(BookmarkMixin){
             {
                 attachedFile.id = '00000000-0000-0000-0000-000000000000';
                 attachedFile.extension = file.target.files[0].name;
-                attachedFile.content =  util.base64RemovePrefix((x.target as any).result);
+                attachedFile.content =  /*new Uint8Array(x.target.result as ArrayBuffer);*/util.base64RemovePrefix((x.target as any).result);
                 this.value = attachedFile;
                 this.isFileSelected = true;
                 this.value = attachedFile;
             }
         });
+        //reader.readAsArrayBuffer(file.target.files[0])
         reader.readAsDataURL(file.target.files[0]);
     }
 
