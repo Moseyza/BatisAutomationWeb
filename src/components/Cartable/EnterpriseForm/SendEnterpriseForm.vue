@@ -170,9 +170,15 @@ export default class SendEnterpriseForm extends Vue{
     }
     
     async send(){
-        //store.state.eventHub.$emit('test');
-        
+
         if(this.errors != '')return;
+        if(this.selectedMainRecipients.length === 0 && this.selectedDraftRecipients.length === 0){
+            this.msgBoxMessage = "هیچ گیرنده اصلی یا پیش نویس انتخاب نشده است";
+            this.msgBoxMessageType = 'fail';
+            this.msgBoxButtons = 'ok';
+            this.shallShowMsgBox = true;
+            return;
+        }
         this.sending = true;
         const sendFormDto = {} as any;
         const mandatoryValidation = {allValuesSupplied: true} as any;
@@ -188,11 +194,12 @@ export default class SendEnterpriseForm extends Vue{
             this.errors = '';
         }
         store.state.eventHub.$emit('send-enterpriseform',sendFormDto);
-        //*****************************
+      
+        //Adding attached files to dto
         const attachedFiles = [] as any[];
         store.state.eventHub.$emit('add-file-requested',attachedFiles);
         sendFormDto.attachedFiles = attachedFiles;
-        //*****************************
+        
         sendFormDto.draftReceivers = this.selectedDraftRecipients;
         sendFormDto.copyReceivers  = this.selectedCopyRecipients;
         sendFormDto.Receivers = this.selectedMainRecipients;

@@ -70,8 +70,10 @@ export async function getFormReceivers(formId: string,senderId: string,dependent
 export async function sendEnterpriseForm(sendFormDto: any): Promise<SentLetterInformation>{
     try {
         const formData = new FormData();
+        const fileBookmarkNames = [] as string[];
         sendFormDto.attachedFiles.forEach((file: any) => {
             formData.append(file.fileId,file.fileContent);
+            fileBookmarkNames.push(file.bookmarkName);
         });
         
         for(const key in sendFormDto){
@@ -79,6 +81,7 @@ export async function sendEnterpriseForm(sendFormDto: any): Promise<SentLetterIn
                 formData.append(key,JSON.stringify(sendFormDto[key]));
             }
         }
+        formData.append("fileBookmarks",JSON.stringify(fileBookmarkNames));
         const serverResult =  await api.batisAutomationApi.post("/EnterpriseForms/send",formData,
         { 
             headers: {

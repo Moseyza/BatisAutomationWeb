@@ -71,9 +71,6 @@ export default class BookmarkMixin extends Vue{
         
     }
     onTableRowRemoved(rowInfo: any){
-        // alert(rowInfo.tableName);
-        // alert(rowInfo.rowIndex);
-        // alert(this.parentTableName);
         if(this.tableRowIndex === undefined || !this.parentTableName)return;
         if(this.parentTableName === rowInfo.tableName && this.tableRowIndex === rowInfo.rowIndex)
         {
@@ -87,6 +84,7 @@ export default class BookmarkMixin extends Vue{
         attachedFile.fileId = file.id;
         attachedFile.fileContent = file.content;
         attachedFile.fileName = file.extension;
+        attachedFile.bookmarkName = this.englishName;
         attachedFiles.push(attachedFile);
     }
     created(){
@@ -97,12 +95,9 @@ export default class BookmarkMixin extends Vue{
         store.state.eventHub.$on("table-row-removed",this.onTableRowRemoved);
         if((this.bookmark && this.bookmark.type === 13) || (this.tableColumnBookmark && this.tableColumnBookmark.type === 16))
         store.state.eventHub.$on("add-file-requested",this.onAddFileRequested);
-        //store.state.eventHub.$on("mest",(e: any)=> {this.$destroy(); this.$el.remove(); alert("p");} );
-        // store.state.eventHub.$on("test", this.sayName );
          store.state.eventHub.$on("remove-all",(e: any)=>{
              this.$destroy();
              this.$el.remove();
-             
          } );
          
     }
@@ -118,15 +113,18 @@ export default class BookmarkMixin extends Vue{
                 if(!this.bookmark)return;
                 data.Id = this.bookmark.id;
                 data.Name = this.bookmark.englishName;
-                if(this.value.Value){
-                    data.Value = this.value.Value;
+                if(this.bookmark.type === 13){//file bookmark
+                    data.Value = this.value.id;
                 }
-                else
-                    data.Value = this.value;
+                else{
+                    if(this.value.Value)
+                        data.Value = this.value.Value;
+                    else
+                        data.Value = this.value;
+                }
                 eventArg[this.bookmark.englishName] = data;
             }
             else{
-                
                 if(!this.tableColumnBookmark)return;
                 if(this.tableRowIndex === undefined)return;
                 if(eventArg.tableData)
