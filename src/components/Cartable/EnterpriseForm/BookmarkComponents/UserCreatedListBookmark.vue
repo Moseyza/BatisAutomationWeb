@@ -26,13 +26,13 @@ import { ValidValues } from '../../../../store/models/EnterpriseForm/EnterpriseF
     components:{SimpleLookup}
 })
 export default  class  UserCreatedListBookmark extends Mixins(BookmarkMixin){
-    get defaultValue(){
-        if(this.tableColumnBookmark)
-        {
-            return this.tableColumnBookmark.defaultValue;
-        }
-        return '';
-    }
+    // get defaultValue(){
+    //     if(this.tableColumnBookmark)
+    //     {
+    //         return this.tableColumnBookmark.defaultValue;
+    //     }
+    //     return '';
+    // }
     
     get validValues(){
         if(this.tableColumnBookmark)

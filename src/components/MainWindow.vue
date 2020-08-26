@@ -7,7 +7,7 @@
             <div style="flex:2;">
                     <div class="three-part-flexbox">
                         <div class="flex-part-top" style="flex: 0 0 auto;display:flex;">
-                                <QuickAccess  @fast-send-clicked="onFastSendBtnClick($event)" @enterprise-form-selected="onEnterpriseFormSelected($event)"/>
+                                <QuickAccess  @fast-send-clicked="onFastSendBtnClick($event)" @enterprise-form-selected="onEnterpriseFormSelected($event,null)"/>
                         </div>
                         <div class="flex-part-middle">
                             <FoldersTree :letterOwnerId="letterOwnerId" @folder-clicked="onFolderClicked()"></FoldersTree>
@@ -33,6 +33,7 @@
                 @letter-closed-fast="onLetterClosedFast($event)"
                 @closed-letter-rejected="onClosedLetterRejected($event)"
                 @send-fast-dependon="sendFastDependOn($event)"
+                @next-form-selected="onNextFormSelected($event)"
                 >
                 </LetterDetails>
                 <DraftDetails 
@@ -49,7 +50,7 @@
                 <FinalizeLetter v-else-if="leftSideMode=== 'finalize'" :letter="selectedLetter"  />
                 <ForwardLetter v-else-if="leftSideMode=== 'forward'" @forward-canceled="onForwardCanceled" @forward-done="onLetterForwarded($event)" :letter="selectedLetter" />
                 <FastSend :mode="fastSendMode" v-else-if="leftSideMode=== 'fastSend'" @fastsend-canceled="onFastSendCanceled($event)"  :dependentLetters="fastSendDependencies" />
-                <SendEnterpriseForm  v-else-if="leftSideMode=== 'enterpriseForm'" @sendform-close="clearLeftSide()" :form="selectedFrom" :tableLblWidth="maxTableLabelWidth" :formLblWidth="maxFormLabelWidth" />
+                <SendEnterpriseForm  v-else-if="leftSideMode=== 'enterpriseForm'" @sendform-close="clearLeftSide()" :form="selectedFrom" :nextFormInfo="nextFormInfo" :tableLblWidth="maxTableLabelWidth" :formLblWidth="maxFormLabelWidth"  />
             </div>
             
         </div>
@@ -78,6 +79,8 @@ import { DependentLetter } from '../store/models/Letter/DependentLetter';
 import { DraftLetter } from '../store/models/Letter/DraftLetter';
 import { EnterpriseForm } from '../store/models/EnterpriseForm/EnterpriseForm';
 import SendEnterpriseForm from '@/components/Cartable/EnterpriseForm/SendEnterpriseForm.vue';
+import * as enterpriseFormService from '@/store/Services/enterpriseFormService';
+import { NextFormInfo } from '@/store/models/EnterpriseForm/NextFormInfo';
 @Component({
     components: { FoldersTree, LetterDetails, DraftDetails , CartableTitle,FinalizeLetter, ForwardLetter, QuickAccess, FastSend, SearchResultDetails, SendEnterpriseForm}
 })
@@ -89,7 +92,6 @@ export default class MainWindow extends Vue {
     leftSideMode = 'details';
     firstLoad = false;
     onSelectdLetterChanged(letter: Letter ){
-        
         this.leftSideMode = 'details';
         this.noLetterSelected = false;
         const temp: any = {};
@@ -194,7 +196,8 @@ export default class MainWindow extends Vue {
     maxFormLabelWidth = 0;
     maxTableLabelWidth = 0;
     shallShowSendEnterpriseForm = false;
-    onEnterpriseFormSelected(form: EnterpriseForm){
+    onEnterpriseFormSelected(form: EnterpriseForm,nextFormInfo: NextFormInfo){
+        this.nextFormInfo = nextFormInfo;
         if(form.bookmarks){
             form.bookmarks.forEach(bm=>
             {
@@ -231,6 +234,11 @@ export default class MainWindow extends Vue {
 
     clearLeftSide(){
         this.leftSideMode = '';
+    }
+    nextFormInfo = {} as NextFormInfo;
+    async onNextFormSelected(nextFormRequest: any){
+        const nextFormInfo = await  enterpriseFormService.getNextForm(nextFormRequest);
+        this.onEnterpriseFormSelected(nextFormInfo.enterpriseForm,nextFormInfo);
     }
 }
 </script>

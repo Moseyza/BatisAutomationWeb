@@ -18,7 +18,7 @@ export const batisAutomationApi = axios.create(
         baseURL:"http://localhost:54173/api"
         //baseURL:"http://localhost:1620/api"
         //baseURL:"http://45.149.76.4:1620//api"
-
+        //baseURL:"http://78.38.202.182:1620//api"
     }
 );
 

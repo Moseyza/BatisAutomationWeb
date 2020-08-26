@@ -37,10 +37,12 @@ export default class SimpleLookup extends Vue {
     filteredValues = [] as ValidValues[];
     searchTxt = '';
     @Watch("validValues")
-    onValidValuesChanged(){
+    onValidValuesChanged(newVal: ValidValues[], oldVal: ValidValues[]){
         this.selectedValue = {} as ValidValues;
         if(this.validValues)
             this.filteredValues = this.validValues;
+        if(this.valueProp)
+            this.setValueFromProp();
     }
     onSearch(){
         if(!this.validValues)return;

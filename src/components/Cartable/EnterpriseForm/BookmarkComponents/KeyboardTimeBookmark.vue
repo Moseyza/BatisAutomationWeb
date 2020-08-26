@@ -24,6 +24,7 @@ export default  class  StringBookmark extends Mixins(BookmarkMixin){
     onValueChanged(newVal: string, oldVal: string){
         if(!newVal)return;
         const array = newVal.split('');
+        if(!array)return;
         if(array.length == 0)return;
         if(isNaN(parseInt(array[array.length -1])) || this.value.length > 5){
             this.value = (this.value as string).substring(0,this.value.length -1);

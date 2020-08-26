@@ -20,6 +20,8 @@ import * as $ from 'jquery';
 import { EnterpriseFormValidValues } from '../../../../store/models/EnterpriseForm/EnterpriseFormValidValues';
 import FormFormatRow from '@/components/Cartable/EnterpriseForm/EnterpriseFormContainer/FormFormatRow/FormFormatRow.vue';
 import store from '@/store';
+import { NextFormInfo } from '@/store/models/EnterpriseForm/NextFormInfo';
+import BookmarkMixin from '../BookmarkComponents/BookmarkMixin';
 
 @Component
 export default class EnterpriseFormContainer extends Vue{
@@ -27,21 +29,22 @@ export default class EnterpriseFormContainer extends Vue{
     currentLabel = '';
     formValidValues = {} as  EnterpriseFormValidValues;
     invisibleBookmarks = [] as any[];
+    shallNextFormLoaded = false;
+    @Prop() nextFormInfo?: NextFormInfo;
+    @Watch('nextFormInfo')
+    OnNextFormInfoChanged(){
+        this.loadNextForm();
+    }
     @Prop() form?: EnterpriseForm;
-    // @Watch('form', { immediate: true, deep: true })
-    // onFormChanged(){
-    //     // if(!this.childComponents)return;
-    //     // alert("Childs:"+this.childComponents.length);
-    //     // this.childComponents.forEach(child=>{child.$destroy();child.$el.remove()});
-       
-    // }
-
     @Prop() tableLblWidth?: number;
     @Prop() formLblWidth?: number;
     formatCells =  [] as any[];
     created(){
         store.state.eventHub.$on("send-enterpriseform",(e: any)=>this.onFormSend(e))
+        if(this.nextFormInfo)
+            this.shallNextFormLoaded = true; //this.loadNextForm();
     }
+    
     formatForm(){
         if(!this.form)return;
         const columnFormat = this.getColumnFormat();
@@ -131,9 +134,8 @@ export default class EnterpriseFormContainer extends Vue{
             instance.$on("value-changed",(e: string)=>{this.onFormParameterChanged(e)});
             instance.$mount();
             this.$children.push(instance);
-            //console.log(this.formatCells[formatRowIndex].$refs[col.colName]);
-            this.formatCells[formatRowIndex].$refs[col.colName][0].appendChild(instance.$el);
-            //(this.$refs.formcontainer as any).appendChild(instance.$el);
+            if(this.formatCells[formatRowIndex])
+                this.formatCells[formatRowIndex].$refs[col.colName][0].appendChild(instance.$el);
         }
     }
     getCol(index: number){
@@ -176,12 +178,13 @@ export default class EnterpriseFormContainer extends Vue{
     }
    
     async mounted(){
-        
         console.log(this.form);
         if(this.form)
           this.formValidValues = await  enterpriseFormService.getFormValidValus(this.form.id);
         this.formatForm();
         this.drawForm();
+        if(this.shallNextFormLoaded)
+            this.loadNextForm();
     }
 
     
@@ -202,8 +205,12 @@ export default class EnterpriseFormContainer extends Vue{
         return tableNames;
     }
 
-
     async onFormParameterChanged(parameterName: string){
+        // const x = 1;
+        // if(x===1)return;
+
+        if(this.propertyChanedLock)return;
+        //alert(parameterName);
         if(!this.form)return;
         const tableNames = this.getFormTableNames();
         const formData = this.getFormData();
@@ -214,23 +221,18 @@ export default class EnterpriseFormContainer extends Vue{
                 formParameters.push(formData[key]);
             }
         }
-
         //adding invisible values to form parameters
         this.invisibleBookmarks.forEach(invisibleItem=>{
             formParameters.push(invisibleItem);
         });
-
         const tablesData = {} as any;
         tableNames.forEach(tn=>tablesData[tn] = formData[tn]);
         const ownerId =  store.state.ownerId;
         const parametersValue =  JSON.stringify(formParameters);
         const tableParametersValue = JSON.stringify(tablesData);
-       
         const behindCodeResultStr =  await enterpriseFormService.getCodeBehindExecutionResult(this.form.id,ownerId,parametersValue,tableParametersValue,parameterName);
-        
         if(behindCodeResultStr === '')return;
-        const behindCodeResults =  JSON.parse(behindCodeResultStr);
-        
+            const behindCodeResults =  JSON.parse(behindCodeResultStr);
         if(behindCodeResults.HasError)
             this.$emit("errors-exposed",behindCodeResults.Errors);
         else
@@ -244,7 +246,39 @@ export default class EnterpriseFormContainer extends Vue{
             const tableParameters = JSON.parse(tableParametersStr);
             store.state.eventHub.$emit("tabledata-set-request",tableParameters);
         }
-
+    }
+    propertyChanedLock = false;
+    loadNextForm(){
+        this.propertyChanedLock = true;
+        if(!this.nextFormInfo)return;
+        if(!this.nextFormInfo.multipleValues.letters)return;
+        const bookmarkValues = [] as any[];
+        let tableRows = [] as any[];
+        this.nextFormInfo.multipleValues.letters.forEach(item=>{
+            if(item.values){
+                
+                item.values.forEach(val=>{
+                    if(val.type === 18){
+                        //for tables 
+                        tableRows = JSON.parse(val.value);
+                        store.state.eventHub.$emit('tablerow-add-requested',{tableName: val.englishName,rowCount: tableRows.length});
+                        const test = {} as any;
+                        test[val.englishName] = tableRows;
+                        store.state.eventHub.$emit("tabledata-set-request",test);
+                    }
+                    else{
+                        const bookmarkValue = {} as any;
+                        bookmarkValue.Name = val.englishName;
+                        bookmarkValue.Id = val.id;
+                        bookmarkValue.Value = val.value;
+                        bookmarkValues.push(bookmarkValue);
+                    }
+                });
+            }
+        });
+        store.state.eventHub.$emit("newvalues-set-request",bookmarkValues);
+        this.propertyChanedLock = false;
+        //store.state.eventHub.$emit("tabledata-set-request",tableRows);
     }
 
     getFormDataForSending(){
@@ -266,22 +300,10 @@ export default class EnterpriseFormContainer extends Vue{
         const ownerId =  store.state.ownerId;
         const parametersValue =  JSON.stringify(formParameters);
         const tableParametersValue = JSON.stringify(tablesData);
-
         const result = {} as any;
         result.parameters = parametersValue;
         result.tableParameters = tableParametersValue;
         return result;
-        // this.invisibleValues.forEach((iv,index)=>{
-        //     if(obj.tableData.length > index)
-        //         for (const key in iv) {
-        //             obj.tableData[index][key] = iv[key];
-        //         }
-        // });
-        // alert("test");
-        // console.log("=====================================");
-        // console.log(parametersValue);
-        // console.log(tableParametersValue);
-        // console.log("=====================================");
     }
 
     test(){
@@ -292,11 +314,9 @@ export default class EnterpriseFormContainer extends Vue{
         if(!this.form)return;
         sendFormDto.formId = this.form.id;
         sendFormDto.senderId = store.state.ownerId;
-
         const formData =  this.getFormDataForSending();
         sendFormDto.tableBookmarks = formData.tableParameters;
         sendFormDto.bookmarks = formData.parameters;
-
     }
     
 }

@@ -6,7 +6,7 @@
             <span style="float:left">:</span>
         </div>
         <div style="flex:1;padding:0 5px">
-            <SimpleLookup :validValues="validValues" :valueProp="defaultValue" :color="columnColor" @value-selected="onValueSelected" />
+            <SimpleLookup :validValues="validValues" :valueProp="valueProp" :color="columnColor" @value-selected="onValueSelected" />
         </div>
     </div>
 </template>
@@ -23,13 +23,18 @@ import * as companyService from '@/store/Services/companyService';
 })
 export default  class  CompanyListBookmark extends Mixins(BookmarkMixin){
    
+    valueProp = "";
     validValues = [] as  ValidValues[];
-    get defaultValue(){
-        if(this.tableColumnBookmark)
-            return this.tableColumnBookmark.defaultValue;
-        return '';
-    }
+    // get defaultValue(){
+    //     if(this.tableColumnBookmark)
+    //         return this.tableColumnBookmark.defaultValue;
+    //     return '';
+    // }
     async created(){
+        await this.setValidValues();
+    }
+    async setValidValues(){
+        this.validValues.length = 0;
         const allCompanies =  await companyService.GetAllCompanies();
         allCompanies.forEach(c=>{
             const validVal = {} as ValidValues;
@@ -42,6 +47,10 @@ export default  class  CompanyListBookmark extends Mixins(BookmarkMixin){
         this.value.Id = value.item1;
         this.value.Value = value.item2;
         this.$emit("value-changed",this.englishName);
+    }
+    onValueChanged(){
+        if(this.value)
+            this.valueProp = this.value.Value;
     }
     
 }

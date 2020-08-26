@@ -40,7 +40,6 @@ export default  class  DynamicListBookmark extends Mixins(BookmarkMixin){
     }
 
     onValueChanged(newVal: any, oldVal: any){
-      
         if(oldVal.ValidValues){
             if(newVal.ValidValues != null && oldVal.ValidValues.length > 0){
                 if(newVal.ValidValues.find((item: any)=> item.Id === oldVal.ValidValues[0].Id))

@@ -3,6 +3,7 @@ const path = require('path');
 module.exports = {
     
     configureWebpack: {
+      devtool: 'source-map',
       plugins: [
         new webpack.ProvidePlugin({
             // jquery

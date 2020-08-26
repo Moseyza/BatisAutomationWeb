@@ -30,6 +30,7 @@
                     <div style="flex:1;margin:5px" v-if="isDraft"> <span  class="fixed-icon icon-allDraft"></span></div>
                     <div style="flex:1;margin:5px" v-else-if="letterData.isOpenned || isSent || isOpenned"> <span  class="fixed-icon icon-openLetter"></span></div>
                     <div style="flex:1;margin:5px" v-else> <span  class="fixed-icon icon-notOpenLetter"></span></div>
+                    <div style="flex:1;margin:5px" v-if="letterData.isEnterpriseForm"> <i class="fixed-icon icon-enterpriseForm"></i> </div>
                     
                 </div>
             </div>

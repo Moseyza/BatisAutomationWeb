@@ -81,6 +81,14 @@
             </div>
         <div  style="flex:0 1 auto;display:flex;flex-direction:column;align-items:strech" class="flex-part-bottom">
             <div style="flex:1; display:flex;justify-content:space-around" class="container1">
+                <div v-if="nextEnterpriseForms.length>0" style="flex:1;text-align: center;" class="action-icon">
+                    <div style="flex:1" id="nextforms-dropdown"  class="ui icon pointing  bottom left  dropdown">
+  		                <i class=" icon-enterpriseForm xlarg-text"></i>
+  		                <div class="menu">
+    		                <div v-for="form in nextEnterpriseForms" :key="form.id" class="item menu-item" style="max-height:10px !important;padding:0 5px !important"><div style="padding-left:5px" @click="loadNextForm(form.id)" >{{form.name}}</div> </div>
+  		                </div>
+	                </div>
+                </div>
                 <div style="flex:1;text-align: center;" class="action-icon">
                     <div style="flex:1" id="return-dropdown"  class="ui icon top left dropdown">
   		                <i class=" icon-replay xlarg-text"></i>
@@ -90,8 +98,9 @@
     		                <div class="item menu-item" style="max-height:10px !important;padding:0 5px !important"><div style="padding-left:5px">بازگشت</div> <i class="action-icon icon-SendLetterFast"  @click="sendFastDependOn('returning')"></i></div>
                             <div class="item menu-item" style="max-height:10px !important;padding:0 5px !important"><div style="padding-left:5px">پیوست به</div> <i class="action-icon icon-SendLetterFast"  @click="sendFastDependOn('attaching')"></i></div>
   		                </div>
-	            </div>
+	                </div>
                 </div>
+              
                 <div style="flex:1;text-align: center;" @click="forwardLetter()"  class=" action-icon">
                     <i class=" icon-ForwardLetter xlarg-text"></i>
                 </div>
@@ -115,6 +124,9 @@ import * as $ from 'jquery';
 import FinalizeLetter from './FinalizeLetter/FinalizeLetter.vue';
 import * as util from '@/util/utils.ts';
 import { LetterSearchResult } from '../../../store/models/Letter/LetterSearchResult';
+import * as enterpriseFormService from '@/store/Services/enterpriseFormService';
+import store from '@/store';
+import { EnterpriseForm } from '@/store/models/EnterpriseForm/EnterpriseForm';
 
 @Component({
     name:"LetterDetails",
@@ -125,19 +137,19 @@ export default class LetterDetails extends Vue {
     isReceived = true;
     pdfSrc = {} as any;
     @Prop() letter?: Letter;
+    nextEnterpriseForms = [] as EnterpriseForm[];
     @Watch("letter")
     onLetterChanged(newVal: Letter, oldVal: Letter){
         this.setIsReceived();
         this.setPdfUrl();
         this.canFinalize = !newVal.isClosed;
         this.canReject = newVal.isClosed;
+        this.loadNextForms();
     }
     
-
-   
-       
     created(){
         this.setIsReceived();
+        this.loadNextForms();
     }
     get attachments(){
         
@@ -156,9 +168,6 @@ export default class LetterDetails extends Vue {
         const date = new Date( this.letter.sendTime.substring(0,this.letter.sendTime.length -1));
         return (date).toLocaleTimeString();
     }
-
-   
-    
     setIsReceived(){
         this.isReceived = false;
         if(this.letter == undefined)return;
@@ -179,23 +188,22 @@ export default class LetterDetails extends Vue {
          this.pdfLoaded = false;
         if(this.letter.parts === undefined || this.letter.parts === null)return;
             const file = await fileService.getFile(this.letter.parts[0].file.id);
-            // const blob =  converBase64toBlob(file.content,file.extension);
-            // this.pdfSrc = blob;
-            // console.log(blob);
             if(this.letter.parts[0].file.extension.toLowerCase().includes('.pdf')){
                 this.pdfSrc = "data:application/pdf;base64," + file.content;
                 this.pdfLoaded = true;
             }else{
                 this.pdfSrc = "data:image/png;base64," + file.content;
-            }
-
-        
+        }
     }
     async mounted(){
         $("#options-dropdown").dropdown({action: 'hide',silent: true});
         $("#return-dropdown").dropdown({action: 'nothing',silent: true});
         $(".popup").popup();
         await this.setPdfUrl();
+    }
+
+    updated(){
+         $("#nextforms-dropdown").dropdown({action: 'hide',silent: true});
     }
 
     finalizeLetter(){
@@ -247,8 +255,28 @@ export default class LetterDetails extends Vue {
         this.$emit('send-fast-dependon',mode);
     }
 
-   
+    async loadNextForms(){
+        if(!this.letter)return;
+        if(!this.letter.isEnterpriseForm) return;
+        const ownerId =  store.state.ownerId;
+        const letterId = this.letter.id;
+        const forms = await enterpriseFormService.getNextForms(letterId,ownerId);
+        this.nextEnterpriseForms = forms;
+       
+    }
 
+    loadNextForm(formId: string){
+        //const nextForm =  this.nextEnterpriseForms.find(form=>form.id === formId);
+        if(!this.letter)return;
+        const request  = {} as any;
+        request.formId = formId;
+        request.letterId = this.letter.id;
+        request.ownerId = store.state.ownerId;
+        request.possessionId = this.letter.letterPossessionId;
+        this.$emit('next-form-selected',request);
+    }
+
+    
 }
 </script>
 <style lang="less" scoped>

@@ -31,7 +31,7 @@
             </div>
         </div>
         <div class="flex-part-middle">
-            <EnterpriseFormContainer :formLblWidth="formLblWidth" :tableLblWidth="tableLblWidth"  :form="form" @errors-exposed="onErrorsExposed($event)" @no-errors="onNoErrors()"/>
+            <EnterpriseFormContainer :formLblWidth="formLblWidth" :tableLblWidth="tableLblWidth"  :form="form" :nextFormInfo="nextFormInfo" @errors-exposed="onErrorsExposed($event)" @no-errors="onNoErrors()"/>
         </div>
         <div class="flex-part-bottom container1" style="flex:0 1 auto">
             <InPlaceMessageBox v-if="shallShowMsgBox" :message="msgBoxMessage" :messageType="msgBoxMessageType" :buttons="msgBoxButtons" @button-clicked="onMsgBoxButtonClicked($event)"/>
@@ -58,6 +58,7 @@ import * as $ from 'jquery';
 import { LetterOwnerForSendingFaxAndEmailAndSms } from '@/store/models/LetterOwner/LetterOwnerForSendingFaxAndEmailAndSms';
 import InPlaceMessageBox  from '@/components/UiComponents/InPlaceMessageBox.vue';
 import FullPageLoader from '@/components/UiComponents/FullPageLoader.vue';
+import { NextFormInfo } from '@/store/models/EnterpriseForm/NextFormInfo';
 @Component({
     components: {EnterpriseFormContainer,RecipientLookup , FastSendRecipientSelector , InPlaceMessageBox, FullPageLoader }
 })
@@ -65,6 +66,7 @@ export default class SendEnterpriseForm extends Vue{
     @Prop() form?: EnterpriseForm;
     @Prop() formLblWidth?: number;
     @Prop() tableLblWidth?: number;
+    @Prop() nextFormInfo?: NextFormInfo;
     msgBoxMessage = '';
     msgBoxMessageType = '';
     msgBoxButtons = 'okCancel';
@@ -203,6 +205,9 @@ export default class SendEnterpriseForm extends Vue{
         sendFormDto.draftReceivers = this.selectedDraftRecipients;
         sendFormDto.copyReceivers  = this.selectedCopyRecipients;
         sendFormDto.Receivers = this.selectedMainRecipients;
+        if(this.nextFormInfo)
+            sendFormDto.dependentLetterId = this.nextFormInfo.dependentLetterId;
+        
         const sendResults =  await enterpriseFormService.sendEnterpriseForm(sendFormDto);
         this.sending = false;
         if(sendResults){

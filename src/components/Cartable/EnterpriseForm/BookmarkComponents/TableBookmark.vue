@@ -33,6 +33,7 @@ import * as $ from 'jquery';
 import { ValidValuesForSingleTable } from '../../../../store/models/EnterpriseForm/EnterpriseFormValidValues';
 import FormFormatRow from '@/components/Cartable/EnterpriseForm/EnterpriseFormContainer/FormFormatRow/FormFormatRow.vue';
 import store from '@/store';
+import BooleanBookmark from './BooleanBookmark.vue';
 @Component
 export default  class  TableBookmark extends Mixins(BookmarkMixin){
     @Prop() maxColumnLabelWidth?: number;
@@ -51,7 +52,7 @@ export default  class  TableBookmark extends Mixins(BookmarkMixin){
                 this.invisibleColumns.push(x);
         });
         store.state.eventHub.$on("tabledata-set-request",(e: any)=> this.onTableDataSet(e));
-        
+        store.state.eventHub.$on("tablerow-add-requested",this.onTableRowAddRequested);
     }
     formatCells =  [] as any[];
     formatRow(rowContainerInstance: any){
@@ -83,12 +84,20 @@ export default  class  TableBookmark extends Mixins(BookmarkMixin){
             if(columnBookmark && columnBookmark.isVisible){
                 const columnComponent = this.getColumnBookmarkComponent(columnBookmark);
                 if(columnComponent){
-                    this.formatCells[formatRowIndex].$refs[col.colName][0].appendChild(columnComponent);
+                    if(this.formatCells[formatRowIndex])
+                        this.formatCells[formatRowIndex].$refs[col.colName][0].appendChild(columnComponent);
                 }
             }
         });
-        (this.$refs.tablecontainer as any).appendChild(rowContainerInstance.$el);
+        if((this.$refs.tablecontainer as any))
+            (this.$refs.tablecontainer as any).appendChild(rowContainerInstance.$el);
         this.$emit("value-changed",this.englishName);
+    }
+    onTableRowAddRequested(info: any){
+        if(info.tableName != this.englishName)return;
+        for(let i=0;i<info.rowCount;i++){
+            this.addRow();
+        }
     }
     
     getColumnBookmarkComponent(columnBookmark: EnterpriseFormTableBookmarkColumn){
@@ -104,6 +113,9 @@ export default  class  TableBookmark extends Mixins(BookmarkMixin){
                 break;
             case 1:
                 componentClass = Vue.extend(StringBookmark);
+                break;
+            case 2:
+                componentClass = Vue.extend(BooleanBookmark);
                 break;
             case 4: 
                 componentClass = Vue.extend(CurrencyBookmark);
@@ -234,5 +246,7 @@ export default  class  TableBookmark extends Mixins(BookmarkMixin){
             this.rowsCount--;
         }
     }
+
+    
 }
 </script>

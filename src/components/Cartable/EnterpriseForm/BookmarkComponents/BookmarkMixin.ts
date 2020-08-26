@@ -63,7 +63,10 @@ export default class BookmarkMixin extends Vue{
 
     get isMandatoryValueSupplied(){
         if(!this.isMandatory)return true;
-        return this.value !=='' && this.value !== ({} as any);
+        const result = this.value !=='' && this.value !== ({} as any) && this.value !== undefined;
+        if(!result)alert(this.englishName);
+        return result;
+
     }
 
     onMandatoryValueValidation(e: any){
@@ -131,8 +134,11 @@ export default class BookmarkMixin extends Vue{
                     if(eventArg.tableData[this.tableRowIndex])
                         if(this.tableColumnBookmark.type === 16)//column bookmark is a file
                             eventArg.tableData[this.tableRowIndex][this.tableColumnBookmark.englishName] = {Id: this.value.id,Name:this.value.extension}    
-                        else
+                        else{
+                        //if(this.value === undefined)this.value = '';
                             eventArg.tableData[this.tableRowIndex][this.tableColumnBookmark.englishName] = this.value;    
+                        }
+           
                 
             }
         }
@@ -142,15 +148,17 @@ export default class BookmarkMixin extends Vue{
         if(this.tableRowIndex === undefined)return;
         if(eventArg.rowIndex !== this.tableRowIndex)return;
         if(!this.tableColumnBookmark)return;
-        if(eventArg.data)
+        if(eventArg.data && eventArg.data[this.tableColumnBookmark.englishName])
             this.value = eventArg.data[this.tableColumnBookmark.englishName];
+        
         
     }
     setNewValues(newValues: any[]){
         if(!newValues)return;
         const relatedItem =  newValues.find(item=>item.Name === this.englishName);
-        if(relatedItem)
+        if(relatedItem){
             this.value = relatedItem.Value;
+        }
         
     }
     beforeDestroy(){

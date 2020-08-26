@@ -4,6 +4,7 @@ import { EnterpriseFormValidValues } from '../models/EnterpriseForm/EnterpriseFo
 import { LetterOwnerWithFaxAndEmails } from '../models/LetterOwner/LetterOwnerWithFaxAndEmails';
 import SentLetterInformation from '../models/Letter/SentLetterInformation';
 import axios from 'axios';
+import { NextFormInfo } from '../models/EnterpriseForm/NextFormInfo';
 
 
 
@@ -93,5 +94,29 @@ export async function sendEnterpriseForm(sendFormDto: any): Promise<SentLetterIn
     catch (error) {
         console.log(error);
         return {} as SentLetterInformation;    
+    }
+}
+
+export async function getNextForms(letterId: string,letterOwnerId: string): Promise<EnterpriseForm[]>{
+    try {
+
+        const serverResult =  await api.batisAutomationApi.post("/EnterpriseForms/NextFormsList",{letterId: letterId,letterOwnerId: letterOwnerId  });
+        return serverResult.data as EnterpriseForm[];
+    } 
+    catch (error) {
+        console.log(error);
+        return [] as EnterpriseForm[];    
+    }
+}
+
+export async function getNextForm(nextFormReqeust: any): Promise<NextFormInfo>{
+    try {
+
+        const serverResult =  await api.batisAutomationApi.post("/EnterpriseForms/NextForm",nextFormReqeust);
+        return serverResult.data as NextFormInfo;
+    } 
+    catch (error) {
+        console.log(error);
+        return {} as NextFormInfo;    
     }
 }
