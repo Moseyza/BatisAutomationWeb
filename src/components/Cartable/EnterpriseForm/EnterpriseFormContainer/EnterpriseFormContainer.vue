@@ -1,5 +1,6 @@
 <template>
     <div  ref="formcontainer">
+        <!-- <button @click="test()">test</button> -->
     </div>
 </template>
 
@@ -136,6 +137,7 @@ export default class EnterpriseFormContainer extends Vue{
             this.$children.push(instance);
             if(this.formatCells[formatRowIndex])
                 this.formatCells[formatRowIndex].$refs[col.colName][0].appendChild(instance.$el);
+            
         }
     }
     getCol(index: number){
@@ -164,7 +166,26 @@ export default class EnterpriseFormContainer extends Vue{
 
     getColumnFormat(){
         if(!this.form)return '';
-        if(this.form.columnFormat != undefined && this.form.columnFormat != "")return this.form.columnFormat;
+        if(!this.form.bookmarks)return'';
+        if(this.form.columnFormat != undefined && this.form.columnFormat != ""){
+            const visibleBookmarks =  this.form.bookmarks.filter(bm=>bm.isVisibleInSend); 
+            const splited =  this.form.columnFormat.split(',');
+            let columnFormatSum = 0;
+            splited.forEach(x=>{ columnFormatSum += parseInt(x)});
+            if(visibleBookmarks.length > columnFormatSum)
+            {
+                const diff = visibleBookmarks.length - columnFormatSum;
+                let result = this.form.columnFormat;
+                for(let i =0; i < diff;i++)
+                {
+                    result += ',1'; 
+                }
+                return result;
+            }
+            else{
+                return this.form.columnFormat;
+            }
+        }
         let result = "";
         if(!this.form.bookmarks)return '';
         for(let i = 0;i<this.form.bookmarks.length; i++){
@@ -256,15 +277,14 @@ export default class EnterpriseFormContainer extends Vue{
         let tableRows = [] as any[];
         this.nextFormInfo.multipleValues.letters.forEach(item=>{
             if(item.values){
-                
                 item.values.forEach(val=>{
                     if(val.type === 18){
                         //for tables 
                         tableRows = JSON.parse(val.value);
                         store.state.eventHub.$emit('tablerow-add-requested',{tableName: val.englishName,rowCount: tableRows.length});
-                        const test = {} as any;
-                        test[val.englishName] = tableRows;
-                        store.state.eventHub.$emit("tabledata-set-request",test);
+                        const table = {} as any;
+                        table[val.englishName] = tableRows;
+                        store.state.eventHub.$emit("tabledata-set-request",table);
                     }
                     else{
                         const bookmarkValue = {} as any;
@@ -307,7 +327,7 @@ export default class EnterpriseFormContainer extends Vue{
     }
 
     test(){
-        alert(this.$children.length);
+         store.state.eventHub.$emit('test-sayname');
     }
 
     onFormSend(sendFormDto: any){

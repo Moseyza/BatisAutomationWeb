@@ -87,6 +87,10 @@ export default class SendEnterpriseForm extends Vue{
         this.loadReceivers();
         store.state.eventHub.$emit('remove-all');
     }
+    @Watch("nextFormInfo",{ immediate: true, deep: true })
+    onNextFormInfoChanged(){
+        store.state.eventHub.$emit('remove-all');
+    }
 
     created(){
         this.loadReceivers();

@@ -91,6 +91,15 @@ export default class BookmarkMixin extends Vue{
         attachedFiles.push(attachedFile);
     }
     created(){
+        // if(this.tableColumnBookmark){
+        //     if(this.tableColumnBookmark.type === 10)
+        //         alert("created");
+            
+        // }
+        // if(this.bookmark)
+        //     if(this.bookmark.type === 3)
+        //             alert("Date");
+        store.state.eventHub.$on("test-sayname", this.sayName);
         store.state.eventHub.$on("form-values-requested", this.getData);
         store.state.eventHub.$on("tablerow-set-requested", this.setValueInTableRow);
         store.state.eventHub.$on("newvalues-set-request",this.setNewValues);
@@ -162,11 +171,13 @@ export default class BookmarkMixin extends Vue{
         
     }
     beforeDestroy(){
+        store.state.eventHub.$off("test-sayname", this.sayName);
         store.state.eventHub.$off('mandatory-values-validation', this.onMandatoryValueValidation);
         store.state.eventHub.$off("form-values-requested", this.getData);
         store.state.eventHub.$off("tablerow-set-requested", this.setValueInTableRow);
         store.state.eventHub.$off("newvalues-set-request", this.setNewValues);
         store.state.eventHub.$off("table-row-romoved",this.onTableRowRemoved);
+        
         if((this.bookmark && this.bookmark.type === 13) || (this.tableColumnBookmark && this.tableColumnBookmark.type === 16))
             store.state.eventHub.$off("add-file-requested",this.onAddFileRequested);
     }

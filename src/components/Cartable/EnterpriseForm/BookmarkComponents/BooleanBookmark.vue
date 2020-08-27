@@ -19,6 +19,7 @@ export default  class  BooleanBookmark extends Mixins(BookmarkMixin){
     created(){
         this.value = false;
     }
+    
 }
 </script>
 

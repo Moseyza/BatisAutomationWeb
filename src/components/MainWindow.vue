@@ -57,6 +57,7 @@
         <div class="flex-part-bottom container2" style="flex: 0 1 auto;direction:ltr;font-size:x-small;">
             Batis idea processors. All rights reserved ©
         </div>
+        <FullPageLoader :isActive="isLoading"/>
     </div>
 </template>
 
@@ -81,8 +82,9 @@ import { EnterpriseForm } from '../store/models/EnterpriseForm/EnterpriseForm';
 import SendEnterpriseForm from '@/components/Cartable/EnterpriseForm/SendEnterpriseForm.vue';
 import * as enterpriseFormService from '@/store/Services/enterpriseFormService';
 import { NextFormInfo } from '@/store/models/EnterpriseForm/NextFormInfo';
+import FullPageLoader from '@/components/UiComponents/FullPageLoader.vue';
 @Component({
-    components: { FoldersTree, LetterDetails, DraftDetails , CartableTitle,FinalizeLetter, ForwardLetter, QuickAccess, FastSend, SearchResultDetails, SendEnterpriseForm}
+    components: { FoldersTree, LetterDetails, DraftDetails , CartableTitle,FinalizeLetter, ForwardLetter, QuickAccess, FastSend, SearchResultDetails, SendEnterpriseForm, FullPageLoader}
 })
 export default class MainWindow extends Vue {
     selectedLetter: Letter = {} as Letter;
@@ -91,6 +93,7 @@ export default class MainWindow extends Vue {
     letterOwnerId = '';
     leftSideMode = 'details';
     firstLoad = false;
+    isLoading = false;
     onSelectdLetterChanged(letter: Letter ){
         this.leftSideMode = 'details';
         this.noLetterSelected = false;
@@ -230,6 +233,7 @@ export default class MainWindow extends Vue {
             this.shallShowSendEnterpriseForm = false;
             this.leftSideMode = 'enterpriseForm';
         }
+        this.isLoading = false;
     }
 
     clearLeftSide(){
@@ -237,6 +241,7 @@ export default class MainWindow extends Vue {
     }
     nextFormInfo = {} as NextFormInfo;
     async onNextFormSelected(nextFormRequest: any){
+        this.isLoading = true;
         const nextFormInfo = await  enterpriseFormService.getNextForm(nextFormRequest);
         this.onEnterpriseFormSelected(nextFormInfo.enterpriseForm,nextFormInfo);
     }

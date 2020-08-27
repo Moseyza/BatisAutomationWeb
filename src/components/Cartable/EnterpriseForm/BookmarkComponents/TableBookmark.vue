@@ -34,6 +34,7 @@ import { ValidValuesForSingleTable } from '../../../../store/models/EnterpriseFo
 import FormFormatRow from '@/components/Cartable/EnterpriseForm/EnterpriseFormContainer/FormFormatRow/FormFormatRow.vue';
 import store from '@/store';
 import BooleanBookmark from './BooleanBookmark.vue';
+import DataBookmark from './DateBookmark.vue';
 @Component
 export default  class  TableBookmark extends Mixins(BookmarkMixin){
     @Prop() maxColumnLabelWidth?: number;
@@ -119,6 +120,9 @@ export default  class  TableBookmark extends Mixins(BookmarkMixin){
                 break;
             case 4: 
                 componentClass = Vue.extend(CurrencyBookmark);
+                break;
+            case 5: 
+                componentClass = Vue.extend(DataBookmark);
                 break;
             case 7:
                 componentClass = Vue.extend(UserCreatedListBookmark);
@@ -225,9 +229,29 @@ export default  class  TableBookmark extends Mixins(BookmarkMixin){
     }
     getColumnFormat(){
         if(!this.bookmark)return '';
-        if(this.bookmark.columnFormat != undefined && this.bookmark.columnFormat != "")return this.bookmark.columnFormat;
-        let result = "";
         if(!this.bookmark.tableColumns)return '';
+        if(this.bookmark.columnFormat != undefined && this.bookmark.columnFormat != ""){
+            const visibleBookmarks =  this.bookmark.tableColumns.filter(bm=>bm.isVisible); 
+            const splited =  this.bookmark.columnFormat.split(',');
+            let columnFormatSum = 0;
+            splited.forEach(x=>{ columnFormatSum += parseInt(x)});
+            if(visibleBookmarks.length > columnFormatSum)
+            {
+                const diff = visibleBookmarks.length - columnFormatSum;
+                let result = this.bookmark.columnFormat;
+                for(let i =0; i < diff;i++)
+                {
+                    result += ',1'; 
+                }
+                return result;
+            }
+            else{
+
+                return this.bookmark.columnFormat;
+            }
+        }
+        let result = "";
+        
         for(let i = 0;i<this.bookmark.tableColumns.length; i++){
             if(this.bookmark.tableColumns[i].isVisible)
             {
@@ -236,6 +260,10 @@ export default  class  TableBookmark extends Mixins(BookmarkMixin){
             }
         }
         return result;
+
+
+
+        
     }
 
     onTableRowRemoved(rowInfo: any){
@@ -247,6 +275,8 @@ export default  class  TableBookmark extends Mixins(BookmarkMixin){
         }
     }
 
-    
+    beforeDestroy(){
+        store.state.eventHub.$off("tablerow-add-requested",this.onTableRowAddRequested);
+    }
 }
 </script>
