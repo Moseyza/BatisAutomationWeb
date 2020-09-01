@@ -6,7 +6,7 @@
             <span style="float:left">:</span>
         </div>
         <div style="flex:1;padding:0 5px">
-            <input type="text" :style="{'background-color': columnColor}" style="width:100%;border:none;outline:none" v-model="value" :readonly="isReadOnly"/>
+            <input type="text" :style="{'background-color': columnColor}" style="width:100%;border:none;outline:none" @blur="focusOut" v-model="value" :readonly="isReadOnly"/>
         </div>
     </div>
 </template>
@@ -22,6 +22,10 @@ export default  class  StringBookmark extends Mixins(BookmarkMixin){
             this.value = this.defaultValue;
         else
             this.value = '';
+    }
+    focusOut(){
+        if(this.isMandatory)
+            this.$emit("value-changed",this.englishName);
     }
 }
 </script>

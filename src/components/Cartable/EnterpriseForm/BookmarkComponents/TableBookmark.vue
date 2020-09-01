@@ -35,13 +35,14 @@ import FormFormatRow from '@/components/Cartable/EnterpriseForm/EnterpriseFormCo
 import store from '@/store';
 import BooleanBookmark from './BooleanBookmark.vue';
 import DataBookmark from './DateBookmark.vue';
+import FloatBookmark from './FloatBookmark.vue';
 @Component
 export default  class  TableBookmark extends Mixins(BookmarkMixin){
     @Prop() maxColumnLabelWidth?: number;
     @Prop() validValues?: ValidValuesForSingleTable;
     invisibleColumns = [] as EnterpriseFormTableBookmarkColumn[];
     invisibleValues = [] as any[];
-    rowsCount = 0;
+    
     created(){
         this.value = '';
         if(!this.bookmark)return;
@@ -105,7 +106,6 @@ export default  class  TableBookmark extends Mixins(BookmarkMixin){
         let componentClass = undefined;
         const props = {} as any;
         props.tableColumnBookmark = columnBookmark;
-        
         props.parentTableName = this.englishName;
         props.tableRowIndex = this.rowsCount -1;
         switch(columnBookmark.type){
@@ -117,6 +117,9 @@ export default  class  TableBookmark extends Mixins(BookmarkMixin){
                 break;
             case 2:
                 componentClass = Vue.extend(BooleanBookmark);
+                break;
+            case 3:
+                componentClass = Vue.extend(FloatBookmark);
                 break;
             case 4: 
                 componentClass = Vue.extend(CurrencyBookmark);
@@ -169,8 +172,15 @@ export default  class  TableBookmark extends Mixins(BookmarkMixin){
             this.invisibleColumns.forEach(ic=>{
                 if(this.invisibleValues.length > i)
                     internalObj[ic.englishName] = this.invisibleValues[i][ic.englishName];
-                else
+                else{
+                    if(this.getColumnType(ic.englishName) === 2)//invisible column is of type boolean
+                        internalObj[ic.englishName] = false;
+                    else if(this.getColumnType(ic.englishName)===0 || this.getColumnType(ic.englishName)===3 || this.getColumnType(ic.englishName)===4) //int or float or currency
+                        internalObj[ic.englishName] = 0;
+                    else
                     internalObj[ic.englishName] = "";
+                }
+                    
             });
 
             array.push(internalObj);
@@ -182,6 +192,7 @@ export default  class  TableBookmark extends Mixins(BookmarkMixin){
     }
 
     onTableDataSet(tablesData: any){
+       
         if(!this.bookmark)return;
         const data = tablesData[this.bookmark.englishName];
         if(!data)return;
@@ -194,6 +205,7 @@ export default  class  TableBookmark extends Mixins(BookmarkMixin){
             const rowData = {} as any;
             rowData.rowIndex = index;
             rowData.data = row;
+            rowData.tableName = this.englishName;
             const obj = {} as any;
             this.invisibleColumns.forEach(ic=>{
                 obj[ic.englishName] = row[ic.englishName]; 
@@ -277,6 +289,14 @@ export default  class  TableBookmark extends Mixins(BookmarkMixin){
 
     beforeDestroy(){
         store.state.eventHub.$off("tablerow-add-requested",this.onTableRowAddRequested);
+    }
+    getColumnType(columnName: string){
+        if(!this.bookmark)return 1;
+        if(!this.bookmark.tableColumns)return 1;
+        const column =  this.bookmark.tableColumns.find(x=>x.englishName === columnName);
+        if(column)
+            return column.type;
+        return 1;
     }
 }
 </script>

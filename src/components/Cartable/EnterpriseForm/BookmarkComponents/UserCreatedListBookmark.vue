@@ -59,6 +59,10 @@ export default  class  UserCreatedListBookmark extends Mixins(BookmarkMixin){
             data.Id = this.tableColumnBookmark.defaultValue;
             data.Value = this.tableColumnBookmark.defaultValue;
         }
+        else if(this.bookmark && this.bookmark.defaultValue){
+             data.Id = this.bookmark.defaultValue;
+            data.Value = this.bookmark.defaultValue;
+        }
         this.value = data;
     }
     onValueSelected(value: ValidValues){

@@ -39,6 +39,9 @@ export default  class  CurrencyBookmark extends Mixins(BookmarkMixin){
         this.value = parseInt(this.amount.replace(',',''));
          this.$emit("value-changed",this.englishName);
     }
+    onValueChanged(){
+        this.amount = this.formatMoney((this.value as number).toString());
+    }
 }
 </script>
 

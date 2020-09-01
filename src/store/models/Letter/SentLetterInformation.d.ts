@@ -1,3 +1,5 @@
+import { EnterpriseFormValidatorResult } from "../EnterpriseForm/EnterpriseFormValidatorResult";
+
 export default interface SentLetterInformation{
     letterNumber: string;
     sendTime: string;
@@ -13,10 +15,4 @@ export default interface SentLetterInformation{
 export interface SendLetterAndSaveDraftResults{
     letterNo: string;
     isAnyDraftSaved: boolean|null;
-}
-
-export interface EnterpriseFormValidatorResult{
-    errors: string[],
-    hasError: boolean;
-    newValues: any[];
 }

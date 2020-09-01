@@ -23,6 +23,8 @@ import FormFormatRow from '@/components/Cartable/EnterpriseForm/EnterpriseFormCo
 import store from '@/store';
 import { NextFormInfo } from '@/store/models/EnterpriseForm/NextFormInfo';
 import BookmarkMixin from '../BookmarkComponents/BookmarkMixin';
+import IntegerBookmark from '../BookmarkComponents/IntegerBookmark.vue';
+import FloatBookmark from '../BookmarkComponents/FloatBookmark.vue';
 
 @Component
 export default class EnterpriseFormContainer extends Vue{
@@ -206,6 +208,7 @@ export default class EnterpriseFormContainer extends Vue{
         this.drawForm();
         if(this.shallNextFormLoaded)
             this.loadNextForm();
+        this.callClientSideInitialize();
     }
 
     
@@ -227,22 +230,17 @@ export default class EnterpriseFormContainer extends Vue{
     }
 
     async onFormParameterChanged(parameterName: string){
-        // const x = 1;
-        // if(x===1)return;
-
+        
         if(this.propertyChanedLock)return;
-        //alert(parameterName);
         if(!this.form)return;
         const tableNames = this.getFormTableNames();
         const formData = this.getFormData();
         const formParameters = [] as any[];
-        
         for(const key in formData){
             if(key!='tableName' && !tableNames.includes(key)){
                 formParameters.push(formData[key]);
             }
         }
-        //adding invisible values to form parameters
         this.invisibleBookmarks.forEach(invisibleItem=>{
             formParameters.push(invisibleItem);
         });
@@ -267,6 +265,53 @@ export default class EnterpriseFormContainer extends Vue{
             const tableParameters = JSON.parse(tableParametersStr);
             store.state.eventHub.$emit("tabledata-set-request",tableParameters);
         }
+    }
+    async callClientSideInitialize(){
+        if(!this.form)return;
+        const tableNames = this.getFormTableNames();
+        const formData = this.getFormData();
+        const formParameters = [] as any[];
+        for(const key in formData){
+            if(key!='tableName' && !tableNames.includes(key)){
+                formParameters.push(formData[key]);
+            }
+        }
+        this.invisibleBookmarks.forEach(invisibleItem=>{
+            formParameters.push(invisibleItem);
+        });
+        const tablesData = {} as any;
+        tableNames.forEach(tn=>tablesData[tn] = formData[tn]);
+        const ownerId =  store.state.ownerId;
+        const parametersValue =  JSON.stringify(formParameters);
+        const tableParametersValue = JSON.stringify(tablesData);
+        const behindCodeResults =  await enterpriseFormService.getClientSideInitialEvaluateResult(this.form.id,ownerId,parametersValue,tableParametersValue);
+
+        
+        if(behindCodeResults.hasError)
+            this.$emit("errors-exposed",behindCodeResults.errors);
+        else
+            this.$emit("no-errors");
+        const newValues = behindCodeResults.newValues;
+     
+        tableNames.forEach((tName: string)=>{
+        const lowerStartTName = tName.substring(0,1).toLowerCase() + tName.substring(1,tName.length);
+        
+            if(newValues[lowerStartTName]){
+                
+                const tableRows =  JSON.parse(newValues[lowerStartTName]);
+                store.state.eventHub.$emit('tablerow-add-requested',{tableName: tName,rowCount: tableRows.length});
+                const tData = {} as any;
+                tData[tName] = tableRows;
+                store.state.eventHub.$emit("tabledata-set-request",tData);
+            }
+        });
+        //store.state.eventHub.$emit("newvalues-set-request",newValues);
+        // const tableParametersStr = behindCodeResults.;
+        // if(tableParametersStr)
+        // {
+        //     const tableParameters = JSON.parse(tableParametersStr);
+             
+        // }
     }
     propertyChanedLock = false;
     loadNextForm(){

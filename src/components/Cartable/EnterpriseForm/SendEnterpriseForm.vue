@@ -169,6 +169,7 @@ export default class SendEnterpriseForm extends Vue{
         $('.popup').popup({onShow: this.shallShowError});
     }
     shallShowError(){
+        $('.popup').css('max-height', $(window).height());
         return this.errors != '';
     }
     onNoErrors(){
@@ -254,3 +255,9 @@ export default class SendEnterpriseForm extends Vue{
     }
 }
 </script>
+
+<style lang="less" scoped>
+    .popup{
+        overflow:auto;
+    }
+</style>

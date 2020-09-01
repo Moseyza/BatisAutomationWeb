@@ -2,9 +2,10 @@ import * as api from '@/store/api';
 import { EnterpriseForm } from '../models/EnterpriseForm/EnterpriseForm';
 import { EnterpriseFormValidValues } from '../models/EnterpriseForm/EnterpriseFormValidValues';
 import { LetterOwnerWithFaxAndEmails } from '../models/LetterOwner/LetterOwnerWithFaxAndEmails';
-import SentLetterInformation from '../models/Letter/SentLetterInformation';
 import axios from 'axios';
 import { NextFormInfo } from '../models/EnterpriseForm/NextFormInfo';
+import { EnterpriseFormValidatorResult } from '../models/EnterpriseForm/EnterpriseFormValidatorResult';
+import SentLetterInformation from '../models/Letter/SentLetterInformation';
 
 
 
@@ -44,10 +45,10 @@ export async function getCodeBehindExecutionResult(formId: string,ownerId: strin
     }
 }
 
-export async function getClientSideInitializeResult(formId: string,ownerId: string,parametersValue: string, tableParameterValues: string, changedParameterName: string ){
+export async function getClientSideInitializeResult(formId: string,ownerId: string,parametersValue: string, tableParameterValues: string){
     try {
         
-        const serverResult =  await api.batisAutomationApi.post("/EnterpriseForms/ClientSideInitialize",{formId: formId,ownerId: ownerId,parametersValue: parametersValue, TableParametersValue: tableParameterValues, ChangedParameterName: changedParameterName });
+        const serverResult =  await api.batisAutomationApi.post("/EnterpriseForms/ClientSideInitialize",{formId: formId,ownerId: ownerId,parametersValue: parametersValue, TableParametersValue: tableParameterValues });
         return serverResult.data as string;
     } 
     catch (error) {
@@ -55,6 +56,18 @@ export async function getClientSideInitializeResult(formId: string,ownerId: stri
         return {} as string;    
     }
 }
+
+export async function getClientSideInitialEvaluateResult(formId: string,ownerId: string,parametersValue: string, tableParameterValues: string): Promise<EnterpriseFormValidatorResult>{
+    try {
+        const serverResult =  await api.batisAutomationApi.post("/EnterpriseForms/ClientSideInitialEvaluate",{formId: formId,ownerId: ownerId,parametersValue: parametersValue, TableParametersValue: tableParameterValues });
+        return serverResult.data as EnterpriseFormValidatorResult;
+    } 
+    catch (error) {
+        console.log(error);
+        return {} as EnterpriseFormValidatorResult;    
+    }
+}
+
 
 export async function getFormReceivers(formId: string,senderId: string,dependentLetterId: string ): Promise<LetterOwnerWithFaxAndEmails[]>{
     try {

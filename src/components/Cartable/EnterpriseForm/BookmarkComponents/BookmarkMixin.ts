@@ -11,6 +11,7 @@ export default class BookmarkMixin extends Vue{
     @Prop() maxLabelWidth?: number;
     @Prop() parentTableName?: string;
     @Prop() tableRowIndex?: number;
+    rowsCount = 0;//only for table bookmark
     value: any = {};
     valueId = '';
     @Watch('value')
@@ -63,6 +64,12 @@ export default class BookmarkMixin extends Vue{
 
     get isMandatoryValueSupplied(){
         if(!this.isMandatory)return true;
+        if(this.bookmark){
+            if(this.bookmark.type === 18){
+                if(this.rowsCount === 0){ return false;}
+                else return true;
+            }
+        }
         const result = this.value !=='' && this.value !== ({} as any) && this.value !== undefined;
         if(!result)alert(this.englishName);
         return result;
@@ -123,10 +130,18 @@ export default class BookmarkMixin extends Vue{
             const data  = {} as any;
             if(eventArg.tableName === ''){
                 if(!this.bookmark)return;
+                // if(this.bookmark.englishName === "ClientName"){
+                //     console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+                //     console.log(this.value);
+                //     console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+                // }
                 data.Id = this.bookmark.id;
                 data.Name = this.bookmark.englishName;
                 if(this.bookmark.type === 13){//file bookmark
                     data.Value = this.value.id;
+                }
+                if(this.bookmark.type === 15){//company bookmark
+                    data.Value = this.value.Id
                 }
                 else{
                     if(this.value.Value)
@@ -145,6 +160,7 @@ export default class BookmarkMixin extends Vue{
                             eventArg.tableData[this.tableRowIndex][this.tableColumnBookmark.englishName] = {Id: this.value.id,Name:this.value.extension}    
                         else{
                         //if(this.value === undefined)this.value = '';
+                            
                             eventArg.tableData[this.tableRowIndex][this.tableColumnBookmark.englishName] = this.value;    
                         }
            
@@ -156,6 +172,7 @@ export default class BookmarkMixin extends Vue{
     setValueInTableRow(eventArg: any){
         if(this.tableRowIndex === undefined)return;
         if(eventArg.rowIndex !== this.tableRowIndex)return;
+        if(eventArg.tableName !== this.parentTableName)return;
         if(!this.tableColumnBookmark)return;
         if(eventArg.data && eventArg.data[this.tableColumnBookmark.englishName])
             this.value = eventArg.data[this.tableColumnBookmark.englishName];
