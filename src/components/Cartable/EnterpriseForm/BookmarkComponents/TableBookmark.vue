@@ -61,6 +61,7 @@ export default  class  TableBookmark extends Mixins(BookmarkMixin){
         if(!this.bookmark)return;
         //if(!this.bookmark.columnFormat)return;
         const columnFormat = this.getColumnFormat();
+       // alert(columnFormat);
         const rows =  columnFormat.split(',');
         this.formatCells = [];
         const FormFormatRowClass = Vue.extend(FormFormatRow);
@@ -80,10 +81,13 @@ export default  class  TableBookmark extends Mixins(BookmarkMixin){
         const rowContainerInstance = new rowContainerClass({propsData: {rowIndex:this.rowsCount-1,tableName: this.englishName} });
         rowContainerInstance.$mount();
         this.formatRow(rowContainerInstance);
+        let visibleIndex = 0;
         this.bookmark.tableColumns.forEach((columnBookmark,index)=>{
-        const col = this.getCol(index);
-        const formatRowIndex = col.rowIndex;
             if(columnBookmark && columnBookmark.isVisible){
+                //const col = this.getCol(index);
+                const col = this.getCol(visibleIndex);
+                visibleIndex++
+                const formatRowIndex = col.rowIndex;
                 const columnComponent = this.getColumnBookmarkComponent(columnBookmark);
                 if(columnComponent){
                     if(this.formatCells[formatRowIndex])

@@ -91,10 +91,16 @@ export default class SimpleLookup extends Vue {
         this.isDropdownShown = false;
     }
     setValueFromProp(){
-        if(!this.validValues || !this.valueProp)return;
-        const val =  this.validValues.find(item=>item.item2.trim() === (this.valueProp as string).trim() );
+        if(!this.validValues || !this.valueProp )return;
+        if(typeof this.valueProp  !== 'string')return;
+        let val =  this.validValues.find(item=>item.item2.trim() === (this.valueProp as string).trim() );
         if(val)
             this.selectedValue = val;
+        else{
+            val = this.validValues.find(item=>item.item1.trim() === (this.valueProp as string).trim() );
+            if(val)
+                this.selectedValue = val;
+        }
     }
 }
 </script>

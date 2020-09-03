@@ -28,6 +28,9 @@ export default  class  FloatBookmark extends Mixins(BookmarkMixin){
         if(!isNaN(this.amount))
             this.value = parseFloat(this.amount.toString());
     }
+    onValueChanged(){
+        this.amount = this.value;
+    }
 }
 </script>
 

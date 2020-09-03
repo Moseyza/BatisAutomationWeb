@@ -130,11 +130,6 @@ export default class BookmarkMixin extends Vue{
             const data  = {} as any;
             if(eventArg.tableName === ''){
                 if(!this.bookmark)return;
-                // if(this.bookmark.englishName === "ClientName"){
-                //     console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-                //     console.log(this.value);
-                //     console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-                // }
                 data.Id = this.bookmark.id;
                 data.Name = this.bookmark.englishName;
                 if(this.bookmark.type === 13){//file bookmark

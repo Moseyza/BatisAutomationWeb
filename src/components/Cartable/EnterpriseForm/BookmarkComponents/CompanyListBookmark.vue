@@ -50,7 +50,10 @@ export default  class  CompanyListBookmark extends Mixins(BookmarkMixin){
     }
     onValueChanged(){
         if(this.value)
-            this.valueProp = this.value.Value;
+            if(this.value.Value)
+                this.valueProp = this.value.Value;
+            else 
+                this.valueProp = this.value;
     }
     
 }
