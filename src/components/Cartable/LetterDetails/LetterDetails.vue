@@ -140,6 +140,10 @@ export default class LetterDetails extends Vue {
     nextEnterpriseForms = [] as EnterpriseForm[];
     @Watch("letter")
     onLetterChanged(newVal: Letter, oldVal: Letter){
+        // if(this.letter){
+        //     alert(this.letter.id);
+        //     alert(this.letter.letterPossessionId);
+        // }
         this.setIsReceived();
         this.setPdfUrl();
         this.canFinalize = !newVal.isClosed;

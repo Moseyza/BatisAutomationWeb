@@ -179,6 +179,10 @@ export default  class  TableBookmark extends Mixins(BookmarkMixin){
                 else{
                     if(this.getColumnType(ic.englishName) === 2)//invisible column is of type boolean
                         internalObj[ic.englishName] = false;
+                    // else if(this.getColumnType(ic.englishName) === 13)//invisible column is of type custom query
+                    //     internalObj[ic.englishName] = {Id:"",Value:""};
+                    else if(this.getColumnType(ic.englishName) === 16)//invisible column is of type file
+                        internalObj[ic.englishName] = {Name:"",Id:"00000000-0000-0000-0000-000000000000"};
                     else if(this.getColumnType(ic.englishName)===0 || this.getColumnType(ic.englishName)===3 || this.getColumnType(ic.englishName)===4) //int or float or currency
                         internalObj[ic.englishName] = 0;
                     else

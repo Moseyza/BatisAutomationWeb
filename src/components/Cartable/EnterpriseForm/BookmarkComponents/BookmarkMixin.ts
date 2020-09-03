@@ -152,14 +152,16 @@ export default class BookmarkMixin extends Vue{
                 if(eventArg.tableData)
                     if(eventArg.tableData[this.tableRowIndex])
                         if(this.tableColumnBookmark.type === 16)//column bookmark is a file
-                            eventArg.tableData[this.tableRowIndex][this.tableColumnBookmark.englishName] = {Id: this.value.id,Name:this.value.extension}    
+                        {
+                            if(this.value.id)
+                                eventArg.tableData[this.tableRowIndex][this.tableColumnBookmark.englishName] = {Id: this.value.id,Name:this.value.extension}    
+                            else
+                                eventArg.tableData[this.tableRowIndex][this.tableColumnBookmark.englishName] = {Id: "00000000-0000-0000-0000-000000000000",Name:""}    
+                        }
                         else{
                         //if(this.value === undefined)this.value = '';
-                            
                             eventArg.tableData[this.tableRowIndex][this.tableColumnBookmark.englishName] = this.value;    
                         }
-           
-                
             }
         }
     }
