@@ -14,6 +14,7 @@ import UserCreatedListBookmark from '@/components/Cartable/EnterpriseForm/Bookma
 import KeyboardTimeBookmark from '@/components/Cartable/EnterpriseForm/BookmarkComponents/KeyboardTimeBookmark.vue';
 import CustomQueryListBookmark from '@/components/Cartable/EnterpriseForm/BookmarkComponents/CustomQueryListBookmark.vue';
 import CompanyListBookmark from '@/components/Cartable/EnterpriseForm/BookmarkComponents/CompanyListBookmark.vue';
+import CompanyLetterOwnerListBookmark from '@/components/Cartable/EnterpriseForm/BookmarkComponents/CompanyLetterOwnerListBookmark.vue';
 import {EnterpriseForm} from '@/store/models/EnterpriseForm/EnterpriseForm';
 import { EnterpriseFormBookmark } from '@/store/models/EnterpriseForm/EnterpriseFormBookmark';
 import * as enterpriseFormService from '@/store/Services/enterpriseFormService';
@@ -66,9 +67,12 @@ export default class EnterpriseFormContainer extends Vue{
         if(!this.form)return;
         if(!this.form.bookmarks)return;
         this.invisibleBookmarks.length = 0;
+        let visibleIndex = 0;
         this.form.bookmarks.forEach((bookmark,index) => {
-            if(bookmark.isVisibleInSend)
-                this.addBookmarkToForm(bookmark,index);    
+            if(bookmark.isVisibleInSend){
+                this.addBookmarkToForm(bookmark,visibleIndex);    
+                visibleIndex++;
+            }
             else 
                 this.addToInvisibleBookmarks(bookmark);
         });
@@ -112,6 +116,9 @@ export default class EnterpriseFormContainer extends Vue{
                 break;
             case 15://company
                 componentClass = Vue.extend(CompanyListBookmark);
+                break;
+            case 16://company letter owner
+                componentClass = Vue.extend(CompanyLetterOwnerListBookmark);
                 break;
             case 18://table
                 componentClass = Vue.extend(TableBookmark);
@@ -285,8 +292,7 @@ export default class EnterpriseFormContainer extends Vue{
         const parametersValue =  JSON.stringify(formParameters);
         const tableParametersValue = JSON.stringify(tablesData);
         const behindCodeResults =  await enterpriseFormService.getClientSideInitialEvaluateResult(this.form.id,ownerId,parametersValue,tableParametersValue);
-
-        
+        if(!behindCodeResults)return;
         if(behindCodeResults.hasError)
             this.$emit("errors-exposed",behindCodeResults.errors);
         else

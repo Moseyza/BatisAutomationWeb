@@ -97,6 +97,7 @@ export default class SendEnterpriseForm extends Vue{
     }
 
     async loadReceivers(){
+        console.log("test");
         if(!this.form)return;
         const senderId =  store.state.ownerId;
         this.formReceivers =  await enterpriseFormService.getFormReceivers(this.form.id,senderId,'');

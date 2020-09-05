@@ -4,6 +4,7 @@ import { LetterOwner } from '@/store/models/LetterOwner/LetterOwner';
 import { LetterOwnerWithFaxAndEmails } from '@/store/models/LetterOwner/LetterOwnerWithFaxAndEmails';
 import { LetterOwnerWithSendingInformationAndAttachments } from '../models/LetterOwner/LetterOwnerWithSendingInformationAndAttachments';
 import { LetterOwnerForSendingFaxAndEmailAndSms } from '../models/LetterOwner/LetterOwnerForSendingFaxAndEmailAndSms';
+import { CompanyLetterOwner } from '../models/LetterOwner/CompanyLetterOwner';
 
 export async function getArchiveFolders(ownerId: string): Promise<OwnerFolder[]>{
     try {
@@ -30,6 +31,17 @@ export async function getOwnerRecipients(ownerId: string): Promise<LetterOwnerWi
 export async function getAllLetterOwners(): Promise<LetterOwner[]>{
     try {
         const serverResult =  await api.batisAutomationApi.post("/LetterOwners/All",{});
+        return serverResult.data as LetterOwner[];
+    } 
+    catch (error) {
+        console.log(error);
+        return {} as LetterOwner[];    
+    }
+}
+
+export async function getAllCompanyLetterOwners(): Promise<LetterOwner[]>{
+    try {
+        const serverResult =  await api.batisAutomationApi.post("/LetterOwners/CompanyLetterOwners",{});
         return serverResult.data as LetterOwner[];
     } 
     catch (error) {
