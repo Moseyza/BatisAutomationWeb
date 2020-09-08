@@ -6,7 +6,12 @@
             <span style="float:left">:</span>
         </div>
         <div style="flex:1;padding:0 5px">
-            <SimpleLookup :validValues="validValues" :valueProp="valueProp" :color="columnColor" @value-selected="onValueSelected" />
+            <SimpleLookup 
+            :validValues="validValues" 
+            :valueProp="valueProp" 
+            :color="columnColor" 
+            ::allowUserEntry="false"
+            @value-selected="onValueSelected" />
         </div>
     </div>
 </template>

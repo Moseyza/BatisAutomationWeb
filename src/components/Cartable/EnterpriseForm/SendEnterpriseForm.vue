@@ -17,7 +17,14 @@
                 </div>
                 <div style="flex:10">
                     <RecipientLookup  v-if="shallShowCopyLookup"  :recipients="copyReceivers" @recipient-selected="selectRecipient($event,'copy')"   />    
-                    <FastSendRecipientSelector  @additem-requested="onAddRecipientRequest('copy')" style="flex:10" :autoCompleteDataType="'copy'"  :recipients="selectedCopyRecipients" @recipient-removed="onRecipientRemoved($event,'copy')"/>
+                    <FastSendRecipientSelector  
+                    @additem-requested="onAddRecipientRequest('copy')" 
+                    style="flex:10" 
+                    :autoCompleteDataType="'copy'"  
+                    :recipients="selectedCopyRecipients" 
+                    @recipient-removed="onRecipientRemoved($event,'copy')"
+                    
+                    />
                 </div>
             </div>
             <div v-if="draftReceivers.length>0" class="symmetric-grid" style="margin-bottom: 5px">
@@ -97,7 +104,7 @@ export default class SendEnterpriseForm extends Vue{
     }
 
     async loadReceivers(){
-        console.log("test");
+        
         if(!this.form)return;
         const senderId =  store.state.ownerId;
         this.formReceivers =  await enterpriseFormService.getFormReceivers(this.form.id,senderId,'');
@@ -189,11 +196,12 @@ export default class SendEnterpriseForm extends Vue{
         }
         this.sending = true;
         const sendFormDto = {} as any;
-        const mandatoryValidation = {allValuesSupplied: true} as any;
+        const mandatoryValidation = {allValuesSupplied: true,errors:[]} as any;
         store.state.eventHub.$emit("mandatory-values-validation",mandatoryValidation);
         if(!mandatoryValidation.allValuesSupplied)
         {
             this.errors = this.mandatoryValuesErrorMessage;
+            console.log(mandatoryValidation.errors);
             $('.popup').popup({onShow: this.shallShowError});
             this.sending = false;
             return;
@@ -214,16 +222,23 @@ export default class SendEnterpriseForm extends Vue{
         if(this.nextFormInfo)
             sendFormDto.dependentLetterId = this.nextFormInfo.dependentLetterId;
         
-        const sendResults =  await enterpriseFormService.sendEnterpriseForm(sendFormDto);
+        const sendingResults =  await enterpriseFormService.sendEnterpriseForm(sendFormDto);
         this.sending = false;
-        if(sendResults){
-            if(sendResults.letterNumber != ''){
+        if(!sendingResults.hasError){
+            if(sendingResults.sentLetterInformation.letterNumber != ''){
                 this.msgBoxMessageType = 'success';
                 this.msgBoxButtons = 'ok';
-                this.msgBoxMessage = `نامه با شماره ${sendResults.letterNumber} ارسال گردید.`
+                this.msgBoxMessage = `نامه با شماره ${sendingResults.sentLetterInformation.letterNumber} ارسال گردید.`
                 this.shallShowMsgBox = true;
                 this.isFormSent = true;
             }
+        }
+        else{
+            this.msgBoxMessageType = 'fail';
+            this.msgBoxButtons = 'ok';
+            this.msgBoxMessage = sendingResults.errorMessage;
+            this.shallShowMsgBox = true;
+            this.isFormSent = true;
         }
     }
     cancel(){

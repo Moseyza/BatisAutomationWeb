@@ -70,14 +70,24 @@ export default class BookmarkMixin extends Vue{
                 else return true;
             }
         }
-        const result = this.value !=='' && this.value !== ({} as any) && this.value !== undefined;
-        if(!result)alert(this.englishName);
+        let result = this.value !=='' && this.value !== ({} as any) && this.value !== undefined;
+        if(this.value.Id !== undefined && this.value.Value !== undefined){
+            result = result && (this.value.Value !== "" && this.value.Id !== "");
+        }
+        //if(!result)alert(this.englishName);
         return result;
 
     }
 
     onMandatoryValueValidation(e: any){
-        e.allValuesSupplied = e.allValuesSupplied && this.isMandatoryValueSupplied;
+        const isSupplied = this.isMandatoryValueSupplied;
+        e.allValuesSupplied = e.allValuesSupplied && isSupplied;
+        if(!isSupplied) 
+        {
+            let errorMsg = this.persianName;
+            if(this.tableRowIndex != undefined) errorMsg = errorMsg + " سطر: " + (this.tableRowIndex+1) 
+            e.errors.push(errorMsg);
+        }
         
     }
     onTableRowRemoved(rowInfo: any){
@@ -94,7 +104,10 @@ export default class BookmarkMixin extends Vue{
         attachedFile.fileId = file.id;
         attachedFile.fileContent = file.content;
         attachedFile.fileName = file.extension;
-        attachedFile.bookmarkName = this.englishName;
+        if(this.tableRowIndex !== undefined && this.parentTableName)
+            attachedFile.bookmarkName = this.parentTableName + "|" + this.englishName + "|" + this.tableRowIndex + "|" + file.id + "|" + file.extension;
+        else
+            attachedFile.bookmarkName = this.englishName + "|" + file.id + "|" + file.extension;
         attachedFiles.push(attachedFile);
     }
     created(){
@@ -173,6 +186,11 @@ export default class BookmarkMixin extends Vue{
         if(!this.tableColumnBookmark)return;
         if(eventArg.data && eventArg.data[this.tableColumnBookmark.englishName])
             this.value = eventArg.data[this.tableColumnBookmark.englishName];
+        // if(this.tableRowIndex === 4 && this.tableColumnBookmark.type === 16)
+        // {
+        //     console.log(eventArg.data[this.tableColumnBookmark.englishName]);
+        // }
+            
         
         
     }

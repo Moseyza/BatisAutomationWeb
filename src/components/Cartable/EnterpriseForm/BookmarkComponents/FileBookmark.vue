@@ -61,6 +61,17 @@ export default  class  FileBookmark extends Mixins(BookmarkMixin){
 
     clearFile(){
         this.isFileSelected = false;
+        this.value = {Name:"",Id:"00000000-0000-0000-0000-000000000000"}
+    }
+
+    onValueChanged(newVal: any, oldVal: any){
+        if(this.value.Name && this.value.Id){
+            const attachedFile = {} as File;
+            attachedFile.id = this.value.Id;
+            attachedFile.extension = this.value.Name;
+            this.value = attachedFile;
+            this.isFileSelected = true;
+        }
     }
     
 }

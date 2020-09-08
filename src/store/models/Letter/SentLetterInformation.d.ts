@@ -16,3 +16,10 @@ export interface SendLetterAndSaveDraftResults{
     letterNo: string;
     isAnyDraftSaved: boolean|null;
 }
+
+export  interface SendingFormResults
+{
+    hasError: boolean;
+    sentLetterInformation: SentLetterInformation;
+    errorMessage: string;
+}

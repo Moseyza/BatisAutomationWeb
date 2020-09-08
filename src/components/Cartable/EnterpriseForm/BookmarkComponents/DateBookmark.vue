@@ -6,7 +6,7 @@
             <span style="float:left">:</span>
         </div>
         <div style="flex:1;display:flex;padding:0 5px">
-            <input style="border:none;outline:none;" type="text" v-model="value" :id='englishName' placeholder="__/__/_____"> <VuePersianDatetimePicker :clearable="true" :element="englishName" v-model="value" />
+            <input style="border:none;outline:none;" type="text" v-model="value" :id='controlName' placeholder="__/__/_____"> <VuePersianDatetimePicker :clearable="true" :element="controlName" v-model="value" />
             <button @click="clear" class="button"  style="margin-right:5px;padding:1px;" ><i  class="icon-clearSearch"></i></button>
         </div>
     </div>
@@ -20,6 +20,12 @@ import VuePersianDatetimePicker from 'vue-persian-datetime-picker';
     components: {VuePersianDatetimePicker}
 })
 export default  class  DateBookmark extends Mixins(BookmarkMixin){
+
+    get controlName(){
+        if(this.tableRowIndex != undefined)
+            return this.englishName + this.tableRowIndex;
+        else return this.englishName;
+    }
     created(){
         this.value = ''; //this.defaultValue;
     }

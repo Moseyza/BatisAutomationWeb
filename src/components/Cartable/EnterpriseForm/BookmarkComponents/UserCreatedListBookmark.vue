@@ -8,8 +8,9 @@
         <div style="flex:1;padding:0 5px">
             <SimpleLookup 
             :validValues="validValues" 
-            :valueProp="defaultValue" 
+            :valueProp="value.Value" 
             :color="columnColor" 
+            ::allowUserEntry="false"
             @value-selected="onValueSelected($event)" 
             @value-cleared="onValueCleared()" />
         </div>
@@ -76,5 +77,13 @@ export default  class  UserCreatedListBookmark extends Mixins(BookmarkMixin){
         this.value.Value = "";
         this.$emit("value-changed",this.englishName);
     }
+
+    onValueChanged(){
+        console.log("***************");
+        console.log(this.englishName);
+        console.log(this.value);
+        console.log("***************");
+    }
+
 }
 </script>

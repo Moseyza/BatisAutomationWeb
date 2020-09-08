@@ -14,6 +14,7 @@ import UserCreatedListBookmark from '@/components/Cartable/EnterpriseForm/Bookma
 import KeyboardTimeBookmark from '@/components/Cartable/EnterpriseForm/BookmarkComponents/KeyboardTimeBookmark.vue';
 import CustomQueryListBookmark from '@/components/Cartable/EnterpriseForm/BookmarkComponents/CustomQueryListBookmark.vue';
 import CompanyListBookmark from '@/components/Cartable/EnterpriseForm/BookmarkComponents/CompanyListBookmark.vue';
+import CurrencyBookmark from '@/components/Cartable/EnterpriseForm/BookmarkComponents/CurrencyBookmark.vue';
 import CompanyLetterOwnerListBookmark from '@/components/Cartable/EnterpriseForm/BookmarkComponents/CompanyLetterOwnerListBookmark.vue';
 import {EnterpriseForm} from '@/store/models/EnterpriseForm/EnterpriseForm';
 import { EnterpriseFormBookmark } from '@/store/models/EnterpriseForm/EnterpriseFormBookmark';
@@ -26,6 +27,9 @@ import { NextFormInfo } from '@/store/models/EnterpriseForm/NextFormInfo';
 import BookmarkMixin from '../BookmarkComponents/BookmarkMixin';
 import IntegerBookmark from '../BookmarkComponents/IntegerBookmark.vue';
 import FloatBookmark from '../BookmarkComponents/FloatBookmark.vue';
+import MonthBookmark from '../BookmarkComponents/MonthBookmark.vue';
+const onPropertyChangeCallQueue  = [] as any[];
+let isAnotherPropertyChangeCallInProgress = false;
 
 @Component
 export default class EnterpriseFormContainer extends Vue{
@@ -105,8 +109,14 @@ export default class EnterpriseFormContainer extends Vue{
             case 4://time
                 componentClass = Vue.extend(KeyboardTimeBookmark);
                 break;
+            case 7://Month
+                componentClass = Vue.extend(MonthBookmark);
+                break;
             case 9://shortString
                 componentClass = Vue.extend(StringBookmark);
+                break;
+            case 10://currency
+                componentClass = Vue.extend(CurrencyBookmark);
                 break;
             case 12://userCreated
                 componentClass = Vue.extend(UserCreatedListBookmark);
@@ -208,7 +218,7 @@ export default class EnterpriseFormContainer extends Vue{
     }
    
     async mounted(){
-        console.log(this.form);
+        
         if(this.form)
           this.formValidValues = await  enterpriseFormService.getFormValidValus(this.form.id);
         this.formatForm();
@@ -235,9 +245,21 @@ export default class EnterpriseFormContainer extends Vue{
         }); 
         return tableNames;
     }
-
     async onFormParameterChanged(parameterName: string){
-        
+        onPropertyChangeCallQueue.push(parameterName);
+        if(isAnotherPropertyChangeCallInProgress){
+            return;
+        }
+        isAnotherPropertyChangeCallInProgress = true;
+        while(onPropertyChangeCallQueue.length>0){
+            const p =onPropertyChangeCallQueue.shift();
+            await this.onFormParameterChanged2(p);
+        }
+        isAnotherPropertyChangeCallInProgress = false;
+    }
+    async onFormParameterChanged2(parameterName: string){
+        // const x = 1;
+        // if(x===1)return;
         if(this.propertyChanedLock)return;
         if(!this.form)return;
         const tableNames = this.getFormTableNames();
@@ -321,6 +343,7 @@ export default class EnterpriseFormContainer extends Vue{
     }
     propertyChanedLock = false;
     loadNextForm(){
+        console.log(this.form);
         this.propertyChanedLock = true;
         if(!this.nextFormInfo)return;
         if(!this.nextFormInfo.multipleValues.letters)return;

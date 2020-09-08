@@ -32,8 +32,10 @@ export default  class  CurrencyBookmark extends Mixins(BookmarkMixin){
         this.amount = this.formatMoney(this.amount);
     }
     formatMoney(amount: string) {
+        amount =  amount.replace(',','');
         const j = (amount.length > 3) ? amount.length % 3 : 0;
-        return  (j ? amount.substr(0, j) + "," : '') + amount.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + ",");
+        const result =   (j ? amount.substr(0, j) + "," : '') + amount.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + ",");
+        return result;
     }
     focusOut(){
         this.value = parseInt(this.amount.replace(',',''));

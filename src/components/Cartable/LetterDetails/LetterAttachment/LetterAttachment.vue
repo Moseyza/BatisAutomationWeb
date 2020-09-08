@@ -1,6 +1,6 @@
 <template>
     <div class="symmetric-grid  single-attachment">
-        <div class="xxsmall-text"  style="flex:3;white-space:nowrap;overflow:hidden;text-overflow: ellipsis">{{file.extension}}</div>
+        <div class="xxsmall-text"  style="flex:3;white-space:nowrap;overflow:hidden;">{{file.extension}}</div>
         <div class="xxsmall-text" style="flex:1 margin:0 3px"><i class="icon-download helper-icon-small" @click="downloadFile"></i></div>
         <i v-if="canRemove"  @click="remove()" class="icon-removeFile icon action-icon"></i>
     </div>
@@ -34,6 +34,11 @@
 
         remove(){
             this.$emit('remove',this.index);
+        }
+
+        @Watch('file')
+        onFileChanged(){
+            const test =  this.file;
         }
 
         

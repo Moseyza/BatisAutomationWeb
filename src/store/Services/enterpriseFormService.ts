@@ -5,7 +5,7 @@ import { LetterOwnerWithFaxAndEmails } from '../models/LetterOwner/LetterOwnerWi
 import axios from 'axios';
 import { NextFormInfo } from '../models/EnterpriseForm/NextFormInfo';
 import { EnterpriseFormValidatorResult } from '../models/EnterpriseForm/EnterpriseFormValidatorResult';
-import SentLetterInformation from '../models/Letter/SentLetterInformation';
+import SentLetterInformation, { SendingFormResults } from '../models/Letter/SentLetterInformation';
 
 
 
@@ -81,7 +81,7 @@ export async function getFormReceivers(formId: string,senderId: string,dependent
     }
 }
 
-export async function sendEnterpriseForm(sendFormDto: any): Promise<SentLetterInformation>{
+export async function sendEnterpriseForm(sendFormDto: any): Promise<SendingFormResults>{
     try {
         const formData = new FormData();
         const fileBookmarkNames = [] as string[];
@@ -102,11 +102,11 @@ export async function sendEnterpriseForm(sendFormDto: any): Promise<SentLetterIn
             'Content-Type': 'multipart/form-data; boundary=${form._boundary}'
             }
         });
-        return serverResult.data as SentLetterInformation;
+        return serverResult.data as SendingFormResults;
     } 
     catch (error) {
         console.log(error);
-        return {} as SentLetterInformation;    
+        return {} as SendingFormResults;    
     }
 }
 
