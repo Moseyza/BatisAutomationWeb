@@ -27,7 +27,10 @@ export default  class  DateBookmark extends Mixins(BookmarkMixin){
         else return this.englishName;
     }
     created(){
-        this.value = ''; //this.defaultValue;
+        if(this.defaultValue)
+            this.value = this.defaultValue;
+        else
+            this.value = ''; //this.defaultValue;
     }
 
     clear(){

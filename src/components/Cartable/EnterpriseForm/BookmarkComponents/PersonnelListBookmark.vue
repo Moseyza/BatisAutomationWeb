@@ -6,7 +6,12 @@
             <span style="float:left">:</span>
         </div>
         <div style="flex:1;padding:0 5px">
-            <SimpleLookup :validValues="validValues" :valueProp="valueProp" :color="columnColor" @value-selected="onValueSelected" />
+            <SimpleLookup 
+            :validValues="validValues" 
+            :valueProp="valueProp" 
+            :color="columnColor" @value-selected="onValueSelected"
+            ::allowUserEntry="false"
+             />
         </div>
     </div>
 </template>
@@ -16,33 +21,32 @@ import {Vue,Component,Prop, Watch,Mixins} from 'vue-property-decorator';
 import BookmarkMixin from './BookmarkMixin';
 import SimpleLookup from '@/components/Cartable/EnterpriseForm/SimpleLookup/SimpleLookup.vue';
 import { ValidValues } from '../../../../store/models/EnterpriseForm/EnterpriseFormValidValues';
+import * as personnelService from '@/store/Services/personnelService';
 
 @Component({
     components:{SimpleLookup}
 })
-export default  class  CustomQueryListBookmark extends Mixins(BookmarkMixin){
+export default  class  PersonnelListBookmark extends Mixins(BookmarkMixin){
    
     valueProp = "";
-    @Prop() validValues?: ValidValues;
+    validValues = [] as  ValidValues[];
     // get defaultValue(){
     //     if(this.tableColumnBookmark)
     //         return this.tableColumnBookmark.defaultValue;
     //     return '';
     // }
-    created(){
-        const data = {} as any;
-        data.Id = '';
-        data.Value = '';
-        if(this.tableColumnBookmark && this.tableColumnBookmark.defaultValue){
-            data.Id = this.tableColumnBookmark.defaultValue;
-            data.Value = this.tableColumnBookmark.defaultValue;
-        }
-        else if(this.bookmark && this.bookmark.defaultValue)
-        {
-            data.Id = this.bookmark.defaultValue;
-            data.Value = this.bookmark.defaultValue;
-        }
-        this.value = data;
+    async created(){
+        await this.setValidValues();
+    }
+    async setValidValues(){
+        this.validValues.length = 0;
+        const allPersonnel =  await personnelService.GetAllPersonnel();
+        allPersonnel.forEach(p=>{
+            const validVal = {} as ValidValues;
+            validVal.item1 = p.personnelId
+            validVal.item2 = `${p.firstName} ${p.lastName}`
+            this.validValues.push(validVal);
+        });
     }
     onValueSelected(value: ValidValues){
         this.value.Id = value.item1;
@@ -53,7 +57,7 @@ export default  class  CustomQueryListBookmark extends Mixins(BookmarkMixin){
         if(this.value)
             if(this.value.Value)
                 this.valueProp = this.value.Value;
-            else
+            else 
                 this.valueProp = this.value;
     }
     

@@ -28,6 +28,7 @@ import BookmarkMixin from '../BookmarkComponents/BookmarkMixin';
 import IntegerBookmark from '../BookmarkComponents/IntegerBookmark.vue';
 import FloatBookmark from '../BookmarkComponents/FloatBookmark.vue';
 import MonthBookmark from '../BookmarkComponents/MonthBookmark.vue';
+import PersonnelListBookmark from '../BookmarkComponents/PersonnelListBookmark.vue';
 const onPropertyChangeCallQueue  = [] as any[];
 let isAnotherPropertyChangeCallInProgress = false;
 
@@ -74,7 +75,7 @@ export default class EnterpriseFormContainer extends Vue{
         let visibleIndex = 0;
         this.form.bookmarks.forEach((bookmark,index) => {
             if(bookmark.isVisibleInSend){
-                this.addBookmarkToForm(bookmark,visibleIndex);    
+                this.addBookmarkToForm(bookmark,index);    
                 visibleIndex++;
             }
             else 
@@ -86,6 +87,8 @@ export default class EnterpriseFormContainer extends Vue{
         invisibleItem.Name = bookmark.englishName;
         invisibleItem.Id = bookmark.id;
         invisibleItem.Value = bookmark.defaultValue;
+        if((bookmark.type === 1 || bookmark.type === 2) && isNaN(parseInt(bookmark.defaultValue as string)))  
+            invisibleItem.Value = 0;
         this.invisibleBookmarks.push(invisibleItem);
     }
     addBookmarkToForm(bookmark: EnterpriseFormBookmark, index: number){
@@ -130,6 +133,9 @@ export default class EnterpriseFormContainer extends Vue{
             case 16://company letter owner
                 componentClass = Vue.extend(CompanyLetterOwnerListBookmark);
                 break;
+            case 17://Personnel
+                componentClass = Vue.extend(PersonnelListBookmark);
+                break;
             case 18://table
                 componentClass = Vue.extend(TableBookmark);
                 break;
@@ -143,12 +149,24 @@ export default class EnterpriseFormContainer extends Vue{
             props.maxLabelWidth = this.formLblWidth;
             if(bookmark.type === 18){
                 props.maxColumnLabelWidth = this.tableLblWidth;
+                if(this.formValidValues)
                 if(this.formValidValues.tableValidValues)
                 {
                        const currentTableValues =  this.formValidValues.tableValidValues.find(item=>item.tableName === bookmark.englishName);
                        if(currentTableValues)
                             props.validValues = currentTableValues;
                 }
+            }
+            else{
+                if(this.formValidValues)
+                if(this.formValidValues.formValidValues)
+                {
+                    
+                    const currentBookmarkValidValues = (this.formValidValues.formValidValues as any)[this.firstLetterToLowerCase(bookmark.englishName)];
+                    if(currentBookmarkValidValues)
+                        props.validValues = currentBookmarkValidValues;
+                }
+
             }
             const instance = new componentClass({propsData: props});
             instance.$on("value-changed",(e: string)=>{this.onFormParameterChanged(e)});
@@ -187,7 +205,8 @@ export default class EnterpriseFormContainer extends Vue{
         if(!this.form)return '';
         if(!this.form.bookmarks)return'';
         if(this.form.columnFormat != undefined && this.form.columnFormat != ""){
-            const visibleBookmarks =  this.form.bookmarks.filter(bm=>bm.isVisibleInSend); 
+            const visibleBookmarks =  this.form.bookmarks//.filter(bm=>bm.isVisibleInSend); 
+            //const tableBookmarkCount =  (visibleBookmarks.filter(bm=>bm.type === 18)).length;
             const splited =  this.form.columnFormat.split(',');
             let columnFormatSum = 0;
             splited.forEach(x=>{ columnFormatSum += parseInt(x)});
@@ -208,7 +227,7 @@ export default class EnterpriseFormContainer extends Vue{
         let result = "";
         if(!this.form.bookmarks)return '';
         for(let i = 0;i<this.form.bookmarks.length; i++){
-            if(this.form.bookmarks[i].isVisibleInSend)
+            if(this.form.bookmarks[i]/*.isVisibleInSend*/)
             {
                 if(result != "") result = result + ",1";
                 else result = result + "1";
@@ -218,7 +237,7 @@ export default class EnterpriseFormContainer extends Vue{
     }
    
     async mounted(){
-        
+        console.log(this.form);
         if(this.form)
           this.formValidValues = await  enterpriseFormService.getFormValidValus(this.form.id);
         this.formatForm();
@@ -258,8 +277,6 @@ export default class EnterpriseFormContainer extends Vue{
         isAnotherPropertyChangeCallInProgress = false;
     }
     async onFormParameterChanged2(parameterName: string){
-        // const x = 1;
-        // if(x===1)return;
         if(this.propertyChanedLock)return;
         if(!this.form)return;
         const tableNames = this.getFormTableNames();
@@ -321,8 +338,9 @@ export default class EnterpriseFormContainer extends Vue{
             this.$emit("no-errors");
         const newValues = behindCodeResults.newValues;
      
+        if(newValues)
         tableNames.forEach((tName: string)=>{
-        const lowerStartTName = tName.substring(0,1).toLowerCase() + tName.substring(1,tName.length);
+        const lowerStartTName = this.firstLetterToLowerCase(tName); //tName.substring(0,1).toLowerCase() + tName.substring(1,tName.length);
         
             if(newValues[lowerStartTName]){
                 
@@ -333,15 +351,12 @@ export default class EnterpriseFormContainer extends Vue{
                 store.state.eventHub.$emit("tabledata-set-request",tData);
             }
         });
-        //store.state.eventHub.$emit("newvalues-set-request",newValues);
-        // const tableParametersStr = behindCodeResults.;
-        // if(tableParametersStr)
-        // {
-        //     const tableParameters = JSON.parse(tableParametersStr);
-             
-        // }
     }
     propertyChanedLock = false;
+    firstLetterToLowerCase(str: string){
+        const result =  str.substring(0,1).toLowerCase() + str.substring(1,str.length);
+        return result;
+    }
     loadNextForm(){
         console.log(this.form);
         this.propertyChanedLock = true;
@@ -372,7 +387,6 @@ export default class EnterpriseFormContainer extends Vue{
         });
         store.state.eventHub.$emit("newvalues-set-request",bookmarkValues);
         this.propertyChanedLock = false;
-        //store.state.eventHub.$emit("tabledata-set-request",tableRows);
     }
 
     getFormDataForSending(){

@@ -107,7 +107,10 @@ export default class SendEnterpriseForm extends Vue{
         
         if(!this.form)return;
         const senderId =  store.state.ownerId;
-        this.formReceivers =  await enterpriseFormService.getFormReceivers(this.form.id,senderId,'');
+        let dependentLetterId = '';
+        if(this.nextFormInfo)
+            dependentLetterId = this.nextFormInfo.dependentLetterId;
+        this.formReceivers =  await enterpriseFormService.getFormReceivers(this.form.id,senderId,dependentLetterId);
         this.mainReceivers = this.formReceivers.filter(x=>x.canUserSend);
         this.copyReceivers = this.formReceivers.filter(x=>x.canUserSendCopy);
         this.draftReceivers = this.formReceivers.filter(x=>x.canUserSendDraft);

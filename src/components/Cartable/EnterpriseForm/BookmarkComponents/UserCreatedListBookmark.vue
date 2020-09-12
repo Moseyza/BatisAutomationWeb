@@ -79,10 +79,11 @@ export default  class  UserCreatedListBookmark extends Mixins(BookmarkMixin){
     }
 
     onValueChanged(){
-        console.log("***************");
-        console.log(this.englishName);
-        console.log(this.value);
-        console.log("***************");
+        if(typeof this.value === 'string'){
+            const  val = {Id:this.value,Value:this.value};
+            this.value = val;
+        }
+
     }
 
 }
