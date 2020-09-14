@@ -3,14 +3,14 @@
        
        <div class="flex-part-top">
             گیرنده اصلی:
-           <RecipientLookup :recipients="recipients" @recipient-selected="selectMainRecipient($event)"/>
-           <RecipientSelector :autoCompleteDataType="'all'" :recipients="selectedMainRecipients" 
+           <RecipientLookup v-if="shallShowMainLookup" :recipients="recipients" @recipient-selected="selectMainRecipient($event)"/>
+           <RecipientSelector  @additem-requested="onAddRecipientRequest('main')" :autoCompleteDataType="'all'" :recipients="selectedMainRecipients" 
            @recipient-removed="onMainRecipientRemoved($event)"
            />
 
             گیرنده رونوشت:
-           <RecipientLookup :recipients="recipients" @recipient-selected="selectCopyRecipient($event)"/>
-           <RecipientSelector :autoCompleteDataType="'copy'" :recipients="selectedCopyRecipients" 
+           <RecipientLookup v-if="shallShowCopyLookup" :recipients="recipients" @recipient-selected="selectCopyRecipient($event)"/>
+           <RecipientSelector @additem-requested="onAddRecipientRequest('copy')" :autoCompleteDataType="'copy'" :recipients="selectedCopyRecipients" 
            @recipient-removed="onCopyRecipientRemoved($event)"
            />
        </div>
@@ -37,8 +37,8 @@
                :messageType="messageType"
                @button-clicked="onMessageBoxBtnClicked($event)"/>
                <div v-else style="display:flex">
-                    <div @click="cancel" class="action-icon bg1" style="flex:1;text-align:center"><i style="color:inherit" class="icon icon-cancel"></i></div>
-                    <div @click="send" class="action-icon bg1" style="flex:1;text-align:center"><i style="color:inherit" class="icon icon-send"></i></div>
+                    <div @click="cancel" class="action-icon bg1" style="flex:1;text-align:center"><i style="color:inherit" class="icon icon-close"></i></div>
+                    <div @click="send" class="action-icon bg1" style="flex:1;text-align:center;font-size:x-large;"><i style="color:inherit" class="icon icon-sendForwardLetter"></i></div>
                </div>
               
         </div>
@@ -103,6 +103,7 @@ export default class ForwardLetter extends Vue{
     // }
     
     selectMainRecipient(recipient: LetterOwnerWithFaxAndEmails){
+        this.shallShowMainLookup = false;
         let addedItem =  this.selectedMainRecipients.find(item=>item.id === recipient.id);
         if(!addedItem) 
             addedItem = this.selectedCopyRecipients.find(item=>item.id === recipient.id);
@@ -116,6 +117,7 @@ export default class ForwardLetter extends Vue{
         this.selectedMainRecipients.splice(index,1);        
     }
     selectCopyRecipient(recipient: LetterOwnerWithFaxAndEmails){
+        this.shallShowCopyLookup = false;
         let addedItem =  this.selectedCopyRecipients.find(item=>item.id === recipient.id);
         if(!addedItem) 
             addedItem = this.selectedMainRecipients.find(item=>item.id === recipient.id);
@@ -181,6 +183,18 @@ export default class ForwardLetter extends Vue{
         this.shallShowMessageBox = false;
         if(this.isDone)
             this.cancel();
+    }
+    shallShowMainLookup = false;
+    shallShowCopyLookup = false;
+    onAddRecipientRequest(mode: string){
+        switch(mode){
+            case 'main':
+                this.shallShowMainLookup = true;
+                break;
+            case 'copy':
+                this.shallShowCopyLookup = true;
+                break;
+        }
     }
 }
 </script>

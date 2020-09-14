@@ -1,5 +1,5 @@
 <template>
-    <div id="selection-area">
+    <div class="selection-area">
         <SingleSelectedRecipient
         v-for="recipient in recipients"
         :key="recipient.id"
@@ -8,6 +8,7 @@
         @paraph="onParaph($event)"
         :autoCompleteDataType="autoCompleteDataType"
         />
+        <button class="button" @click="requestAddItem()"><i class="icon-plus"></i></button>
     </div>
 </template>
 
@@ -28,16 +29,19 @@ export default class RecipientSelector extends Vue{
     onParaph(recipientId: string){
         this.$emit('paraph',recipientId);
     }
-    
+     requestAddItem(){
+        this.$emit("additem-requested");
+    }
   
 
 }
 </script>
 
 <style lang="less" scoped>
-    #selection-area{
+    .selection-area{
         display: flex;
         flex-wrap: wrap;
+        align-items: center;
     }
 </style>
 

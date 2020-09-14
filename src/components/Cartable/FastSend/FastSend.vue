@@ -18,13 +18,8 @@
                 </div>
                 <div style="flex:10">
                     <RecipientLookup  v-if="shallShowDraftLookup"  :recipients="recipients" @recipient-selected="selectRecipient($event, 'draft')"   />    
+                    <FastSendRecipientSelector style="flex:10;flex-wrap: wrap;"  :autoCompleteDataType="'draft'" :recipients="selectedDraftRecipients" @recipient-removed="onRecipientRemoved($event,'draft')"   @additem-requested="onAddRecipientRequest('draft')"  />
                 </div>
-            </div>
-             <div v-if="mode=='draft'" class="symmetric-grid">
-            <div style="flex:1">
-
-            </div>
-            <FastSendRecipientSelector style="flex:10"  :autoCompleteDataType="'draft'" :recipients="selectedDraftRecipients" @recipient-removed="onRecipientRemoved($event,'draft')"   @additem-requested="onAddRecipientRequest('draft')"  />
             </div>
             <div v-if="mode=='send'" class="symmetric-grid" style="margin-bottom: 5px">
                 <div style="flex:1;margin-left:5px">
@@ -32,29 +27,17 @@
                 </div>
                 <div style="flex:10">
                     <RecipientLookup v-if="shallShowMainLookup"  :recipients="recipients" @recipient-selected="selectRecipient($event,'main')"   />    
+                    <FastSendRecipientSelector  style="flex:10;flex-wrap: wrap;" :autoCompleteDataType="'all'" :recipients="selectedMainRecipients" @recipient-removed="onRecipientRemoved($event,'main')"   @additem-requested="onAddRecipientRequest('main')" />
                 </div>
             </div>
-            <div v-if="mode=='send'" class="symmetric-grid">
-                <div style="flex:1">
-
-                </div>
-                <FastSendRecipientSelector  style="flex:10" :autoCompleteDataType="'all'" :recipients="selectedMainRecipients" @recipient-removed="onRecipientRemoved($event,'main')"   @additem-requested="onAddRecipientRequest('main')" />
-            </div>
-            
-
             <div v-if="mode=='send'" class="symmetric-grid" style="margin-bottom: 5px">
                 <div style="flex:1;margin-left:5px">
                  رونوشت 
                 </div>
                 <div style="flex:10">
                     <RecipientLookup   v-if="shallShowCopyLookup" :recipients="recipients" @recipient-selected="selectRecipient($event,'copy')"   />    
+                    <FastSendRecipientSelector style="flex:10;flex-wrap: wrap;" :autoCompleteDataType="'copy'"  :recipients="selectedCopyRecipients" @recipient-removed="onRecipientRemoved($event,'copy')"   @additem-requested="onAddRecipientRequest('copy')" />
                 </div>
-            </div>
-            <div v-if="mode=='send'" class="symmetric-grid">
-                <div style="flex:1">
-
-                </div>
-            <FastSendRecipientSelector style="flex:10" :autoCompleteDataType="'copy'"  :recipients="selectedCopyRecipients" @recipient-removed="onRecipientRemoved($event,'copy')"   @additem-requested="onAddRecipientRequest('copy')" />
             </div>
             
             
