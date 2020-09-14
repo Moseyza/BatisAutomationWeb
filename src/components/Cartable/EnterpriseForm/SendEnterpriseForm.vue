@@ -38,13 +38,22 @@
             </div>
         </div>
         <div class="flex-part-middle">
-            <EnterpriseFormContainer :formLblWidth="formLblWidth" :tableLblWidth="tableLblWidth"  :form="form" :nextFormInfo="nextFormInfo" @errors-exposed="onErrorsExposed($event)" @no-errors="onNoErrors()"/>
+            <EnterpriseFormContainer 
+            :formLblWidth="formLblWidth" 
+            :tableLblWidth="tableLblWidth"  
+            :form="form" 
+            :nextFormInfo="nextFormInfo" 
+            :draftFormInfo="draftFormInfo"
+            @errors-exposed="onErrorsExposed($event)" 
+            @no-errors="onNoErrors()"/>
         </div>
         <div class="flex-part-bottom container1" style="flex:0 1 auto">
             <InPlaceMessageBox v-if="shallShowMsgBox" :message="msgBoxMessage" :messageType="msgBoxMessageType" :buttons="msgBoxButtons" @button-clicked="onMsgBoxButtonClicked($event)"/>
             <div v-else style="display:flex">
                     <div  @click="cancel()" class="action-icon bg1" style="flex:1;text-align:center"><i style="color:inherit;font-size:xx-large" class=" icon-close"></i></div>
-                    <div  @click="send()" class="action-icon bg1 popup" :data-content="errors" style="flex:1;text-align:center"><i style="color:inherit;position:absolute" class=" icon-forwardedLetter xlarg-text"></i> <span v-if="shallShowError()" style="color:red;position: absolute;margin: 8px;font-size: larger;">!</span> </div>
+                    <div   class="action-icon bg1" style="flex:1;text-align:center;margin-top: 3px;"><i style="color:inherit;font-size:x-large" class=" icon-letterPreview"></i></div>
+                    <div  @click="send('save')" class="action-icon bg1" style="flex:1;text-align:center;margin-top: 3px;"><i style="color:inherit;font-size:x-large" class=" icon-saveDraft"></i></div>
+                    <div  @click="send('send')" class="action-icon bg1 popup" :data-content="errors" style="flex:1;text-align:center"><i style="color:inherit;position:absolute" class=" icon-sendForwardLetter xlarg-text"></i> <span v-if="shallShowError()" style="color:red;position: absolute;margin: 8px;font-size: larger;">!</span> </div>
             </div>
         </div>
     </div>
@@ -66,6 +75,7 @@ import { LetterOwnerForSendingFaxAndEmailAndSms } from '@/store/models/LetterOwn
 import InPlaceMessageBox  from '@/components/UiComponents/InPlaceMessageBox.vue';
 import FullPageLoader from '@/components/UiComponents/FullPageLoader.vue';
 import { NextFormInfo } from '@/store/models/EnterpriseForm/NextFormInfo';
+import { DraftEnterpriseFormInfo } from '@/store/models/EnterpriseForm/LoadEnterpriseFormDraftResponse';
 @Component({
     components: {EnterpriseFormContainer,RecipientLookup , FastSendRecipientSelector , InPlaceMessageBox, FullPageLoader }
 })
@@ -74,6 +84,7 @@ export default class SendEnterpriseForm extends Vue{
     @Prop() formLblWidth?: number;
     @Prop() tableLblWidth?: number;
     @Prop() nextFormInfo?: NextFormInfo;
+    @Prop() draftFormInfo?: DraftEnterpriseFormInfo;
     msgBoxMessage = '';
     msgBoxMessageType = '';
     msgBoxButtons = 'okCancel';
@@ -187,7 +198,7 @@ export default class SendEnterpriseForm extends Vue{
         this.errors = '';
     }
     
-    async send(){
+    async send(mode: string){
 
         if(this.errors != '')return;
         if(this.selectedMainRecipients.length === 0 && this.selectedDraftRecipients.length === 0){
@@ -224,16 +235,27 @@ export default class SendEnterpriseForm extends Vue{
         sendFormDto.Receivers = this.selectedMainRecipients;
         if(this.nextFormInfo)
             sendFormDto.dependentLetterId = this.nextFormInfo.dependentLetterId;
+        if(this.draftFormInfo)
+            sendFormDto.parentDraftId = this.draftFormInfo.draftLetterId;
         
-        const sendingResults =  await enterpriseFormService.sendEnterpriseForm(sendFormDto);
+        const sendingResults =  await enterpriseFormService.sendEnterpriseForm(sendFormDto,mode);
         this.sending = false;
+        
         if(!sendingResults.hasError){
-            if(sendingResults.sentLetterInformation.letterNumber != ''){
-                this.msgBoxMessageType = 'success';
-                this.msgBoxButtons = 'ok';
-                this.msgBoxMessage = `نامه با شماره ${sendingResults.sentLetterInformation.letterNumber} ارسال گردید.`
-                this.shallShowMsgBox = true;
-                this.isFormSent = true;
+            this.msgBoxMessageType = 'success';
+            this.msgBoxButtons = 'ok';
+            if(mode === 'send'){
+                
+                if(sendingResults.sentLetterInformation.letterNumber != ''){
+                    this.msgBoxMessage = `نامه با شماره ${sendingResults.sentLetterInformation.letterNumber} ارسال گردید.`
+                    this.shallShowMsgBox = true;
+                    this.isFormSent = true;
+                }
+            }
+            else{
+                 this.msgBoxMessage = "پیشنویس ذخیره شد";
+                 this.shallShowMsgBox = true;
+                 this.isFormSent = true;
             }
         }
         else{

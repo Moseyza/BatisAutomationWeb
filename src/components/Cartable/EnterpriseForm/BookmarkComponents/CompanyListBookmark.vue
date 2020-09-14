@@ -36,12 +36,14 @@ export default  class  CompanyListBookmark extends Mixins(BookmarkMixin){
     async setValidValues(){
         this.validValues.length = 0;
         const allCompanies =  await companyService.GetAllCompanies();
+        const temp = [] as ValidValues[];
         allCompanies.forEach(c=>{
             const validVal = {} as ValidValues;
             validVal.item1 = c.id;
             validVal.item2 = c.name;
-            this.validValues.push(validVal);
+            temp.push(validVal);
         });
+        this.validValues = temp;
     }
     onValueSelected(value: ValidValues){
         this.value.Id = value.item1;
@@ -52,7 +54,7 @@ export default  class  CompanyListBookmark extends Mixins(BookmarkMixin){
         if(this.value)
             if(this.value.Value)
                 this.valueProp = this.value.Value;
-            else 
+            else if (typeof this.value === 'string')
                 this.valueProp = this.value;
     }
     

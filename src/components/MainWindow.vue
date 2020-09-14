@@ -7,7 +7,7 @@
             <div style="flex:2;">
                     <div class="three-part-flexbox">
                         <div class="flex-part-top" style="flex: 0 0 auto;display:flex;">
-                                <QuickAccess  @fast-send-clicked="onFastSendBtnClick($event)" @enterprise-form-selected="onEnterpriseFormSelected($event,null)"/>
+                                <QuickAccess  @fast-send-clicked="onFastSendBtnClick($event)" @enterprise-form-selected="onEnterpriseFormSelected($event,null,null)"/>
                         </div>
                         <div class="flex-part-middle">
                             <FoldersTree :letterOwnerId="letterOwnerId" @folder-clicked="onFolderClicked()"></FoldersTree>
@@ -50,7 +50,7 @@
                 <FinalizeLetter v-else-if="leftSideMode=== 'finalize'" :letter="selectedLetter"  />
                 <ForwardLetter v-else-if="leftSideMode=== 'forward'" @forward-canceled="onForwardCanceled" @forward-done="onLetterForwarded($event)" :letter="selectedLetter" />
                 <FastSend :mode="fastSendMode" v-else-if="leftSideMode=== 'fastSend'" @fastsend-canceled="onFastSendCanceled($event)"  :dependentLetters="fastSendDependencies" />
-                <SendEnterpriseForm  v-else-if="leftSideMode=== 'enterpriseForm'" @sendform-close="clearLeftSide()" :form="selectedFrom" :nextFormInfo="nextFormInfo" :tableLblWidth="maxTableLabelWidth" :formLblWidth="maxFormLabelWidth"  />
+                <SendEnterpriseForm  v-else-if="leftSideMode=== 'enterpriseForm'" @sendform-close="clearLeftSide()" :form="selectedFrom" :nextFormInfo="nextFormInfo" :tableLblWidth="maxTableLabelWidth" :formLblWidth="maxFormLabelWidth" :draftFormInfo="draftFormInfo" />
             </div>
             
         </div>
@@ -83,6 +83,9 @@ import SendEnterpriseForm from '@/components/Cartable/EnterpriseForm/SendEnterpr
 import * as enterpriseFormService from '@/store/Services/enterpriseFormService';
 import { NextFormInfo } from '@/store/models/EnterpriseForm/NextFormInfo';
 import FullPageLoader from '@/components/UiComponents/FullPageLoader.vue';
+import { getAllWorkflowsWithEnterpriseForms } from '@/store/Services/workflowService';
+import store from '@/store';
+import { DraftEnterpriseFormInfo } from '@/store/models/EnterpriseForm/LoadEnterpriseFormDraftResponse';
 @Component({
     components: { FoldersTree, LetterDetails, DraftDetails , CartableTitle,FinalizeLetter, ForwardLetter, QuickAccess, FastSend, SearchResultDetails, SendEnterpriseForm, FullPageLoader}
 })
@@ -101,12 +104,26 @@ export default class MainWindow extends Vue {
         Object.assign(temp,letter)
         this.selectedLetter = temp;
     }
-    onSelectdDraftChanged(letter: DraftLetter ){
-        this.leftSideMode = 'draftDetails';
-        this.noLetterSelected = false;
-        const temp: any = {};
-        Object.assign(temp,letter)
-        this.selectedLetter = temp;
+    async onSelectdDraftChanged(letter: DraftLetter ){
+        if(letter.isEnterpriseForm){
+            const ownerId =  store.state.ownerId;
+            const loadDraftEnterpriseFormRequest = {
+                possessionId: letter.letterPossessionId,
+                letterId: letter.id,
+                formId: letter.enterpriseFormId,
+                ownerId: ownerId
+            }
+            const draftFormInfo =  await enterpriseFormService.getDraftEnterpriseForm(loadDraftEnterpriseFormRequest);
+            draftFormInfo.draftEnterpriseForm.enterpriseFormDto
+            this.onEnterpriseFormSelected(draftFormInfo.draftEnterpriseForm.enterpriseFormDto,undefined,draftFormInfo);
+        }
+        else{
+            this.leftSideMode = 'draftDetails';
+            this.noLetterSelected = false;
+            const temp: any = {};
+            Object.assign(temp,letter)
+            this.selectedLetter = temp;
+        }
     }
     onSelectdSearchResultChanged(searchResult: LetterSearchResult){
         //this.leftSideMode = 'searchResultDetails';
@@ -199,8 +216,10 @@ export default class MainWindow extends Vue {
     maxFormLabelWidth = 0;
     maxTableLabelWidth = 0;
     shallShowSendEnterpriseForm = false;
-    onEnterpriseFormSelected(form: EnterpriseForm,nextFormInfo: NextFormInfo){
-        this.nextFormInfo = nextFormInfo;
+    onEnterpriseFormSelected(form: EnterpriseForm,nextFormInfo?: NextFormInfo,draftFormInfo?: DraftEnterpriseFormInfo){
+        
+            this.nextFormInfo = nextFormInfo;
+            this.draftFormInfo = draftFormInfo;
         if(form.bookmarks){
             form.bookmarks.forEach(bm=>
             {
@@ -239,11 +258,12 @@ export default class MainWindow extends Vue {
     clearLeftSide(){
         this.leftSideMode = '';
     }
-    nextFormInfo = {} as NextFormInfo;
+    nextFormInfo?: NextFormInfo;
+    draftFormInfo?: DraftEnterpriseFormInfo;
     async onNextFormSelected(nextFormRequest: any){
         this.isLoading = true;
         const nextFormInfo = await  enterpriseFormService.getNextForm(nextFormRequest);
-        this.onEnterpriseFormSelected(nextFormInfo.enterpriseForm,nextFormInfo);
+        this.onEnterpriseFormSelected(nextFormInfo.enterpriseForm,nextFormInfo,undefined);
     }
 }
 </script>

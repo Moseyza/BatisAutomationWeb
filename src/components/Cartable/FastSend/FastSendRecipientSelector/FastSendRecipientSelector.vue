@@ -1,6 +1,6 @@
 <template>
-    <div style="display:flex">
-        <div style="flex:1" id="selection-area">
+    <div style="display:flex;align-items: center;">
+        <!-- <div style="flex:1" id="selection-area"> -->
             <FastSendSelectedRecipient
             v-for="recipient in recipients"
             :key="recipient.id"
@@ -9,10 +9,10 @@
             :autoCompleteDataType="autoCompleteDataType"
             :hideComment="hideComment"
             />
-        </div>
-        <div style="flex:0 1 auto">
-            <button class="action-button" @click="requestAddItem()">+</button>
-        </div>
+        <!-- </div> -->
+        <!-- <div style="flex:0 1 auto"> -->
+            <button class="button" @click="requestAddItem()"><i class="icon-plus"></i></button>
+        <!-- </div> -->
     </div>
 </template>
 

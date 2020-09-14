@@ -29,6 +29,7 @@ import IntegerBookmark from '../BookmarkComponents/IntegerBookmark.vue';
 import FloatBookmark from '../BookmarkComponents/FloatBookmark.vue';
 import MonthBookmark from '../BookmarkComponents/MonthBookmark.vue';
 import PersonnelListBookmark from '../BookmarkComponents/PersonnelListBookmark.vue';
+import { DraftEnterpriseFormInfo, EnterpriseFormValues } from '@/store/models/EnterpriseForm/LoadEnterpriseFormDraftResponse';
 const onPropertyChangeCallQueue  = [] as any[];
 let isAnotherPropertyChangeCallInProgress = false;
 
@@ -39,19 +40,28 @@ export default class EnterpriseFormContainer extends Vue{
     formValidValues = {} as  EnterpriseFormValidValues;
     invisibleBookmarks = [] as any[];
     shallNextFormLoaded = false;
+    shallDraftFormLoaded = false;
     @Prop() nextFormInfo?: NextFormInfo;
+    @Prop() draftFormInfo?: DraftEnterpriseFormInfo;
     @Watch('nextFormInfo')
     OnNextFormInfoChanged(){
         this.loadNextForm();
+    }
+    @Watch('draftFormInfo')
+    OnDraftFormInfoChanged(){
+        this.loadDraftForm();
     }
     @Prop() form?: EnterpriseForm;
     @Prop() tableLblWidth?: number;
     @Prop() formLblWidth?: number;
     formatCells =  [] as any[];
     created(){
+        console.log(this.form);
         store.state.eventHub.$on("send-enterpriseform",(e: any)=>this.onFormSend(e))
         if(this.nextFormInfo)
             this.shallNextFormLoaded = true; //this.loadNextForm();
+        if(this.draftFormInfo)
+            this.shallDraftFormLoaded = true;
     }
     
     formatForm(){
@@ -161,12 +171,10 @@ export default class EnterpriseFormContainer extends Vue{
                 if(this.formValidValues)
                 if(this.formValidValues.formValidValues)
                 {
-                    
                     const currentBookmarkValidValues = (this.formValidValues.formValidValues as any)[this.firstLetterToLowerCase(bookmark.englishName)];
                     if(currentBookmarkValidValues)
                         props.validValues = currentBookmarkValidValues;
                 }
-
             }
             const instance = new componentClass({propsData: props});
             instance.$on("value-changed",(e: string)=>{this.onFormParameterChanged(e)});
@@ -244,6 +252,9 @@ export default class EnterpriseFormContainer extends Vue{
         this.drawForm();
         if(this.shallNextFormLoaded)
             this.loadNextForm();
+        if(this.shallDraftFormLoaded)
+            this.loadDraftForm();
+        
         this.callClientSideInitialize();
     }
 
@@ -265,6 +276,9 @@ export default class EnterpriseFormContainer extends Vue{
         return tableNames;
     }
     async onFormParameterChanged(parameterName: string){
+       
+        if(this.isLoadingDraftForm)return;
+        if(this.isLoadingNextForm)return;
         onPropertyChangeCallQueue.push(parameterName);
         if(isAnotherPropertyChangeCallInProgress){
             return;
@@ -277,7 +291,7 @@ export default class EnterpriseFormContainer extends Vue{
         isAnotherPropertyChangeCallInProgress = false;
     }
     async onFormParameterChanged2(parameterName: string){
-        if(this.propertyChanedLock)return;
+        
         if(!this.form)return;
         const tableNames = this.getFormTableNames();
         const formData = this.getFormData();
@@ -352,16 +366,47 @@ export default class EnterpriseFormContainer extends Vue{
             }
         });
     }
-    propertyChanedLock = false;
+    //propertyChanedLock = false;
     firstLetterToLowerCase(str: string){
         const result =  str.substring(0,1).toLowerCase() + str.substring(1,str.length);
         return result;
     }
+    isLoadingDraftForm = false;
+    loadDraftForm(){
+        if(!this.draftFormInfo)return;
+        if(!this.draftFormInfo.draftEnterpriseForm)return;
+        if(!this.draftFormInfo.draftEnterpriseForm.values)return;
+        if(!this.draftFormInfo.draftEnterpriseForm.values.values)return;
+        this.isLoadingDraftForm = true;
+        const bookmarkValues = [] as any[];
+        this.draftFormInfo.draftEnterpriseForm.values.values.forEach(val=>{
+                    if(val.type === 18){
+                        let tableRows = [] as any[];
+                        tableRows = JSON.parse(val.value);
+                        store.state.eventHub.$emit('tablerow-add-requested',{tableName: val.englishName,rowCount: tableRows.length});
+                        const table = {} as any;
+                        table[val.englishName] = tableRows;
+                        store.state.eventHub.$emit("tabledata-set-request",table);
+                    }
+                    else{
+                        const bookmarkValue = {} as any;
+                        bookmarkValue.Name = val.englishName;
+                        bookmarkValue.Id = val.id;
+                        bookmarkValue.Value = val.value;
+                        bookmarkValues.push(bookmarkValue);
+                    }
+        });
+        store.state.eventHub.$emit("newvalues-set-request",bookmarkValues);
+        this.isLoadingDraftForm = false;
+        //console.log(this.draftFormInfo.draftEnterpriseForm.values);
+    }
+    isLoadingNextForm = false;
     loadNextForm(){
-        console.log(this.form);
-        this.propertyChanedLock = true;
+        //console.log(this.form);
+        //this.propertyChanedLock = true;
         if(!this.nextFormInfo)return;
         if(!this.nextFormInfo.multipleValues.letters)return;
+        this.isLoadingNextForm = true;
         const bookmarkValues = [] as any[];
         let tableRows = [] as any[];
         this.nextFormInfo.multipleValues.letters.forEach(item=>{
@@ -386,7 +431,8 @@ export default class EnterpriseFormContainer extends Vue{
             }
         });
         store.state.eventHub.$emit("newvalues-set-request",bookmarkValues);
-        this.propertyChanedLock = false;
+        this.isLoadingNextForm = false;
+        //this.propertyChanedLock = false;
     }
 
     getFormDataForSending(){

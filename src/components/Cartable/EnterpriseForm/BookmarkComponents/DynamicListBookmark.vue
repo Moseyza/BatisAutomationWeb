@@ -49,7 +49,8 @@ export default  class  DynamicListBookmark extends Mixins(BookmarkMixin){
         this.validValues.length = 0;
         if(newVal.ValidValues === null && oldVal.ValidValues !== null)
         {
-            this.value.ValidValues = oldVal.ValidValues;
+            //this.value.ValidValues = oldVal.ValidValues;
+            this.value = oldVal;
         }
         if(!newVal.ValidValues)return;
         newVal.ValidValues.forEach((element: any) => {

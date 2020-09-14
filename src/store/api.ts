@@ -11,8 +11,8 @@ import * as persianDate from 'persian-date';
 
 export const batisAutomationApi = axios.create( 
     {   
-        //baseURL:"http://45.149.76.4:1620//api"
-        //baseURL: "http://185.8.174.148:1620/api",
+       // baseURL:"http://45.149.76.4:1620//api"
+       // baseURL: "http://185.8.174.148:1620/api",
         baseURL: "http://localhost:54173/api",
     }
     //baseUrl: "http://localhost:54173/api",

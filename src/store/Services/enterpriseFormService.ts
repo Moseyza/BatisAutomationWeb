@@ -6,6 +6,7 @@ import axios from 'axios';
 import { NextFormInfo } from '../models/EnterpriseForm/NextFormInfo';
 import { EnterpriseFormValidatorResult } from '../models/EnterpriseForm/EnterpriseFormValidatorResult';
 import SentLetterInformation, { SendingFormResults } from '../models/Letter/SentLetterInformation';
+import { DraftEnterpriseFormInfo } from '../models/EnterpriseForm/LoadEnterpriseFormDraftResponse';
 
 
 
@@ -81,7 +82,19 @@ export async function getFormReceivers(formId: string,senderId: string,dependent
     }
 }
 
-export async function sendEnterpriseForm(sendFormDto: any): Promise<SendingFormResults>{
+export async function getDraftEnterpriseForm(request: any): Promise<DraftEnterpriseFormInfo> {
+    try {
+
+        const serverResult =  await api.batisAutomationApi.post("/EnterpriseForms/LoadDraft",request);
+        return serverResult.data as DraftEnterpriseFormInfo;
+    } 
+    catch (error) {
+        console.log(error);
+        return {} as DraftEnterpriseFormInfo;
+    }
+}
+
+export async function sendEnterpriseForm(sendFormDto: any,mode: string): Promise<SendingFormResults>{
     try {
         const formData = new FormData();
         const fileBookmarkNames = [] as string[];
@@ -96,7 +109,7 @@ export async function sendEnterpriseForm(sendFormDto: any): Promise<SendingFormR
             }
         }
         formData.append("fileBookmarks",JSON.stringify(fileBookmarkNames));
-        const serverResult =  await api.batisAutomationApi.post("/EnterpriseForms/send",formData,
+        const serverResult =  await api.batisAutomationApi.post(`/EnterpriseForms/send/${mode}`,formData,
         { 
             headers: {
             'Content-Type': 'multipart/form-data; boundary=${form._boundary}'

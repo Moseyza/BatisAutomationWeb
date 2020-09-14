@@ -50,6 +50,10 @@ export default  class  CustomQueryListBookmark extends Mixins(BookmarkMixin){
         this.$emit("value-changed",this.englishName);
     }
     onValueChanged(){
+        
+        if(this.englishName.toLowerCase() === "kindofactivity"){
+            const test = 1;
+        }
         if(this.value)
             if(this.value.Value)
                 this.valueProp = this.value.Value;

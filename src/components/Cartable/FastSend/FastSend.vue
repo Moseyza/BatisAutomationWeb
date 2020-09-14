@@ -17,28 +17,28 @@
                  پیش نویس 
                 </div>
                 <div style="flex:10">
-                    <RecipientLookup   :recipients="recipients" @recipient-selected="selectRecipient($event, 'draft')"   />    
+                    <RecipientLookup  v-if="shallShowDraftLookup"  :recipients="recipients" @recipient-selected="selectRecipient($event, 'draft')"   />    
                 </div>
             </div>
              <div v-if="mode=='draft'" class="symmetric-grid">
             <div style="flex:1">
 
             </div>
-            <FastSendRecipientSelector style="flex:10"  :autoCompleteDataType="'draft'" :recipients="selectedDraftRecipients" @recipient-removed="onRecipientRemoved($event,'draft')"/>
+            <FastSendRecipientSelector style="flex:10"  :autoCompleteDataType="'draft'" :recipients="selectedDraftRecipients" @recipient-removed="onRecipientRemoved($event,'draft')"   @additem-requested="onAddRecipientRequest('draft')"  />
             </div>
             <div v-if="mode=='send'" class="symmetric-grid" style="margin-bottom: 5px">
                 <div style="flex:1;margin-left:5px">
                  اصلی
                 </div>
                 <div style="flex:10">
-                    <RecipientLookup  :recipients="recipients" @recipient-selected="selectRecipient($event,'main')"   />    
+                    <RecipientLookup v-if="shallShowMainLookup"  :recipients="recipients" @recipient-selected="selectRecipient($event,'main')"   />    
                 </div>
             </div>
             <div v-if="mode=='send'" class="symmetric-grid">
                 <div style="flex:1">
 
                 </div>
-                <FastSendRecipientSelector  style="flex:10" :autoCompleteDataType="'all'" :recipients="selectedMainRecipients" @recipient-removed="onRecipientRemoved($event,'main')"/>
+                <FastSendRecipientSelector  style="flex:10" :autoCompleteDataType="'all'" :recipients="selectedMainRecipients" @recipient-removed="onRecipientRemoved($event,'main')"   @additem-requested="onAddRecipientRequest('main')" />
             </div>
             
 
@@ -47,14 +47,14 @@
                  رونوشت 
                 </div>
                 <div style="flex:10">
-                    <RecipientLookup   :recipients="recipients" @recipient-selected="selectRecipient($event,'copy')"   />    
+                    <RecipientLookup   v-if="shallShowCopyLookup" :recipients="recipients" @recipient-selected="selectRecipient($event,'copy')"   />    
                 </div>
             </div>
             <div v-if="mode=='send'" class="symmetric-grid">
                 <div style="flex:1">
 
                 </div>
-            <FastSendRecipientSelector style="flex:10" :autoCompleteDataType="'copy'"  :recipients="selectedCopyRecipients" @recipient-removed="onRecipientRemoved($event,'copy')"/>
+            <FastSendRecipientSelector style="flex:10" :autoCompleteDataType="'copy'"  :recipients="selectedCopyRecipients" @recipient-removed="onRecipientRemoved($event,'copy')"   @additem-requested="onAddRecipientRequest('copy')" />
             </div>
             
             
@@ -227,6 +227,17 @@ export default class FastSent extends Vue{
         this.addDependentLettersAttachments();
     }
     selectRecipient(recipient: LetterOwnerWithFaxAndEmails, listName: string){
+        switch(listName){
+            case 'main':
+                this.shallShowMainLookup = false;
+                break;
+            case 'copy':
+                this.shallShowCopyLookup = false;
+                break;
+            case 'draft':
+                this.shallShowDraftLookup = false;
+                break;
+        }
         let addedItem =  this.selectedMainRecipients.find(item=>item.id === recipient.id);
         if(!addedItem) 
             addedItem = this.selectedCopyRecipients.find(item=>item.id === recipient.id);
@@ -419,6 +430,22 @@ export default class FastSent extends Vue{
             this.priority = 5;
         else if(priority === 'high')
             this.priority = 10;
+    }
+    shallShowMainLookup = false;
+    shallShowCopyLookup = false;
+    shallShowDraftLookup = false;
+    onAddRecipientRequest(mode: string){
+        switch(mode){
+            case 'main':
+                this.shallShowMainLookup = true;
+                break;
+            case 'copy':
+                this.shallShowCopyLookup = true;
+                break;
+            case 'draft':
+                this.shallShowDraftLookup = true;
+                break;
+        }
     }
 }
 
