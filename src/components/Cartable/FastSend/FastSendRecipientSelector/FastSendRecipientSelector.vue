@@ -11,7 +11,7 @@
             />
         <!-- </div> -->
         <!-- <div style="flex:0 1 auto"> -->
-            <button class="button" @click="requestAddItem()"><i class="icon-plus"></i></button>
+            <button class="button" @click="requestAddItem()">+</button>
         <!-- </div> -->
     </div>
 </template>

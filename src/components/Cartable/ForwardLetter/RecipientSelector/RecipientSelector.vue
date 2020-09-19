@@ -8,7 +8,7 @@
         @paraph="onParaph($event)"
         :autoCompleteDataType="autoCompleteDataType"
         />
-        <button class="button" @click="requestAddItem()"><i class="icon-plus"></i></button>
+        <button class="button" @click="requestAddItem()">+</button>
     </div>
 </template>
 

@@ -28,8 +28,10 @@ import BookmarkMixin from '../BookmarkComponents/BookmarkMixin';
 import IntegerBookmark from '../BookmarkComponents/IntegerBookmark.vue';
 import FloatBookmark from '../BookmarkComponents/FloatBookmark.vue';
 import MonthBookmark from '../BookmarkComponents/MonthBookmark.vue';
+import DayBookmark from '../BookmarkComponents/DayBookmark.vue';
 import PersonnelListBookmark from '../BookmarkComponents/PersonnelListBookmark.vue';
 import { DraftEnterpriseFormInfo, EnterpriseFormValues } from '@/store/models/EnterpriseForm/LoadEnterpriseFormDraftResponse';
+import SenderSignBookmark from '../BookmarkComponents/SenderSignBookmark.vue';
 const onPropertyChangeCallQueue  = [] as any[];
 let isAnotherPropertyChangeCallInProgress = false;
 
@@ -122,6 +124,9 @@ export default class EnterpriseFormContainer extends Vue{
             case 4://time
                 componentClass = Vue.extend(KeyboardTimeBookmark);
                 break;
+            case 6://Day
+                componentClass = Vue.extend(DayBookmark);
+                break;
             case 7://Month
                 componentClass = Vue.extend(MonthBookmark);
                 break;
@@ -148,6 +153,12 @@ export default class EnterpriseFormContainer extends Vue{
                 break;
             case 18://table
                 componentClass = Vue.extend(TableBookmark);
+                break;
+            case 19://SenderSign
+                componentClass =  Vue.extend(SenderSignBookmark);
+                break;
+            case 20://SenderSign
+                componentClass =  Vue.extend(SenderSignBookmark);
                 break;
             case 21://customQuery
                 componentClass = Vue.extend(CustomQueryListBookmark);
