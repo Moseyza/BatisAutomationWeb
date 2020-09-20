@@ -144,6 +144,7 @@ export default class LetterDetails extends Vue {
         //     alert(this.letter.id);
         //     alert(this.letter.letterPossessionId);
         // }
+        console.log(this.letter);
         this.setIsReceived();
         this.setPdfUrl();
         this.canFinalize = !newVal.isClosed;

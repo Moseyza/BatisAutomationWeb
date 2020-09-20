@@ -24,16 +24,19 @@
                     <div class="item menu-item">
                         <div style="padding-left:5px">فرم های سازمانی({{counts.forms}})</div>
                         <ToggleSwitch :checkedProp="showForms" @click="onToggleSwitchClick('forms')" :isReadOnly="true" />
-                        <div class="left menu" >
-                            <div v-for="wf in workflows" :key="wf.id" class="item menu-item" :class="{'disabled': !showForms}">
-                                <div style="padding-left:5px">{{wf.name}}</div>
-                                <div class="left menu">
-                                    <div v-for="item in wf.enterpriseForms" :key="item.id" class="item menu-item">
+                        <div class="left menu" style="max-height:400px !important;overflow:auto;width:300px" >
+                            <div v-for="wf in workflows" :key="wf.id" class="item menu-item" :class="{'disabled': !showForms}" style="border-bottom:1px solid black;display:flex;align-items:strech" >
+                                <div style="padding-left:5px;width:150px;border-left:1px solid black;text-align: right;" >{{wf.name}}</div>
+                                <!-- <div class="left menu"> -->
+                                <div >
+                                    <div v-for="item in wf.enterpriseForms" :key="item.id" class="item menu-item" style="margin-bottom:3px">
                                         <div style="padding-left:5px"> {{item.name}} </div>
-                                        <ToggleSwitch @checked-changed="formFilterSelection($event,item.id)" /> </div>
+                                        <ToggleSwitch @checked-changed="formFilterSelection($event,item.id)" /> 
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                        
                     </div>
                     <div class="divider"></div>
                     <div class="item menu-item">
