@@ -24,7 +24,7 @@
                     <div class="item menu-item">
                         <div style="padding-left:5px">فرم های سازمانی({{counts.forms}})</div>
                         <ToggleSwitch :checkedProp="showForms" @click="onToggleSwitchClick('forms')" :isReadOnly="true" />
-                        <div class="left menu">
+                        <div class="left menu" >
                             <div v-for="wf in workflows" :key="wf.id" class="item menu-item" :class="{'disabled': !showForms}">
                                 <div style="padding-left:5px">{{wf.name}}</div>
                                 <div class="left menu">

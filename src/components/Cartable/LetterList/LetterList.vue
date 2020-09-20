@@ -74,7 +74,7 @@ export default class LetterList extends Vue{
     @Prop() mode?: string;
     @Prop() years?: number[];
     @Prop() defaultDate?: any;
-    serverTime = '';
+    @Prop() serverTime?: string;
     currentLetterType = 'all';
     currentSearchText = '';
     letters: Letter[] = [];
@@ -276,9 +276,9 @@ export default class LetterList extends Vue{
         return inputStr;
     }
 
-    refresh(){
-       
+    async refresh(){
         this.$forceUpdate();
+
     }
 
     get filteredLetters(){
@@ -315,7 +315,7 @@ export default class LetterList extends Vue{
             const workflows =  await workflowService.getAllWorkflowsWithEnterpriseForms();
             store.commit("setWorkflows",workflows);
         }
-        this.serverTime = await letterService.getServerTime();
+        //this.serverTime = await letterService.getServerTime();
         
     }
 

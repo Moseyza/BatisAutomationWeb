@@ -9,6 +9,7 @@
         :defaultDate="defaultDate" 
         @date-filter-changed="onDateFilterChanged($event)" 
         ref="letterList"
+        :serverTime="serverTime"
         ></LetterList>
     </div>
 </template>
@@ -19,6 +20,8 @@ import LetterList from '@/components/Cartable/LetterList/LetterList.vue';
 import {Letter} from '@/store/models/Letter/Letter'
 import * as api from '@/store/api'
 import * as persianDate from 'persian-date';
+import * as letterService from '@/store/Services/letterServices';
+
 @Component({
     components:{LetterList}
 })
@@ -27,6 +30,7 @@ export default class ReceivedLetters extends Vue {
     years?: number[] = [];
     defaultDate: any = {};
     loading = false;
+    serverTime = '';
      async created(){
          await this.refresh();
       
@@ -34,6 +38,7 @@ export default class ReceivedLetters extends Vue {
     async refresh(){
         this.loading = true;
         const serverResult = await api.getReceivedLetters();
+        this.serverTime = await letterService.getServerTime();
         this.loading = false;
         if(!serverResult.letterList) return;
         this.letters =  serverResult.letterList;

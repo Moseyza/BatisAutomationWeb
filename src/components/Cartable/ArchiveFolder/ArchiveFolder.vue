@@ -1,6 +1,11 @@
 <template>
      <div style="height:100%">
-        <LetterList :lettersProp="letters" :loading="loading" @selected-letter-changed="onSelectedLetterChanged($event)" ></LetterList>
+        <LetterList 
+        :lettersProp="letters" 
+        :loading="loading" 
+        @selected-letter-changed="onSelectedLetterChanged($event)" 
+        :serverTime="serverTime"
+        ></LetterList>
     </div>
 </template>
 
@@ -10,12 +15,14 @@ import LetterList from '@/components/Cartable/LetterList/LetterList.vue';
 import {Letter} from '@/store/models/Letter/Letter'
 import * as letterService from '@/store/Services/letterServices'
 import * as api from '@/store/api'
+
 @Component({
     components:{LetterList}
 })
 export default class ArchiveFolder extends Vue {
     letters?: Letter[] = [];
     loading = false;
+    serverTime = '';
     @Prop() folderId?: string;
     @Watch('folderId')
     async onFolderIdChanged(){
@@ -30,6 +37,7 @@ export default class ArchiveFolder extends Vue {
         if(this.folderId === undefined)return;
         this.loading = true;
         const archiveLetters = await letterService.GetArchiveFolderLetters(this.folderId);
+        this.serverTime = await letterService.getServerTime();
         this.loading = false;
         if(!archiveLetters || this.letters === undefined) return;
         this.letters = archiveLetters;
