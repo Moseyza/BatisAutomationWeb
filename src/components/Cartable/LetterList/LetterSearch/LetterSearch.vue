@@ -13,7 +13,7 @@
                 </div>
             </div>
             <div style="padding:3px 3px" id="filter-dropdown" class="ui icon top left dropdown ">
-                <i class="search-icon icon-filter action-icon "></i>
+                <i class="search-icon icon-filter action-icon " :class="{'active':isFilterActive}"></i>
                 <div class="menu">
                     <div class="item menu-item">
                         <div style="padding-left:5px">همه({{counts.all}})</div>
@@ -104,6 +104,7 @@ export default class LetterSearch extends Vue {
     sortOnDate = true;
     sortOnSender = false;
     sortOnTitle = false;
+    isFilterActive = false;
     @Watch('searchText')
     onSearchTextChanged() {
         this.$emit('search-text-changed', this.searchText);
@@ -196,16 +197,19 @@ export default class LetterSearch extends Vue {
             this.showAll = true;
             this.showForms = false;
             this.showNotForms = false;
+            this.isFilterActive = false;
 
         } else if (mode === 'forms') {
             this.showAll = false;
             this.showForms = true;
             this.showNotForms = false;
+            this.isFilterActive = true;
 
         } else if (mode === 'notForms') {
             this.showAll = false;
             this.showForms = false;
             this.showNotForms = true;
+            this.isFilterActive = true;
         }
         this.$emit('mode-changed', mode);
     }
@@ -250,5 +254,8 @@ input:focus {
 
 #search-container {
     background-color: #575757
+}
+.active{
+    color: #ff6b6b;
 }
 </style>
