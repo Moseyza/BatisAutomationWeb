@@ -14,9 +14,15 @@ export default class TableRowContainer extends Vue{
     @Prop() tableName?: string;
     removeRow(){
         //alert(this.rowIndex);
-        store.state.eventHub.$emit('table-row-removed',{tableName: this.tableName, rowIndex: this.rowIndex});
+        store.state.eventHub.$emit('table-row-removed',{tableName: this.tableName, rowIndex: this._rowIndex});
         this.$destroy();
         this.$el.remove();
+    }
+    _rowIndex = 0;
+    created(){
+        if(this.rowIndex)
+            this._rowIndex = this.rowIndex;
+        console.log(this.rowIndex);
     }
 }
 

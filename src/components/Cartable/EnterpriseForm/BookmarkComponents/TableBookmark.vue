@@ -73,18 +73,19 @@ export default  class  TableBookmark extends Mixins(BookmarkMixin){
             (rowContainerInstance.$refs.tablerow as any).appendChild(formatRowInstance.$el);
         }
     }
+    rows =  [] as TableRowContainer[];
     addRow(){
         if(!this.bookmark)return;
         if(!this.bookmark.tableColumns)return;
         this.rowsCount++;
         const rowContainerClass = Vue.extend(TableRowContainer);
         const rowContainerInstance = new rowContainerClass({propsData: {rowIndex:this.rowsCount-1,tableName: this.englishName} });
+        this.rows.push(rowContainerInstance as TableRowContainer);
         rowContainerInstance.$mount();
         this.formatRow(rowContainerInstance);
         let visibleIndex = 0;
         this.bookmark.tableColumns.forEach((columnBookmark,index)=>{
             if(columnBookmark && columnBookmark.isVisible){
-                //const col = this.getCol(index);
                 const col = this.getCol(visibleIndex);
                 visibleIndex++
                 const formatRowIndex = col.rowIndex;
@@ -204,6 +205,26 @@ export default  class  TableBookmark extends Mixins(BookmarkMixin){
         if(!this.bookmark)return;
         const data = tablesData[this.bookmark.englishName];
         if(!data)return;
+        if(data.length != this.rowsCount)
+        {
+            const info = {} as any;
+            const rowCount =   data.length - this.rowsCount;
+            info.rowCount = rowCount;
+            info.tableName = this.englishName;
+            if(rowCount >0){
+                this.onTableRowAddRequested(info);
+            }
+            else if(rowCount < 0){
+                const abs = Math.abs(rowCount);
+                for(let i = 0; i< abs; i++){
+                    if(this.rows[this.rows.length -1]){
+                        this.rows[this.rows.length -1].removeRow();
+                        this.rows.pop();
+                    }
+                }
+            }
+            //alert("test");
+        }
         this.setData(data)
     }
 
@@ -291,8 +312,11 @@ export default  class  TableBookmark extends Mixins(BookmarkMixin){
         if(!this.invisibleValues)return;
         if(this.invisibleValues.length > 0){
             this.invisibleValues =  this.invisibleValues.splice(rowInfo.rowIndex,1);
-            this.rowsCount--;
+            
         }
+        //این باید فعال شود فعلا در جای دیگری پاپ کردم ولی باید اینجا باشد
+        //this.rows =  this.rows.splice(rowInfo.rowIndex,1);
+        this.rowsCount--;
     }
 
     beforeDestroy(){

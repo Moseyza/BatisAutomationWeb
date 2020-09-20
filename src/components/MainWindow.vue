@@ -50,7 +50,7 @@
                 <FinalizeLetter v-else-if="leftSideMode=== 'finalize'" :letter="selectedLetter"  />
                 <ForwardLetter v-else-if="leftSideMode=== 'forward'" @forward-canceled="onForwardCanceled" @forward-done="onLetterForwarded($event)" :letter="selectedLetter" />
                 <FastSend :mode="fastSendMode" v-else-if="leftSideMode=== 'fastSend'" @fastsend-canceled="onFastSendCanceled($event)"  :dependentLetters="fastSendDependencies" />
-                <SendEnterpriseForm  v-else-if="leftSideMode=== 'enterpriseForm'" @sendform-close="clearLeftSide()" :form="selectedFrom" :nextFormInfo="nextFormInfo" :tableLblWidth="maxTableLabelWidth" :formLblWidth="maxFormLabelWidth" :draftFormInfo="draftFormInfo" />
+                <SendEnterpriseForm  v-else-if="leftSideMode=== 'enterpriseForm'" @sendform-close="onSendFormClose($event)" :form="selectedFrom" :nextFormInfo="nextFormInfo" :tableLblWidth="maxTableLabelWidth" :formLblWidth="maxFormLabelWidth" :draftFormInfo="draftFormInfo" />
             </div>
             
         </div>
@@ -253,6 +253,11 @@ export default class MainWindow extends Vue {
             this.leftSideMode = 'enterpriseForm';
         }
         this.isLoading = false;
+    }
+    onSendFormClose(isNextForm: boolean){
+        const possessionId =  this.selectedLetter.letterPossessionId;
+        this.onLetterForwarded(possessionId);
+        this.clearLeftSide();
     }
 
     clearLeftSide(){

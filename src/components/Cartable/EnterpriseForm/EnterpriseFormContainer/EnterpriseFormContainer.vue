@@ -335,6 +335,7 @@ export default class EnterpriseFormContainer extends Vue{
         {
             const tableParameters = JSON.parse(tableParametersStr);
             store.state.eventHub.$emit("tabledata-set-request",tableParameters);
+            
         }
     }
     async callClientSideInitialize(){

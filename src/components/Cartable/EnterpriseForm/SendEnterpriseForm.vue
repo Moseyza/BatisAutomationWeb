@@ -84,6 +84,7 @@ export default class SendEnterpriseForm extends Vue{
     @Prop() formLblWidth?: number;
     @Prop() tableLblWidth?: number;
     @Prop() nextFormInfo?: NextFormInfo;
+    isNextForm = false;
     @Prop() draftFormInfo?: DraftEnterpriseFormInfo;
     msgBoxMessage = '';
     msgBoxMessageType = '';
@@ -233,8 +234,10 @@ export default class SendEnterpriseForm extends Vue{
         sendFormDto.draftReceivers = this.selectedDraftRecipients;
         sendFormDto.copyReceivers  = this.selectedCopyRecipients;
         sendFormDto.Receivers = this.selectedMainRecipients;
-        if(this.nextFormInfo)
+        if(this.nextFormInfo){
             sendFormDto.dependentLetterId = this.nextFormInfo.dependentLetterId;
+            this.isNextForm = true;
+        }
         if(this.draftFormInfo)
             sendFormDto.parentDraftId = this.draftFormInfo.draftLetterId;
         
@@ -275,7 +278,7 @@ export default class SendEnterpriseForm extends Vue{
     onMsgBoxButtonClicked(btn: string){
         this.shallShowMsgBox = false;
         if((btn ==='ok' && this.isFormSent) || btn === 'yes'){
-            this.$emit('sendform-close');
+            this.$emit('sendform-close',this.nextFormInfo);
         }
     }
     shallShowMainLookup = false;

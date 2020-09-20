@@ -25,12 +25,22 @@
                     {{sendTime}}
                 </div>
                 <div  style="display:flex; justify-content:space-around ">
-                    <div style="flex:1;margin:5px" v-if="letterData.isForwarded || isSentDraft"> <i class="fixed-icon icon-forwardedLetter"></i> </div>
-                    <div style="flex:1;margin:5px" v-if="letterData.isClosed"> <i class="fixed-icon icon-closedLetter"></i> </div>
+                    <!-- v-on:before-enter="beforeEnter"
+                    v-on:enter="enter"
+                    v-on:leave="leave"
+                    v-bind:css="false" -->
+                    <transition name="bounce">
+                        <div style="flex:1;margin:5px" v-if="letterData.isForwarded || isSentDraft"> <i class="fixed-icon icon-forwardedLetter"></i> </div>
+                    </transition>
+                    <transition name="bounce">
+                        <div style="flex:1;margin:5px" v-if="letterData.isClosed"> <i class="fixed-icon icon-closedLetter"></i> </div>
+                    </transition>
                     <div style="flex:1;margin:5px" v-if="isDraft"> <span  class="fixed-icon icon-allDraft"></span></div>
                     <div style="flex:1;margin:5px" v-else-if="letterData.isOpenned || isSent || isOpenned"> <span  class="fixed-icon icon-openLetter"></span></div>
                     <div style="flex:1;margin:5px" v-else> <span  class="fixed-icon icon-notOpenLetter"></span></div>
                     <div style="flex:1;margin:5px" v-if="letterData.isEnterpriseForm"> <i class="fixed-icon icon-enterpriseForm"></i> </div>
+                    <!-- <div style="flex:1;margin:5px" v-if="letterData.isForwarded || isSentDraft"> <i class="fixed-icon icon-forwardedLetter"></i> </div> -->
+                    <!-- <div style="flex:1;margin:5px" v-if="letterData.isClosed"> <i class="fixed-icon icon-closedLetter"></i> </div> -->
                     
                 </div>
             </div>
@@ -47,6 +57,7 @@ import * as api from '@/store/Services/letterServices';
 import { DateBaseOnCurrentTimeConverter } from '@/util/dateConverter';
 import * as letterService from '@/store/Services/letterServices';
 import { DraftLetter } from '../../../../store/models/Letter/DraftLetter';
+import * as Velocity from 'velocity-animate';
 
 @Component
 export default class SingleLetter extends Vue{
@@ -112,6 +123,24 @@ export default class SingleLetter extends Vue{
         if(!draftLetter.childLetters)return false;
         return draftLetter.childLetters.length > 0 ;
     }
+    beforeEnter(el: any) {
+      el.style.opacity = 0
+      el.style.transformOrigin = 'left'
+    }
+    enter(el: any, done: any) {
+      Velocity(el, { opacity: 1, fontSize: '2em', color:'red' }, { duration: 300 })
+      Velocity(el, { fontSize: '1em' }, { complete: done })
+    }
+    leave(el: any, done: any) {
+      Velocity(el, { translateX: '15px', rotateZ: '50deg' }, { duration: 600 })
+      Velocity(el, { rotateZ: '100deg' }, { loop: 2 })
+      Velocity(el, {
+        rotateZ: '45deg',
+        translateY: '30px',
+        translateX: '30px',
+        opacity: 0
+      }, { complete: done })
+    }
     
 
 }
@@ -165,6 +194,23 @@ export default class SingleLetter extends Vue{
     table{
         width: 100%;
     }
+    .bounce-enter-active {
+    animation: bounce-in .5s;
+    }
+    .bounce-leave-active {
+    animation: bounce-in .5s reverse;
+    }
+@keyframes bounce-in {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(2.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
    
 
 </style>
