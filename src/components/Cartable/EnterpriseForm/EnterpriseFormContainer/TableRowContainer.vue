@@ -22,7 +22,7 @@ export default class TableRowContainer extends Vue{
     created(){
         if(this.rowIndex)
             this._rowIndex = this.rowIndex;
-        console.log(this.rowIndex);
+        //console.log(this.rowIndex);
     }
 }
 

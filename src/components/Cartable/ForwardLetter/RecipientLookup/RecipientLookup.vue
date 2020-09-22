@@ -11,7 +11,7 @@
                 
             </div>
              
-  		    <div class="left menu">
+  		    <div class="left menu" style="max-height:300px;overflow:auto;">
     		    <div class="item menu-item"  v-for="recipient in filteredRecipients" :key="recipient.id" @click="selectRecipient(recipient)" ><div style="padding-left:5px">{{recipient.nameOnly}}</div>  <div v-if="recipient.post" style="padding-left:5px">{{recipient.post}}</div>  <div v-else style="padding-left:5px">{{recipient.letterOwnerCompanyNameOnly}}</div> </div> 
   		    </div>
 	    </div>

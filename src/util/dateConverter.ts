@@ -18,7 +18,7 @@ class NowResult extends Result{
 class MinutesAgoResult extends Result{
     minutes = 0;
     toString(){
-        return `${this.minutes.toString().padStart(2,"0")} دقیقه پیش`;
+        return `${this.minutes.toString().padStart(2,"")} دقیقه پیش`;
     }
 }
 

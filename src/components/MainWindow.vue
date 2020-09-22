@@ -255,8 +255,10 @@ export default class MainWindow extends Vue {
         this.isLoading = false;
     }
     onSendFormClose(isNextForm: boolean){
-        const possessionId =  this.selectedLetter.letterPossessionId;
-        this.onLetterForwarded(possessionId);
+        if(isNextForm){
+            const possessionId =  this.selectedLetter.letterPossessionId;
+            this.onLetterForwarded(possessionId);
+        }
         this.clearLeftSide();
     }
 

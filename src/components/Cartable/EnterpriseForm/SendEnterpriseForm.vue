@@ -238,6 +238,9 @@ export default class SendEnterpriseForm extends Vue{
             sendFormDto.dependentLetterId = this.nextFormInfo.dependentLetterId;
             this.isNextForm = true;
         }
+        else{
+            this.isNextForm = false;
+        }
         if(this.draftFormInfo)
             sendFormDto.parentDraftId = this.draftFormInfo.draftLetterId;
         
@@ -270,6 +273,7 @@ export default class SendEnterpriseForm extends Vue{
         }
     }
     cancel(){
+        this.isNextForm = false;
         this.msgBoxMessage = 'آیا مطمئن هستید؟';
         this.msgBoxMessageType = '';
         this.msgBoxButtons = 'yesNo';
@@ -278,7 +282,7 @@ export default class SendEnterpriseForm extends Vue{
     onMsgBoxButtonClicked(btn: string){
         this.shallShowMsgBox = false;
         if((btn ==='ok' && this.isFormSent) || btn === 'yes'){
-            this.$emit('sendform-close',this.nextFormInfo);
+            this.$emit('sendform-close',this.isNextForm);
         }
     }
     shallShowMainLookup = false;

@@ -94,6 +94,18 @@ export async function getDraftEnterpriseForm(request: any): Promise<DraftEnterpr
     }
 }
 
+export async function IsFormAutoClose(formId: string): Promise<boolean>{
+    try {
+
+        const serverResult =  await api.batisAutomationApi.get(`/EnterpriseForms/IsAutoClose/${formId}`);
+        return serverResult.data as boolean;
+    } 
+    catch (error) {
+        console.log(error);
+        return {} as boolean;
+    }
+}
+
 export async function sendEnterpriseForm(sendFormDto: any,mode: string): Promise<SendingFormResults>{
     try {
         const formData = new FormData();

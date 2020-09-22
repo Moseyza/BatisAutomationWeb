@@ -58,6 +58,7 @@ import { DateBaseOnCurrentTimeConverter } from '@/util/dateConverter';
 import * as letterService from '@/store/Services/letterServices';
 import { DraftLetter } from '../../../../store/models/Letter/DraftLetter';
 import * as Velocity from 'velocity-animate';
+import * as enterpriseFormService from '@/store/Services/enterpriseFormService';
 
 @Component
 export default class SingleLetter extends Vue{
@@ -93,7 +94,7 @@ export default class SingleLetter extends Vue{
         return   dateConverter.getDateString(new Date(this.letterData.sendTime.substring(0,this.letterData.sendTime.length -1)),this.serverTime)
     }
 
-    select(){
+    async select(){
         
         if(this.letterData === undefined)return;
         if(this.isDraft){
@@ -102,6 +103,9 @@ export default class SingleLetter extends Vue{
         else{
             if(this.letterData.isOpenned === false){
                 api.OpenLetter(this.letterData.letterPossessionId);
+                if(this.letterData.isEnterpriseForm)
+                   if( await enterpriseFormService.IsFormAutoClose(this.letterData.enterpriseFormId))
+                        this.letterData.isClosed = true;
             }
             this.isOpenned = true;
             //this.letterData.isOpenned = true;
