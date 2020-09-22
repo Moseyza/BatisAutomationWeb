@@ -290,6 +290,7 @@ export default class EnterpriseFormContainer extends Vue{
        
         if(this.isLoadingDraftForm)return;
         if(this.isLoadingNextForm)return;
+        //alert("OnParameterChanged");
         onPropertyChangeCallQueue.push(parameterName);
         if(isAnotherPropertyChangeCallInProgress){
             return;
@@ -334,7 +335,7 @@ export default class EnterpriseFormContainer extends Vue{
         if(tableParametersStr)
         {
             const tableParameters = JSON.parse(tableParametersStr);
-            store.state.eventHub.$emit("tabledata-set-request",tableParameters);
+            store.state.eventHub.$emit("tabledata-set-request",tableParameters,true);
             
         }
     }
@@ -416,6 +417,7 @@ export default class EnterpriseFormContainer extends Vue{
     loadNextForm(){
         //console.log(this.form);
         //this.propertyChanedLock = true;
+        //alert("loadNextFormStart");
         if(!this.nextFormInfo)return;
         if(!this.nextFormInfo.multipleValues.letters)return;
         this.isLoadingNextForm = true;
@@ -443,6 +445,7 @@ export default class EnterpriseFormContainer extends Vue{
             }
         });
         store.state.eventHub.$emit("newvalues-set-request",bookmarkValues);
+        //alert("loadNextFormEnd");
         this.isLoadingNextForm = false;
         //this.propertyChanedLock = false;
     }

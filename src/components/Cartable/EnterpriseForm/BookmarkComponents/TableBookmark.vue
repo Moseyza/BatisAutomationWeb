@@ -53,7 +53,7 @@ export default  class  TableBookmark extends Mixins(BookmarkMixin){
             if(x && !x.isVisible)
                 this.invisibleColumns.push(x);
         });
-        store.state.eventHub.$on("tabledata-set-request",(e: any)=> this.onTableDataSet(e));
+        store.state.eventHub.$on("tabledata-set-request",(e: any,t: boolean)=> this.onTableDataSet(e,t));
         store.state.eventHub.$on("tablerow-add-requested",this.onTableRowAddRequested);
     }
     formatCells =  [] as any[];
@@ -200,8 +200,9 @@ export default  class  TableBookmark extends Mixins(BookmarkMixin){
         eventArg[this.bookmark.englishName] = obj.tableData;
     }
 
-    onTableDataSet(tablesData: any){
+    onTableDataSet(tablesData: any, isFromBehindCode: boolean){
        
+        
         if(!this.bookmark)return;
         const data = tablesData[this.bookmark.englishName];
         if(!data)return;
@@ -225,10 +226,10 @@ export default  class  TableBookmark extends Mixins(BookmarkMixin){
             }
             //alert("test");
         }
-        this.setData(data)
+        this.setData(data,isFromBehindCode)
     }
 
-    setData(tableData: any[]){
+    setData(tableData: any[],isFromBehindCode: boolean){
         this.invisibleValues = [];
         tableData.forEach((row,index) => {
             const rowData = {} as any;
@@ -240,7 +241,7 @@ export default  class  TableBookmark extends Mixins(BookmarkMixin){
                 obj[ic.englishName] = row[ic.englishName]; 
             });
             this.invisibleValues.push(obj);
-            store.state.eventHub.$emit("tablerow-set-requested",rowData);
+            store.state.eventHub.$emit("tablerow-set-requested",rowData,isFromBehindCode);
         });
     }
 

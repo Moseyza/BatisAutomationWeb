@@ -73,6 +73,12 @@ export default  class  FileBookmark extends Mixins(BookmarkMixin){
             this.isFileSelected = true;
         }
     }
+    setValueFromBehindCodeResult(value: any){
+        if(!value.Id)return;
+        if(this.value.Id != "00000000-0000-0000-0000-000000000000" && value.Id == "00000000-0000-0000-0000-000000000000")
+            return;
+        this.value = value;
+    }
     
 }
 </script>

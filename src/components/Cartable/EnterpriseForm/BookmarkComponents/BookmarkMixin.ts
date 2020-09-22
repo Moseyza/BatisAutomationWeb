@@ -179,20 +179,19 @@ export default class BookmarkMixin extends Vue{
         }
     }
 
-    setValueInTableRow(eventArg: any){
+    setValueInTableRow(eventArg: any,isFromBehindCode: boolean){
         if(this.tableRowIndex === undefined)return;
         if(eventArg.rowIndex !== this.tableRowIndex)return;
         if(eventArg.tableName !== this.parentTableName)return;
         if(!this.tableColumnBookmark)return;
         if(eventArg.data && eventArg.data[this.tableColumnBookmark.englishName])
-            this.value = eventArg.data[this.tableColumnBookmark.englishName];
-        // if(this.tableRowIndex === 4 && this.tableColumnBookmark.type === 16)
-        // {
-        //     console.log(eventArg.data[this.tableColumnBookmark.englishName]);
-        // }
-            
-        
-        
+        {
+            if(isFromBehindCode)
+                this.setValueFromBehindCodeResult(eventArg.data[this.tableColumnBookmark.englishName]);
+            else
+                this.value = eventArg.data[this.tableColumnBookmark.englishName];
+
+        }
     }
     setNewValues(newValues: any[]){
         if(!newValues)return;
@@ -212,6 +211,11 @@ export default class BookmarkMixin extends Vue{
         
         if((this.bookmark && this.bookmark.type === 13) || (this.tableColumnBookmark && this.tableColumnBookmark.type === 16))
             store.state.eventHub.$off("add-file-requested",this.onAddFileRequested);
+    }
+
+    setValueFromBehindCodeResult(value: any){
+        this.value = value;
+        //this method must be implemented in components
     }
     
 }
