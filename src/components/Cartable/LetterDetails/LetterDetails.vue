@@ -68,6 +68,8 @@
                     <!-- <p> -->
                         <!-- {{letter.abstract}} -->
                         <div style="padding:5px;flex:1;min-height:400px" class="ng-scope pdfobject-container">
+
+                            <span v-if="hasHtmlMainFile" v-html="htmlSrc"></span>
                             <iframe v-if="pdfLoaded" :src="pdfSrc" type="application/pdf" width="100%" height="100%" style="overflow: auto;"></iframe>
                             <img v-else-if="noPdfExists" :src="pdfSrc" width="100%" height="100%" alt="مشاهده پیش نمایش امکان پذیر نیست" style="overflow: auto;color:#ff6b6b;min-height:100px"/>
                         </div>
@@ -189,18 +191,26 @@ export default class LetterDetails extends Vue {
     }
     pdfLoaded = false;
     noPdfExists = false;
+    htmlSrc = "";
+    hasHtmlMainFile = false;
     async setPdfUrl(){
          if(this.letter === undefined)return;
          this.pdfLoaded = false;
          this.noPdfExists = false;
         if(this.letter.parts === undefined || this.letter.parts === null)return;
             const file = await fileService.getFile(this.letter.parts[0].file.id);
-            if(this.letter.parts[0].file.extension.toLowerCase().includes('.pdf')){
+            if(this.letter.parts[0].file.extension.toLowerCase().includes('.html')){
+                this.htmlSrc = util.b64DecodeUnicode(file.content);
+                this.hasHtmlMainFile = true;
+            }
+            else if(this.letter.parts[0].file.extension.toLowerCase().includes('.pdf')){
                 this.pdfSrc = "data:application/pdf;base64," + file.content;
                 this.pdfLoaded = true;
+                this.hasHtmlMainFile = false;
             }else{
                 this.noPdfExists = true;
                 this.pdfSrc = "data:image/png;base64," + file.content;
+                this.hasHtmlMainFile = false;
         }
     }
     async mounted(){

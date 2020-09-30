@@ -103,7 +103,7 @@ export default class LetterList extends Vue{
         if(this.letters.length >0){
             const all =  this.letters.length;
             const notRead = this.letters.filter(l=>!l.isOpenned).length;
-            const notForwarded = this.letters.filter(l=>!l.isForwarded).length;
+            const notForwarded = this.letters.filter(l=>!l.isForwarded && l.isMainPossession).length;
             const forms = this.letters.filter(l=>l.isEnterpriseForm).length;
             const notForms = all - forms;
             
@@ -223,7 +223,7 @@ export default class LetterList extends Vue{
             
         }
         else if(this.currentLetterType === 'notForwarded'){
-            return  !letter.isForwarded;
+            return  !letter.isForwarded && letter.isMainPossession;
         }
         else if(this.currentLetterType === 'sent'){
             const draftLetter =  letter as DraftLetter;

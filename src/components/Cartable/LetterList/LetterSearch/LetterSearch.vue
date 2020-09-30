@@ -140,6 +140,7 @@ export default class LetterSearch extends Vue {
     @Prop() defaultDate?: any;
     @Watch("defaultDate")
     onDefaultDateChanged(n: any, o: any) {
+        if(n.month == o.month && n.year== o.year)return;
         this.monthSelected(n.month);
         this.yearSelected(n.year);
 
