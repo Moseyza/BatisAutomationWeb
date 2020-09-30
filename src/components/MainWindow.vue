@@ -2,7 +2,7 @@
     <div class="three-part-flexbox" id="main-container">
         <div ref="formlabel" style="position:absolute">{{maxLengthFormLabel}}</div> 
         <div ref="tablelabel" style="position:absolute">{{maxLengthTableLabel}}</div> 
-        <CartableTitle @on-letter-owner-set="onLetterOwnerSet" class="flex-part-top" />
+        <CartableTitle @on-letter-owner-set="onLetterOwnerSet($event)" class="flex-part-top" style="flex: 0 1 auto" />
         <div class="container3 flex-part-middle" id="child-container"  style="flex: 18 1 0%;overflow: hidden;">
             <div style="flex:2;">
                     <div class="three-part-flexbox">
@@ -149,8 +149,14 @@ export default class MainWindow extends Vue {
         this.leftSideMode = 'details';
     }
     
-    onLetterOwnerSet(){
+    async onLetterOwnerSet(e: boolean){
         this.letterOwnerId = this.$store.state.ownerId;
+        if(e){
+            this.leftSideMode = "";
+            await (this.$refs.letterlist as any).refresh();
+        }
+        
+        
     }
     onFinalizeLetter(letterId: string){
         this.leftSideMode = 'finalize';

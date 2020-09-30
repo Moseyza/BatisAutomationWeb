@@ -1,6 +1,6 @@
 <template>
 <div id="container" class="container5">
-    <SingleCartableOwner @on-letter-owner-set="onLetterOwnerSet"/>
+    <SingleCartableOwner @on-letter-owner-set="onLetterOwnerSet($event)"/>
     <div>
         {{branch}}
     </div>
@@ -38,8 +38,8 @@ export default class CartableTitle extends Vue{
         this.branch = branches[0].name;
     }
 
-    onLetterOwnerSet(){
-        this.$emit('on-letter-owner-set');
+    onLetterOwnerSet(e: boolean){
+        this.$emit('on-letter-owner-set',e);
     }
 }
 </script>

@@ -17,7 +17,8 @@ export default new Vuex.Store({
     workflows: [],
     canSeeAllLetters: false,
     advancedSearchSettings: {} as LetterSearch,
-    eventHub:  new Vue()
+    eventHub:  new Vue(),
+    version: '2.1.35'
 
 
   },

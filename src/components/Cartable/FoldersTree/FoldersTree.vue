@@ -28,6 +28,7 @@ export default class FoldersTree extends Vue {
     @Prop() letterOwnerId?: string;
     @Watch('letterOwnerId')
     async onLetterOwnerChanged(){
+        this.folders = [];
         if(this.letterOwnerId === undefined) return;
         const archiveFolders =  await letterOwnerService.getArchiveFolders(this.letterOwnerId);
         const announcementBoards = await announcementBoardService.getAccessibleAnnouncementBoards(this.letterOwnerId);

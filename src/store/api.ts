@@ -62,7 +62,6 @@ export async function isUserValid(userName: string , password: string): Promise<
         const data = qs.stringify({"userName": userName , "password": password  , 'grant_type': "password"});
         const config = { headers: {
             'content-type': 'application/x-www-form-urlencoded;charset=utf-8',
-        
           }};
         const serverResponse =  await batisAutomationApi.post("/token",data,config);
         if(serverResponse){
@@ -176,6 +175,9 @@ export async function getLetterOwners(): Promise<LetterOwnerWithPicture[]>
             branchIds: store.state.branchIds
         };
         const serverResult = await batisAutomationApi.post("/LetterOwners",data,config);
+        // console.log("*************************");
+        // console.log(serverResult.data);
+        // console.log("*************************");
         return serverResult.data;
     } catch (error) {
         console.log(error);
