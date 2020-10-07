@@ -107,9 +107,11 @@
                 <div style="flex:1;text-align: center;" class=" action-icon">
                     <i class=" icon-saveDraft xlarg-text"></i>
                 </div>
-                <div style="flex:1;text-align: center;" @click="send()" class=" action-icon">
+                <SendButtonWithOptions @send="send()" :signProp="sign" :setCopyProp="setCopy" @options-changed="toggleSendOption($event)"/>
+                <!-- <div style="flex:1;text-align: center;" @click="send()" class=" action-icon">
                     <i class=" icon-send xlarg-text"></i>
-                </div>
+                </div> -->
+                
             </div>
         </div>
         
@@ -156,9 +158,10 @@ import LetterReferencesToOtherLetters from '@/store/models/Letter/LetterReferenc
 import MessageBox from '@/components/UiComponents/MessageBox.vue';
 import InPlaceMessageBox from '@/components/UiComponents/InPlaceMessageBox.vue';
 import FullPageTrail from '@/components/UiComponents/FullPageTrail.vue'
+import SendButtonWithOptions from '@/components/Cartable/FastSend/SendButtonWithOptions.vue';
 @Component({
     name: "DraftDetails",
-    components: { LetterAttachment, LetterTrailTree, RecipientLookup, FastSendRecipientSelector , PrioritySelector, FileSelector, FullPageLoader, MessageBox, FullPageTrail,InPlaceMessageBox}
+    components: { LetterAttachment, LetterTrailTree, RecipientLookup, FastSendRecipientSelector , PrioritySelector, FileSelector, FullPageLoader, MessageBox, FullPageTrail,InPlaceMessageBox, SendButtonWithOptions}
 })
 export default class DraftDetails extends Vue {
 
@@ -171,6 +174,8 @@ export default class DraftDetails extends Vue {
     loading = false;
     shallShowTrail = false;
     shallShowInPlaceMessageBox = false;
+    sign = true;
+    setCopy = true;
     @Prop() letter?: DraftLetter;
     @Watch("letter")
     async onLetterChanged(newVal: DraftLetter, oldVal: DraftLetter) {

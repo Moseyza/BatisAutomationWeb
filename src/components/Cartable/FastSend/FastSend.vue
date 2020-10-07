@@ -115,8 +115,26 @@
             />
             <div v-else style="display:flex">
                     <div @click="cancel" class="action-icon bg1" style="flex:1;text-align:center"><i style="color:inherit;font-size:xx-large" class=" icon-close"></i></div>
-                     <div v-if="mode === 'send'" @click="send(true)" class="action-icon bg1" style="flex:1;text-align:center"><i style="color:inherit;" class=" icon-saveDraft xlarg-text"></i></div>
-                    <div @click="send(false)" class="action-icon bg1" style="flex:1;text-align:center"><i style="color:inherit;" class=" icon-forwardedLetter xlarg-text"></i></div>
+                    <div v-if="mode === 'send'" @click="send(true)" class="action-icon bg1" style="flex:1;text-align:center"><i style="color:inherit;" class=" icon-saveDraft xlarg-text"></i></div>
+                    <SendButtonWithOptions @send="send(false)" :setCopyProp="shallSetCopyReceivers" :signProp="shallSign" @options-changed="toggleSendOption($event)"/>
+                    <!-- <div  class="bg1" style="flex:1;text-align:center;display:flex;flex-direction:column;align-items:center">
+                        <div class="action-icon"><i @click="send(false)" style="color:inherit;" class="action-icon icon-sendForwardLetter xlarg-text"></i></div>
+                        <div id="sendingOptions-dropdown"  class="ui icon top left dropdown">
+  		                
+                              <div class="action-btn;" style="font-size: 5pt;border: 1px solid gray;padding-left: 5px;margin-left: 5px;width: 20px;height: 10px;box-sizing: border-box;    background-color: lightgray;">
+                                <i style="margin-top:-10px" class="icon action-icon icon-triangle"></i> 
+                              </div>
+                        
+  		                <div class="menu">
+    		                    <div class="item menu-item">
+                                    <div style="text-align:right;display:flex;flex-direction:column">
+                                        <div @click="toggleSendOption('sign')"> <input type="checkbox"  v-model="shallSign"> امضا</div>
+                                        <div @click="toggleSendOption('setCopy')"> <input type="checkbox" v-model="shallSetCopyReceivers"> تنظیم گیرندگان رونوشت</div>
+                                    </div>
+                                </div>
+  		                </div>
+	                    </div>
+                    </div> -->
             </div>
         </div>
         <!-- <MessageBox 
@@ -154,9 +172,11 @@ import { Letter } from '../../../store/models/Letter/Letter';
 import DependentItem from './DependentItem/DependentItem.vue';
 import {DependentLetter} from '@/store/models/Letter/DependentLetter';
 import LetterReferencesToOtherLetters from '../../../store/models/Letter/LetterReferencesToOtherLetters';
+import * as $ from 'jquery';
+import SendButtonWithOptions from '@/components/Cartable/FastSend/SendButtonWithOptions.vue';
 
 @Component({
-    components:{RecipientLookup, FastSendRecipientSelector, MessageBox, FileSelector, LetterAttachment, FullPageLoader, InPlaceMessageBox,PrioritySelector , DependentItem}
+    components:{RecipientLookup, FastSendRecipientSelector, MessageBox, FileSelector, LetterAttachment, FullPageLoader, InPlaceMessageBox,PrioritySelector , DependentItem, SendButtonWithOptions}
 })
 export default class FastSent extends Vue{
     recipients: LetterOwnerWithFaxAndEmails[] = [];
@@ -182,6 +202,15 @@ export default class FastSent extends Vue{
         });
     }
     shallShowMessageBox = false;
+    // @Watch('shallShowMessageBox')
+    // onShallShowMessageBoxChanged(n: boolean, o: boolean)
+    // {
+    //     if(!n && o){
+    //          $("#sendingOptions-dropdown").dropdown({action:'nothing'});
+    //          alert("test");
+    //     }
+    // }
+
     msgBoxBtns = 'ok';
     messageType = 'success';
     message="";
@@ -194,6 +223,8 @@ export default class FastSent extends Vue{
     attachments = [] as File[];
     loading = false;
     priority = 1;
+    shallSign = true;
+    shallSetCopyReceivers = true;
     @Prop() mode?: string;
     
     @Watch('mode') 
@@ -298,6 +329,7 @@ export default class FastSent extends Vue{
         });
     }
     async send(shallSaveforSender: boolean){
+        
         this.msgBoxBtns = 'ok';
         this.messageType = 'fail';
         if(this.title.trim() === ''){
@@ -339,6 +371,9 @@ export default class FastSent extends Vue{
         dto.copyRecievers = this.selectedCopyRecipients;
         dto.draftRecievers = this.selectedDraftRecipients;
         dto.priority = this.priority;
+        dto.shallSign = this.shallSign;
+        dto.shallShowCopyReceiversInLetter = this.shallSetCopyReceivers;
+
         if(this.dependentLetters){
         
             const tempArray = [] as LetterReferencesToOtherLetters[];
@@ -396,6 +431,7 @@ export default class FastSent extends Vue{
         this.messageType = '';
         this.shallShowMessageBox = true;
     }
+
     onMessageBoxBtnClicked(btn: string){
         if(this.isLetterSent)
             this.$emit('fastsend-canceled');
@@ -429,6 +465,11 @@ export default class FastSent extends Vue{
                 this.shallShowDraftLookup = true;
                 break;
         }
+    }
+    
+    toggleSendOption(options: any){       
+            this.shallSign = options.sign;
+            this.shallSetCopyReceivers = options.setCopy;
     }
 }
 

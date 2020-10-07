@@ -2,6 +2,22 @@
     <div class="three-part-flexbox">
        
        <div class="flex-part-top">
+            
+            <div class="container3 chamfer">
+                <h4>{{letter.title}}</h4>
+                <div>{{letter.abstract}}</div>
+            </div>           
+            <div v-if="attachments.length > 0">پیوست ها:</div> 
+            <div class="wrap-grid">
+                    <LetterAttachment
+                    v-for="part in attachments"
+                    :key="part.id"
+                    :file="part.file"
+                    >
+                    </LetterAttachment>
+            </div>
+       </div>
+       <div class="flex-part-middle" >
             گیرنده اصلی:
            <RecipientLookup v-if="shallShowMainLookup" :recipients="recipients" @recipient-selected="selectMainRecipient($event)"/>
            <RecipientSelector  @additem-requested="onAddRecipientRequest('main')" :autoCompleteDataType="'all'" :recipients="selectedMainRecipients" 
@@ -13,21 +29,7 @@
            <RecipientSelector @additem-requested="onAddRecipientRequest('copy')" :autoCompleteDataType="'copy'" :recipients="selectedCopyRecipients" 
            @recipient-removed="onCopyRecipientRemoved($event)"
            />
-       </div>
-       <div class="flex-part-middle" >
-            <div v-if="attachments.length > 0">پیوست ها:</div> 
-            <div class="wrap-grid">
-                    <LetterAttachment
-                    v-for="part in attachments"
-                    :key="part.id"
-                    :file="part.file"
-                    >
-                    </LetterAttachment>
-            </div>
-            <div class="container3 chamfer">
-                <div>{{letter.title}}</div>
-                <div>{{letter.abstract}}</div>
-            </div>
+            
        </div>
        <div class="flex-part-bottom" style="flex:0" >
                 <InPlaceMessageBox 

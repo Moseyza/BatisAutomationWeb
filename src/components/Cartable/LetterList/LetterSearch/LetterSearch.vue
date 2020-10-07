@@ -47,7 +47,7 @@
                                 <div class="left menu">
                                     <div v-for="year in yearsArray" :key="year.value" class="item menu-item">
                                         <div style="padding-left:5px"> {{year.value}} </div>
-                                        <ToggleSwitch isReadOnly=t rue :checkedProp="year.isSelected" @click="yearSelected(year.value)" /> </div>
+                                        <ToggleSwitch :isReadOnly="true" :checkedProp="year.isSelected" @click="yearSelected(year.value)" /> </div>
                                 </div>
                             </div>
                             <div class="item menu-item scrolling">
@@ -55,7 +55,7 @@
                                 <div class="left menu " style="max-height:300px;overflow:auto">
                                     <div v-for="month in months" :key="month.id" class="item menu-item ">
                                         <div style="padding-left:5px"> {{month.name}} </div>
-                                        <ToggleSwitch isReadOnly=t rue :checkedProp="month.isSelected" @click="monthSelected(month.id)" /> </div>
+                                        <ToggleSwitch :isReadOnly="true" :checkedProp="month.isSelected" @click="monthSelected(month.id)" /> </div>
                                 </div> 
                             </div>
                         </div>
@@ -65,15 +65,15 @@
                         <div class="left menu ">
                             <div class="item menu-item">
                                 <div style="padding-left:5px">تاریخ</div>
-                                <ToggleSwitch isReadOnly=t rue :checkedProp="sortOnDate" @click="sortModeChanged('date')" />
+                                <ToggleSwitch :isReadOnly="true" :checkedProp="sortOnDate" @click="sortModeChanged('date')" />
                             </div>
                             <div class="item menu-item">
                                 <div style="padding-left:5px">نام فرستنده</div>
-                                <ToggleSwitch isReadOnly=t rue :checkedProp="sortOnSender" @click="sortModeChanged('sender')" />
+                                <ToggleSwitch :isReadOnly="true" :checkedProp="sortOnSender" @click="sortModeChanged('sender')" />
                             </div>
                             <div class="item menu-item">
                                 <div style="padding-left:5px">عنوان</div>
-                                <ToggleSwitch isReadOnly=t rue :checkedProp="sortOnTitle" @click="sortModeChanged('title')" />
+                                <ToggleSwitch :isReadOnly="true" :checkedProp="sortOnTitle" @click="sortModeChanged('title')" />
                             </div>
                         </div>
                     </div>

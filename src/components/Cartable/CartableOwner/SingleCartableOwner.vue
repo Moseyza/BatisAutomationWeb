@@ -2,7 +2,7 @@
     <div style="display:flex">
        
       <div v-if="letterOwners.length>1 && isOwnersLoaded" style="margin-left:5px">
-            <div @click="activeDropdown()" id="cartables-dropdown"  class="ui icon top left dropdown">
+            <div  id="cartables-dropdown"  class="ui icon top left dropdown">
   		                <i class="action-icon icon-comboboxArrow" style="font-size: medium"></i>
   		                <div class="left menu">
     		                <div @click="onLetterOwnerChanged(owner.id)" v-for="owner in letterOwners" :key="owner.id" class="item menu-item"><div style="padding-left:5px">{{owner.nameOnly}}</div></div>
@@ -68,14 +68,17 @@ export default class SingleCartableOwner extends Vue{
         //this.$router.push("ReceivedLetters");
     }
     mounted(){
-        $(".dropdown").dropdown({action: 'hide',silent: true});
+        $("#cartables-dropdown").dropdown();
     }
-    isFirstClick = false;
-    activeDropdown(){
-        if(this.isFirstClick)return;
-        $(".dropdown").dropdown({action: 'hide',silent: true});
-        this.isFirstClick = true;
+    updated(){
+        $("#cartables-dropdown").dropdown();
     }
+    //isFirstClick = false;
+    //activeDropdown(){
+        //if(this.isFirstClick)return;
+        //$(".dropdown").dropdown({action: 'hide',silent: true});
+        //this.isFirstClick = true;
+    //}
 }
 </script>
 
