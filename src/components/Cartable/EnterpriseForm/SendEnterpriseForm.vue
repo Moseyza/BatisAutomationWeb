@@ -270,6 +270,7 @@ export default class SendEnterpriseForm extends Vue{
             this.msgBoxMessage = sendingResults.errorMessage;
             this.shallShowMsgBox = true;
             this.isFormSent = true;
+            this.isNextForm = false;
         }
     }
     cancel(){
