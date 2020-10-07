@@ -426,6 +426,11 @@ export default class EnterpriseFormContainer extends Vue{
         this.nextFormInfo.multipleValues.letters.forEach(item=>{
             if(item.values){
                 item.values.forEach(val=>{
+                    const invisibleItem = this.invisibleBookmarks.find(x=>x.Name === val.englishName);
+                    if(invisibleItem){
+                        invisibleItem.Value = val.value;
+                    }
+                    else{
                     if(val.type === 18){
                         //for tables 
                         tableRows = JSON.parse(val.value);
@@ -440,6 +445,7 @@ export default class EnterpriseFormContainer extends Vue{
                         bookmarkValue.Id = val.id;
                         bookmarkValue.Value = val.value;
                         bookmarkValues.push(bookmarkValue);
+                    }
                     }
                 });
             }
