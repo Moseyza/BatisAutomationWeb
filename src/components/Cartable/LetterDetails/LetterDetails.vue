@@ -157,6 +157,10 @@ export default class LetterDetails extends Vue {
     created(){
         this.setIsReceived();
         this.loadNextForms();
+        if(this.letter){
+            this.canFinalize = !this.letter.isClosed;
+            this.canReject = this.letter.isClosed;
+        }
     }
     get attachments(){
         
