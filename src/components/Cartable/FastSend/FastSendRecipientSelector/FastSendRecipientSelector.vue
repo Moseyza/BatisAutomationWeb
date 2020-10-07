@@ -1,5 +1,5 @@
 <template>
-    <div style="display:flex;align-items: center;">
+    <div style="display:flex;align-items: center;flex-wrap:wrap">
         <!-- <div style="flex:1" id="selection-area"> -->
             <FastSendSelectedRecipient
             v-for="recipient in recipients"

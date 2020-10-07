@@ -107,10 +107,10 @@
                 <div style="flex:1;text-align: center;" class=" action-icon">
                     <i class=" icon-saveDraft xlarg-text"></i>
                 </div>
-                <SendButtonWithOptions @send="send()" :signProp="sign" :setCopyProp="setCopy" @options-changed="toggleSendOption($event)"/>
-                <!-- <div style="flex:1;text-align: center;" @click="send()" class=" action-icon">
+                <!-- <SendButtonWithOptions @send="send()" :signProp="sign" :setCopyProp="setCopy" @options-changed="toggleSendOption($event)"/> -->
+                <div style="flex:1;text-align: center;" @click="send()" class=" action-icon">
                     <i class=" icon-send xlarg-text"></i>
-                </div> -->
+                </div>
                 
             </div>
         </div>

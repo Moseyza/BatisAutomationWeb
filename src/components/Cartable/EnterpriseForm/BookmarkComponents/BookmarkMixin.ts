@@ -63,6 +63,7 @@ export default class BookmarkMixin extends Vue{
     }
 
     get isMandatoryValueSupplied(){
+        
         if(!this.isMandatory)return true;
         if(this.bookmark){
             if(this.bookmark.type === 18){
@@ -186,6 +187,10 @@ export default class BookmarkMixin extends Vue{
         if(!this.tableColumnBookmark)return;
         if(eventArg.data && eventArg.data[this.tableColumnBookmark.englishName])
         {
+            // if(this.englishName == "CEOConfirmation1"){
+            //     const x = 6;
+            //     const y = x-1;
+            // }
             if(isFromBehindCode)
                 this.setValueFromBehindCodeResult(eventArg.data[this.tableColumnBookmark.englishName]);
             else

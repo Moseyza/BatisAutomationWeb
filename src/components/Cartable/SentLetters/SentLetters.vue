@@ -4,8 +4,13 @@
         :lettersProp="letters" 
         :loading="loading" 
         @selected-letter-changed="onSelectedLetterChanged($event)" 
+        :defaultDate="defaultDate" 
+        @date-filter-changed="onDateFilterChanged($event)" 
+        :years="years"
         ref="letterList"
         :serverTime="serverTime"
+        :mode="'sent'"
+        
         ></LetterList>
     </div>
 </template>
@@ -16,6 +21,7 @@ import LetterList from '@/components/Cartable/LetterList/LetterList.vue';
 import {Letter} from '@/store/models/Letter/Letter'
 import * as api from '@/store/api'
 import * as letterService from '@/store/Services/letterServices';
+import * as persianDate from 'persian-date';
 @Component({
     components:{LetterList}
 })
@@ -23,6 +29,8 @@ export default class ReceivedLetters extends Vue {
     letters?: Letter[] = [];
     loading = false;
     serverTime = '';
+    years?: number[] = [];
+    defaultDate: any = {};
     async created(){
         await this.refresh();
     }
@@ -30,6 +38,8 @@ export default class ReceivedLetters extends Vue {
         this.loading = true;
         const serverResult = await api.getSentLetters(undefined,undefined);
         this.serverTime = await letterService.getServerTime();
+        this.years  =   api.getCartableYears(serverResult.from,serverResult.to);
+        this.defaultDate = api.getDefaultDate(serverResult.to);
         this.loading = false;
         if(!serverResult.letterList) return;
         this.letters =  serverResult.letterList;
@@ -48,6 +58,15 @@ export default class ReceivedLetters extends Vue {
 
     forwardLetter(possessionId: string){
          (this.$refs.letterList as any).forwardLetter(possessionId);
+    }
+    async onDateFilterChanged(date: any){
+        const startDate = new persianDate([date.year,date.month,1]);
+        const endDate = startDate.add('month',1);
+        this.loading = true
+        const serverResult  = await api.getSentLetters(startDate.toDate(),endDate.toDate());
+        if(!serverResult.letterList) return;
+        this.letters = serverResult.letterList;
+        this.loading = false;
     }
     
 }
