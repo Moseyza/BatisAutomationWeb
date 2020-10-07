@@ -176,6 +176,7 @@ export default class MainWindow extends Vue {
         this.leftSideMode = 'details';
     }
     onFastSendBtnClick(mode: string){
+        this.fastSendDependencies = [];
         this.fastSendMode = mode;
         this.leftSideMode = 'fastSend';
     }
