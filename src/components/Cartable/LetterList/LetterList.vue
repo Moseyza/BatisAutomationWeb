@@ -318,10 +318,19 @@ export default class LetterList extends Vue{
             store.commit("setWorkflows",workflows);
         }
         store.state.eventHub.$on('calc-letterscount-requested',this.calcCounts);
+        store.state.eventHub.$on('dependent-letter-sent',this.onDependentLetterSent);
+        
         //this.serverTime = await letterService.getServerTime();
         
     }
-
+    onDependentLetterSent(letterPossessionId: string){
+        // if(!this.lettersProp)return;
+        // const letter =  this.lettersProp.find(l=>l.id == letterPossessionId); 
+        // if(!letter)return;
+        // letter.isForwarded = true;
+        this.forwardLetter(letterPossessionId);
+        
+    }
     setUsedEnterpriseForms(){
         const enterpriseForms =  this.letters.filter(letter=>letter.isEnterpriseForm);
         const distinctForms: Letter[] = [];

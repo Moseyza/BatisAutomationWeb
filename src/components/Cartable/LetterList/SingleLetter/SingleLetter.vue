@@ -57,7 +57,6 @@ import * as api from '@/store/Services/letterServices';
 import { DateBaseOnCurrentTimeConverter } from '@/util/dateConverter';
 import * as letterService from '@/store/Services/letterServices';
 import { DraftLetter } from '../../../../store/models/Letter/DraftLetter';
-import * as Velocity from 'velocity-animate';
 import * as enterpriseFormService from '@/store/Services/enterpriseFormService';
 import store from '@/store';
 
@@ -133,24 +132,7 @@ export default class SingleLetter extends Vue{
         if(!draftLetter.childLetters)return false;
         return draftLetter.childLetters.length > 0 ;
     }
-    beforeEnter(el: any) {
-      el.style.opacity = 0
-      el.style.transformOrigin = 'left'
-    }
-    enter(el: any, done: any) {
-      Velocity(el, { opacity: 1, fontSize: '2em', color:'red' }, { duration: 300 })
-      Velocity(el, { fontSize: '1em' }, { complete: done })
-    }
-    leave(el: any, done: any) {
-      Velocity(el, { translateX: '15px', rotateZ: '50deg' }, { duration: 600 })
-      Velocity(el, { rotateZ: '100deg' }, { loop: 2 })
-      Velocity(el, {
-        rotateZ: '45deg',
-        translateY: '30px',
-        translateX: '30px',
-        opacity: 0
-      }, { complete: done })
-    }
+    
     
 
 }

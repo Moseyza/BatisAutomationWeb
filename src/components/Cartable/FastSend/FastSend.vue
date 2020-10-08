@@ -403,6 +403,10 @@ export default class FastSent extends Vue{
                 this.messageType = 'success';
                 this.shallShowMessageBox = true;
                 this.isLetterSent = true;
+                if(this.dependentLetters){
+                    if(this.dependentLetters.length >0)
+                        store.state.eventHub.$emit('dependent-letter-sent',this.dependentLetters[0].letterPossessionId);
+                }
             }
         }
         else{

@@ -200,7 +200,7 @@ export default class MainWindow extends Vue {
         dependentLetter.dependencyType = mode;
         dependentLetter.id = this.selectedLetter.id;
         dependentLetter.title = this.selectedLetter.title;
-        dependentLetter.letterPossessionId = this.selectedLetter.id;
+        dependentLetter.letterPossessionId = this.selectedLetter.letterPossessionId;
         dependentLetter.letterNo = this.selectedLetter.letterNo;
         dependentLetter.parts = [];
         if(this.selectedLetter.parts)
