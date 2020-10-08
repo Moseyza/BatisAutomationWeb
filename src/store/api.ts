@@ -114,7 +114,7 @@ export function getDefaultDate(date: string): any{
     return {year: pc.year(), month: pc.month()}
 }
 
-export async function getReceivedLetters(from?: Date, to?: Date): Promise<LetterListerWithPaginationResult>{
+export async function getReceivedLetters(from: string, to: string): Promise<LetterListerWithPaginationResult>{
     try {
         const config = {
             //headers: {'Content-Type': 'application/json' }
@@ -137,7 +137,7 @@ export async function getSentLetters(from?: Date, to?: Date): Promise<LetterList
     try {
         const data = {
             ownerId: store.state.ownerId,
-            form: from,
+            from: from,
             to: to
         };
         const serverResult = await batisAutomationApi.post("/SentLetters",data);
@@ -148,19 +148,20 @@ export async function getSentLetters(from?: Date, to?: Date): Promise<LetterList
     }
 }
 
-export async function getDraftLetters(from?: Date, to?: Date): Promise<DraftLetter[]> {
+export async function getDraftLetters(from?: Date, to?: Date): Promise<LetterListerWithPaginationResult> {
     try {
         const data = {
             ownerId: store.state.ownerId,
-            form: from,
+            from: from,
             to: to
         };
         const serverResult = await batisAutomationApi.post("/DraftLetters",data);
-        const result =  serverResult.data.letterList;
+        const result =  serverResult.data;
+        
         return result;
     } catch (error) {
         console.log(error);
-        return [] ;
+        return {} as LetterListerWithPaginationResult ;
     }
 }
 

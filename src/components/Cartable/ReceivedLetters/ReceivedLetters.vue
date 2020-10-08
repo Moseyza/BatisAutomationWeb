@@ -37,7 +37,7 @@ export default class ReceivedLetters extends Vue {
     }
     async refresh(){
         this.loading = true;
-        const serverResult = await api.getReceivedLetters();
+        const serverResult = await api.getReceivedLetters("","");
         this.serverTime = await letterService.getServerTime();
         this.loading = false;
         if(!serverResult.letterList) return;
@@ -56,7 +56,7 @@ export default class ReceivedLetters extends Vue {
         const startDate = new persianDate([date.year,date.month,1]);
         const endDate = startDate.add('month',1);
         this.loading = true
-        const serverResult  = await api.getReceivedLetters(startDate.toDate(),endDate.toDate());
+        const serverResult  = await api.getReceivedLetters(startDate.toDate().toString(),endDate.toDate().toString());
         if(!serverResult.letterList) return;
         this.letters = serverResult.letterList;
         this.loading = false;
