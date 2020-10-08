@@ -41,7 +41,8 @@ export default class SingleCartableOwner extends Vue{
         this.isOwnersLoaded = true;
     }
     async created(){
-        this.letterOwners = await  api.getLetterOwners();
+        const allLetterOwners  = await  api.getLetterOwners();
+        this.letterOwners = allLetterOwners.filter(x=>!x.onlyForReceivingIncommingLetter);
         const currentLetterOwner = this.letterOwners[0];
         //this.selectedOwner = currentLetterOwner.id;
         this.post = currentLetterOwner.post;
