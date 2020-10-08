@@ -7,6 +7,7 @@
 </template>
 
 <script lang="ts">
+import store from '@/store';
 import {Vue, Component, Prop, Watch} from 'vue-property-decorator';
 
 @Component
@@ -24,7 +25,7 @@ export default class LetterTypeSelector extends Vue {
         
     }
     @Prop() counts?: any;
-    @Watch('counts')
+    @Watch('counts',{deep:true})
     onCountsChange(n: any,o: any){
         this.setButtonsText();
     }
@@ -51,11 +52,16 @@ export default class LetterTypeSelector extends Vue {
             this.allSelected = true;
              this.$emit('letter-type-changed',"all");
         }
+        store.state.eventHub.$emit('letter-type-changed');
     }
     created(){
         this.setButtonsText();
+        //store.state.eventHub.$on('letter-opened',this.decreaseNotRead);
     }
-
+    decreaseNotRead(){
+        if(this.counts.notRead )
+            this.counts.notRead = this.counts.notRead -1;
+    }
     setButtonsText(){
         if(this.mode === 'received'){
             this.firstButtonTxt = `ارجاع نشده (${this.counts.notForwarded})`;

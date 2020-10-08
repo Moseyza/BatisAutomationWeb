@@ -59,6 +59,7 @@ import * as letterService from '@/store/Services/letterServices';
 import { DraftLetter } from '../../../../store/models/Letter/DraftLetter';
 import * as Velocity from 'velocity-animate';
 import * as enterpriseFormService from '@/store/Services/enterpriseFormService';
+import store from '@/store';
 
 @Component
 export default class SingleLetter extends Vue{
@@ -73,9 +74,13 @@ export default class SingleLetter extends Vue{
              this.isSent = true;
          }
 
-    
+         store.state.eventHub.$on('letter-type-changed',this.openIfOpen);
     }
-
+    openIfOpen(){
+        if(!this.letterData)return
+        if(this.isOpenned && !this.letterData.isOpenned)
+            this.letterData.isOpenned = true;
+    }
     get priorityColor(){
         if(this.letterData === undefined)return '';
         if(this.letterData.priority<5)
@@ -103,6 +108,7 @@ export default class SingleLetter extends Vue{
         else{
             if(this.letterData.isOpenned === false){
                 api.OpenLetter(this.letterData.letterPossessionId);
+                //store.state.eventHub.$emit('letter-opened');
                 if(this.letterData.isEnterpriseForm)
                    if( await enterpriseFormService.IsFormAutoClose(this.letterData.enterpriseFormId))
                         this.letterData.isClosed = true;

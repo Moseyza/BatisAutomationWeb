@@ -170,12 +170,15 @@ export default class ForwardLetter extends Vue{
         const result = await letterService.ForwardLetter(this.letter.letterPossessionId,this.selectedMainRecipients,this.selectedCopyRecipients)
         this.loading = false;
         if(result != null){
+            
             this.message = "ارجاع انجام شد";
             this.messageType = 'success';
             this.shallShowMessageBox = true;
             this.isDone = true;
+            this.$emit("forward-done",this.letter.letterPossessionId);
+            store.state.eventHub.$emit('calc-letterscount-requested');
         }
-        this.$emit("forward-done",this.letter.letterPossessionId);
+        
     }
 
     cancel(){

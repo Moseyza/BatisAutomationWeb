@@ -298,6 +298,8 @@ export default class LetterList extends Vue{
    
 
     onLetterTypeChanged(mode: string){
+        
+        this.calcCounts();
         this.currentLetterType = mode;
         this.updateFilter();
         
@@ -315,6 +317,7 @@ export default class LetterList extends Vue{
             const workflows =  await workflowService.getAllWorkflowsWithEnterpriseForms();
             store.commit("setWorkflows",workflows);
         }
+        store.state.eventHub.$on('calc-letterscount-requested',this.calcCounts);
         //this.serverTime = await letterService.getServerTime();
         
     }
