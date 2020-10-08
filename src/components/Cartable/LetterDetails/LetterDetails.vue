@@ -55,7 +55,7 @@
                     </LetterAttachment>
                 </div>
             </div>
-            <div style="height: 100%">
+            <div  style="height: 100%">
                 <div v-if="letter.comment">
                     <div  style="margin: 10px 0">هامش: {{letter.comment}}</div>
                     <div class="symmetric-grid" style="padding:20px">
@@ -64,15 +64,26 @@
                         <div style="flex:1"></div>
                     </div>
                 </div>
-                <div style="display:flex; height:100%">
+                <div style="display:flex;flex-direction:column;align-items: center; height:100%">
                     <!-- <p> -->
                         <!-- {{letter.abstract}} -->
-                        <div style="padding:5px;flex:1;min-height:400px" class="ng-scope pdfobject-container">
+                        <!-- <div class="action-button" style="font-size:x-large" @click="fitImage()" v-if="noPdfExists"><i class="icon icon-fitImage"></i></div> -->
+                        <div  style="font-size:large;color:#69b578" v-if="noPdfExists"> {{viewedFileName}} </div>
+                        <div ref="previewContainer" style="padding:5px;flex:1;min-height:400px;width:100%" class="ng-scope pdfobject-container">
 
                             <span v-if="hasHtmlMainFile" v-html="htmlSrc"></span>
-                            <iframe v-if="pdfLoaded" :src="pdfSrc" type="application/pdf" width="100%" height="100%" style="overflow: auto;"></iframe>
-                            <img v-else-if="noPdfExists" :src="pdfSrc" width="100%" height="100%" alt="مشاهده پیش نمایش امکان پذیر نیست" style="overflow: auto;color:#ff6b6b;min-height:100px"/>
+                            <div v-else-if="noPdfExists">
+                                <img :src="pdfSrc" width="100%" height="100%" alt="مشاهده پیش نمایش امکان پذیر نیست" style="overflow: auto;color:#ff6b6b;min-height:100px;max-width:100%;max-height:100%"/>
+                            </div>
+                            <div v-else-if="pdfLoaded" style="width:100%;height:100%">
+                                <iframe  :src="pdfSrc" type="application/pdf" width="100%" height="100%" style="overflow: auto;"></iframe>
+                            </div>
+                            <!--  -->
+                            
+
+                            
                         </div>
+                        
 
                         <!-- <object :data="pdfSrc" type="application/pdf" width="100%" >
                             <p><b>Example fallback content</b>: This browser does not support PDFs. Please download the PDF to view it: <a href="/pdf/sample.pdf">Download PDF</a>.</p>
@@ -130,6 +141,7 @@ import * as enterpriseFormService from '@/store/Services/enterpriseFormService';
 import store from '@/store';
 import { EnterpriseForm } from '@/store/models/EnterpriseForm/EnterpriseForm';
 
+
 @Component({
     name:"LetterDetails",
     components:{LetterAttachment, LetterTrailTree, FinalizeLetter}
@@ -161,6 +173,25 @@ export default class LetterDetails extends Vue {
             this.canFinalize = !this.letter.isClosed;
             this.canReject = this.letter.isClosed;
         }
+        store.state.eventHub.$on('show-file-requested',this.onShowFileRequested);
+    }
+    viewedFileName = "";
+    async onShowFileRequested(fileId: string)
+    {
+        
+                const file = await fileService.getFile(fileId);
+                if(file.extension.toLowerCase().includes("pdf")){
+                        //for pdf insert code here
+                }
+                else{
+                  
+                    this.noPdfExists = true;
+                    this.pdfSrc = "data:image/png;base64," + file.content;
+                    this.viewedFileName = file.extension;
+                    this.hasHtmlMainFile = false;
+                }
+                
+            
     }
     get attachments(){
         
@@ -296,6 +327,10 @@ export default class LetterDetails extends Vue {
         request.ownerId = store.state.ownerId;
         request.possessionId = this.letter.letterPossessionId;
         this.$emit('next-form-selected',request);
+    }
+
+    fitImage(){
+        console.log($(this.$refs.previewContainer).find('img'));
     }
 
     

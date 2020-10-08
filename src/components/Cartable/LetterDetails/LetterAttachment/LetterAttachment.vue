@@ -1,7 +1,8 @@
 <template>
     <div class="symmetric-grid  single-attachment">
-        <div class="xxsmall-text"  style="flex:3;white-space:nowrap;overflow:hidden;">{{file.extension}}</div>
-        <div class="xxsmall-text" style="flex:1 margin:0 3px"><i class="icon-download helper-icon-small" @click="downloadFile"></i></div>
+        <div class="xxsmall-text"  style="flex:5;white-space:nowrap;overflow:hidden;">{{file.extension}}</div>
+        <div class="xxsmall-text" style="flex:1;margin:0 3px"><i class="icon-download helper-icon-small" @click="downloadFile"></i></div>
+        <div class="xxsmall-text" style="flex:1;"><i class="icon-seeFile helper-icon-small" @click="showFileInDetails()"></i></div>
         <i v-if="canRemove"  @click="remove()" class="icon-removeFile icon action-icon"></i>
     </div>
 </template>
@@ -11,6 +12,7 @@
     import File from '@/store/models/Letter/File';
     import * as api from '@/store/Services/fileService';
     import { converBase64toBlob, saveFile } from '@/util/utils';
+    import store from '@/store';
     @Component
     export default class LetterAttachment extends Vue {
         @Prop() file?: File;
@@ -40,7 +42,10 @@
         onFileChanged(){
             const test =  this.file;
         }
-
+        showFileInDetails(){
+            if(this.file)
+                store.state.eventHub.$emit('show-file-requested',this.file.id);
+        }
         
     }
 </script>
