@@ -113,10 +113,13 @@
             :messageType="messageType"
             @button-clicked="onMessageBoxBtnClicked($event)"
             />
+            <InPlaceSendingOptions   v-else-if="shallShowSendingOptions" @close="onSendingOptionsClosed()" @toggle-options="toggleSendOption($event)" :setCopyProp="shallSetCopyReceivers" :signProp="shallSign"/>
             <div v-else style="display:flex">
                     <div @click="cancel" class="action-icon bg1" style="flex:1;text-align:center"><i style="color:inherit;font-size:xx-large" class=" icon-close"></i></div>
                     <div v-if="mode === 'send'" @click="send(true)" class="action-icon bg1" style="flex:1;text-align:center"><i style="color:inherit;" class=" icon-saveDraft xlarg-text"></i></div>
-                    <SendButtonWithOptions @send="send(false)" :setCopyProp="shallSetCopyReceivers" :signProp="shallSign" @options-changed="toggleSendOption($event)"/>
+                    <div class="action-icon" @click="showSendingOptions()" style="flex:1;text-align:center"><i  style="color:inherit;" class="action-icon icon-settings xlarg-text"></i></div>
+                    <div class="action-icon" @click="send(false)" style="flex:1;text-align:center" ><i  style="color:inherit;" class="action-icon icon-sendForwardLetter xlarg-text"></i></div>
+                    <!-- <SendButtonWithOptions @send="send(false)" :setCopyProp="shallSetCopyReceivers" :signProp="shallSign" @options-changed="toggleSendOption($event)"/> -->
                     <!-- <div  class="bg1" style="flex:1;text-align:center;display:flex;flex-direction:column;align-items:center">
                         <div class="action-icon"><i @click="send(false)" style="color:inherit;" class="action-icon icon-sendForwardLetter xlarg-text"></i></div>
                         <div id="sendingOptions-dropdown"  class="ui icon top left dropdown">
@@ -137,12 +140,6 @@
                     </div> -->
             </div>
         </div>
-        <!-- <MessageBox 
-       :isActive="shallShowMessageBox" 
-       :buttons="msgBoxBtns" 
-       :message="message"
-       :messageType="messageType"
-       @button-clicked="onMessageBoxBtnClicked($event)"/> -->
        <FullPageLoader :isActive="loading"/>
     </div>
 </template>
@@ -174,9 +171,10 @@ import {DependentLetter} from '@/store/models/Letter/DependentLetter';
 import LetterReferencesToOtherLetters from '../../../store/models/Letter/LetterReferencesToOtherLetters';
 import * as $ from 'jquery';
 import SendButtonWithOptions from '@/components/Cartable/FastSend/SendButtonWithOptions.vue';
+import InPlaceSendingOptions from '@/components/Cartable/FastSend/InPlaceSendingOptions.vue';
 
 @Component({
-    components:{RecipientLookup, FastSendRecipientSelector, MessageBox, FileSelector, LetterAttachment, FullPageLoader, InPlaceMessageBox,PrioritySelector , DependentItem, SendButtonWithOptions}
+    components:{RecipientLookup, FastSendRecipientSelector, MessageBox, FileSelector, LetterAttachment, FullPageLoader, InPlaceMessageBox,PrioritySelector , DependentItem, InPlaceSendingOptions}
 })
 export default class FastSent extends Vue{
     recipients: LetterOwnerWithFaxAndEmails[] = [];
@@ -342,7 +340,7 @@ export default class FastSent extends Vue{
             this.shallShowMessageBox = true;
             return;
         }
-        if(this.selectedMainRecipients.length === 0  && this.selectedDraftRecipients.length === 0)
+        if(!shallSaveforSender && this.selectedMainRecipients.length === 0  && this.selectedDraftRecipients.length === 0)
         {
             this.message = 'هیچ گیرنده اصلی یا پیش نویس انتخاب نشده است';
             this.shallShowMessageBox = true;
@@ -475,6 +473,14 @@ export default class FastSent extends Vue{
             this.shallSign = options.sign;
             this.shallSetCopyReceivers = options.setCopy;
     }
+    shallShowSendingOptions = false;
+    onSendingOptionsClosed(){
+        this.shallShowSendingOptions = false;
+    }
+    showSendingOptions(){
+        this.shallShowSendingOptions = true;
+    }
 }
+
 
 </script>

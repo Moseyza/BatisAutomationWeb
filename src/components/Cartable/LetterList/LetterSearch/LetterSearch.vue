@@ -2,6 +2,7 @@
     <div class="symmetric-grid">
         <div id="search-container" class="symmetric-grid">
             <input type="text" v-model="searchText">
+            <i @click="clearSearchText()" class="action-icon icon-removeFile small-text"></i>
             <div style="padding:3px 3px">
                 <div style="padding:3px 3px" id="search-dropdown" class="ui icon top left dropdown">
                     <i class="search-icon action-icon icon-comboboxArrow"></i>
@@ -112,7 +113,9 @@ export default class LetterSearch extends Vue {
     onSearchTextChanged() {
         this.$emit('search-text-changed', this.searchText);
     }
-
+    clearSearchText(){
+        this.searchText = "";
+    }
     mounted() {
         $('#filter-dropdown').dropdown({ action: 'nothing' });
         $('#search-dropdown').dropdown({ action: 'nothing' });

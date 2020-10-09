@@ -103,13 +103,17 @@
             v-if="shallShowInPlaceMessageBox"
             @button-clicked="onMessageBoxButtonClick($event)"
             />
+            <InPlaceSendingOptions   v-else-if="shallShowSendingOptions" @close="onSendingOptionsClosed()" @toggle-options="toggleSendOption($event)" :setCopyProp="shallSetCopyReceivers" :signProp="shallSign"/>
             <div v-else style="flex:1; display:flex;justify-content:space-around" class="container1">
                 <div style="flex:1;text-align: center;" class=" action-icon">
                     <i class=" icon-saveDraft xlarg-text"></i>
                 </div>
+                 <div class="action-icon" @click="showSendingOptions()" style="flex:1;text-align:center">
+                     <i  style="color:inherit;" class="action-icon icon-settings xlarg-text"></i>
+                     </div>
                 <!-- <SendButtonWithOptions @send="send()" :signProp="sign" :setCopyProp="setCopy" @options-changed="toggleSendOption($event)"/> -->
                 <div style="flex:1;text-align: center;" @click="send()" class=" action-icon">
-                    <i class=" icon-send xlarg-text"></i>
+                    <i class=" icon-sendForwardLetter xlarg-text"></i>
                 </div>
                 
             </div>
@@ -158,10 +162,10 @@ import LetterReferencesToOtherLetters from '@/store/models/Letter/LetterReferenc
 import MessageBox from '@/components/UiComponents/MessageBox.vue';
 import InPlaceMessageBox from '@/components/UiComponents/InPlaceMessageBox.vue';
 import FullPageTrail from '@/components/UiComponents/FullPageTrail.vue'
-import SendButtonWithOptions from '@/components/Cartable/FastSend/SendButtonWithOptions.vue';
+import InPlaceSendingOptions from '@/components/Cartable/FastSend/InPlaceSendingOptions.vue';
 @Component({
     name: "DraftDetails",
-    components: { LetterAttachment, LetterTrailTree, RecipientLookup, FastSendRecipientSelector , PrioritySelector, FileSelector, FullPageLoader, MessageBox, FullPageTrail,InPlaceMessageBox, SendButtonWithOptions}
+    components: { LetterAttachment, LetterTrailTree, RecipientLookup, FastSendRecipientSelector , PrioritySelector, FileSelector, FullPageLoader, MessageBox, FullPageTrail,InPlaceMessageBox, InPlaceSendingOptions}
 })
 export default class DraftDetails extends Vue {
 
@@ -446,6 +450,8 @@ export default class DraftDetails extends Vue {
                 
             });
             dto.letterRefrences = tempArray;
+            dto.shallSign = this.shallSign;
+            dto.shallShowCopyReceiversInLetter  = this.shallSetCopyReceivers;
         }
         //dto.transferType = this.letter.transferType;
         
@@ -478,7 +484,8 @@ export default class DraftDetails extends Vue {
         let dto = {} as any;
         dto = this.getSendLetterDto();
         dto.parentDraftLetterId = this.letter.id;
-        
+        dto.shallSign = this.shallSign;
+        dto.shallShowCopyReceiversInLetter  = this.shallSetCopyReceivers;
         if(this.mode == 'send'){
             const info = await letterService.SendLetter(dto);
             if(info.letterNo !== '') this.message = `نامه با شماره ${info.letterNo} ارسال شد.`
@@ -558,6 +565,19 @@ export default class DraftDetails extends Vue {
 
     onLetterTrailClose(){
         this.shallShowTrail = false;
+    }
+    shallSetCopyReceivers = true;
+    shallSign = true;
+    toggleSendOption(options: any){       
+            this.shallSign = options.sign;
+            this.shallSetCopyReceivers = options.setCopy;
+    }
+    shallShowSendingOptions = false;
+    onSendingOptionsClosed(){
+        this.shallShowSendingOptions = false;
+    }
+    showSendingOptions(){
+        this.shallShowSendingOptions = true;
     }
 }
 </script>

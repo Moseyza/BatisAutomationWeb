@@ -16,7 +16,7 @@
                     <datalist :id="dataListId">
                         <option v-for="item in autoCompleteData" :key="item.id" :value="item.name" />
                     </datalist>  -->
-                     <SimpleLookup 
+                     <SimpleLookup
                     :validValues="autoCompleteValidValues" 
                     :color="'transparent'"
                     :allowUserEntry="true" 
