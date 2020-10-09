@@ -11,21 +11,19 @@
             </div>
         </div>
         <div class="item-block xxsmall-text">
-            
-             هامش: <!--  <input type="text" :list="dataListId"  v-model="recipient.forwardingComment" >
-                    <datalist :id="dataListId">
-                        <option v-for="item in autoCompleteData" :key="item.id" :value="item.name" />
-                    </datalist>  -->
-                     <SimpleLookup
+            <div style="flex:0 1 auto"> هامش:</div>
+             <CommentEditor style="flex:1;width:100%"  :data="autoCompleteData"/>
+                     <!-- <SimpleLookup
                     :validValues="autoCompleteValidValues" 
                     :color="'transparent'"
                     :allowUserEntry="true" 
                     @value-selected="onValueSelected($event)" 
                     @value-cleared="onValueCleared()"
-                    />
+                    /> -->
+            <div style="flex:0 1 auto" >
                     <FileSelector @file-changed="onFileSelectorChanged($event)"/>
                     <progress v-if="loadingFile" :value="loadedPercent" max="100"></progress>
-                    
+            </div>  
         </div>
         <div class="item-block xxsmall-text" style="justify-content: flex-start;overflow-x: auto;" v-if="recipient.attachments.length > 0">
             پیوست:
@@ -62,9 +60,9 @@ import FileSelector from '@/components/UiComponents/FileSelector.vue';
 import * as autoCompleteDataService from '@/store/Services/autoCompleteDataService.ts';
 import SimpleLookup from '@/components/Cartable/EnterpriseForm/SimpleLookup/SimpleLookup.vue';
 import { ValidValuesForSingleColumn, ValidValues } from '@/store/models/EnterpriseForm/EnterpriseFormValidValues';
-
+import CommentEditor from '@/components/Cartable/ForwardLetter/RecipientSelector/CommentEditor/CommentEditor.vue'
 @Component({
-    components: { LetterAttachment, FileSelector ,SimpleLookup}
+    components: { LetterAttachment, FileSelector ,SimpleLookup, CommentEditor}
 })
 export default class SingleSelectedRecipient extends Vue{
     isTelegramActive = false;
