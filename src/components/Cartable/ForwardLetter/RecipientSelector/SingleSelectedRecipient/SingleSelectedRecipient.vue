@@ -12,7 +12,7 @@
         </div>
         <div class="item-block xxsmall-text">
             <div style="flex:0 1 auto"> هامش:</div>
-             <CommentEditor style="flex:1;width:100%"  :data="autoCompleteData"/>
+             <CommentEditor style="flex:1;width:100%"  @comment-changed="onCommentChanged($event)" :data="autoCompleteData"/>
                      <!-- <SimpleLookup
                     :validValues="autoCompleteValidValues" 
                     :color="'transparent'"
@@ -60,7 +60,8 @@ import FileSelector from '@/components/UiComponents/FileSelector.vue';
 import * as autoCompleteDataService from '@/store/Services/autoCompleteDataService.ts';
 import SimpleLookup from '@/components/Cartable/EnterpriseForm/SimpleLookup/SimpleLookup.vue';
 import { ValidValuesForSingleColumn, ValidValues } from '@/store/models/EnterpriseForm/EnterpriseFormValidValues';
-import CommentEditor from '@/components/Cartable/ForwardLetter/RecipientSelector/CommentEditor/CommentEditor.vue'
+import CommentEditor from '@/components/Cartable/ForwardLetter/RecipientSelector/CommentEditor/CommentEditor.vue';
+
 @Component({
     components: { LetterAttachment, FileSelector ,SimpleLookup, CommentEditor}
 })
@@ -191,6 +192,11 @@ export default class SingleSelectedRecipient extends Vue{
     onValueCleared(){
         if(!this.recipient)return;
         this.recipient.forwardingComment = "";
+    }
+    onCommentChanged(comment: string){
+        
+         if(!this.recipient)return;
+        this.recipient.forwardingComment = comment;
     }
    
 }

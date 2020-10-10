@@ -7,7 +7,7 @@ export class LetterOwner {
     post: string;
     letterOwnerCompanyNameOnly: string;
     letterOwnerPersonnelCode: string;
-    sendingComment?: null;
+    sendingComment: string;
     ownerType: number;
     trailingPermission: number;
     isSecretariatWorker: boolean;

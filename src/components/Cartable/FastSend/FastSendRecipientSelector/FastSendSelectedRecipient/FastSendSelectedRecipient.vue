@@ -12,10 +12,8 @@
         </div>
         <div v-if="!hideComment" class="item-block xxsmall-text">
             
-            هامش:   <input type="text" :list="dataListId"  v-model="recipient.sendingComment" >
-                    <datalist :id="dataListId">
-                        <option v-for="item in autoCompleteData" :key="item.id" :value="item.name" />
-                    </datalist> 
+            <div style="flex:0 1 auto"> هامش:</div>
+            <CommentEditor style="flex:1;width:100%"  @comment-changed="onCommentChanged($event)" :data="autoCompleteData"/>
                     
                     
         </div>
@@ -88,9 +86,11 @@ import RecipientLookup from '@/components/Cartable/ForwardLetter/RecipientLookup
 import { LetterOwnerForSendingFaxAndEmailAndSms } from '../../../../../store/models/LetterOwner/LetterOwnerForSendingFaxAndEmailAndSms';
 import * as letterOwnerService from '@/store/Services/letterOwnerService';
 import { LetterOwnerWithFaxAndEmails } from '../../../../../store/models/LetterOwner/LetterOwnerWithFaxAndEmails';
+import CommentEditor from '@/components/Cartable/ForwardLetter/RecipientSelector/CommentEditor/CommentEditor.vue';
+
 @Component({
     name:"FastSendSelectedRecipient",
-    components: { LetterAttachment, FileSelector, RecipientLookup  }
+    components: { LetterAttachment, FileSelector, RecipientLookup, CommentEditor  }
 })
 export default class FastSendSelectedRecipient extends Vue{
     isTelegramActive = false;
@@ -204,7 +204,10 @@ export default class FastSendSelectedRecipient extends Vue{
         list.splice(index,1);        
     }
     
-   
+   onCommentChanged(comment: string){
+       if(!this.recipient)return;
+       this.recipient.sendingComment = comment;
+   }
 
     
    
