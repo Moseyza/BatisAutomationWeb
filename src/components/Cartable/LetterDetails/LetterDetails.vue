@@ -181,7 +181,12 @@ export default class LetterDetails extends Vue {
         
                 const file = await fileService.getFile(fileId);
                 if(file.extension.toLowerCase().includes("pdf")){
-                        //for pdf insert code here
+                    //for pdf insert code here
+                    this.noPdfExists = false;
+                    this.pdfSrc = "data:application/pdf;base64," + file.content;
+                    this.viewedFileName = file.extension;
+                    this.hasHtmlMainFile = false;
+                    this.pdfLoaded = true;
                 }
                 else{
                   
