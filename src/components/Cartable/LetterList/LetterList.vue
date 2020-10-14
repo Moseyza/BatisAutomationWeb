@@ -21,7 +21,7 @@
                 <div v-if="lettersProp && lettersProp.length >0"  id="letter-list">
                     <SingleLetter 
                     v-for="(letter,index) in filteredLetters"
-                    :key="letter.letterPossessionId"
+                    :key="index + letter.letterPossessionId"
                     :index="index"
                     :letterData ="letter" @letterselected="onLetterSelected($event)"
                     :serverTime="serverTime"

@@ -9,7 +9,7 @@
         :years="years"
         ref="letterList"
         :serverTime="serverTime"
-        :mode="'sent'"
+        :mode="''"
         
         ></LetterList>
     </div>
