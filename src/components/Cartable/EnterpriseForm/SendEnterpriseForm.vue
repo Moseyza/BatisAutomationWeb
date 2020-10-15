@@ -254,14 +254,19 @@ export default class SendEnterpriseForm extends Vue{
                 
                 if(sendingResults.sentLetterInformation.letterNumber != ''){
                     this.msgBoxMessage = `نامه با شماره ${sendingResults.sentLetterInformation.letterNumber} ارسال گردید.`
-                    this.shallShowMsgBox = true;
+                    //this.shallShowMsgBox = true;
                     this.isFormSent = true;
+                    store.state.eventHub.$emit("show-message",this.msgBoxMessage);
+                    this.$emit('sendform-close',this.isNextForm);
+
                 }
             }
             else{
                  this.msgBoxMessage = "پیشنویس ذخیره شد";
-                 this.shallShowMsgBox = true;
+                 //this.shallShowMsgBox = true;
                  this.isFormSent = true;
+                 store.state.eventHub.$emit("show-message",this.msgBoxMessage);
+                 this.$emit('sendform-close',this.isNextForm);
             }
         }
         else{

@@ -15,7 +15,6 @@
                         <div class="flex-part-bottom" style="flex: 0 1 auto;"></div>
                         
                     </div>
-                     
             </div>
             <div class="conatiner2" style="flex:3">
                 <router-view 
@@ -26,6 +25,10 @@
                 </router-view>
             </div>
             <div class="container2" style="flex:6">
+                <transition name="fade">
+                    <div v-if="shallShowMessage" class="ui green message">{{message}}</div>
+                </transition>
+                
                 <LetterDetails v-if="noLetterSelected == false && leftSideMode==='details'" :letter="selectedLetter" 
                 :searchResult="selectedSearchResult"
                 @finalize-letter="onFinalizeLetter($event)"
@@ -48,7 +51,7 @@
                  >
                 </SearchResultDetails>
                 <FinalizeLetter v-else-if="leftSideMode=== 'finalize'" :letter="selectedLetter"  />
-                <ForwardLetter v-else-if="leftSideMode=== 'forward'" @forward-canceled="onForwardCanceled" @forward-done="onLetterForwarded($event)" :letter="selectedLetter" />
+                <ForwardLetter v-else-if="leftSideMode=== 'forward'" @forward-closed="onForwardClosed" @forward-done="onLetterForwarded($event)" :letter="selectedLetter" />
                 <FastSend :mode="fastSendMode" v-else-if="leftSideMode=== 'fastSend'" @fastsend-canceled="onFastSendCanceled($event)"  :dependentLetters="fastSendDependencies" />
                 <SendEnterpriseForm  v-else-if="leftSideMode=== 'enterpriseForm'" @sendform-close="onSendFormClose($event)" :form="selectedFrom" :nextFormInfo="nextFormInfo" :tableLblWidth="maxTableLabelWidth" :formLblWidth="maxFormLabelWidth" :draftFormInfo="draftFormInfo" />
             </div>
@@ -57,7 +60,7 @@
         <div class="flex-part-bottom container2" style="flex: 0 1 auto;direction:ltr;font-size:x-small;">
             Batis idea processors. All rights reserved ©
         </div>
-        <FullPageLoader :isActive="isLoading"/>
+        <!-- <FullPageLoader :isActive="isLoading"/> -->
     </div>
 </template>
 
@@ -97,6 +100,25 @@ export default class MainWindow extends Vue {
     leftSideMode = 'details';
     firstLoad = false;
     isLoading = false;
+    shallShowMessage = false;
+    interval = 0;
+    message = '';
+    created(){
+        store.state.eventHub.$on('show-message',this.onShowMessage);
+    }
+
+    
+    onShowMessage(message: string){
+        this.message = message;
+        this.shallShowMessage = true;
+        this.interval =  setInterval(this.onMessageInterval,4000);
+    }
+    onMessageInterval(interval: number)
+    {
+        this.shallShowMessage = false;
+        clearInterval(this.interval);
+        
+    }
     onSelectdLetterChanged(letter: Letter ){
         this.leftSideMode = 'details';
         this.noLetterSelected = false;
@@ -169,7 +191,7 @@ export default class MainWindow extends Vue {
     onLetterForwarded(possessionId: string){
         (this.$refs.letterlist as any).forwardLetter(possessionId);
     }
-    onForwardCanceled(){
+    onForwardClosed(){
         this.leftSideMode = 'details';
     }
     onFastSendCanceled(){
@@ -295,6 +317,13 @@ export default class MainWindow extends Vue {
     max-height:-webkit-fill-available;
     //overflow:auto;
     //height:100%;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .8s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
 }
 
 </style>

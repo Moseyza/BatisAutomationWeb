@@ -39,7 +39,7 @@
                :messageType="messageType"
                @button-clicked="onMessageBoxBtnClicked($event)"/>
                <div v-else style="display:flex">
-                    <div @click="cancel" class="action-icon bg1" style="flex:1;text-align:center"><i style="color:inherit" class="icon icon-close"></i></div>
+                    <div @click="close" class="action-icon bg1" style="flex:1;text-align:center"><i style="color:inherit" class="icon icon-close"></i></div>
                     <div @click="send" class="action-icon bg1" style="flex:1;text-align:center;font-size:x-large;"><i style="color:inherit" class="icon icon-sendForwardLetter"></i></div>
                </div>
               
@@ -171,23 +171,23 @@ export default class ForwardLetter extends Vue{
         this.loading = false;
         if(result != null){
             
-            this.message = "ارجاع انجام شد";
-            this.messageType = 'success';
-            this.shallShowMessageBox = true;
+            //this.message = "ارجاع انجام شد";
+            //this.messageType = 'success';
+            //this.shallShowMessageBox = true;
             this.isDone = true;
             this.$emit("forward-done",this.letter.letterPossessionId);
+            store.state.eventHub.$emit("show-message","ارجاع انجام شد");
             store.state.eventHub.$emit('calc-letterscount-requested');
+            this.close();
         }
         
     }
 
-    cancel(){
-        this.$emit("forward-canceled");
+    close(){
+        this.$emit("forward-closed");
     }
     onMessageBoxBtnClicked(btn: string){
         this.shallShowMessageBox = false;
-        if(this.isDone)
-            this.cancel();
     }
     shallShowMainLookup = false;
     shallShowCopyLookup = false;

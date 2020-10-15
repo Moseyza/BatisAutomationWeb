@@ -397,10 +397,12 @@ export default class FastSent extends Vue{
             const info = await letterService.SendLetterFast(dto);
             if(info.letterNumber){
                 this.message = `نامه با شماره ${info.letterNumber} ارسال شد.`
-                this.msgBoxBtns = 'ok';
-                this.messageType = 'success';
-                this.shallShowMessageBox = true;
+                //this.msgBoxBtns = 'ok';
+                //this.messageType = 'success';
+                //this.shallShowMessageBox = true;
                 this.isLetterSent = true;
+                this.$emit('fastsend-canceled');
+                store.state.eventHub.$emit("show-message",this.message);
                 if(this.dependentLetters){
                     if(this.dependentLetters.length >0)
                         store.state.eventHub.$emit('dependent-letter-sent',this.dependentLetters[0].letterPossessionId);
@@ -417,11 +419,13 @@ export default class FastSent extends Vue{
             request.dto = dto;
             const info = await letterService.SaveDraft(request);
             if(info && info.isAnyDraftSaved){
-                this.messageType = 'success';
+                //this.messageType = 'success';
                 this.message = 'پیش نویس ارسال شد';
-                this.msgBoxBtns = 'ok';
-                this.shallShowMessageBox = true;
+                //this.msgBoxBtns = 'ok';
+                //this.shallShowMessageBox = true;
                 this.isLetterSent = true;
+                this.$emit('fastsend-canceled');
+                store.state.eventHub.$emit("show-message",this.message);
             }
         }
         this.loading = false;

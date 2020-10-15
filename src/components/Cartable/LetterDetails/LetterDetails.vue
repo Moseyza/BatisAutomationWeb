@@ -163,6 +163,7 @@ export default class LetterDetails extends Vue {
         this.setPdfUrl();
         this.canFinalize = !newVal.isClosed;
         this.canReject = newVal.isClosed;
+        this.nextEnterpriseForms = [];
         this.loadNextForms();
     }
     

@@ -497,8 +497,9 @@ export default class DraftDetails extends Vue {
             if(this.message != ''){
                 this.msgBoxBtns = 'ok';
                 this.messageType = 'success';
-                this.shallShowInPlaceMessageBox = true;
+                //this.shallShowInPlaceMessageBox = true;
                 this.isLetterSent = true;
+                store.state.eventHub.$emit("show-message",this.message);
             }
             else{
                 this.message = 'خطایی رخ داده است';
@@ -519,7 +520,8 @@ export default class DraftDetails extends Vue {
                 this.messageType = 'success';
                 this.message = 'پیش نویس ارسال شد';
                 this.msgBoxBtns = 'ok';
-                this.shallShowInPlaceMessageBox = true;
+                //this.shallShowInPlaceMessageBox = true;
+                store.state.eventHub.$emit("show-message",this.message);
                 this.isLetterSent = true;
             }
         }
