@@ -28,7 +28,7 @@ export interface LetterTrailWithAttachments {
     closingAttorner?: null;
     possessionId: string;
     sendTime: string;
-    recievers?: (LetterTrailWithAttachments)[];
+    recievers: (LetterTrailWithAttachments)[];
     isMainPossession: boolean;
     openTime?: null;
     closeTime?: null;

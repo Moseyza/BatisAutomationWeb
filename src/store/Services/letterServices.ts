@@ -35,6 +35,15 @@ export async function GetLetterTrialWithAttachment(letterPossessionId: string,le
     }
 }
 
+export async function GetRemoteLetterTrail(letterPossessionId: string,letterOwnerId: string): Promise<LetterTrailWithAttachments> {
+    try {
+        const serverResult =  await api.batisAutomationApi.post("/Letters/RemoteLetterTrail",{letterPossessionId: letterPossessionId, ownerId: letterOwnerId});
+        return serverResult.data as LetterTrailWithAttachments;
+    } catch (error) {
+        console.log(error);
+        return {} as LetterTrailWithAttachments;
+    }
+}
 
 export async function GetArchiveFolderLetters(folderId: string): Promise<Letter[]>{
     try {
@@ -166,5 +175,28 @@ export async function deleteLetter(letter: Letter){
         
     } catch (error) {
         console.log(error);
+    }
+}
+
+
+export async function getEmailStatus(emailReferenceId: string)
+{
+    try {
+        const result = await api.batisAutomationApi.post('/letters/EmailState',{emailReferenceId: emailReferenceId});
+        return result.data;
+    } catch (error) {
+        console.log(error);
+        return {} as any;
+    }
+}
+
+export async function getTelegramStatus(telegramReferenceId: string)
+{
+    try {
+        const result = await api.batisAutomationApi.post('/letters/TelegramState',{telegramReferenceId: telegramReferenceId});
+        return result.data;
+    } catch (error) {
+        console.log(error);
+        return {} as any;
     }
 }

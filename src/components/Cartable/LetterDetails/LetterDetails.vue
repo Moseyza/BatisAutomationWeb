@@ -147,7 +147,7 @@ import { EnterpriseForm } from '@/store/models/EnterpriseForm/EnterpriseForm';
     components:{LetterAttachment, LetterTrailTree, FinalizeLetter}
 })
 export default class LetterDetails extends Vue {
-
+   
     isReceived = true;
     pdfSrc = {} as any;
     @Prop() letter?: Letter;

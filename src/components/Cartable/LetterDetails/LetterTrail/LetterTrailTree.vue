@@ -1,7 +1,7 @@
 <template>
     <div>
         <div v-if="loading" class="ui active inline centered loader"></div>
-        <LetterTrailTreeNode v-else :nodeData="data" :serverTime="serverTime" :isRoot="true" :currentPossession="letterId"></LetterTrailTreeNode>
+        <LetterTrailTreeNode v-else :nodeData="data" :serverTime="serverTime" :isRoot="true" :currentPossession="letterId" :isHideProp="rootIsHide" ></LetterTrailTreeNode>
     </div>
     
 </template>
@@ -14,6 +14,7 @@ import * as letterService  from '@/store/Services/letterServices.ts';
 import store from '@/store';
 import { LetterTrailWithAttachments } from '../../../../store/models/Letter/LetterTrailWithAttachment';
 import { LetterOwner } from '../../../../store/models/LetterOwner/LetterOwner';
+
 @Component({
     name:"LetterTrailTree",
     components: {LetterTrailTreeNode}
@@ -33,22 +34,49 @@ export default class LetterTrailTree extends Vue {
     async created(){
         await this.getLetterTrail();
         this.serverTime = await letterService.getServerTime();
+        store.state.eventHub.$on("remote-inquiry",this.onRemoteInquiry);
     }
-   
+    root = {} as LetterTrailWithAttachments;
     async getLetterTrail(){
         if(this.letterId === undefined)return;
         this.loading = true;
         const ownerId =  store.state.ownerId;
         const  trailData =  await  letterService.GetLetterTrialWithAttachment(this.letterId,ownerId);
         trailData.isSender = true;
-        const root = {} as LetterTrailWithAttachments;
-        root.sender = {} as LetterOwner;
-        root.sender.nameOnly = `پیگیری نامه ${this.letterNo}`;
-        root.recievers = [];
-        root.sendTime = '';
-        root.recievers[0] = trailData;
-        this.data = root;
+        this.root = {} as LetterTrailWithAttachments;
+        this.root.sender = {} as LetterOwner;
+        this.root.sender.nameOnly = `پیگیری نامه ${this.letterNo}`;
+        this.root.recievers = [];
+        this.root.sendTime = '';
+        this.root.recievers[0] = trailData;
+        this.data = this.root;
         this.loading = false;
+    }
+    
+    onRemoteInquiry(inquriyResult: LetterTrailWithAttachments, possessionId: string ){
+        //console.log(this.root);
+        this.getParentRecursive(this.root,possessionId);
+        const remotItem =  this.tempParent.recievers.find(x=>x.possessionId === possessionId);
+        if(!remotItem)return;
+        const index =  this.tempParent.recievers.indexOf(remotItem);
+        if(!this.tempParent)return;
+        this.tempParent.recievers = [];//this.tempParent.recievers.splice(index,1);
+        inquriyResult.recievers.push(remotItem);
+        this.tempParent.recievers.splice(0,0,inquriyResult);
+        this.data = this.tempParent;
+        this.rootIsHide = true;
+    }
+    tempParent = {} as LetterTrailWithAttachments;
+    rootIsHide = false;
+    getParentRecursive(parent: LetterTrailWithAttachments, possessionId: string  ){
+        parent.recievers.forEach(reciever => {
+            if(reciever.possessionId === possessionId){
+                this.tempParent = parent;
+            }
+            else{
+                this.getParentRecursive(reciever,possessionId);
+            }
+        });
     }
 }
 </script>
