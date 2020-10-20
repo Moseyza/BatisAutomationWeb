@@ -87,7 +87,7 @@ export default class LetterTypeSelector extends Vue {
 
 <style lang="less" scoped>
 .type-btn{
-    background-color: #5f5f5f;
+    background-color: var(--LineItem);
     flex: 1;
     text-align: center;
     cursor: pointer;
@@ -96,7 +96,7 @@ export default class LetterTypeSelector extends Vue {
     
 }
 .selected{
-    background-color: #939393;
+    background-color: var(--TxtColor);
 }
 </style>
 

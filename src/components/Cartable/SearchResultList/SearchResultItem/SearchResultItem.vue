@@ -109,7 +109,7 @@ export default class SearchResultItem extends Vue{
     }
      .single-letter{
         height: 80px;
-        background-color: @back-color3;
+        background-color: var(--SingleLetter);
         padding: 3px 5px 3px 5px;
         white-space: nowrap;
         width: 100%;
@@ -133,7 +133,7 @@ export default class SearchResultItem extends Vue{
 
     }
     .letter-date{
-        color: @color-icon;
+        color: var(--TxtColor);
         //font-size: 12pt;
 
     }

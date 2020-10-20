@@ -211,9 +211,9 @@ export default class ForwardLetter extends Vue{
     }
 
     .paraph-form{
-        border: 1px solid #939393;
+        border: 1px solid var(--TxtColor);
         border-radius: 3px;
-        background-color: #5f5f5f;
+        background-color: var(--LineItem);
         min-width: 400px;
         min-height: 100px;
     }
@@ -225,7 +225,7 @@ export default class ForwardLetter extends Vue{
         margin: 5px 0px;
     }
     .paraph-title{
-        background-color: #3f3f3f;
+        background-color: var(--NormalBackground);
         padding: 5px;
     }
 </style>

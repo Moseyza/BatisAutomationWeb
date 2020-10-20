@@ -1,8 +1,8 @@
 <template>
     <div style="display:flex;justify-content:space-between">
         <div  style=" width:100%;display:flex;justify-content:flex-start">
-            <div style="padding:3px"><button style="padding:3px;cursor:pointer;background-color:#575757" @click="toggle('sign')"  :class="{'optionbtn-active':sign}">امضا</button></div>
-            <div style="padding:3px"><button style="padding:3px;cursor:pointer;background-color:#575757" @click="toggle('setCopy')"  :class="{'optionbtn-active':setCopy}">تنظیم گیرندگان رونوشت</button></div>
+            <div style="padding:3px"><button style="padding:3px;cursor:pointer;background-color:var(--BackgroundTable)" @click="toggle('sign')"  :class="{'optionbtn-active':sign}">امضا</button></div>
+            <div style="padding:3px"><button style="padding:3px;cursor:pointer;background-color:var(--BackgroundTable)" @click="toggle('setCopy')"  :class="{'optionbtn-active':setCopy}">تنظیم گیرندگان رونوشت</button></div>
         </div>
         <div style="text-align:center" @click="close" class="action-icon" >
             <i style="margin-left:15px;font-size:25pt;" class="icon-close"></i>

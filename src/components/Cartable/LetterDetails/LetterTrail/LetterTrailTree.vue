@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div style="color:var(--TxtColor) !important">
         <div v-if="loading" class="ui active inline centered loader"></div>
         <LetterTrailTreeNode v-else :nodeData="data" :serverTime="serverTime" :isRoot="true" :currentPossession="letterId"></LetterTrailTreeNode>
     </div>

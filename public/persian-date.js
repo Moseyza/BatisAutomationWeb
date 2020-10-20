@@ -1543,6 +1543,9 @@ var PersianDateClass = function () {
             value = normalizeDuration(key, value).value;
             if (unit === 'year') {
                 var normalizedDate = arr[2],
+
+
+                
                     monthDays = this.daysInMonth(arr[0] + value, arr[1]);
                 if (arr[2] > monthDays) {
                     normalizedDate = monthDays;

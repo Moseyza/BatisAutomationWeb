@@ -53,7 +53,7 @@ export default class ToggleSwitch extends Vue {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #494949;
+  background-color: var(--DetailBackground);
   -webkit-transition: .4s;
   transition: .4s;
 }

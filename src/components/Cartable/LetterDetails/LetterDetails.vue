@@ -3,7 +3,7 @@
             <div style="flex:0 1 auto"  class="flex-part-top" >
                 <div class="symmetric-grid">
                 <div style="flex:3">
-                    <h4 style="margin-right:5px">{{letter.title}}</h4>
+                    <h4 style="margin-right:5px;color:var(--TxtColor);">{{letter.title}}</h4>
                 </div>
                 <div style="flex:1;justify-content:space-around" class="symmetric-grid">
                     <div class="popup" data-content='یادداشت شخصی'> <i class="action-icon icon-comment" style="font-size: x-large"></i></div>
@@ -39,7 +39,7 @@
                     </div>
                 </div>
                 <div>
-                    <div>
+                    <div style="color:var(--TxtColor) !important">
                         {{letterTime}}
                     </div>
                     <div>
@@ -57,7 +57,7 @@
             </div>
             <div  style="height: 100%">
                 <div v-if="letter.comment">
-                    <div  style="margin: 10px 0">هامش: {{letter.comment}}</div>
+                    <div  style="margin: 10px 0;color:var(--TxtColor) !important">هامش: {{letter.comment}}</div>
                     <div class="symmetric-grid" style="padding:20px">
                         <div style="flex:1"></div>
                         <!-- <div style="flex:2;border-bottom:2px #e7e7e7 solid;"></div> -->
@@ -69,7 +69,7 @@
                         <!-- {{letter.abstract}} -->
                         <!-- <div class="action-button" style="font-size:x-large" @click="fitImage()" v-if="noPdfExists"><i class="icon icon-fitImage"></i></div> -->
                         <div  style="font-size:large;color:#69b578" v-if="noPdfExists"> {{viewedFileName}} </div>
-                        <div ref="previewContainer" style="padding:5px;flex:1;min-height:400px;width:100%" class="ng-scope pdfobject-container">
+                        <div ref="previewContainer" style="padding:5px;flex:1;min-height:400px;width:100%; color:var(--TxtColor);" class="ng-scope pdfobject-container">
 
                             <span v-if="hasHtmlMainFile" v-html="htmlSrc"></span>
                             <div v-else-if="noPdfExists">
@@ -91,7 +91,7 @@
                     <!-- </p> -->
                 </div>
             </div>
-            </div>
+        </div>
         <div  style="flex:0 1 auto;display:flex;flex-direction:column;align-items:strech" class="flex-part-bottom">
             <div style="flex:1; display:flex;justify-content:space-around" class="container1">
                 <div v-if="nextEnterpriseForms.length>0" style="flex:1;text-align: center;" class="action-icon">
@@ -113,13 +113,11 @@
   		                </div>
 	                </div>
                 </div>
-              
                 <div style="flex:1;text-align: center;" @click="forwardLetter()"  class=" action-icon">
                     <i class=" icon-ForwardLetter xlarg-text"></i>
                 </div>
             </div>
         </div>
-      
     </div>
 </template>
 
