@@ -22,7 +22,7 @@ export default class App extends Vue {
     if(store.state.isLoggedIn === false)
       this.$router.replace({name: "Login"});
     else 
-      this.$router.replace({name: "MainWindow"});
+      this.$router.replace({name: "MainWindowMobile"});
      
   }
 }

@@ -34,6 +34,11 @@ const routes = [
   },
   {
     path: '/',
+    name: 'MainWindowMobile',
+    component: () => import('@/components/MobileComponents/MainWindowMobile.vue'),
+  },
+  {
+    path: '/',
     name: 'MainWindow',
     component: () => import('@/components/MainWindow.vue'),
     children:[

@@ -96,7 +96,7 @@ export default class Login extends Vue {
       this.isUserValid =  await api.isUserValid(this.userName,this.password);
       if(this.isUserValid){
           this.$store.commit("setIsLoggedIn",true);
-          this.$router.replace({name: "MainWindow"});
+          this.$router.replace({name: "MainWindowMobile"});
 
       }
   }
