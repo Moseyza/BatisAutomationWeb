@@ -1,12 +1,16 @@
 <template>
 <div id="container" class="container5">
-    <SingleCartableOwner @on-letter-owner-set="onLetterOwnerSet($event)"/>
-    <div>
+    <SingleCartableOwner style="display: flex;align-items: center;" @on-letter-owner-set="onLetterOwnerSet($event)"/>
+    <div style="display: flex;align-items: center;">
         {{branch}}
     </div>
-    <div style="direction: ltr">
-       {{currentDate}}  {{currentTime}}
+    <div style="display:flex; direction: ltr">
+       <ThemeSelector style="margin:0em 1em 0em 1em;"/>
+        <div style="display: flex;align-items: center;">
+            {{currentDate}}  {{currentTime}}
+       </div>
     </div>
+    
 </div>    
 </template>
 
@@ -16,9 +20,10 @@ import SingleCartableOwner from '@/components/Cartable/CartableOwner/SingleCarta
 import { getPersianDate } from '@/util/utils';
 import { getBranches } from '@/store/api';
 import * as letterService from '@/store/Services/letterServices';
+import ThemeSelector from '@/components/UiComponents/ThemeSelector.vue';
 
 @Component({
-    components: {SingleCartableOwner}
+    components: {SingleCartableOwner, ThemeSelector}
 })
 export default class CartableTitle extends Vue{
     clock = 0;
