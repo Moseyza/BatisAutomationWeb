@@ -7,7 +7,7 @@
                 <div style="padding:3px 3px" id="search-dropdown" class="ui icon top left dropdown">
                     <i class="search-icon action-icon icon-comboboxArrow"></i>
                     <div class=" menu">
-                        <div style="background-color:#3f3f3f" class="item menu-item">
+                        <div style="background-color:var(--NormalBackground);" class="item menu-item">
                             <AdvancedSearch/>
                         </div>
                     </div>
@@ -243,8 +243,8 @@ export default class LetterSearch extends Vue {
 
 <style lang="less" scoped>
 input {
-    background-color: #575757;
-    color: #e7e7e7;
+    background-color: var(--BackgroundTable);
+    color: var(--FontColor);
     width: 100%;
     border: none;
     font-size: small;
@@ -256,11 +256,11 @@ input:focus {
 }
 
 .search-icon {
-    font-size: large; //color: #e7e7e7;
+    font-size: large;
 }
 
 #search-container {
-    background-color: #575757
+    background-color: var(--BackgroundTable)
 }
 .active{
     color: #ff6b6b;

@@ -8,7 +8,7 @@
   		<div class="left menu" >
             <div style="padding:5px" ><input type="text" v-model="formSearchTxt" style="width:100%"/></div>
             <div v-if="isLoading" class="item"><div class="ui active inline centered loader"></div></div> 
-            <div style="max-height:200px !important;overflow:auto;width:300px">
+            <div style="max-height:200px !important;overflow:auto;width:300px;background:var(--BackgroundTable1);">
                 <div v-for="(form) in filteredForms" :key="form.id" class="item menu-item" :style="{'background-color':getFromColor(form.selectionColor), 'color':'black' ,'border':'1px solid black' , 'max-height':'30px','cursor':'pointer' , 'overflow':'hidden' }">
                     <div @click="showForm(form.id)" style="padding-left:5px;">{{form.name}}</div>
                 </div>
@@ -54,7 +54,7 @@ export default class QuickAccess extends Vue{
     }
 
     getFromColor(color: number){
-        if(color === 0) return '#939393';
+        if(color === 0) return 'var(--BackgroundTable1)';
         const result =  '#' + color.toString(16).substring(2);
         return result;
     }

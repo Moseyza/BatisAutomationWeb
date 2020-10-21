@@ -31,6 +31,6 @@ export default class TableRowContainer extends Vue{
 <style lang="less" scoped>
     .form-table-row:hover{
         border: 1px solid #3498db  !important;
-        background-color: #5f5f5f;
+        background-color: var(--LineItem);
     }
 </style>

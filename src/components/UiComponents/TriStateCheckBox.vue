@@ -1,6 +1,6 @@
 <template>
     <div class="tris-checkbox" @click="changeState()">
-        <i style="color:#5f5f5f;font-size:9pt" :class="{'icon-comboBoxButton':state === 'dontCare','icon-check':state === 'checked' }"></i>
+        <i style="color:var(--LineItem);font-size:9pt" :class="{'icon-comboBoxButton':state === 'dontCare','icon-check':state === 'checked' }"></i>
     </div>    
 </template>
 

@@ -17,12 +17,59 @@
     src: url('../fonts/IranSans/IRANSANS.TTF');
 }
 
+
+:root{
+    --back-color1: #3f3f3f;
+    --back-color2: #494949;
+    --back-color3: #4d4d4d;
+    --back-color4: #575757;
+    --back-color5: #5f5f5f;
+    --back-color6: #939393;
+    --color-success:#69b578;
+    --color-danger: #ff6b6b;
+    --color-primary: #3498db;
+    --color-caution: #e9c46a;
+    --color-font: #e7e7e7;
+    --color-icon: #939393;
+
+    --LineItem:var(--back-color5);
+    --BackgroundTable:var(--back-color4);
+    --DetailBackground:var(--back-color2);
+    --NormalBackground:var(--back-color1);
+    --SingleLetter:var(--back-color3);
+    --TxtColor:var(--back-color6);
+    --FontColor:var(--color-font);
+  
+    //dark
+    --dayBack-color1: #cacaca;
+    --dayBack-color2: #cacaca;
+    --dayBack-color3: #f6f6f6;
+    --dayBack-color4: #cacaca;
+    --dayBack-color5: #949494;
+    --dayBack-color6: #3f3f3f;
+    --dayBackcolor-font: #3f3f3f;
+   
+    --LineItem1:var(--dayBack-color5);
+    --BackgroundTable1:var(--dayBack-color4);
+    --SingleLetter1:var(--dayBack-color3);
+    --DetailBackground1:var(--dayBack-color2);
+    --NormalBackground1:var(--dayBack-color1);
+    --TxtColor1:var(--dayBack-color6);
+    --FontColor1:var(--dayBackcolor-font);
+   
+
+}
+
+*{
+    user-select: text !important;
+}
+
 ::-webkit-scrollbar {
     width: 5px !important;
   }
   
   ::-webkit-scrollbar-track {
-    background: @back-color3 !important; 
+    background: var(--SingleLetter) !important; 
   }
    
   ::-webkit-scrollbar-thumb {
@@ -47,7 +94,7 @@ html,body{
 
 #app{
 
-    background-color: @back-color1;
+    background-color: var(--NormalBackground);
     height: 100%;
     overflow: hidden;
     
@@ -72,43 +119,43 @@ button{
 }
 .container1{
     .container;
-    background-color: @back-color1;
+    background-color: var(--NormalBackground);
 }
 
 .container2{
     .container;
-    background-color: @back-color2;
+    background-color: var(--DetailBackground);
 }
 
 .container3{
     .container;
-    background-color: @back-color3;
+    background-color: var(--SingleLetter);
 }
 
 .container4{
     .container;
-    background-color: @back-color4;
+    background-color: var(--BackgroundTable);
 }
 
 .container5{
     .container;
-    background-color: @back-color5;
+    background-color: var(--LineItem);
 }
 
 .bg1{
-    background-color: @back-color1;
+    background-color: var(--NormalBackground);
 }
 .bg2{
-    background-color: @back-color2;
+    background-color: var(--DetailBackground);
 }
 .bg3{
-    background-color: @back-color3;
+    background-color: var(--SingleLetter);
 }
 .bg4{
-    background-color: @back-color4;
+    background-color: var(--BackgroundTable);
 }
 .bg5{
-    background-color: @back-color5;
+    background-color: var(--LineItem);
 }
 .fc1{
     color: @color-font;
@@ -117,7 +164,7 @@ button{
     border-radius: 5px;
 }
 .form-input{
-    background-color: @back-color6;
+    background-color: var(--TxtColor);
     width: 100%;
     margin: 5px;
     padding: 5px;
@@ -187,11 +234,11 @@ button{
 
 .fixed-icon{
     font-size: x-large;
-    color: @color-icon;
+    color: var(--TxtColor);
 }
 .icon{
     cursor: pointer;
-    color: @color-icon;
+    color: var(--TxtColor);
     vertical-align: middle;
 }
 .icon:hover{
@@ -206,7 +253,7 @@ button{
 }
 .action-button{
     cursor: pointer;
-    color: @back-color1;
+    color: var(--NormalBackground);
     vertical-align: middle;
     border-radius: 3px;
     padding-top: 2px;
@@ -243,7 +290,7 @@ button{
 
 .selected-letter
 {
-    background-color: @back-color5 !important;
+    background-color: var(--LineItem) !important;
 }
 
 .xxsmall-text{
@@ -265,7 +312,7 @@ button{
     font-size: x-large;
 }
 .dark-text{
-    color: @color-icon;
+    color: var(--TxtColor);
 }
 
 .nowrap{
@@ -275,7 +322,7 @@ button{
 }
 
 .dialog-button{
-    background-color: @back-color1;
+    background-color: var(--NormalBackground);
     padding: 5px;
     border-radius: 3px;
     color: @color-font;

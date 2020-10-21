@@ -1,12 +1,12 @@
 <template>
-    <div class="letter-container" @click="select">
+    <div id="test" class="letter-container"  @click="select"  >
         <div style="flex:0 0 3px" :style="priorityColor"></div>
-        <div style="flex:1 0 0" class="single-letter" :class="{'selected-letter': letterData.isSelected}">
-            <div class="letter-title">
+        <div style="flex:1 0 0;color:var(--TxtColor);" class="single-letter" :class="{'selected-letter': letterData.isSelected}">
+            <div class="letter-title" style="color:var(--TxtColor);">
                  {{letterData.title}}
             </div>
             <div class="symmetric-grid">
-                <div style="flex:2">
+                <div style="flex:2 color:var(--TxtColor);">
                     <div style="display:inline;" class="letter-audience">
                         <div v-if="isSent == false" class="small-text">
                             {{letterData.sender.nameOnly}}
@@ -16,7 +16,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="letter-text" style="flex:1; text-align:left;">
+                <div class="letter-text" style="flex:1; text-align:left;color:var(--TxtColor);">
                             {{letterData.letterNo}}
                 </div>
             </div>
@@ -40,8 +40,6 @@
                     <div style="flex:1;margin:5px" v-else> <span  class="fixed-icon icon-notOpenLetter"></span></div>
                     <div style="flex:1;margin:5px" v-if="!letterData.isMainPossession"> <span  class="fixed-icon icon-copyLetter"></span></div>
                     <div style="flex:1;margin:5px" v-if="letterData.isEnterpriseForm"> <i class="fixed-icon icon-enterpriseForm"></i> </div>
-                    
-                    
                 </div>
             </div>
         </div>
@@ -132,10 +130,11 @@ export default class SingleLetter extends Vue{
         if(!draftLetter.childLetters)return false;
         return draftLetter.childLetters.length > 0 ;
     }
-    
-    
 
+    
 }
+
+
 
 </script>
 
@@ -155,7 +154,7 @@ export default class SingleLetter extends Vue{
     }
      .single-letter{
         height: 80px;
-        background-color: @back-color3;
+        background-color: var(--SingleLetter);
         padding: 3px 5px 3px 5px;
         white-space: nowrap;
         width: 100%;
@@ -179,7 +178,7 @@ export default class SingleLetter extends Vue{
 
     }
     .letter-date{
-        color: @color-icon;
+        color: var(--TxtColor);
         //font-size: 12pt;
 
     }

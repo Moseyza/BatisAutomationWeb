@@ -226,7 +226,7 @@ export default class FastSendSelectedRecipient extends Vue{
         border-radius: 3px;
         margin: 1px 1px;
         padding: 2px 5px;
-        background-color: #5f5f5f;
+        background-color: var(--LineItem);
     }
 
     .active{

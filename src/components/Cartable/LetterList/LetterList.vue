@@ -434,9 +434,8 @@ export default class LetterList extends Vue{
     #letter-list{
         //overflow: auto;
         width:100%;
-        background-color: @back-color2;
+        background-color: var(--DetailBackground);
         height: 100%;
-        
     }
 </style>
 

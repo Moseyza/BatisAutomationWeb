@@ -6,7 +6,7 @@
             <div  v-if="isDropdownShown" style="position:absolute;left:0" ><i class="action-icon icon-comboboxArrow" style="font-size:small;margin-left:5px"></i></div>
             <!-- <div v-else :style="{'background-color': color}"><i class="action-icon icon-comboboxArrow" style="font-size:small;margin-left:5px"></i></div> -->
         </div>
-        <div class="left menu" style="width:100%;background-color:#939393 !important" >
+        <div class="left menu" style="width:100%;background-color:var(--TxtColor) !important" >
             <div style="max-height:200px !important;overflow:auto;width:100%">
                 <div @click="selectValue(value)" v-for="(value) in filteredValues" 
                 :key="value.item1" class="item menu-item" 

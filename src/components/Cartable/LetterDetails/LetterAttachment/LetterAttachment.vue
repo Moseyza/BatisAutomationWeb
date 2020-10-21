@@ -52,7 +52,7 @@
 
 <style lang="less" scoped>
     .single-attachment{
-        background-color: #3f3f3f;
+        background-color: var(--NormalBackground);
         padding: 3px;
         margin: 2px;
         border-radius: 3px;

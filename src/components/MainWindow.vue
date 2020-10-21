@@ -1,20 +1,29 @@
 <template>
     <div class="three-part-flexbox" id="main-container">
+        <div style="display:flex;">
+            <div style="flex:1" @click="changeColor" >
+                <!-- <i  style="color:white;cursor:pointer" class="sun icon"></i> -->
+                <div  style="color:white;cursor:pointer;justify-content: center;align-items: center;display: flex;">روز</div>
+            </div>
+            <div style="flex:1" @click="reset">
+                <!-- <i  style="color:black;cursor:pointer" class="moon icon"></i> -->
+                <div  style="color:black;cursor:pointer;justify-content: center;align-items: center;display: flex;">شب</div>
+            </div>
+        </div>
         <div ref="formlabel" style="position:absolute">{{maxLengthFormLabel}}</div> 
         <div ref="tablelabel" style="position:absolute">{{maxLengthTableLabel}}</div> 
         <CartableTitle @on-letter-owner-set="onLetterOwnerSet($event)" class="flex-part-top" style="flex: 0 1 auto" />
         <div class="container3 flex-part-middle" id="child-container"  style="flex: 18 1 0%;overflow: hidden;">
             <div style="flex:2;">
-                    <div class="three-part-flexbox">
-                        <div class="flex-part-top" style="flex: 0 0 auto;display:flex;">
-                                <QuickAccess  @fast-send-clicked="onFastSendBtnClick($event)" @enterprise-form-selected="onEnterpriseFormSelected($event,null,null)"/>
-                        </div>
-                        <div class="flex-part-middle">
-                            <FoldersTree :letterOwnerId="letterOwnerId" @folder-clicked="onFolderClicked()"></FoldersTree>
-                        </div>
-                        <div class="flex-part-bottom" style="flex: 0 1 auto;"></div>
-                        
+                <div class="three-part-flexbox">
+                    <div class="flex-part-top" style="flex: 0 0 auto;display:flex;">
+                            <QuickAccess  @fast-send-clicked="onFastSendBtnClick($event)" @enterprise-form-selected="onEnterpriseFormSelected($event,null,null)"/>
                     </div>
+                    <div class="flex-part-middle">
+                        <FoldersTree :letterOwnerId="letterOwnerId" @folder-clicked="onFolderClicked()"></FoldersTree>
+                    </div>
+                    <div class="flex-part-bottom" style="flex: 0 1 auto;"></div>
+                </div>
             </div>
             <div class="conatiner2" style="flex:3">
                 <router-view 
@@ -291,6 +300,8 @@ export default class MainWindow extends Vue {
         this.clearLeftSide();
     }
 
+   
+
     clearLeftSide(){
         this.leftSideMode = '';
     }
@@ -301,6 +312,26 @@ export default class MainWindow extends Vue {
         const nextFormInfo = await  enterpriseFormService.getNextForm(nextFormRequest);
         this.onEnterpriseFormSelected(nextFormInfo.enterpriseForm,nextFormInfo,undefined);
     }
+     changeColor(){
+        const element= document.documentElement
+        element.style.setProperty('--LineItem','#949494');
+        element.style.setProperty('--BackgroundTable','#cacaca');
+        element.style.setProperty('--SingleLetter','#f6f6f6');
+        element.style.setProperty('--DetailBackground','#eaeaea');
+        element.style.setProperty('--NormalBackground','#cacaca');
+        element.style.setProperty('--TxtColor','#3f3f3f');
+        element.style.setProperty('--FontColor','#3f3f3f');
+    } 
+     reset(){
+        const element= document.documentElement
+        element.style.setProperty('--LineItem','#5f5f5f');
+        element.style.setProperty('--BackgroundTable','#575757');
+        element.style.setProperty('--SingleLetter','#4d4d4d');
+        element.style.setProperty('--DetailBackground','#494949');
+        element.style.setProperty('--NormalBackground','#3f3f3f');
+        element.style.setProperty('--TxtColor','#939393');
+        element.style.setProperty('--FontColor','#e7e7e7');
+    } 
 }
 </script>
 

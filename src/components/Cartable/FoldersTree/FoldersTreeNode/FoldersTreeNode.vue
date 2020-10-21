@@ -5,8 +5,8 @@
                 <div class="leaf-node" v-if="data.children.length == 0" ></div>
                 <i v-if="data.children.length >0" class="icon-nodeIconOpen node-icon" @click="toggle()" :class="{'icon-nodeIcon':!isOpen , 'icon-nodeIconOpen':isOpen}" ></i>
                 <i style="flex:1;padding-top:5px;" :class="data.iconClass"></i>
-                <h5 style="flex:5;text-align:right;padding-top:10px" v-if="data.isRoot" :class="{'highlight': data.isSelected }">{{data.name}}</h5>
-                <router-link style="flex:5;cursor:pointer;padding-top:10px" v-else tag="div" :to="data.url" @click.native="onFolderClicked"  :class="{'highlight': data.isSelected}" >{{data.name}}</router-link>
+                <h5 style="flex:5;text-align:right;padding-top:10px;color:var(--TxtColor)" v-if="data.isRoot" :class="{'highlight': data.isSelected }">{{data.name}}</h5>
+                <router-link style="flex:5;cursor:pointer;padding-top:10px;color:var(--TxtColor)" v-else tag="div" :to="data.url" @click.native="onFolderClicked"  :class="{'highlight': data.isSelected}" >{{data.name}}</router-link>
                 <input type="checkbox" v-if="isSelectable" v-model="isSelected"/>
             </div>
             <div class="node-child" :class="{hide:!isOpen}">
@@ -171,7 +171,7 @@ export interface FoldersTreeNodeData {
         margin: 0;
     }
     .node-icon{
-        color: #939393;
+        color: var(--TxtColor);
         // color:#96171A;
         font-size: small;
         flex: 1;
