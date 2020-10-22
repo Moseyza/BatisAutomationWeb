@@ -45,7 +45,7 @@
                 <div v-if="shallShowComment" >
                      <button v-if="nodeData.isSendedViaMessagingApp" @click="getTelegramStatus()"  style="float:left;margin-top:5px;margin-left:5px" >وضعیت تلگرام <i v-if="isTelegramOk" class="icon icon-check" style="color:#69b578;font-size:8pt" ></i>  <div v-if="isLoadingTelegramStatus" class="ui active inline mini centered loader"></div> </button>
                     <button v-if="nodeData.isEmailed" @click="getEmailStatus()"  style="float:left;margin-top:5px;margin-left:5px" >وضعیت ایمیل <i v-if="isEmailOk" class="icon icon-check" style="color:#69b578;font-size:8pt" ></i>  <div v-if="isLoadingEmailStatus" class="ui active inline mini centered loader"></div> </button>
-                    <button v-if="isInterCompany" @click="getRemotLetterTrail()"  class="action-button" style="float:left;margin-top:5px;margin-left:5px" >استعلام نامه</button>
+                    <button v-if="isInterCompany && !isRemoteTrailGet" @click="getRemotLetterTrail()"  class="action-button" style="float:left;margin-top:5px;margin-left:5px" >استعلام نامه</button>
                 </div>
                 <div v-if="shallShowComment" class="bottom-line">
 
@@ -97,8 +97,7 @@ export default class LetterTrailTreeNode extends Vue {
     @Prop() serverTime?: string;
     @Prop() isRoot?: boolean;
     get isOpened(){
-        //console.log("test");
-        //console.log(this.nodeData);
+  
         
         if(this.nodeData === undefined) return false;
         //console.log(getPersianDate(this.nodeData.sendTime,"dddd dd MMMM"));
@@ -109,7 +108,6 @@ export default class LetterTrailTreeNode extends Vue {
     }
 
     toggleNode(){
-        
         this.isHide = !this.isHide;
 
     }
@@ -155,12 +153,23 @@ export default class LetterTrailTreeNode extends Vue {
         return this.nodeData.isDraft;
     }
 
+    isRemoteTrailGet = false;
     async getRemotLetterTrail(){
         if(!this.nodeData)return;
+        this.isRemoteTrailGet = true;
         const ownerId = store.state.ownerId;
         const result =  await letterService.GetRemoteLetterTrail(this.nodeData.possessionId,ownerId);
         //this.nodeData = result;
-        store.state.eventHub.$emit("remote-inquiry",result,this.nodeData.possessionId);
+        //console.log(result);
+        //store.state.eventHub.$emit("remote-inquiry",result,this.nodeData.possessionId);
+        if(!result)return;
+        if(this.nodeData.isSender)
+            store.state.eventHub.$emit("remote-inquiry",result,this.nodeData.possessionId);
+        else{
+            this.nodeData.recievers.push(result);
+            this.toggleComment();
+            this.toggleNode();
+        }
     }
 
     isEmailOk = false;

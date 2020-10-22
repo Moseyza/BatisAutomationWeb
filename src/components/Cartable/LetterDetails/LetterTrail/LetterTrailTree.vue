@@ -42,6 +42,7 @@ export default class LetterTrailTree extends Vue {
         this.loading = true;
         const ownerId =  store.state.ownerId;
         const  trailData =  await  letterService.GetLetterTrialWithAttachment(this.letterId,ownerId);
+        //console.log(trailData);
         trailData.isSender = true;
         this.root = {} as LetterTrailWithAttachments;
         this.root.sender = {} as LetterOwner;
@@ -54,13 +55,16 @@ export default class LetterTrailTree extends Vue {
     }
     
     onRemoteInquiry(inquriyResult: LetterTrailWithAttachments, possessionId: string ){
+        
         //console.log(this.root);
         this.getParentRecursive(this.root,possessionId);
+        if(!this.tempParent.recievers)return;
         const remotItem =  this.tempParent.recievers.find(x=>x.possessionId === possessionId);
         if(!remotItem)return;
         const index =  this.tempParent.recievers.indexOf(remotItem);
         if(!this.tempParent)return;
         this.tempParent.recievers = [];//this.tempParent.recievers.splice(index,1);
+        
         inquriyResult.recievers.push(remotItem);
         this.tempParent.recievers.splice(0,0,inquriyResult);
         this.data = this.tempParent;

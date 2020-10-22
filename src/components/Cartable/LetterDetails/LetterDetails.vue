@@ -156,7 +156,7 @@ export default class LetterDetails extends Vue {
         //     alert(this.letter.id);
         //     alert(this.letter.letterPossessionId);
         // }
-        console.log(this.letter);
+       // console.log(this.letter);
         this.setIsReceived();
         this.setPdfUrl();
         this.canFinalize = !newVal.isClosed;
@@ -334,7 +334,7 @@ export default class LetterDetails extends Vue {
     }
 
     fitImage(){
-        console.log($(this.$refs.previewContainer).find('img'));
+        //console.log($(this.$refs.previewContainer).find('img'));
     }
 
     
