@@ -15,7 +15,7 @@
   		                <div class="menu">
     		                <div class="item menu-item" @click="finalizeLetter()" ><div style="padding-left:5px">اختتام</div> <i class="fixed-icon icon-closeLetter"></i> </div>
     		                <div class="item menu-item"><div style="padding-left:5px">چاپ</div> <i class="fixed-icon icon-print"></i></div>
-    		                <div class="item menu-item"><div style="padding-left:5px">جریان وابستگی</div> <i class="fixed-icon icon-notRouted"></i></div>
+    		                <div class="item menu-item" @click="ShowDependencyGraph()" ><div style="padding-left:5px">جریان وابستگی</div> <i class="fixed-icon icon-notRouted"></i></div>
                             <div class="item menu-item"><div style="padding-left:5px">مشاهده گزارش</div> <i class="fixed-icon icon-report"></i></div>
   		                </div>
 	                </div>
@@ -118,6 +118,7 @@
                 </div>
             </div>
         </div>
+        <DependencyGraphContainer v-if="shallShowDependencyGraph" />
     </div>
 </template>
 
@@ -138,11 +139,12 @@ import { LetterSearchResult } from '../../../store/models/Letter/LetterSearchRes
 import * as enterpriseFormService from '@/store/Services/enterpriseFormService';
 import store from '@/store';
 import { EnterpriseForm } from '@/store/models/EnterpriseForm/EnterpriseForm';
+import DependencyGraphContainer from './DependencyGraph/DependencyGraphContainer.vue';
 
 
 @Component({
     name:"LetterDetails",
-    components:{LetterAttachment, LetterTrailTree, FinalizeLetter}
+    components:{LetterAttachment, LetterTrailTree, FinalizeLetter,DependencyGraphContainer}
 })
 export default class LetterDetails extends Vue {
    
@@ -335,6 +337,10 @@ export default class LetterDetails extends Vue {
 
     fitImage(){
         //console.log($(this.$refs.previewContainer).find('img'));
+    }
+    shallShowDependencyGraph = false;
+    ShowDependencyGraph(){
+        this.shallShowDependencyGraph = true;
     }
 
     
