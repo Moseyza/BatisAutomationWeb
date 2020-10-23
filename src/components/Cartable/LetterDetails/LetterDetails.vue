@@ -118,7 +118,7 @@
                 </div>
             </div>
         </div>
-        <DependencyGraphContainer v-if="shallShowDependencyGraph" />
+        <DependencyGraphContainer v-if="shallShowDependencyGraph" @close="closeDependencyGraph" :letterPossessionId="letter.letterPossessionId" />
     </div>
 </template>
 
@@ -341,6 +341,9 @@ export default class LetterDetails extends Vue {
     shallShowDependencyGraph = false;
     ShowDependencyGraph(){
         this.shallShowDependencyGraph = true;
+    }
+    closeDependencyGraph(){
+        this.shallShowDependencyGraph = false;
     }
 
     

@@ -8,6 +8,7 @@ import SentLetterInformation, { SendLetterAndSaveDraftResults } from '@/store/mo
 import { LetterTrailWithAttachments } from '../models/Letter/LetterTrailWithAttachment';
 import { LetterSearchResult } from '../models/Letter/LetterSearchResult';
 import letterSearch from '../models/Letter/letterSearch';
+import { DependencyTrail } from '@/store/models/Letter/DependencyTrail';
 
 export async function OpenLetter(letterPossessionId: string){
     const serverResult =  await api.batisAutomationApi.post("/Letters/OpenLetter",{letterPossessionId: letterPossessionId});
@@ -200,3 +201,16 @@ export async function getTelegramStatus(telegramReferenceId: string)
         return {} as any;
     }
 }
+
+export async function getDependencyTrail(ownerId: string , letterPossessionId: string): Promise<DependencyTrail>
+{
+    try {
+        
+        const result = await api.batisAutomationApi.post('/letters/DependencyTrail',{ownerId: ownerId, letterPossessionId: letterPossessionId});
+        return result.data;
+    } catch (error) {
+        console.log(error);
+        return {} as any;
+    }
+}
+
