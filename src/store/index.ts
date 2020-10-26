@@ -18,7 +18,7 @@ export default new Vuex.Store({
     canSeeAllLetters: false,
     advancedSearchSettings: {} as LetterSearch,
     eventHub:  new Vue(),
-    version: '2.1.39'
+    version: '2.1.40'
 
 
   },
