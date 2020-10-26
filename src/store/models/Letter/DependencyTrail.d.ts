@@ -4,7 +4,7 @@ import { LetterOwner } from "@/store/models/LetterOwner/LetterOwner";
 export interface DependencyTrail {
     ownerPossessions?: (OwnerPossessionsInAllLetter)[] | null;
     letters?: (LettersInDependencyGraph)[] | null;
-    dependencyGraph?: (number | null)[] | null;
+    dependencyGraph: number[];
     rootDependencyIndex: number;
   }
   export interface OwnerPossessionsInAllLetter {
@@ -42,5 +42,13 @@ export interface DependencyTrail {
     senderLetterOwnerCompanyNameOnly: string;
     senderLetterOwnerPersonnelCode: string;
     enterpriseFormColor?: number;
+  }
+
+  export interface DependencyTreeNode
+  {
+      letterId: string;
+      childs: DependencyTreeNode[],
+      childType: Number[];
+      level: number;
   }
   

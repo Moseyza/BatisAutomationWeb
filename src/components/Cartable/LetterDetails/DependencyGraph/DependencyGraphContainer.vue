@@ -21,7 +21,7 @@
 import {Vue, Component, Prop} from 'vue-property-decorator';
 import * as letterService from '@/store/Services/letterServices';
 import store from '@/store';
-import { DependencyTrail } from '@/store/models/Letter/DependencyTrail';
+import { DependencyTrail, DependencyTreeNode } from '@/store/models/Letter/DependencyTrail';
 import DependencyGraphNode from './DependencyGraphNode/DependencyGraphNode.vue';
 import * as $ from 'jquery';
 
@@ -35,8 +35,9 @@ export default class DependencyGraphContainer extends Vue{
         if(!this.letterPossessionId)return;
         const ownerId =  store.state.ownerId;
         this.dependencyTrail = await letterService.getDependencyTrail(ownerId,this.letterPossessionId);
-        console.log(this.dependencyTrail);
+        //console.log(this.dependencyTrail);
         (this.$refs.page as any).addEventListener('contextmenu',this.cancel);
+        this.createDependencyTree();
     }
     cancel(e: Event){
         e.preventDefault();
@@ -67,6 +68,54 @@ export default class DependencyGraphContainer extends Vue{
     onGraphNodeClicked(letterId: string){
         this.lastClickedLetterId = letterId;
         this.isMovingNode = true;
+    }
+
+    createDependencyTree(){
+        if(!this.dependencyTrail)return;
+        if(!this.dependencyTrail.dependencyGraph)return;
+        if(!this.dependencyTrail.letters)return;
+        const sqrt = Math.sqrt(this.dependencyTrail.dependencyGraph.length) - 1;
+        let rootIndex = -1;
+        for(let i =0 ;i <= sqrt; i++)
+        {
+            for(let j = 0; j<=sqrt; j++)
+            {
+                if(this.dependencyTrail.dependencyGraph[((i*sqrt) + (i+j))] != null)
+                    break;
+                if(j === sqrt)
+                    rootIndex = i;
+            }
+            if(rootIndex !== -1)break;
+        }
+        const root = {} as DependencyTreeNode;
+        root.letterId = this.dependencyTrail.letters[rootIndex].letterId;
+        root.level = 0;
+        root.childs = [];
+        root.childType = [];
+        this.addNodToTreeRecursive(root,rootIndex,sqrt);
+        console.log("ROOT====>");
+        console.log(root);
+    }
+
+    addNodToTreeRecursive(parent: DependencyTreeNode, index: number,sqrt: number){
+        if(!this.dependencyTrail)return;
+        if(!this.dependencyTrail.letters)return;
+        if(!this.dependencyTrail.dependencyGraph)return;
+        let currentIndex = index; 
+        for(let rowIndex = 0;rowIndex <= sqrt;rowIndex++)
+        {
+            if(this.dependencyTrail.dependencyGraph[currentIndex] != null){
+                const child = {} as DependencyTreeNode;
+                child.letterId = this.dependencyTrail.letters[rowIndex].letterId;
+                child.level = parent.level+ 1;
+                child.childs = [];
+                child.childType = [];
+                parent.childs.push(child);
+                parent.childType.push(this.dependencyTrail.dependencyGraph[currentIndex]);
+                this.addNodToTreeRecursive(child,rowIndex,sqrt);
+            }
+            currentIndex += sqrt +1;
+        }
     }
     
 }
