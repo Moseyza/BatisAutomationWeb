@@ -14,7 +14,7 @@
     import { converBase64toBlob, saveFile } from '@/util/utils';
     import store from '@/store';
     @Component
-    export default class LetterAttachment extends Vue {
+    export default class LetterAttachmentMobile extends Vue {
         @Prop() file?: File;
     
         @Prop() canRemove?: boolean;

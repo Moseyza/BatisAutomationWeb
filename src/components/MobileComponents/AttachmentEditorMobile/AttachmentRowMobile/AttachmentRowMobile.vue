@@ -8,7 +8,7 @@
 <script lang="ts">
 import {Vue, Component, Prop} from 'vue-property-decorator';
 @Component
-export default class AttachmentRow extends Vue{
+export default class AttachmentRowMobile extends Vue{
 @Prop() file?: File;
 @Prop() index?: number;
 remove(){

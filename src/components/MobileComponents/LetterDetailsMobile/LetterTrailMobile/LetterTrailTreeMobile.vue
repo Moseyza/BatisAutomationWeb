@@ -1,14 +1,14 @@
 <template>
     <div style="color:var(--TxtColor) !important">
         <div v-if="loading" class="ui active inline centered loader"></div>
-        <LetterTrailTreeNode v-else :nodeData="data" :serverTime="serverTime" :isRoot="true" :currentPossession="letterId" :isHideProp="rootIsHide" ></LetterTrailTreeNode>
+        <LetterTrailTreeNodeMobile v-else :nodeData="data" :serverTime="serverTime" :isRoot="true" :currentPossession="letterId" :isHideProp="rootIsHide" ></LetterTrailTreeNodeMobile>
     </div>
     
 </template>
 
 <script lang="ts">
 import {Vue, Prop, Component, Watch} from 'vue-property-decorator';
-import LetterTrailTreeNode from './LetterTrailTreeNode/LetterTrailTreeNode.vue';
+import LetterTrailTreeNodeMobile from './LetterTrailTreeNodeMobile/LetterTrailTreeNodeMobile.vue';
 import { LetterTrail } from '@/store/models/Letter/LetterTrail';
 import * as letterService  from '@/store/Services/letterServices.ts';
 import store from '@/store';
@@ -16,10 +16,10 @@ import { LetterTrailWithAttachments } from '../../../../store/models/Letter/Lett
 import { LetterOwner } from '../../../../store/models/LetterOwner/LetterOwner';
 
 @Component({
-    name:"LetterTrailTree",
-    components: {LetterTrailTreeNode}
+    name:"LetterTrailTreeMobile",
+    components: {LetterTrailTreeNodeMobile}
 })
-export default class LetterTrailTree extends Vue {
+export default class LetterTrailTreeMobile extends Vue {
     data?: LetterTrailWithAttachments;
     loading = false;
     serverTime = '';

@@ -6,7 +6,7 @@
         <div v-if="attachments && attachments.length>0" style="overflow: hidden;display:flex; justify-content:flex-start"  >
             <div style="flex:0 1 auto;white-space:nowrap">اصل و پیوست ها:</div>
             <div style="display:flex;align-items:center;justify-content:flex-start;flex-wrap:wrap; overflow-x:hidden;flex:1 0 0">
-                <LetterAttachment  v-for="(file,index) in attachments" 
+                <LetterAttachmentMobile  v-for="(file,index) in attachments" 
                 :key="index"
                 :file ="file"
                 :index ="index"
@@ -23,12 +23,12 @@
 <script lang="ts">
 import {Vue, Component, Prop} from 'vue-property-decorator';
 import * as util from '@/util/utils';
-import LetterAttachment from '@/components/Cartable/LetterDetails/LetterAttachment/LetterAttachment.vue';
+import LetterAttachmentMobile from '@/components/MobileComponents/LetterDetailsMobile/LetterAttachmentMobile/LetterAttachmentMobile.vue';
 import File from '../../../../../../store/models/Letter/File';
 @Component({
-    components: {LetterAttachment}
+    components: {LetterAttachmentMobile}
 })
-export default class LetterTrailNodeComment extends Vue{
+export default class LetterTrailNodeCommentMobile extends Vue{
     @Prop() mode?: string;
     @Prop() sendTime?: string;
     @Prop() comment?: string;

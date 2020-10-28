@@ -26,7 +26,7 @@
                     </div>
                 </div>
                 <div v-if="shallShowComment">
-                           <LetterTrailNodeComment 
+                           <LetterTrailNodeCommentMobile 
                            :mode="nodeData.isSender?'send':'forward'" 
                            :sendTime="nodeData.sendTime"
                            :comment="nodeData.comment"
@@ -34,7 +34,7 @@
                            /> 
                 </div>
                 <div v-if="shallShowComment && nodeData.closeTime">
-                           <LetterTrailNodeComment 
+                           <LetterTrailNodeCommentMobile 
                            :mode="'close'" 
                            :sendTime="nodeData.closeTime"
                            :comment="nodeData.closingComment"
@@ -53,7 +53,7 @@
                 
             </div>
             <div>
-            <LetterTrailTreeNode 
+            <LetterTrailTreeNodeMobile 
             :class="{'hide':isHide}"
             v-for="(item,index) in nodeData.recievers"
             :key="item.sendTime + index"
@@ -61,7 +61,7 @@
             :serverTime="serverTime"
             :currentPossession="currentPossession"
             :isHideProp="isHide"
-            ></LetterTrailTreeNode>
+            ></LetterTrailTreeNodeMobile>
             </div>
         </li>
     </ul>
@@ -75,14 +75,14 @@ import { LetterTrailWithAttachments } from '../../../../../store/models/Letter/L
 import * as dateConverter from '@/util/dateConverter';
 import { DateBaseOnCurrentTimeConverter } from '@/util/dateConverter';
 import * as letterService from '@/store/Services/letterServices';
-import LetterTrailNodeComment from './LetterTrailNodeComment/LetterTrailNodeComment.vue';
+import LetterTrailNodeCommentMobile from './LetterTrailNodeCommentMobile/LetterTrailNodeCommentMobile.vue';
 import store from '@/store';
 
 @Component({
     name:'LetterTrailTreeNode',
-    components: {LetterTrailNodeComment}
+    components: {LetterTrailNodeCommentMobile}
 })
-export default class LetterTrailTreeNode extends Vue {
+export default class LetterTrailTreeNodeMobile extends Vue {
    
     @Prop() nodeData?: LetterTrailWithAttachments;
     @Prop() currentPossession?: string;

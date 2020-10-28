@@ -48,7 +48,7 @@
                     <transition name="fade">
                         <div v-if="shallShowMessage" class="ui green message">{{message}}</div>
                     </transition>
-                    <LetterDetails v-if="noLetterSelected == false && leftSideMode==='details'" :letter="selectedLetter" 
+                    <LetterDetailsMobile v-if="noLetterSelected == false && leftSideMode==='details'" :letter="selectedLetter" 
                     :searchResult="selectedSearchResult"
                     @finalize-letter="onFinalizeLetter($event)"
                     @forward-letter="onForwardLetter($event)"
@@ -57,7 +57,7 @@
                     @send-fast-dependon="sendFastDependOn($event)"
                     @next-form-selected="onNextFormSelected($event)"
                     >
-                    </LetterDetails>
+                    </LetterDetailsMobile>
                     <DraftDetails 
                     v-if="noLetterSelected == false && leftSideMode==='draftDetails'" 
                     :letter="selectedLetter" 
@@ -93,12 +93,13 @@ import MixinMainWindow from '@/components/Cartable/ComponentMixins/MixinMainWind
 import CartableTitleMobile from '@/components/MobileComponents/CartableTitleMobile/CartableTitleMobile.vue';
 import QuickAccessMobile from '@/components/MobileComponents/QuickAccessMobile/QuickAccessMobile.vue';
 import FoldersTreeMobile from '@/components/MobileComponents/FoldersTreeMobile/FoldersTreeMobile.vue';
+import LetterDetailsMobile from '@/components/MobileComponents/LetterDetailsMobile/LetterDetailsMobile.vue';
 
 import {Component, Mixins} from 'vue-property-decorator'
 import * as $ from 'jquery';
 
 @Component({
-    components:{CartableTitleMobile,QuickAccessMobile,FoldersTreeMobile}
+    components:{CartableTitleMobile,QuickAccessMobile,FoldersTreeMobile,LetterDetailsMobile}
 })
 export default class MainWindowMobile extends Mixins(MixinMainWindow) {
      mounted(){
