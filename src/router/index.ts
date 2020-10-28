@@ -36,6 +36,50 @@ const routes = [
     path: '/',
     name: 'MainWindowMobile',
     component: () => import('@/components/MobileComponents/MainWindowMobile.vue'),
+    children:[
+      {
+        path: 'ReceivedLettersMobile',
+        name: 'ReceivedLettersMobile',
+        component: () => import('@/components/MobileComponents/ReceivedLettersMobile/ReceivedLettersMobile.vue'),
+      },
+      // {
+      //   path: 'SentLetters',
+      //   name: 'SentLetters',
+      //   component: () => import('@/components/Cartable/SentLetters/SentLetters.vue')
+      // },
+      // {
+      //   path: 'DraftLetters',
+      //   name: 'DraftLetters',
+      //   component: () => import('@/components/Cartable/DraftLetters/DraftLetters.vue')
+      // },
+      // {
+      //   path: 'FolderLetters',
+      //   name: 'FolderLetters',
+      //   component: () => import('@/components/Cartable/ArchiveFolder/ArchiveFolder.vue'),
+      //   props: (route: any) => ({folderId: route.query.folderId})
+      // },
+      // {
+      //   path: 'AnnouncementBoard',
+      //   name: 'AnnouncementBoard',
+      //   component: () => import('@/components/Cartable/Announcements/Announcements.vue'),
+      //   props: (route: any) => ({boardId: route.query.boardId})
+      // },
+      // {
+      //   path: 'SearchResults',
+      //   name: 'SearchResults',
+      //   component: () => import('@/components/Cartable/SearchResultList/SearchResultList.vue'),
+      // },
+      // {
+      //   path: 'IncomingClosedLetters',
+      //   name: 'IncomingClosedLetters',
+      //   component: () => import('@/components/Cartable/ClosedLetters/Incoming/IncomingClosedLetters.vue'),
+      // },
+      // {
+      //   path: 'OutgoingClosedLetters',
+      //   name: 'OutgoingClosedLetters',
+      //   component: () => import('@/components/Cartable/ClosedLetters/Outgoing/OutgoingClosedLetters.vue'),
+      // }
+    ]
   },
   {
     path: '/',
