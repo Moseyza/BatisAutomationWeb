@@ -42,11 +42,11 @@ const routes = [
         name: 'ReceivedLettersMobile',
         component: () => import('@/components/MobileComponents/ReceivedLettersMobile/ReceivedLettersMobile.vue'),
       },
-      // {
-      //   path: 'SentLetters',
-      //   name: 'SentLetters',
-      //   component: () => import('@/components/Cartable/SentLetters/SentLetters.vue')
-      // },
+      {
+        path: 'SentLettersMobile',
+        name: 'SentLettersMobile',
+        component: () => import('@/components/MobileComponents/SentLettersMobile/SentLettersMobile.vue')
+      },
       // {
       //   path: 'DraftLetters',
       //   name: 'DraftLetters',
