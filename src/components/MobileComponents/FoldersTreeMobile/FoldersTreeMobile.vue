@@ -42,13 +42,13 @@ export default class FoldersTreeMobile extends Vue {
         const receiveLetters = {} as FoldersTreeNodeDataMobile;
         receiveLetters.name = 'نامه های دریافتی';
         receiveLetters.isSelected = true;
-        receiveLetters.url = "ReceivedLetters"
+        receiveLetters.url = "ReceivedLettersMobile"
         receiveLetters.isRoot = false;
         receiveLetters.children = [];
         receiveLetters.iconClass = {'icon-inbox':true,'fixed-icon':true }
         const sentLetters = {} as FoldersTreeNodeDataMobile;
         sentLetters.name = 'نامه های ارسالی';
-        sentLetters.url = "SentLetters"
+        sentLetters.url = "SentLettersMobile"
         sentLetters.isRoot = false;
         sentLetters.iconClass = {'icon-outbox':true,'fixed-icon':true }
         sentLetters.isSelected = false;
@@ -64,7 +64,7 @@ export default class FoldersTreeMobile extends Vue {
         const savedDraft = {} as FoldersTreeNodeDataMobile;
         savedDraft.isRoot = false;
         savedDraft.name = 'پیش نویس های ثبت شده';
-        savedDraft.url = 'DraftLetters';
+        savedDraft.url = 'DraftLettersMobile';
         savedDraft.iconClass = {'icon-drafts xxlarg-text':true,'fixed-icon':true};
         savedDraft.children = [];
         savedDraft.isSelected = false;
