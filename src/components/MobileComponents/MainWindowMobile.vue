@@ -12,7 +12,7 @@
                 </a>
                 <!-- <div style="display:flex;width:100%;" @click="shallHideletterList"> -->
                 <div style="display:flex;width:100%;">
-                    <QuickAccessMobile  @fast-send-clicked="onFastSendBtnClick($event)" @enterprise-form-selected="onEnterpriseFormSelected($event,null,null)"/>
+                    <QuickAccessMobile @shallShowenterpriseFormListsEvent="showOfficeFormlist()" @fast-send-clicked="onFastSendBtnClick($event)" @enterprise-form-selected-Mobile="onEnterpriseFormSelected($event,null,null)"/>
                 </div>
              </div>
             <div class="ui bottom attached segment" style="background: transparent !important; height: 100%;">
@@ -57,6 +57,7 @@
                             <ForwardLetter v-else-if="leftSideMode=== 'forward'" @forward-closed="onForwardClosed" @forward-done="onLetterForwarded($event)" :letter="selectedLetter" />
                             <FastSend :mode="fastSendMode" v-else-if="leftSideMode=== 'fastSend'" @fastsend-canceled="onFastSendCanceled($event)"  :dependentLetters="fastSendDependencies" />
                             <SendEnterpriseForm  v-else-if="leftSideMode=== 'enterpriseForm'" @sendform-close="onSendFormClose($event)" :form="selectedFrom" :nextFormInfo="nextFormInfo" :tableLblWidth="maxTableLabelWidth" :formLblWidth="maxFormLabelWidth" :draftFormInfo="draftFormInfo" />
+                            <EnterpriseFormLists  v-else-if="leftSideMode=== 'enterpriseFormLists'"  />
                         </div>
                         <!-- <div v-show="shallShowLetterList"> -->
                         <div style="height:100%">
@@ -67,6 +68,8 @@
                                 ref='letterlist'>
                             </router-view>
                         </div>
+                        <!-- <div v-show="shallOfficeFormlist" class="ui center menu" > -->
+                       
                     </div>
                 </div>
              </div>
@@ -87,28 +90,34 @@ import CartableTitleMobile from '@/components/MobileComponents/CartableTitleMobi
 import QuickAccessMobile from '@/components/MobileComponents/QuickAccessMobile/QuickAccessMobile.vue';
 import FoldersTreeMobile from '@/components/MobileComponents/FoldersTreeMobile/FoldersTreeMobile.vue';
 import LetterDetailsMobile from '@/components/MobileComponents/LetterDetailsMobile/LetterDetailsMobile.vue';
+import EnterpriseFormLists from '@/components/MobileComponents/EnterpriseFormLists/EnterpriseFormLists.vue';
+import store from '@/store';
 
-import {Component, Mixins} from 'vue-property-decorator'
+import {Component, Mixins, Watch} from 'vue-property-decorator'
 import * as $ from 'jquery';
 
 
 @Component({
-    components:{CartableTitleMobile,QuickAccessMobile,FoldersTreeMobile,LetterDetailsMobile}
+    components:{CartableTitleMobile,QuickAccessMobile,FoldersTreeMobile,LetterDetailsMobile,EnterpriseFormLists}
 })
 export default class MainWindowMobile extends Mixins(MixinMainWindow) {
 
-    shallShowLetterList = true;
-
+    // shallShowLetterList = true;
+    shallShowenterpriseFormLists=false
      mounted(){
        alert("test");
            $('.ui.sidebar').sidebar({
             context: $('.bottom.segment')
           }).sidebar('attach events','.sidebarButton').sidebar('setting', 'mobileTransition', 'overlay');
     }
+    
 
-    shallHideletterList(){
-        this.shallShowLetterList=false;
+    showOfficeFormlist(){
+        this.shallShowenterpriseFormLists=true;
+        this.leftSideMode = 'enterpriseFormLists';
+
     }
+   
 }
 
 </script>
