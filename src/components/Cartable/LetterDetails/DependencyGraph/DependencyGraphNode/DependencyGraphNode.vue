@@ -6,7 +6,7 @@
         <div class="graphNodeBody">
             <div>شماره:{{nodeData.letterNo}}</div>
             <div>تاریخ:{{persDate}}</div>
-            <div>خلاصه:{{nodeData.abstract}}</div>
+            <p style="font-size:x-small;color:black;text-align:right">خلاصه:{{nodeData.abstract}}</p>
         </div>
     </div>
 </template>
@@ -34,6 +34,8 @@ export default class DependencyGraphNode extends Vue{
         //alert(this.headerColor);
         store.state.eventHub.$on("page-clicked",this.moveNode);
         store.state.eventHub.$on("unselect-all",this.unSelect);
+        store.state.eventHub.$on("get-width",this.getWidth);
+        store.state.eventHub.$on("set-position",this.setPosition);
         
 
     }
@@ -69,6 +71,23 @@ export default class DependencyGraphNode extends Vue{
         this.isSelected = true;
         //alert(( this.$refs.nodcontainer as any).clientWidth);
     }
+
+    getWidth(letterId: string , level: number) {
+        //alert("test");
+        if(!this.nodeData)return;
+        if(this.nodeData.letterId != letterId)return;
+        if(!( this.$refs.nodcontainer as any))return;
+        const width = ( this.$refs.nodcontainer as any).clientWidth;//$(this.$refs.nodcontainer).css('width');
+        //alert(width);
+        this.$emit('expose-width',width,level);
+    }
+    setPosition(letterId: string, x: number , y: number){
+        if(!this.nodeData)return;
+        if(this.nodeData.letterId != letterId)return;
+        if(!( this.$refs.nodcontainer as any))return;
+        $(this.$refs.nodcontainer).css('top',y);
+        $(this.$refs.nodcontainer).css('left',x);
+    }
 }
 </script>
 
@@ -78,10 +97,12 @@ export default class DependencyGraphNode extends Vue{
         color:white;
         border-bottom: 1px solid black;
         padding: 5px;
-        overflow: auto;
+        overflow: hidden;
+        text-overflow: ellipsis;
         white-space: nowrap;
         font-size: inherit;
         border-radius: 3px 3px 0 0;
+
     }
 
     .graphNodeBody{
@@ -108,6 +129,7 @@ export default class DependencyGraphNode extends Vue{
         overflow: hidden;
         font-size: .8em;
         border-radius: 3px;
+        max-width: 300px;
     }
 
     .selected-node{
