@@ -51,7 +51,11 @@ export default  class  CompanyListBookmark extends Mixins(BookmarkMixin){
         this.$emit("value-changed",this.englishName);
     }
     onValueChanged(){
-        if(this.value)
+        if(typeof this.value === 'string'){
+            const  val = {Id:this.value,Value:this.value};
+            this.value = val;
+        }
+        else if(this.value)
             if(this.value.Value)
                 this.valueProp = this.value.Value;
             else if (typeof this.value === 'string')
