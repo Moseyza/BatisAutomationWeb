@@ -37,7 +37,7 @@
     --DetailBackground:var(--back-color2);
     --NormalBackground:var(--back-color1);
     --SingleLetter:var(--back-color3);
-    --TxtColor:var(--back-color6);
+    --TxtColor:var(--color-font);
     --FontColor:var(--color-font);
   
     //dark
@@ -73,7 +73,7 @@
   }
    
   ::-webkit-scrollbar-thumb {
-    background: @color-font !important; 
+    background: var(--TxtColor) !important; 
   }
   
  
@@ -113,7 +113,7 @@ button{
 
 .container{
    // border-radius: 5px;
-    color: @color-font;
+    color: var(--FontColor);
     margin: 5px 5px 0 5px;
     padding: 5px;
 }
@@ -158,7 +158,7 @@ button{
     background-color: var(--LineItem);
 }
 .fc1{
-    color: @color-font;
+    color: var(--TxtColor);
 }
 .chamfer{
     border-radius: 5px;
@@ -177,7 +177,7 @@ button{
     padding: 5px;
     margin: 5px;
     border: none;
-    color: @color-font;
+    color: var(--TxtColor);
     background-color: @color-primary;
     font-size: 10pt;
     &:hover{
@@ -185,7 +185,7 @@ button{
     }
 }
 .form-label{
-    color: @color-font;
+    color: var(--TxtColor);
     margin-right: 5px;
     font-size: 10pt;
 }
@@ -325,7 +325,7 @@ button{
     background-color: var(--NormalBackground);
     padding: 5px;
     border-radius: 3px;
-    color: @color-font;
+    color: var(--TxtColor);
     margin: 5px;
     cursor: pointer;
     text-align: center;
@@ -333,7 +333,7 @@ button{
 }
 
 .bottom-line{
-    border-bottom: 2px solid @color-font;
+    border-bottom: 2px solid var(--TxtColor);
     margin: 10px 5px;
 }
 // .relative-container{

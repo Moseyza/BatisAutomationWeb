@@ -10,64 +10,65 @@
                 <a class="item sidebarButton" style="color: var(--Text);">
                     <i class="sidebar icon" style="color: var(--Text);"></i> Menu
                 </a>
-                <div style="display:flex;width:100%;" @click="shallHideletterList">
+                <!-- <div style="display:flex;width:100%;" @click="shallHideletterList"> -->
+                <div style="display:flex;width:100%;">
                     <QuickAccessMobile  @fast-send-clicked="onFastSendBtnClick($event)" @enterprise-form-selected="onEnterpriseFormSelected($event,null,null)"/>
                 </div>
              </div>
-             <div class="ui bottom attached segment" style="background: transparent !important; height: 100%;">
-            <div class="ui inverted labeled icon inline vertical top sidebar menu" style="height: 100% !important;">
-                <div style="display: flex;flex-direction: column; height: 100%;background: var(--Header);">
-                    <div class="three-part-flexbox">
-                        <div class="flex-part-middle">
-                            <FoldersTreeMobile :letterOwnerId="letterOwnerId" @folder-clicked="onFolderClicked()"></FoldersTreeMobile>
+            <div class="ui bottom attached segment" style="background: transparent !important; height: 100%;">
+                <div class="ui inverted labeled icon inline vertical top sidebar menu" style="height: 100% !important;">
+                    <div style="display: flex;flex-direction: column; height: 100%;background: var(--Header);">
+                        <div class="three-part-flexbox">
+                            <div class="flex-part-middle">
+                                <FoldersTreeMobile :letterOwnerId="letterOwnerId" @folder-clicked="onFolderClicked()"></FoldersTreeMobile>
+                            </div>
+                            <div class="flex-part-bottom" style="flex: 0 1 auto;"></div>
                         </div>
-                        <div class="flex-part-bottom" style="flex: 0 1 auto;"></div>
                     </div>
                 </div>
-            </div>
-            <div class="pusher" style="display: flex;height:100%">
-                <div class="" style="background: transparent !important;padding: 0;width: 100%;height: 100%;">
-                    <div class="container2" >
-                        <transition name="fade">
-                            <div v-if="shallShowMessage" class="ui green message">{{message}}</div>
-                        </transition>
-                        <LetterDetailsMobile v-if="noLetterSelected == false && leftSideMode==='details'" :letter="selectedLetter" 
-                        :searchResult="selectedSearchResult"
-                        @finalize-letter="onFinalizeLetter($event)"
-                        @forward-letter="onForwardLetter($event)"
-                        @letter-closed-fast="onLetterClosedFast($event)"
-                        @closed-letter-rejected="onClosedLetterRejected($event)"
-                        @send-fast-dependon="sendFastDependOn($event)"
-                        @next-form-selected="onNextFormSelected($event)"
-                        >
-                        </LetterDetailsMobile>
-                        <DraftDetails 
-                        v-if="noLetterSelected == false && leftSideMode==='draftDetails'" 
-                        :letter="selectedLetter" 
-                        @delete-letter="onDeleteLetter($event)"
-                        >
-                        </DraftDetails>
-                        <SearchResultDetails v-else-if="noLetterSelected == false && leftSideMode==='searchResultDetails'" :searchResult="selectedSearchResult"
-                        @finalize-letter="onFinalizeLetter($event)"
-                        @forward-letter="onForwardLetter($event)"
-                        >
-                        </SearchResultDetails>
-                        <FinalizeLetter v-else-if="leftSideMode=== 'finalize'" :letter="selectedLetter"  />
-                        <ForwardLetter v-else-if="leftSideMode=== 'forward'" @forward-closed="onForwardClosed" @forward-done="onLetterForwarded($event)" :letter="selectedLetter" />
-                        <FastSend :mode="fastSendMode" v-else-if="leftSideMode=== 'fastSend'" @fastsend-canceled="onFastSendCanceled($event)"  :dependentLetters="fastSendDependencies" />
-                        <SendEnterpriseForm  v-else-if="leftSideMode=== 'enterpriseForm'" @sendform-close="onSendFormClose($event)" :form="selectedFrom" :nextFormInfo="nextFormInfo" :tableLblWidth="maxTableLabelWidth" :formLblWidth="maxFormLabelWidth" :draftFormInfo="draftFormInfo" />
+                <div class="pusher" style="display: flex;height:100%">
+                    <div class="" style="background: transparent !important;padding: 0;width: 100%;height: 100%;">
+                        <div class="container2" >
+                            <transition name="fade">
+                                <div v-if="shallShowMessage" class="ui green message">{{message}}</div>
+                            </transition>
+                            <LetterDetailsMobile v-if="noLetterSelected == false && leftSideMode==='details'" :letter="selectedLetter" 
+                            :searchResult="selectedSearchResult"
+                            @finalize-letter="onFinalizeLetter($event)"
+                            @forward-letter="onForwardLetter($event)"
+                            @letter-closed-fast="onLetterClosedFast($event)"
+                            @closed-letter-rejected="onClosedLetterRejected($event)"
+                            @send-fast-dependon="sendFastDependOn($event)"
+                            @next-form-selected="onNextFormSelected($event)"
+                            >
+                            </LetterDetailsMobile>
+                            <DraftDetails 
+                            v-if="noLetterSelected == false && leftSideMode==='draftDetails'" 
+                            :letter="selectedLetter" 
+                            @delete-letter="onDeleteLetter($event)"
+                            >
+                            </DraftDetails>
+                            <SearchResultDetails v-else-if="noLetterSelected == false && leftSideMode==='searchResultDetails'" :searchResult="selectedSearchResult"
+                            @finalize-letter="onFinalizeLetter($event)"
+                            @forward-letter="onForwardLetter($event)"
+                            >
+                            </SearchResultDetails>
+                            <FinalizeLetter v-else-if="leftSideMode=== 'finalize'" :letter="selectedLetter"  />
+                            <ForwardLetter v-else-if="leftSideMode=== 'forward'" @forward-closed="onForwardClosed" @forward-done="onLetterForwarded($event)" :letter="selectedLetter" />
+                            <FastSend :mode="fastSendMode" v-else-if="leftSideMode=== 'fastSend'" @fastsend-canceled="onFastSendCanceled($event)"  :dependentLetters="fastSendDependencies" />
+                            <SendEnterpriseForm  v-else-if="leftSideMode=== 'enterpriseForm'" @sendform-close="onSendFormClose($event)" :form="selectedFrom" :nextFormInfo="nextFormInfo" :tableLblWidth="maxTableLabelWidth" :formLblWidth="maxFormLabelWidth" :draftFormInfo="draftFormInfo" />
+                        </div>
+                        <!-- <div v-show="shallShowLetterList"> -->
+                        <div style="height:100%">
+                            <router-view 
+                                @selected-letter-changed="onSelectdLetterChanged($event)" 
+                                @selected-draft-changed="onSelectdDraftChanged($event)"
+                                @selected-searchresult-changed="onSelectdSearchResultChanged($event)" 
+                                ref='letterlist'>
+                            </router-view>
+                        </div>
                     </div>
-                    <div v-show="shallShowLetterList">
-                        <router-view 
-                            @selected-letter-changed="onSelectdLetterChanged($event)" 
-                            @selected-draft-changed="onSelectdDraftChanged($event)"
-                            @selected-searchresult-changed="onSelectdSearchResultChanged($event)" 
-                            ref='letterlist'>
-                        </router-view>
-                    </div>
-                
-                 </div>
-               </div>
+                </div>
              </div>
            </div>
         </div>

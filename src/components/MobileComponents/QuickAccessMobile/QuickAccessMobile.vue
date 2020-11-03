@@ -3,18 +3,17 @@
         <div class="popup"  data-content="ارسال سریع"><i  class="action-icon icon-SendLetterFast" @click="fastSend('send')" style="font-size:30pt"></i></div>
         <div class="popup"  data-content="ارسال پیشنویس" > <i class="action-icon icon-allDraft" @click="fastSend('draft')" style="font-size:22pt"></i></div>
         <div @click="onFormsIconClicked()" id="forms-dropdown"  class="ui icon top left dropdown" data-content="فرم های اداری">
-  		<i class="action-icon icon-enterpriseForm " style="font-size:17pt"></i>
-        
-  		<div class="left menu" >
-            <div style="padding:5px" ><input type="text" v-model="formSearchTxt" style="width:100%"/></div>
-            <div v-if="isLoading" class="item"><div class="ui active inline centered loader"></div></div> 
-            <div style="max-height:200px !important;overflow:auto;width:300px;background:var(--BackgroundTable1);">
-                <div v-for="(form) in filteredForms" :key="form.id" class="item menu-item" :style="{'background-color':getFromColor(form.selectionColor), 'color':'black' ,'border':'1px solid black' , 'max-height':'30px','cursor':'pointer' , 'overflow':'hidden' }">
-                    <div @click="showForm(form.id)" style="padding-left:5px;">{{form.name}}</div>
+            <i class="action-icon icon-enterpriseForm " style="font-size:17pt"></i>
+            <div class=" ui center menu" >
+                <div style="padding:5px" ><input type="text" v-model="formSearchTxt" style="width:100%"/></div>
+                <div v-if="isLoading" class="item"><div class="ui active inline centered loader"></div></div> 
+                <div style="max-height:200px !important;overflow:auto;width:300px;background:var(--BackgroundTable1);">
+                    <div v-for="(form) in filteredForms" :key="form.id" class="item menu-item" :style="{'background-color':getFromColor(form.selectionColor), 'color':'black' ,'border':'1px solid black' , 'max-height':'30px','cursor':'pointer' , 'overflow':'hidden' }">
+                        <div @click="showForm(form.id)" style="padding-left:5px;">{{form.name}}</div>
+                    </div>
                 </div>
             </div>
-  		</div>
-	    </div>
+        </div>
     </div>
 </template>
 
@@ -42,7 +41,12 @@ export default class QuickAccessMobile extends Vue{
         $('.popup').popup();
         $('#forms-dropdown').dropdown({action:'nothing'}).popup();
         $('#test').dropdown();
-
+        $('a.browse.item').popup({
+            popup : $('.ui.flowing.basic.admission.popup'),//Popup Content selector 
+            on    : 'click',//event trigger
+            position   : 'bottom left',
+            lastResort:true,
+        })
     }
 
     onFormsIconClicked(){

@@ -1,5 +1,5 @@
 <template>
-    <div class="symmetric-grid">
+    <div class="symmetric-grid" style="border-top: solid thin;">
         <div class="type-btn" :class="{selected:firstSelected}" @click="select(1)" >{{firstButtonTxt}}</div>
         <div class="type-btn" :class="{selected:secondSelected}" @click="select(2)"  >{{secondButtonTxt}}</div>
         <div class="type-btn" :class="{selected:allSelected}" @click="select(3)"  >{{thirdButtonTxt}}</div>
@@ -87,7 +87,7 @@ export default class LetterTypeSelector extends Vue {
 
 <style lang="less" scoped>
 .type-btn{
-    background-color: var(--LineItem);
+    background-color: var(--SingleLetter);
     flex: 1;
     text-align: center;
     cursor: pointer;
@@ -96,7 +96,7 @@ export default class LetterTypeSelector extends Vue {
     
 }
 .selected{
-    background-color: var(--TxtColor);
+    background-color: var(--LineItem);
 }
 </style>
 
