@@ -2,7 +2,8 @@
 <html lang="en">
   <head>
     <script>
-      window.apiAddress = "http://localhost:54173/api"; //"http://185.8.174.148:1620/api";
+      // window.apiAddress = "http://localhost:54173/api";
+      window.apiAddress = "http://185.8.174.148:1620/api";//"http://185.8.174.148:1620/api";
    </script>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -18,6 +19,11 @@
     <noscript>
       <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
     </noscript>
+  	<link rel="stylesheet" type="text/css" href="/semantic/dist/semantic.rtl.min.css">
+    <!-- <link rel="stylesheet" type="text/css" href="../src/assets/styles/semantic.min.css"> -->
+    <scripts src="jquery-3.1.1.min.js"></script>
+    <!-- <script src="../src/assets/scripts/semantic.min.js"></script> -->
+  	<script src="/semantic/dist/semantic.min.js"></script>
     <div id="app"></div>
     <!-- built files will be auto injected -->
   </body>

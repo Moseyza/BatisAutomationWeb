@@ -1,0 +1,102 @@
+<template>
+    <div class="symmetric-grid" style="border-top: solid thin;">
+        <div class="type-btn" :class="{selected:firstSelected}" @click="select(1)" >{{firstButtonTxt}}</div>
+        <div class="type-btn" :class="{selected:secondSelected}" @click="select(2)"  >{{secondButtonTxt}}</div>
+        <div class="type-btn" :class="{selected:allSelected}" @click="select(3)"  >{{thirdButtonTxt}}</div>
+    </div>    
+</template>
+
+<script lang="ts">
+import store from '@/store';
+import {Vue, Component, Prop, Watch} from 'vue-property-decorator';
+
+@Component
+export default class LetterTypeSelectorMobile extends Vue {
+    firstSelected = false;
+    secondSelected = false;
+    allSelected = true;
+    firstButtonTxt = '';
+    secondButtonTxt = '';
+    thirdButtonTxt = '';
+    @Prop() mode?: string;
+    @Watch('mode')
+    onModeChanged(newVal: string, oldVal: string){
+        this.setButtonsText();
+        
+    }
+    @Prop() counts?: any;
+    @Watch('counts',{deep:true})
+    onCountsChange(n: any,o: any){
+        this.setButtonsText();
+    }
+    unSelectAll(){
+        this.allSelected = false;
+        this.secondSelected = false;
+        this.firstSelected = false;
+    }
+    select(p: number){
+        this.unSelectAll();
+        if(p === 1){
+            this.firstSelected = true;
+            if(this.mode === 'received')
+                this.$emit('letter-type-changed',"notForwarded");
+            else if(this.mode === 'drafts')
+                this.$emit('letter-type-changed',"sent");
+        }else if(p === 2){
+            this.secondSelected = true;
+            if(this.mode === 'received')
+                this.$emit('letter-type-changed','notRead');
+            else if(this.mode === 'drafts')
+                this.$emit('letter-type-changed',"notSent");
+        }else{
+            this.allSelected = true;
+             this.$emit('letter-type-changed',"all");
+        }
+        store.state.eventHub.$emit('letter-type-changed');
+    }
+    created(){
+        this.setButtonsText();
+        //store.state.eventHub.$on('letter-opened',this.decreaseNotRead);
+    }
+    decreaseNotRead(){
+        if(this.counts.notRead )
+            this.counts.notRead = this.counts.notRead -1;
+    }
+    setButtonsText(){
+        if(this.mode === 'received'){
+            this.firstButtonTxt = `ارجاع نشده (${this.counts.notForwarded})`;
+            this.secondButtonTxt = `خوانده نشده (${this.counts.notRead})`;
+            this.thirdButtonTxt = `همه (${this.counts.all})`;
+
+        }
+        else if(this.mode === 'drafts'){
+            this.firstButtonTxt = `ارسال شده (${this.counts.draftSent})`;
+            this.secondButtonTxt = `ارسال نشده (${this.counts.draftNotSent})`;
+            this.thirdButtonTxt = `همه (${this.counts.all})`;
+        }
+    }
+
+    selectAllMode(){
+        this.select(3);
+    }
+    selectNotSentMode(){
+        this.select(2);
+    }
+}
+</script>
+
+<style lang="less" scoped>
+.type-btn{
+    background-color: var(--SingleLetter);
+    flex: 1;
+    text-align: center;
+    cursor: pointer;
+    margin: 10px 0;
+    padding: 5px 0;
+    
+}
+.selected{
+    background-color: var(--LineItem) !important;
+}
+</style>
+

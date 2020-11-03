@@ -52,6 +52,7 @@ batisAutomationApi.interceptors.response.use(
                 alert("Token expiered....");
                 store.commit("clearToken");
                 router.replace({name: "Login"});
+                // router.replace({name: "Login"});
             }
         
     }

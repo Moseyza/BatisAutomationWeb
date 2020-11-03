@@ -162,11 +162,11 @@ export default class SingleLetter extends Vue{
         
     }
     .letter-text{
-        color: @color-font;
+        color: var(--TxtColor);
         font-size: 10pt;
     }
     .letter-title{
-        color: @color-font;
+        color: var(--TxtColor);
         // width: 90%;
         max-width: 300px;
         overflow: hidden;

@@ -1,15 +1,5 @@
 <template>
     <div class="three-part-flexbox" id="main-container">
-        <!-- <div style="display:flex;">
-            <div style="flex:1" @click="changeColor" >
-                
-                <div  style="color:white;cursor:pointer;justify-content: center;align-items: center;display: flex;">روز</div>
-            </div>
-            <div style="flex:1" @click="reset">
-                
-                <div  style="color:black;cursor:pointer;justify-content: center;align-items: center;display: flex;">شب</div>
-            </div>
-        </div> -->
         <div ref="formlabel" style="position:absolute">{{maxLengthFormLabel}}</div> 
         <div ref="tablelabel" style="position:absolute">{{maxLengthTableLabel}}</div> 
         <CartableTitle @on-letter-owner-set="onLetterOwnerSet($event)" class="flex-part-top" style="flex: 0 1 auto" />

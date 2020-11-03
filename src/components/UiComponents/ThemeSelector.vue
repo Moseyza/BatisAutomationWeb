@@ -39,7 +39,7 @@ export default class ThemeSelector extends Vue {
         element.style.setProperty('--SingleLetter','#4d4d4d');
         element.style.setProperty('--DetailBackground','#494949');
         element.style.setProperty('--NormalBackground','#3f3f3f');
-        element.style.setProperty('--TxtColor','#939393');
+        element.style.setProperty('--TxtColor','#e7e7e7');
         element.style.setProperty('--FontColor','#e7e7e7');
     }
 }
