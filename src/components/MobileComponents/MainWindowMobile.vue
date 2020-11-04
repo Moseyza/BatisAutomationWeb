@@ -20,7 +20,7 @@
                     <div style="display: flex;flex-direction: column; height: 100%;background: var(--Header);">
                         <div class="three-part-flexbox">
                             <div class="flex-part-middle">
-                                <FoldersTreeMobile :letterOwnerId="letterOwnerId" @folder-clicked="onFolderClicked()"></FoldersTreeMobile>
+                                <FoldersTreeMobile :letterOwnerId="letterOwnerId" @folder-clicked="onFolderMobileClicked()"></FoldersTreeMobile>
                             </div>
                             <div class="flex-part-bottom" style="flex: 0 1 auto;"></div>
                         </div>
@@ -28,7 +28,7 @@
                 </div>
                 <div class="pusher" style="display: flex;height:100%">
                     <div class="" style="background: transparent !important;padding: 0;width: 100%;height: 100%;">
-                        <div class="container2" >
+                        <div class="container2"  style="height:100%">
                             <transition name="fade">
                                 <div v-if="shallShowMessage" class="ui green message">{{message}}</div>
                             </transition>
@@ -58,16 +58,17 @@
                             <FastSend :mode="fastSendMode" v-else-if="leftSideMode=== 'fastSend'" @fastsend-canceled="onFastSendCanceled($event)"  :dependentLetters="fastSendDependencies" />
                             <SendEnterpriseForm  v-else-if="leftSideMode=== 'enterpriseForm'" @sendform-close="onSendFormClose($event)" :form="selectedFrom" :nextFormInfo="nextFormInfo" :tableLblWidth="maxTableLabelWidth" :formLblWidth="maxFormLabelWidth" :draftFormInfo="draftFormInfo" />
                             <EnterpriseFormLists  v-else-if="leftSideMode=== 'enterpriseFormLists'"  />
+                            <LetterListRouterView  v-else-if="leftSideMode=== 'letterListRouterView'"  @set-selectdLetterChanged-letterListView="onSetSelectdLetterChangedLetterListView($event)" @set-selectdDraftChanged-letterListView="onSetSelectdDraftChangedLetterListView($event)" @set-selectdSearchResultChanged-letterListView="onSetSelectdSearchResultChangedLetterListView($event)"/>
                         </div>
                         <!-- <div v-show="shallShowLetterList"> -->
-                        <div style="height:100%">
+                        <!-- <div style="height:100%">
                             <router-view 
                                 @selected-letter-changed="onSelectdLetterChanged($event)" 
                                 @selected-draft-changed="onSelectdDraftChanged($event)"
                                 @selected-searchresult-changed="onSelectdSearchResultChanged($event)" 
                                 ref='letterlist'>
                             </router-view>
-                        </div>
+                        </div> -->
                         <!-- <div v-show="shallOfficeFormlist" class="ui center menu" > -->
                        
                     </div>
@@ -91,14 +92,18 @@ import QuickAccessMobile from '@/components/MobileComponents/QuickAccessMobile/Q
 import FoldersTreeMobile from '@/components/MobileComponents/FoldersTreeMobile/FoldersTreeMobile.vue';
 import LetterDetailsMobile from '@/components/MobileComponents/LetterDetailsMobile/LetterDetailsMobile.vue';
 import EnterpriseFormLists from '@/components/MobileComponents/EnterpriseFormLists/EnterpriseFormLists.vue';
+import LetterListRouterView from '@/components/MobileComponents/LetterListRouterView/LetterListRouterView.vue';
 import store from '@/store';
-
-import {Component, Mixins, Watch} from 'vue-property-decorator'
+import {LetterSearchResult } from '@/store/models/Letter/LetterSearchResult';
+import * as enterpriseFormService from '@/store/Services/enterpriseFormService';
+import {Component, Mixins, Watch} from 'vue-property-decorator';
 import * as $ from 'jquery';
+import {Letter} from '@/store/models/Letter/Letter';
+import { DraftLetter } from '@/store/models/Letter/DraftLetter';
 
 
 @Component({
-    components:{CartableTitleMobile,QuickAccessMobile,FoldersTreeMobile,LetterDetailsMobile,EnterpriseFormLists}
+    components:{CartableTitleMobile,QuickAccessMobile,FoldersTreeMobile,LetterDetailsMobile,EnterpriseFormLists,LetterListRouterView}
 })
 export default class MainWindowMobile extends Mixins(MixinMainWindow) {
 
@@ -110,12 +115,25 @@ export default class MainWindowMobile extends Mixins(MixinMainWindow) {
             context: $('.bottom.segment')
           }).sidebar('attach events','.sidebarButton').sidebar('setting', 'mobileTransition', 'overlay');
     }
-    
+    onSetSelectdLetterChangedLetterListView(letter: Letter){
+       this.onSelectdLetterChanged(letter);
+    }
+
+    async onSetSelectdDraftChangedLetterListView(letter: DraftLetter){
+        this.onSelectdDraftChanged(letter);
+    }
+
+    onSetSelectdSearchResultChangedLetterListView(searchResult: LetterSearchResult){
+        this.onSelectdSearchResultChanged(searchResult);
+    }
 
     showOfficeFormlist(){
         this.shallShowenterpriseFormLists=true;
         this.leftSideMode = 'enterpriseFormLists';
-
+    }
+    async onFolderMobileClicked(){
+        this.leftSideMode = "letterListRouterView";
+         await (this.$refs.letterlist as any).refresh();
     }
    
 }
