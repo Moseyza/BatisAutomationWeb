@@ -12,11 +12,12 @@
                 </a>
                 <!-- <div style="display:flex;width:100%;" @click="shallHideletterList"> -->
                 <div style="display:flex;width:100%;">
-                    <QuickAccessMobile @shallShowenterpriseFormListsEvent="showOfficeFormlist()" @fast-send-clicked="onFastSendBtnClick($event)" @enterprise-form-selected-Mobile="onEnterpriseFormSelected($event,null,null)"/>
+                    <!-- <QuickAccessMobile @shallShowenterpriseFormListsEvent="showOfficeFormlist()" @fast-send-clicked="onFastSendBtnClick($event)" @enterprise-form-selected-Mobile="onEnterpriseFormSelected($event,null,null)"/> -->
+                    <QuickAccessMobile @shallShowenterpriseFormListsEvent="showOfficeFormlist()" @fast-send-clicked="onFastSendBtnClick($event)" />
                 </div>
              </div>
-            <div class="ui bottom attached segment" style="background: transparent !important; height: 100%;">
-                <div class="ui inverted labeled icon inline vertical top sidebar menu" style="height: 100% !important;">
+            <div class="ui bottom attached segment pushable mobileBottomSegmant" style="background: transparent !important; height: 100%;">
+                <div class="ui inverted labeled icon inline vertical right sidebar menu mobilesidebar">
                     <div style="display: flex;flex-direction: column; height: 100%;background: var(--Header);">
                         <div class="three-part-flexbox">
                             <div class="flex-part-middle">
@@ -57,20 +58,9 @@
                             <ForwardLetter v-else-if="leftSideMode=== 'forward'" @forward-closed="onForwardClosed" @forward-done="onLetterForwarded($event)" :letter="selectedLetter" />
                             <FastSend :mode="fastSendMode" v-else-if="leftSideMode=== 'fastSend'" @fastsend-canceled="onFastSendCanceled($event)"  :dependentLetters="fastSendDependencies" />
                             <SendEnterpriseForm  v-else-if="leftSideMode=== 'enterpriseForm'" @sendform-close="onSendFormClose($event)" :form="selectedFrom" :nextFormInfo="nextFormInfo" :tableLblWidth="maxTableLabelWidth" :formLblWidth="maxFormLabelWidth" :draftFormInfo="draftFormInfo" />
-                            <EnterpriseFormLists  v-else-if="leftSideMode=== 'enterpriseFormLists'"  />
+                            <EnterpriseFormLists  v-else-if="leftSideMode=== 'enterpriseFormLists'"  @enterprise-form-selected-Mobile="onEnterpriseFormMobileSelected($event,null,null)" />
                             <LetterListRouterView  v-else-if="leftSideMode=== 'letterListRouterView'"  @set-selectdLetterChanged-letterListView="onSetSelectdLetterChangedLetterListView($event)" @set-selectdDraftChanged-letterListView="onSetSelectdDraftChangedLetterListView($event)" @set-selectdSearchResultChanged-letterListView="onSetSelectdSearchResultChangedLetterListView($event)"/>
                         </div>
-                        <!-- <div v-show="shallShowLetterList"> -->
-                        <!-- <div style="height:100%">
-                            <router-view 
-                                @selected-letter-changed="onSelectdLetterChanged($event)" 
-                                @selected-draft-changed="onSelectdDraftChanged($event)"
-                                @selected-searchresult-changed="onSelectdSearchResultChanged($event)" 
-                                ref='letterlist'>
-                            </router-view>
-                        </div> -->
-                        <!-- <div v-show="shallOfficeFormlist" class="ui center menu" > -->
-                       
                     </div>
                 </div>
              </div>
@@ -100,6 +90,10 @@ import {Component, Mixins, Watch} from 'vue-property-decorator';
 import * as $ from 'jquery';
 import {Letter} from '@/store/models/Letter/Letter';
 import { DraftLetter } from '@/store/models/Letter/DraftLetter';
+import { EnterpriseForm } from '@/store/models/EnterpriseForm/EnterpriseForm';
+import { NextFormInfo } from '@/store/models/EnterpriseForm/NextFormInfo';
+import { DraftEnterpriseFormInfo } from '@/store/models/EnterpriseForm/LoadEnterpriseFormDraftResponse';
+import router from '@/router';
 
 
 @Component({
@@ -107,20 +101,45 @@ import { DraftLetter } from '@/store/models/Letter/DraftLetter';
 })
 export default class MainWindowMobile extends Mixins(MixinMainWindow) {
 
-    // shallShowLetterList = true;
     shallShowenterpriseFormLists=false
      mounted(){
        alert("test");
            $('.ui.sidebar').sidebar({
             context: $('.bottom.segment')
-          }).sidebar('attach events','.sidebarButton').sidebar('setting', 'mobileTransition', 'overlay');
+          }).sidebar('attach events','.sidebarButton')
+          .sidebar('setting', 'mobileTransition', 'overlay')
+          ;
     }
+    //  mounted(){
+    //    alert("test");
+    //        $('.ui.sidebar').sidebar({
+    //         context: $('.bottom.segment')
+    //       }).sidebar('attach events','.sidebarButton').sidebar('setting', 'mobileTransition', 'overlay');
+    //       window.addEventListener("keydown", function(event:any) {
+    //         let str = "KeyboardEvent: key='" + event.key + "' | code='" +
+    //                     event.code + "'";
+    //                 if(event.code=='Backspace'){
+    //                     alert(event.code);
+    //                     router.replace("ReceivedLettersMobile");
+    //                 }
+    //     }.bind(this), true);
+    // }
+    // created(){
+    //     window.addEventListener("hashchange", function(e) {
+    //     if(e.oldURL.length > e.newURL.length)
+    //         alert("back")   
+    //     });
+    // }
     onSetSelectdLetterChangedLetterListView(letter: Letter){
        this.onSelectdLetterChanged(letter);
     }
 
     async onSetSelectdDraftChangedLetterListView(letter: DraftLetter){
         this.onSelectdDraftChanged(letter);
+    }
+
+    onEnterpriseFormMobileSelected(form: EnterpriseForm,nextFormInfo?: NextFormInfo,draftFormInfo?: DraftEnterpriseFormInfo){
+        this.onEnterpriseFormSelected(form,nextFormInfo,draftFormInfo)
     }
 
     onSetSelectdSearchResultChangedLetterListView(searchResult: LetterSearchResult){

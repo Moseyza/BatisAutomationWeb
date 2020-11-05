@@ -45,8 +45,16 @@ const routes = [
       {
         path: 'SentLettersMobile',
         name: 'SentLettersMobile',
-        component: () => import('@/components/MobileComponents/SentLettersMobile/SentLettersMobile.vue')
+        component: () => import('@/components/MobileComponents/SentLettersMobile/SentLettersMobile.vue'),
+        children:[
+          {
+            path: 'LetterDetailsMobile',
+            name: 'LetterDetailsMobile',
+            component: () => import('@/components/MobileComponents/LetterDetailsMobile/LetterDetailsMobile.vue'),
+          },
+        ]
       },
+    
       // {
       //   path: 'DraftLetters',
       //   name: 'DraftLetters',
