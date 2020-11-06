@@ -1,6 +1,6 @@
 <template>
     <!-- <ul> -->
-        <div class="node">
+        <div style="flex:1;">
             <div @dblclick="titleDblClick()" class="node-title">
                 <div class="leaf-node" v-if="data.children.length == 0" ></div>
                 <i v-if="data.children.length >0" class="icon-nodeIconOpen node-icon" @click="toggle()" :class="{'icon-nodeIcon':!isOpen , 'icon-nodeIconOpen':isOpen}" ></i>
