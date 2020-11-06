@@ -152,7 +152,7 @@ export default class MainWindowMobile extends Mixins(MixinMainWindow) {
     }
     async onFolderMobileClicked(){
         this.leftSideMode = "letterListRouterView";
-         await (this.$refs.letterlist as any).refresh();
+        //  await (this.$refs.letterlist as any).refresh();
     }
    
 }

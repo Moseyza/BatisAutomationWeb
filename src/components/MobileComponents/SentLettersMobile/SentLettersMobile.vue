@@ -25,7 +25,7 @@ import * as persianDate from 'persian-date';
 @Component({
     components:{LetterListMobile}
 })
-export default class ReceivedLettersMobile extends Vue {
+export default class SentLettersMobile extends Vue {
     letters?: Letter[] = [];
     loading = false;
     serverTime = '';

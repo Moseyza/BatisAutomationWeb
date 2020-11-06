@@ -1,10 +1,11 @@
 <template >
-    <div id="enterpriseFormLists-container">
-        <div v-if="isLoading" class="item">
+    <div id="enterpriseFormLists-container" style="height: 100%;display: flex;justify-content: center;align-items: center;
+">
+        <div v-if="isLoading" class="item" style="flex:1;align-items:center;justify-content:center;">
             <div class="ui active inline centered loader"></div>
         </div> 
-        <div style="background:var(--BackgroundTable);">
-            <div v-for="(form) in filteredForms" :key="form.id" class="item menu-item" :style="{'cursor':'pointer'}">
+        <div v-if="!isLoading" style="justify-content: space-evenly;background: var(--BackgroundTable);flex: 1;display: flex;flex-direction: column;border: solid thin;border-color: var(--FontColor);height: 100%;">
+            <div v-for="(form) in filteredForms" :key="form.id" class="item menu-item" style="cursor:pointer;border: solid thin;border-color: var(--FontColor);">
                 <div @click="showForm(form.id)" style="padding-left:5px;">{{form.name}}</div>
             </div>
         </div>
