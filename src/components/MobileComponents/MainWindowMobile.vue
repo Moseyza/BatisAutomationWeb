@@ -4,67 +4,67 @@
         <div ref="formlabel" style="position:absolute">{{maxLengthFormLabel}}</div> 
         <div ref="tablelabel" style="position:absolute">{{maxLengthTableLabel}}</div> 
         <div class="container3 flex-part-middle" id="child-container"  style="flex: 18 1 0%;overflow: hidden;">
-            <div style="width: 100%;height: 100%;">
+            <div style="width: 100%;height: 100%;display: flex;flex-direction: column;">
              <!-- <div class="fill-parent" data-b-content="{Binding mainWindowViewModel,ViewSelector:viewSelector}"></div> -->
-             <div class="ui top attached menu">
-                <a class="item sidebarButton" style="color: var(--Text);">
-                    <i class="sidebar icon" style="color: var(--Text);"></i> Menu
-                </a>
-                <!-- <div style="display:flex;width:100%;" @click="shallHideletterList"> -->
-                <div style="display:flex;width:100%;">
-                    <!-- <QuickAccessMobile @shallShowenterpriseFormListsEvent="showOfficeFormlist()" @fast-send-clicked="onFastSendBtnClick($event)" @enterprise-form-selected-Mobile="onEnterpriseFormSelected($event,null,null)"/> -->
-                    <QuickAccessMobile @shallShowenterpriseFormListsEvent="showOfficeFormlist()" @fast-send-clicked="onFastSendBtnClick($event)" />
+                <div class="ui top attached menu">
+                    <a class="item sidebarButton" style="color: var(--Text);">
+                        <i class="sidebar icon" style="color: var(--Text);"></i> Menu
+                    </a>
+                    <!-- <div style="display:flex;width:100%;" @click="shallHideletterList"> -->
+                    <div style="display:flex;width:100%;">
+                        <!-- <QuickAccessMobile @shallShowenterpriseFormListsEvent="showOfficeFormlist()" @fast-send-clicked="onFastSendBtnClick($event)" @enterprise-form-selected-Mobile="onEnterpriseFormSelected($event,null,null)"/> -->
+                        <QuickAccessMobile @shallShowenterpriseFormListsEvent="showOfficeFormlist()" @fast-send-clicked="onFastSendBtnClick($event)" />
+                    </div>
                 </div>
-             </div>
-            <div class="ui bottom attached segment pushable mobileBottomSegmant" style="background: transparent !important; height: 100%;">
-                <div class="ui inverted labeled icon inline vertical right sidebar menu mobilesidebar">
-                    <div style="display: flex;flex-direction: column; height: 100%;background: var(--Header);">
-                        <div class="three-part-flexbox">
-                            <div class="flex-part-middle">
-                                <FoldersTreeMobile :letterOwnerId="letterOwnerId" @folder-clicked="onFolderMobileClicked()"></FoldersTreeMobile>
+                <div class="ui bottom attached segment pushable mobileBottomSegmant" style="background: transparent !important; height: 100%;flex:1">
+                    <div class="ui inverted labeled icon inline vertical right sidebar menu mobilesidebar">
+                        <div style="display: flex;flex-direction: column; height: 100%;background: var(--Header);">
+                            <div class="three-part-flexbox">
+                                <div class="flex-part-middle">
+                                    <FoldersTreeMobile :letterOwnerId="letterOwnerId" @folder-clicked="onFolderMobileClicked()"></FoldersTreeMobile>
+                                </div>
+                                <div class="flex-part-bottom" style="flex: 0 1 auto;"></div>
                             </div>
-                            <div class="flex-part-bottom" style="flex: 0 1 auto;"></div>
+                        </div>
+                    </div>
+                    <div class="pusher" style="display: flex;height:100%">
+                        <div class="" style="background: transparent !important;padding: 0;width: 100%;height: 100%;">
+                            <div class="container2"  style="height:100%">
+                                <transition name="fade">
+                                    <div v-if="shallShowMessage" class="ui green message">{{message}}</div>
+                                </transition>
+                                <LetterDetailsMobile v-if="noLetterSelected == false && leftSideMode==='details'" :letter="selectedLetter" 
+                                :searchResult="selectedSearchResult"
+                                @finalize-letter="onFinalizeLetter($event)"
+                                @forward-letter="onForwardLetter($event)"
+                                @letter-closed-fast="onLetterClosedFast($event)"
+                                @closed-letter-rejected="onClosedLetterRejected($event)"
+                                @send-fast-dependon="sendFastDependOn($event)"
+                                @next-form-selected="onNextFormSelected($event)"
+                                >
+                                </LetterDetailsMobile>
+                                <DraftDetails 
+                                v-if="noLetterSelected == false && leftSideMode==='draftDetails'" 
+                                :letter="selectedLetter" 
+                                @delete-letter="onDeleteLetter($event)"
+                                >
+                                </DraftDetails>
+                                <SearchResultDetails v-else-if="noLetterSelected == false && leftSideMode==='searchResultDetails'" :searchResult="selectedSearchResult"
+                                @finalize-letter="onFinalizeLetter($event)"
+                                @forward-letter="onForwardLetter($event)"
+                                >
+                                </SearchResultDetails>
+                                <FinalizeLetter v-else-if="leftSideMode=== 'finalize'" :letter="selectedLetter"  />
+                                <ForwardLetter v-else-if="leftSideMode=== 'forward'" @forward-closed="onForwardClosed" @forward-done="onLetterForwarded($event)" :letter="selectedLetter" />
+                                <FastSend :mode="fastSendMode" v-else-if="leftSideMode=== 'fastSend'" @fastsend-canceled="onFastSendCanceled($event)"  :dependentLetters="fastSendDependencies" />
+                                <SendEnterpriseForm  v-else-if="leftSideMode=== 'enterpriseForm'" @sendform-close="onSendFormClose($event)" :form="selectedFrom" :nextFormInfo="nextFormInfo" :tableLblWidth="maxTableLabelWidth" :formLblWidth="maxFormLabelWidth" :draftFormInfo="draftFormInfo" />
+                                <EnterpriseFormLists  v-else-if="leftSideMode=== 'enterpriseFormLists'"  @enterprise-form-selected-Mobile="onEnterpriseFormMobileSelected($event,null,null)" />
+                                <!-- <LetterListRouterView  v-else-if="leftSideMode=== 'letterListRouterView'"  @set-selectdLetterChanged-letterListView="onSetSelectdLetterChangedLetterListView($event)" @set-selectdDraftChanged-letterListView="onSetSelectdDraftChangedLetterListView($event)" @set-selectdSearchResultChanged-letterListView="onSetSelectdSearchResultChangedLetterListView($event)"/> -->
+                                <LetterListRouterView ref="letterlist"  @set-selectdLetterChanged-letterListView="onSetSelectdLetterChangedLetterListView($event)" @set-selectdDraftChanged-letterListView="onSetSelectdDraftChangedLetterListView($event)" @set-selectdSearchResultChanged-letterListView="onSetSelectdSearchResultChangedLetterListView($event)"/>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="pusher" style="display: flex;height:100%">
-                    <div class="" style="background: transparent !important;padding: 0;width: 100%;height: 100%;">
-                        <div class="container2"  style="height:100%">
-                            <transition name="fade">
-                                <div v-if="shallShowMessage" class="ui green message">{{message}}</div>
-                            </transition>
-                            <LetterDetailsMobile v-if="noLetterSelected == false && leftSideMode==='details'" :letter="selectedLetter" 
-                            :searchResult="selectedSearchResult"
-                            @finalize-letter="onFinalizeLetter($event)"
-                            @forward-letter="onForwardLetter($event)"
-                            @letter-closed-fast="onLetterClosedFast($event)"
-                            @closed-letter-rejected="onClosedLetterRejected($event)"
-                            @send-fast-dependon="sendFastDependOn($event)"
-                            @next-form-selected="onNextFormSelected($event)"
-                            >
-                            </LetterDetailsMobile>
-                            <DraftDetails 
-                            v-if="noLetterSelected == false && leftSideMode==='draftDetails'" 
-                            :letter="selectedLetter" 
-                            @delete-letter="onDeleteLetter($event)"
-                            >
-                            </DraftDetails>
-                            <SearchResultDetails v-else-if="noLetterSelected == false && leftSideMode==='searchResultDetails'" :searchResult="selectedSearchResult"
-                            @finalize-letter="onFinalizeLetter($event)"
-                            @forward-letter="onForwardLetter($event)"
-                            >
-                            </SearchResultDetails>
-                            <FinalizeLetter v-else-if="leftSideMode=== 'finalize'" :letter="selectedLetter"  />
-                            <ForwardLetter v-else-if="leftSideMode=== 'forward'" @forward-closed="onForwardClosed" @forward-done="onLetterForwarded($event)" :letter="selectedLetter" />
-                            <FastSend :mode="fastSendMode" v-else-if="leftSideMode=== 'fastSend'" @fastsend-canceled="onFastSendCanceled($event)"  :dependentLetters="fastSendDependencies" />
-                            <SendEnterpriseForm  v-else-if="leftSideMode=== 'enterpriseForm'" @sendform-close="onSendFormClose($event)" :form="selectedFrom" :nextFormInfo="nextFormInfo" :tableLblWidth="maxTableLabelWidth" :formLblWidth="maxFormLabelWidth" :draftFormInfo="draftFormInfo" />
-                            <EnterpriseFormLists  v-else-if="leftSideMode=== 'enterpriseFormLists'"  @enterprise-form-selected-Mobile="onEnterpriseFormMobileSelected($event,null,null)" />
-                            <!-- <LetterListRouterView  v-else-if="leftSideMode=== 'letterListRouterView'"  @set-selectdLetterChanged-letterListView="onSetSelectdLetterChangedLetterListView($event)" @set-selectdDraftChanged-letterListView="onSetSelectdDraftChangedLetterListView($event)" @set-selectdSearchResultChanged-letterListView="onSetSelectdSearchResultChangedLetterListView($event)"/> -->
-                            <LetterListRouterView ref="letterlist"  @set-selectdLetterChanged-letterListView="onSetSelectdLetterChangedLetterListView($event)" @set-selectdDraftChanged-letterListView="onSetSelectdDraftChangedLetterListView($event)" @set-selectdSearchResultChanged-letterListView="onSetSelectdSearchResultChangedLetterListView($event)"/>
-                        </div>
-                    </div>
-                </div>
-             </div>
            </div>
         </div>
         <div class="flex-part-bottom container2" style="flex: 0 1 auto;direction:ltr;font-size:x-small;">
