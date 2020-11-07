@@ -23,7 +23,7 @@
     export default class LetterListRouterView extends Vue {
 
         async created(){
-            alert('listRouter')
+            // alert('listRouter')
             //  await (this.$refs.letterlist as any).refresh();
         }
         

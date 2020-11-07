@@ -104,12 +104,13 @@ export default class MainWindowMobile extends Mixins(MixinMainWindow) {
 
     shallShowenterpriseFormLists=false
      async mounted(){
-       alert("test");
+    //    alert("test");
            $('.ui.sidebar').sidebar({
             context: $('.bottom.segment')
           }).sidebar('attach events','.sidebarButton')
           .sidebar('setting', 'mobileTransition', 'overlay')
           ;
+          
         //   await (this.$refs.letterlist as any).refresh();
     }
     //  mounted(){

@@ -34,6 +34,16 @@ export default class SentLettersMobile extends Vue {
     async created(){
         await this.refresh();
     }
+    mounted(){
+        //      window.addEventListener("keydown", function(event: any) {
+        //                 alert(event.code);
+        //             if(event.code=='AltLeft'){
+        //                 if(event.code=='ArrowLeft'){
+        //                     alert(event.code);
+        //                 }
+        //             }
+        // }.bind(this), true);
+    }
     async refresh(){
         this.loading = true;
         const serverResult = await api.getSentLetters(undefined,undefined);
