@@ -2,15 +2,15 @@
     <div class="prty-slctr bg1 chamfer">
         <label @click="select('low')"  class="chk-container" >
             <input  type="checkbox" :checked="isLow" disabled>
-            <span class="checkmark" style="background-color:#69b578" :class="{'blurred':!isLow }"></span>
+            <span class="checkmark" style="background-color:var(--color-success)" :class="{'blurred':!isLow }"></span>
         </label>
         <label @click="select('med')"  class="chk-container">
             <input  type="checkbox" :checked="isMed" disabled>
-            <span class="checkmark" style="background-color:#e9c46a" :class="{'blurred':!isMed }" ></span>
+            <span class="checkmark" style="background-color:var(--color-caution)" :class="{'blurred':!isMed }" ></span>
         </label>
         <label @click="select('high')" class="chk-container">
             <input  type="checkbox" :checked="isHigh" disabled>
-            <span class="checkmark" style="background-color:#ff6b6b" :class="{'blurred':!isHigh }" ></span>
+            <span class="checkmark" style="background-color:var(--color-danger)" :class="{'blurred':!isHigh }" ></span>
         </label>
     </div>
 </template>

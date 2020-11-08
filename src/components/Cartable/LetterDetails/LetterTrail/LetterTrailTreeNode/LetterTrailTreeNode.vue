@@ -43,8 +43,8 @@
                            
                 </div>
                 <div v-if="shallShowComment" >
-                     <button v-if="nodeData.isSendedViaMessagingApp" @click="getTelegramStatus()"  style="float:left;margin-top:5px;margin-left:5px" >وضعیت تلگرام <i v-if="isTelegramOk" class="icon icon-check" style="color:#69b578;font-size:8pt" ></i>  <div v-if="isLoadingTelegramStatus" class="ui active inline mini centered loader"></div> </button>
-                    <button v-if="nodeData.isEmailed" @click="getEmailStatus()"  style="float:left;margin-top:5px;margin-left:5px" >وضعیت ایمیل <i v-if="isEmailOk" class="icon icon-check" style="color:#69b578;font-size:8pt" ></i>  <div v-if="isLoadingEmailStatus" class="ui active inline mini centered loader"></div> </button>
+                     <button v-if="nodeData.isSendedViaMessagingApp" @click="getTelegramStatus()"  style="float:left;margin-top:5px;margin-left:5px" >وضعیت تلگرام <i v-if="isTelegramOk" class="icon icon-check" style="color:var(--color-success);font-size:8pt" ></i>  <div v-if="isLoadingTelegramStatus" class="ui active inline mini centered loader"></div> </button>
+                    <button v-if="nodeData.isEmailed" @click="getEmailStatus()"  style="float:left;margin-top:5px;margin-left:5px" >وضعیت ایمیل <i v-if="isEmailOk" class="icon icon-check" style="color:var(--color-success);font-size:8pt" ></i>  <div v-if="isLoadingEmailStatus" class="ui active inline mini centered loader"></div> </button>
                     <button v-if="isInterCompany" @click="getRemotLetterTrail()"  class="action-button" style="float:left;margin-top:5px;margin-left:5px" >استعلام نامه</button>
                 </div>
                 <div v-if="shallShowComment" class="bottom-line">
@@ -209,7 +209,7 @@ export default class LetterTrailTreeNode extends Vue {
           font-size: 8pt !important;
     }
     .nodeIcon:hover{
-        color:#ff6b6b;
+        color:var(--color-danger);
         font-size: 10pt !important;
     }
     .trail-node-title{
@@ -223,7 +223,7 @@ export default class LetterTrailTreeNode extends Vue {
         justify-content: flex-start;
     }
     .red{
-        color:#ff6b6b;
+        color:var(--color-danger);
     }
 </style>
 

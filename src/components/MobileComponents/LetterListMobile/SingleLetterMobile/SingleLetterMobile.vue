@@ -150,7 +150,7 @@ export default class SingleLetterMobile extends Vue{
         cursor: pointer;
     }
     .letter-container:hover{
-        border: .5px solid @color-primary;
+        border: .5px solid var(--color-primary);
     }
      .single-letter{
         height: 80px;
@@ -173,7 +173,7 @@ export default class SingleLetterMobile extends Vue{
         text-overflow: ellipsis;
     }
     .letter-audience{
-        color: @color-primary;
+        color: var(--color-primary);
         //font-size: 10pt;
 
     }
