@@ -72,18 +72,20 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator'; 
+import { Component, Prop, Vue,Mixins } from 'vue-property-decorator'; 
 import store from '@/store';
 import * as api from '@/store/api'
 import {notFilter} from './filters/filters';
-import {Letter} from '@/store/models/Letter/Letter'
+import {Letter} from '@/store/models/Letter/Letter';
+import ComponentMixinBase from './components/Cartable/ComponentMixins/ComponentMixinBase';
+
 @Component({
     store,
     filters: {
         notFilter: notFilter,
     }
 })
-export default class Login extends Vue {
+export default class Login extends Mixins(ComponentMixinBase) {
   
   userName = '';
   password = '';
@@ -96,7 +98,11 @@ export default class Login extends Vue {
       this.isUserValid =  await api.isUserValid(this.userName,this.password);
       if(this.isUserValid){
           this.$store.commit("setIsLoggedIn",true);
-          this.$router.replace({name: "MainWindowMobile"});
+          if(this.isMobile()==true){
+              this.$router.replace({name: "MainWindowMobile"});
+          }else{
+              this.$router.replace({name: "MainWindow"});
+          }
 
       }
   }
