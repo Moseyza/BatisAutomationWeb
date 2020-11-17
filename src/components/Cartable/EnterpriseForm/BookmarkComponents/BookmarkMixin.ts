@@ -150,13 +150,16 @@ export default class BookmarkMixin extends Vue{
                     data.Value = this.value.id;
                 }
                 if(this.bookmark.type === 15){//company bookmark
-                    data.Value = this.value.Id
+                    data.Value = this.value.Id;
                 }
                 else{
-                    if(this.value.Value)
+                    if(this.value.Value){
                         data.Value = this.value.Value;
-                    else
+                        
+                    }
+                    else{
                         data.Value = this.value;
+                    }
                 }
                 eventArg[this.bookmark.englishName] = data;
             }

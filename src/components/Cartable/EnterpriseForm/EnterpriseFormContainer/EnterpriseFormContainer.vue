@@ -32,6 +32,7 @@ import DayBookmark from '../BookmarkComponents/DayBookmark.vue';
 import PersonnelListBookmark from '../BookmarkComponents/PersonnelListBookmark.vue';
 import { DraftEnterpriseFormInfo, EnterpriseFormValues } from '@/store/models/EnterpriseForm/LoadEnterpriseFormDraftResponse';
 import SenderSignBookmark from '../BookmarkComponents/SenderSignBookmark.vue';
+import YearBookmark from '../BookmarkComponents/YearBookmark.vue';
 const onPropertyChangeCallQueue  = [] as any[];
 let isAnotherPropertyChangeCallInProgress = false;
 
@@ -129,6 +130,9 @@ export default class EnterpriseFormContainer extends Vue{
                 break;
             case 7://Month
                 componentClass = Vue.extend(MonthBookmark);
+                break;
+            case 8://Year
+                componentClass = Vue.extend(YearBookmark);
                 break;
             case 9://shortString
                 componentClass = Vue.extend(StringBookmark);
