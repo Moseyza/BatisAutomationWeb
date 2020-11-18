@@ -17,7 +17,7 @@
                     </div>
                 </div>
                 <div class="letter-text" style="flex:1; text-align:left;color:var(--TxtColor);">
-                            {{letterData.letterNo}}
+                    {{letterData.letterNo}}
                 </div>
             </div>
             <div class="symmetric-grid">

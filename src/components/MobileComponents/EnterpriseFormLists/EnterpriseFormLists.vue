@@ -41,6 +41,7 @@ export default class EnterpriseFormLists extends Vue {
         const result =  '#' + color.toString(16).substring(2);
         return result;
     }
+    
     showForm(id: string){
         const selectedForm =  this.enterpriseForms.find(x=>x.id === id);
         this.$emit('enterprise-form-selected-Mobile',selectedForm);

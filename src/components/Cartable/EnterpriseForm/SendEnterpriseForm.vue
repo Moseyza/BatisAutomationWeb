@@ -1,6 +1,11 @@
 <template>
     <div class="three-part-flexbox">
         <FullPageLoader :isActive="sending" />
+         <div v-if="shallRenderOnMobile==true" style="text-align: end;">
+            <button @click="returnToParent">
+                بازگشت
+            </button>
+        </div>
         <div class="flex-part-top">
             <div v-if="mainReceivers.length>0" class="symmetric-grid" style="margin-bottom: 5px">
                 <div style="flex:1;margin-left:5px">
@@ -23,7 +28,6 @@
                     :autoCompleteDataType="'copy'"  
                     :recipients="selectedCopyRecipients" 
                     @recipient-removed="onRecipientRemoved($event,'copy')"
-                    
                     />
                 </div>
             </div>
@@ -60,7 +64,7 @@
 </template>
 
 <script lang="ts">
-import {Vue,Component,Prop, Watch} from 'vue-property-decorator';
+import {Vue,Component,Prop, Watch,Mixins} from 'vue-property-decorator';
 import StringBookmark from './BookmarkComponents/StringBookmark.vue';
 import EnterpriseFormContainer from './EnterpriseFormContainer/EnterpriseFormContainer.vue';
 import {EnterpriseForm} from '@/store/models/EnterpriseForm/EnterpriseForm';
@@ -71,6 +75,7 @@ import * as letterOwnerService from '@/store/Services/letterOwnerService';
 import  FastSendRecipientSelector from '@/components/Cartable/FastSend/FastSendRecipientSelector/FastSendRecipientSelector.vue';
 import store from '@/store';
 import * as $ from 'jquery';
+import ComponentMixinBase from '@/components/Cartable/ComponentMixins/ComponentMixinBase';
 import { LetterOwnerForSendingFaxAndEmailAndSms } from '@/store/models/LetterOwner/LetterOwnerForSendingFaxAndEmailAndSms';
 import InPlaceMessageBox  from '@/components/UiComponents/InPlaceMessageBox.vue';
 import FullPageLoader from '@/components/UiComponents/FullPageLoader.vue';
@@ -79,7 +84,7 @@ import { DraftEnterpriseFormInfo } from '@/store/models/EnterpriseForm/LoadEnter
 @Component({
     components: {EnterpriseFormContainer,RecipientLookup , FastSendRecipientSelector , InPlaceMessageBox, FullPageLoader }
 })
-export default class SendEnterpriseForm extends Vue{
+export default class SendEnterpriseForm extends Mixins(ComponentMixinBase){
     @Prop() form?: EnterpriseForm;
     @Prop() formLblWidth?: number;
     @Prop() tableLblWidth?: number;
@@ -99,6 +104,7 @@ export default class SendEnterpriseForm extends Vue{
     selectedDraftRecipients = [] as LetterOwnerForSendingFaxAndEmailAndSms[];
     mandatoryValuesErrorMessage = "عدم تامین پارامترهای اجباری";
     sending = false;
+    shallRenderOnMobile=false;
     errors = '';
     isFormSent = false;
     @Watch("form",{ immediate: true, deep: true })
@@ -111,10 +117,18 @@ export default class SendEnterpriseForm extends Vue{
         store.state.eventHub.$emit('remove-all');
     }
 
+    mounted(){
+        if(this.isMobile()){
+            this.shallRenderOnMobile=true
+        }
+    }
     created(){
         this.loadReceivers();
     }
 
+    returnToParent(){
+        this.$emit('shallShowenterpriseFormListsEvent')
+    }
     async loadReceivers(){
         
         if(!this.form)return;

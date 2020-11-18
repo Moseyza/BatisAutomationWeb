@@ -33,16 +33,20 @@
                                 <transition name="fade">
                                     <div v-if="shallShowMessage" class="ui green message">{{message}}</div>
                                 </transition>
-                                <LetterDetailsMobile v-if="noLetterSelected == false && leftSideMode==='details'" :letter="selectedLetter" 
-                                :searchResult="selectedSearchResult"
-                                @finalize-letter="onFinalizeLetter($event)"
-                                @forward-letter="onForwardLetter($event)"
-                                @letter-closed-fast="onLetterClosedFast($event)"
-                                @closed-letter-rejected="onClosedLetterRejected($event)"
-                                @send-fast-dependon="sendFastDependOn($event)"
-                                @next-form-selected="onNextFormSelected($event)"
-                                >
-                                </LetterDetailsMobile>
+                                <div v-if="shallshowparentcomponent==false">
+                                    <LetterDetailsMobile v-if="noLetterSelected == false && leftSideMode==='details'" :letter="selectedLetter" 
+                                    :searchResult="selectedSearchResult"
+                                    @finalize-letter="onFinalizeLetter($event)"
+                                    @returnToParentPage="onReturnToParentPage($event)"
+                                    @forward-letter="onForwardLetter($event)"
+                                    @letter-closed-fast="onLetterClosedFast($event)"
+                                    @closed-letter-rejected="onClosedLetterRejected($event)"
+                                    @send-fast-dependon="sendFastDependOn($event)"
+                                    @next-form-selected="onNextFormSelected($event)"
+                                    >
+                                    </LetterDetailsMobile>
+                                </div>
+                               
                                 <DraftDetails 
                                 v-if="noLetterSelected == false && leftSideMode==='draftDetails'" 
                                 :letter="selectedLetter" 
@@ -56,8 +60,8 @@
                                 </SearchResultDetails>
                                 <FinalizeLetter v-else-if="leftSideMode=== 'finalize'" :letter="selectedLetter"  />
                                 <ForwardLetter v-else-if="leftSideMode=== 'forward'" @forward-closed="onForwardClosed" @forward-done="onLetterForwarded($event)" :letter="selectedLetter" />
-                                <FastSend :mode="fastSendMode" v-else-if="leftSideMode=== 'fastSend'" @fastsend-canceled="onFastSendCanceled($event)"  :dependentLetters="fastSendDependencies" />
-                                <SendEnterpriseForm  v-else-if="leftSideMode=== 'enterpriseForm'" @sendform-close="onSendFormClose($event)" :form="selectedFrom" :nextFormInfo="nextFormInfo" :tableLblWidth="maxTableLabelWidth" :formLblWidth="maxFormLabelWidth" :draftFormInfo="draftFormInfo" />
+                                <FastSend :mode="fastSendMode" v-else-if="leftSideMode=== 'fastSend'"  @fastsend-canceled="onFastSendCanceled($event)"  :dependentLetters="fastSendDependencies" />
+                                <SendEnterpriseForm  v-else-if="leftSideMode=== 'enterpriseForm'" @shallShowenterpriseFormListsEvent="showOfficeFormlist()" @sendform-close="onSendFormClose($event)" :form="selectedFrom" :nextFormInfo="nextFormInfo" :tableLblWidth="maxTableLabelWidth" :formLblWidth="maxFormLabelWidth" :draftFormInfo="draftFormInfo" />
                                 <EnterpriseFormLists  v-else-if="leftSideMode=== 'enterpriseFormLists'"  @enterprise-form-selected-Mobile="onEnterpriseFormMobileSelected($event,null,null)" />
                                 <!-- <LetterListRouterView  v-else-if="leftSideMode=== 'letterListRouterView'"  @set-selectdLetterChanged-letterListView="onSetSelectdLetterChangedLetterListView($event)" @set-selectdDraftChanged-letterListView="onSetSelectdDraftChangedLetterListView($event)" @set-selectdSearchResultChanged-letterListView="onSetSelectdSearchResultChangedLetterListView($event)"/> -->
                                 <LetterListRouterView ref="letterlist"  @set-selectdLetterChanged-letterListView="onSetSelectdLetterChangedLetterListView($event)" @set-selectdDraftChanged-letterListView="onSetSelectdDraftChangedLetterListView($event)" @set-selectdSearchResultChanged-letterListView="onSetSelectdSearchResultChangedLetterListView($event)"/>
@@ -102,7 +106,8 @@ import router from '@/router';
 })
 export default class MainWindowMobile extends Mixins(MixinMainWindow) {
 
-    shallShowenterpriseFormLists=false
+    shallShowenterpriseFormLists=false;
+    shallshowparentcomponent=false;
      async mounted(){
     //    alert("test");
            $('.ui.sidebar').sidebar({
@@ -134,7 +139,8 @@ export default class MainWindowMobile extends Mixins(MixinMainWindow) {
     //     });
     // }
     onSetSelectdLetterChangedLetterListView(letter: Letter){
-       this.onSelectdLetterChanged(letter);
+        this.shallshowparentcomponent=false;
+        this.onSelectdLetterChanged(letter);
     }
 
     async onSetSelectdDraftChangedLetterListView(letter: DraftLetter){
@@ -156,6 +162,10 @@ export default class MainWindowMobile extends Mixins(MixinMainWindow) {
     async onFolderMobileClicked(){
         this.leftSideMode = "letterListRouterView";
         //  await (this.$refs.letterlist as any).refresh();
+    }
+
+    onReturnToParentPage(){
+        this.shallshowparentcomponent=true;
     }
    
 }

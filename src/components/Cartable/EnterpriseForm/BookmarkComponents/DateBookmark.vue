@@ -1,13 +1,33 @@
 <template>
-    <div class="symmetric-grid" style="margin-bottom:5px">
+    <!-- for desktop -->
+    <!-- <div class="symmetric-grid" style="margin-bottom:5px">
         <div :style="{'width':maxLabelWidthStr}">
             <span style="white-space: break-spaces;">{{persianName}}</span>
             <span v-if="isMandatory" style="color:red;">*</span>
             <span style="float:left">:</span>
         </div>
         <div style="flex:1;display:flex;padding:0 5px">
-            <input style="border:none;outline:none;" type="text" v-model="value" :id='controlName' placeholder="__/__/_____"> <VuePersianDatetimePicker :clearable="true" :element="controlName" v-model="value" />
-            <button @click="clear" class="button"  style="margin-right:5px;padding:1px;" ><i  class="icon-clearSearch"></i></button>
+            <input style="border:none;outline:none;" type="text" v-model="value" :id='controlName' placeholder="__/__/_____">
+             <VuePersianDatetimePicker :clearable="true" :element="controlName" v-model="value" />
+            <button @click="clear" class="button"  style="margin-right:5px;padding:1px;" >
+                <i  class="icon-clearSearch"></i>
+            </button>
+        </div>
+    </div> -->
+    <div style="margin-bottom:5px;display: flex;">
+        <div style="display: flex;justify-content: center;align-items: center;">
+            <span style="white-space: break-spaces;">{{persianName}}</span>
+            <span v-if="isMandatory" style="color:red;">*</span>
+            <span style="float:left">:</span>
+        </div>
+        <div style="flex:1;display:flex;padding:0 5px">
+            <div class="ui fluid input" style="flex:1;">
+                <input style="border:none;outline:none;" type="text" v-model="value" :id='controlName' placeholder="__/__/_____">
+            </div>
+             <VuePersianDatetimePicker :clearable="true" :element="controlName" v-model="value" />
+            <button @click="clear" class="button"  style="margin-right:5px;padding:1px;" >
+                <i  class="icon-clearSearch"></i>
+            </button>
         </div>
     </div>
 </template>
@@ -32,6 +52,7 @@ export default  class  DateBookmark extends Mixins(BookmarkMixin){
         else
             this.value = ''; //this.defaultValue;
     }
+
 
     clear(){
         this.value = '';
