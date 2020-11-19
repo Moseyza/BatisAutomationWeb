@@ -130,6 +130,7 @@ export default class DependencyGraphNode extends Vue{
         font-size: .8em;
         border-radius: 3px;
         max-width: 300px;
+        height: 100px;
     }
 
     .selected-node{
