@@ -128,7 +128,7 @@ export default class SearchResultItemMobile extends Vue{
         text-overflow: ellipsis;
     }
     .letter-audience{
-        color: @color-primary;
+        color: var(--color-primary);
         //font-size: 10pt;
 
     }

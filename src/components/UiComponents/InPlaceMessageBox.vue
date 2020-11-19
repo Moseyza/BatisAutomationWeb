@@ -46,9 +46,9 @@ export default class InPlaceMessageBox extends Vue{
     flex: 1;
 }
 .success{
-    color:#69b578;
+    color:var(--color-success);
 }
 .fail{
-    color: #ff6b6b;
+    color: var(--color-danger);
 }
 </style>

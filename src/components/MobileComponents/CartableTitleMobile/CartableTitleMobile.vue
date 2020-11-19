@@ -1,16 +1,26 @@
 <template>
 <div id="container" class="container5">
-    <SingleCartableOwnerMobile style="display: flex;align-items: center;" @on-letter-owner-set="onLetterOwnerSet($event)"/>
-    <div style="display: flex;align-items: center;">
-        {{branch}}
+    <div class=" landscape ui centered grid" style="margin:0;display: flex;flex-direction: column;align-items: center;">
+        <SingleCartableOwnerMobile style="display: flex;align-items: center;" @on-letter-owner-set="onLetterOwnerSet($event)"/>
+        <div style="display:flex; direction: ltr">
+            <ThemeSelector style="margin:0em 1em 0em 1em;"/>
+            <div style="display: flex;align-items: center;">
+                {{currentDate}}  {{currentTime}}
+            </div>
+        </div>
     </div>
-    <div style="display:flex; direction: ltr">
-       <!-- <ThemeSelector style="margin:0em 1em 0em 1em;"/> -->
+    <div class="portrait largSize ui centered grid" style="margin:0;">
+        <SingleCartableOwnerMobile style="display: flex;align-items: center;" @on-letter-owner-set="onLetterOwnerSet($event)"/>
         <div style="display: flex;align-items: center;">
-            {{currentDate}}  {{currentTime}}
-       </div>
+            {{branch}}
+        </div>
+        <div style="display:flex; direction: ltr">
+            <ThemeSelector style="margin:0em 1em 0em 1em;"/>
+            <div style="display: flex;align-items: center;">
+                {{currentDate}}  {{currentTime}}
+            </div>
+        </div>
     </div>
-    
 </div>    
 </template>
 
@@ -50,10 +60,27 @@ export default class CartableTitleMobile extends Vue{
 </script>
 
 <style lang="less" scoped>
-#container{
-    display:flex;
-    justify-content:space-between;
-    border-radius: 0px;
-    
-}
+    @media (min-width: 0px ) and (max-width: 414px) {
+        .portrait{
+            display: none !important;
+        }
+    }
+
+    @media (min-width: 415px ) and (max-width: 823px) {
+        .landscape{
+            display: none !important;
+        }
+    }
+
+    @media (min-width: 824px ) and (max-width: 14000px) {
+        .largSize{
+            display: none !important;
+        }
+    }
+    #container{
+        display:flex;
+        justify-content:space-between;
+        border-radius: 0px;
+        
+    }
 </style>

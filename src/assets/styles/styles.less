@@ -27,7 +27,7 @@
     --back-color6: #939393;
     --color-success:#69b578;
     --color-danger: #ff6b6b;
-    --color-primary: #3498db;
+    --color-primary: #4db8ff;
     --color-caution: #e9c46a;
     --color-font: #e7e7e7;
     --color-icon: #939393;
@@ -178,7 +178,7 @@ button{
     margin: 5px;
     border: none;
     color: var(--TxtColor);
-    background-color: @color-primary;
+    background-color: var(--color-primary);
     font-size: 10pt;
     &:hover{
         background-color: darken(@color-primary,10%);
@@ -191,7 +191,7 @@ button{
 }
 
 .danger-label{
-    color: @color-danger;
+    color: var(--color-danger);
     text-align: center;
 }
 .grid{
@@ -229,7 +229,7 @@ button{
 }
 
 .highlight{
-    color: @color-primary;
+    color: var(--color-primary);
 }
 
 .fixed-icon{
@@ -248,7 +248,7 @@ button{
     font-size: xx-large;
     .icon;
     &:hover{
-        color: @color-danger;
+        color: var(--color-danger);
     }
 }
 .action-button{
@@ -259,18 +259,18 @@ button{
     padding-top: 2px;
 }
 .action-button:hover{
-    color: @color-danger;
+    color: var(--color-danger);
 }
 .button{
     cursor: pointer;
     &:hover{
-        color: @color-danger;
+        color: var(--color-danger);
     }
 }
 .helper-icon{
     .icon;
     &:hover{
-        color: @color-success;
+        color: var(--color-success);
     }
 }
 

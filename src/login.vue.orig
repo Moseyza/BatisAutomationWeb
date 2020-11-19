@@ -98,11 +98,15 @@ export default class Login extends Mixins(ComponentMixinBase) {
       this.isUserValid =  await api.isUserValid(this.userName,this.password);
       if(this.isUserValid){
           this.$store.commit("setIsLoggedIn",true);
+<<<<<<< HEAD
           if(this.isMobile()==true){
               this.$router.replace({name: "MainWindowMobile"});
           }else{
               this.$router.replace({name: "MainWindow"});
           }
+=======
+          this.$router.replace({name: "MainWindow"});
+>>>>>>> origin/features
 
       }
   }

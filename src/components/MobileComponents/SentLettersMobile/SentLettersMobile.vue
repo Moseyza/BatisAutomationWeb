@@ -25,7 +25,7 @@ import * as persianDate from 'persian-date';
 @Component({
     components:{LetterListMobile}
 })
-export default class ReceivedLettersMobile extends Vue {
+export default class SentLettersMobile extends Vue {
     letters?: Letter[] = [];
     loading = false;
     serverTime = '';
@@ -33,6 +33,16 @@ export default class ReceivedLettersMobile extends Vue {
     defaultDate: any = {};
     async created(){
         await this.refresh();
+    }
+    mounted(){
+        //      window.addEventListener("keydown", function(event: any) {
+        //                 alert(event.code);
+        //             if(event.code=='AltLeft'){
+        //                 if(event.code=='ArrowLeft'){
+        //                     alert(event.code);
+        //                 }
+        //             }
+        // }.bind(this), true);
     }
     async refresh(){
         this.loading = true;

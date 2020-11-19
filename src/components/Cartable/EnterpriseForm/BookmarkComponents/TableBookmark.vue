@@ -1,10 +1,10 @@
 <template>
     <div class="symmetric-grid" style="margin-bottom:5px">
-        <div :style="{'width':maxLabelWidthStr}">
+        <!-- <div :style="{'width':maxLabelWidthStr}">
             <span style="white-space: break-spaces;">{{persianName}}</span>
             <span v-if="isMandatory" style="color:red;">*</span>
             <span style="float:left">:</span>
-        </div>
+        </div> -->
         <div style="flex:1;padding:0 5px;">
             <div  ref="tablecontainer" style="border:1px solid black; min-height:5px">
             </div>
