@@ -1,6 +1,6 @@
 <template>
     <!-- for desktop -->
-    <!-- <div class="symmetric-grid" style="margin-bottom:5px">
+    <div class="symmetric-grid" style="margin-bottom:5px">
         <div :style="{'width':maxLabelWidthStr}">
             <span style="white-space: break-spaces;">{{persianName}}</span>
             <span v-if="isMandatory" style="color:red;">*</span>
@@ -13,8 +13,8 @@
                 <i  class="icon-clearSearch"></i>
             </button>
         </div>
-    </div> -->
-    <div style="margin-bottom:5px;display: flex;">
+    </div>
+    <!-- <div style="margin-bottom:5px;display: flex;">
         <div style="display: flex;justify-content: center;align-items: center;">
             <span style="white-space: break-spaces;">{{persianName}}</span>
             <span v-if="isMandatory" style="color:red;">*</span>
@@ -29,7 +29,7 @@
                 <i  class="icon-clearSearch"></i>
             </button>
         </div>
-    </div>
+    </div> -->
 </template>
 
 <script lang="ts">

@@ -1,5 +1,5 @@
 <template>
-    <!-- <div  class="symmetric-grid" style="margin-bottom:5px">
+    <div  class="symmetric-grid" style="margin-bottom:5px">
         <div   :style="{'width':maxLabelWidthStr}">
             <span style="white-space: break-spaces;">{{persianName}}</span>
             <span v-if="isMandatory" style="color:red;">*</span>
@@ -8,8 +8,8 @@
         <div style="flex:1;padding:0 5px">
             <input type="text" :style="{'background-color': columnColor}" style="width:100%;min-width:40px;border:none;outline:none" @blur="focusOut" v-model="value" :readonly="isReadOnly"/>
         </div>
-    </div> -->
-    <div style="margin-bottom:5px;display: flex;">
+    </div>
+    <!-- <div style="margin-bottom:5px;display: flex;">
         <div style="display: flex;justify-content: center;align-items: center;">
             <span style="white-space: break-spaces;">{{persianName}}</span>
             <span v-if="isMandatory" style="color:red;">*</span>
@@ -20,7 +20,7 @@
                 <input type="text" :style="{'background-color': columnColor}" style="width:100%;min-width:40px;border:none;outline:none" @blur="focusOut" v-model="value" :readonly="isReadOnly"/>
             </div>
         </div>
-    </div>
+    </div> -->
 </template>
 
 <script lang="ts">
