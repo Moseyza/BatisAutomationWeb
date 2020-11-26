@@ -36,6 +36,8 @@
 import {Vue,Component,Prop, Watch,Mixins} from 'vue-property-decorator';
 import BookmarkMixin from './BookmarkMixin';
 import VuePersianDatetimePicker from 'vue-persian-datetime-picker';
+import * as  service from '@/store/Services/enterpriseFormService';
+import store from '@/store';
 @Component({
     components: {VuePersianDatetimePicker}
 })
@@ -46,9 +48,19 @@ export default  class  DateBookmark extends Mixins(BookmarkMixin){
             return this.englishName + this.tableRowIndex;
         else return this.englishName;
     }
-    created(){
+     created(){
         if(this.defaultValue)
-            this.value = this.defaultValue;
+        {
+            //if(this.defaultValue.includes("%%"))
+            //{
+                
+                //alert(this.value);
+                //console.log(this.value);
+            //}
+            //else
+                this.value = this.defaultValue;
+        }
+            
         else
             this.value = ''; //this.defaultValue;
     }
@@ -58,8 +70,13 @@ export default  class  DateBookmark extends Mixins(BookmarkMixin){
         this.value = '';
     }
 
-    onValueChanged(){
+     onValueChanged(){
         this.$emit("value-changed",this.englishName);
+        // if(this.value as string)
+        //     if((this.value as string).includes("%%")){
+        //         this.value =  (await service.updateParameter(store.state.ownerId,this.value) as string);
+        //     }
+
     }
 }
 </script>

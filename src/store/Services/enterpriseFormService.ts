@@ -158,3 +158,15 @@ export async function getNextForm(nextFormReqeust: any): Promise<NextFormInfo>{
         return {} as NextFormInfo;    
     }
 }
+
+export async function updateParameter(ownerId: string, value: string): Promise<string>{
+    try {
+
+        const serverResult =  await api.batisAutomationApi.post(`/EnterpriseForms/UpdateParameters`,{value: value, ownerId: ownerId});
+        return serverResult.data as string;
+    } 
+    catch (error) {
+        console.log(error);
+        return {} as string;
+    }
+}
