@@ -72,7 +72,7 @@
                     <!-- {{letter.abstract}} -->
                     <!-- <div class="action-button" style="font-size:x-large" @click="fitImage()" v-if="noPdfExists"><i class="icon icon-fitImage"></i></div> -->
                     <div  style="font-size:large;color:var(--color-success)" v-if="noPdfExists"> {{viewedFileName}} </div>
-                    <div ref="previewContainer" style="padding:5px;flex:1;min-height:400px;width:100%; color:var(--TxtColor);" class="ng-scope pdfobject-container">
+                    <div ref="previewContainer" style="padding:5px;flex:1;width:100%; color:var(--TxtColor);" class="ng-scope pdfobject-container">
 
                         <span v-if="hasHtmlMainFile" v-html="htmlSrc"></span>
                         <div v-else-if="noPdfExists">
