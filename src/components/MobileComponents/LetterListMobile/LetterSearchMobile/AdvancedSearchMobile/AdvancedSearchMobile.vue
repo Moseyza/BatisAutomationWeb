@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div style="display: flex;flex-direction: column;overflow: auto;max-height: 20em;">
         <div class="fields-row"> 
                 <div class="search-field-title">عنوان:</div>
                 <div class="search-field-value"> <input type="text" v-model="title"/></div>
@@ -246,27 +246,21 @@ export default class AdvancedSerachMobile extends Vue
 
 <style lang="less" scoped>
     .search-field{
-        display: flex;
-        margin: 5px;
-
-
+        text-align:right;
     }
     .search-field-title{
-        width: 100px;
-        margin-left: 3px;
-        font-size: small;
+        text-align:right;
+        margin:0.3em;
     }
-     .search-field-value{
-        width: 125px;
-        font-size: small;
+    .search-field-value{
+        text-align:right;
+        margin:0.3em;
     }
     .search-field-value>input{
         width: 100%;
     }
     .fields-row{
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 10px;
+        margin: 1em;
     }
 
     input[type=text]{

@@ -33,8 +33,8 @@
                                 <transition name="fade">
                                     <div v-if="shallShowMessage" class="ui green message">{{message}}</div>
                                 </transition>
-                                <div v-if="shallshowparentcomponent==false"  >
-                                    <LetterDetailsMobile  v-if="noLetterSelected == false && leftSideMode==='details'" :letter="selectedLetter" 
+                                <div v-if="shallshowparentcomponent==false && shallShowLetterListRouter==true" style="flex:1;"  >
+                                    <LetterDetailsMobile style="flex:1;"  v-if="(noLetterSelected == false && leftSideMode==='details')" :letter="selectedLetter" 
                                     :searchResult="selectedSearchResult"
                                     @finalize-letter="onFinalizeLetter($event)"
                                     @returnToParentPage="onReturnToParentPage($event)"
@@ -64,7 +64,7 @@
                                 <SendEnterpriseForm  v-else-if="leftSideMode=== 'enterpriseForm'" @shallShowenterpriseFormListsEvent="showOfficeFormlist()" @sendform-close="onSendFormClose($event)" :form="selectedFrom" :nextFormInfo="nextFormInfo" :tableLblWidth="maxTableLabelWidth" :formLblWidth="maxFormLabelWidth" :draftFormInfo="draftFormInfo" />
                                 <EnterpriseFormLists  v-else-if="leftSideMode=== 'enterpriseFormLists'"  @enterprise-form-selected-Mobile="onEnterpriseFormMobileSelected($event,null,null)" />
                                 <!-- <LetterListRouterView  v-else-if="leftSideMode=== 'letterListRouterView'"  @set-selectdLetterChanged-letterListView="onSetSelectdLetterChangedLetterListView($event)" @set-selectdDraftChanged-letterListView="onSetSelectdDraftChangedLetterListView($event)" @set-selectdSearchResultChanged-letterListView="onSetSelectdSearchResultChangedLetterListView($event)"/> -->
-                                <LetterListRouterView  ref="letterlist"  @set-selectdLetterChanged-letterListView="onSetSelectdLetterChangedLetterListView($event)" @set-selectdDraftChanged-letterListView="onSetSelectdDraftChangedLetterListView($event)" @set-selectdSearchResultChanged-letterListView="onSetSelectdSearchResultChangedLetterListView($event)"/>
+                                <LetterListRouterView  v-else-if="shallShowLetterListRouter==false" ref="letterlist"  @set-selectdLetterChanged-letterListView="onSetSelectdLetterChangedLetterListView($event)" @set-selectdDraftChanged-letterListView="onSetSelectdDraftChangedLetterListView($event)" @set-selectdSearchResultChanged-letterListView="onSetSelectdSearchResultChangedLetterListView($event)"/>
                             </div>
                         </div>
                     </div>
@@ -75,7 +75,6 @@
             Batis idea processors. All rights reserved ©
         </div>
         <!-- <FullPageLoader :isActive="isLoading"/> -->
-        
     </div>
 </template>
 
@@ -107,6 +106,7 @@ import router from '@/router';
 export default class MainWindowMobile extends Mixins(MixinMainWindow) {
 
     shallShowenterpriseFormLists=false;
+    shallShowLetterListRouter=false;
     shallshowparentcomponent=false;
      async mounted(){
     //    alert("test");
@@ -140,6 +140,7 @@ export default class MainWindowMobile extends Mixins(MixinMainWindow) {
     // }
     onSetSelectdLetterChangedLetterListView(letter: Letter){
         this.shallshowparentcomponent=false;
+        this.shallShowLetterListRouter=true;
         this.onSelectdLetterChanged(letter);
     }
 
@@ -166,6 +167,7 @@ export default class MainWindowMobile extends Mixins(MixinMainWindow) {
 
     onReturnToParentPage(){
         this.shallshowparentcomponent=true;
+        this.shallShowLetterListRouter=false;
     }
    
 }

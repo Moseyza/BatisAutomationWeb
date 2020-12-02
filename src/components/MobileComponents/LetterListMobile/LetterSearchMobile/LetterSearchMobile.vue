@@ -4,10 +4,10 @@
             <input type="text" v-model="searchText">
             <i @click="clearSearchText()" class="action-icon icon-removeFile small-text"></i>
             <div style="padding:3px 3px">
-                <div style="padding:3px 3px" id="search-dropdown" class="ui icon top left dropdown">
+                <div style="padding:3px 3px" id="search-dropdown" class="ui floating right dropdown">
                     <i class="search-icon action-icon icon-comboboxArrow"></i>
-                    <div class=" menu">
-                        <div style="background-color:var(--NormalBackground);" class="item menu-item">
+                    <div class="right menu">
+                        <div style="background-color:var(--NormalBackground);" class="item">
                             <AdvancedSearchMobile/>
                         </div>
                     </div>
@@ -264,5 +264,9 @@ input:focus {
 }
 .active{
     color: #ff6b6b;
+}
+.ui.dropdown>.left.menu {
+    left: 0!important;
+    right: auto !important;
 }
 </style>
