@@ -18,7 +18,7 @@ export default class ComponentMixin extends Vue{
     isMobile(): boolean{
         let isMobile = false; //initiate as false
         // device detection
-        if(/Android|webOS|iPhone|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
+        if(/Android|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
             // true for mobile device
             return isMobile=true;
           }else{

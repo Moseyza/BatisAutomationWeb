@@ -28,12 +28,12 @@
                         </div>
                     </div>
                     <div class="pusher" style="display: flex;height:100%">
-                        <div class="" style="background: transparent !important;padding: 0;width: 100%;height: 100%;">
-                            <div class="container2"  style="height:100%;display: flex;flex-direction: column;">
+                        <div class="" style="background: transparent !important;padding: 0;height: 100%;">
+                            <div class="container2"  style="height:100%;width:100%;display: flex;">
                                 <transition name="fade">
                                     <div v-if="shallShowMessage" class="ui green message">{{message}}</div>
                                 </transition>
-                                <div v-if="shallshowparentcomponent==false && shallShowLetterListRouter==true" style="flex:1;"  >
+                                <div v-if="shallshowparentcomponent==false && shallShowLetterListRouter==true" style="height: 100%;">
                                     <LetterDetailsMobile style="flex:1;"  v-if="(noLetterSelected == false && leftSideMode==='details')" :letter="selectedLetter" 
                                     :searchResult="selectedSearchResult"
                                     @finalize-letter="onFinalizeLetter($event)"
@@ -64,7 +64,7 @@
                                 <SendEnterpriseForm  v-else-if="leftSideMode=== 'enterpriseForm'" @shallShowenterpriseFormListsEvent="showOfficeFormlist()" @sendform-close="onSendFormClose($event)" :form="selectedFrom" :nextFormInfo="nextFormInfo" :tableLblWidth="maxTableLabelWidth" :formLblWidth="maxFormLabelWidth" :draftFormInfo="draftFormInfo" />
                                 <EnterpriseFormLists  v-else-if="leftSideMode=== 'enterpriseFormLists'"  @enterprise-form-selected-Mobile="onEnterpriseFormMobileSelected($event,null,null)" />
                                 <!-- <LetterListRouterView  v-else-if="leftSideMode=== 'letterListRouterView'"  @set-selectdLetterChanged-letterListView="onSetSelectdLetterChangedLetterListView($event)" @set-selectdDraftChanged-letterListView="onSetSelectdDraftChangedLetterListView($event)" @set-selectdSearchResultChanged-letterListView="onSetSelectdSearchResultChangedLetterListView($event)"/> -->
-                                <LetterListRouterView  v-else-if="shallShowLetterListRouter==false" ref="letterlist"  @set-selectdLetterChanged-letterListView="onSetSelectdLetterChangedLetterListView($event)" @set-selectdDraftChanged-letterListView="onSetSelectdDraftChangedLetterListView($event)" @set-selectdSearchResultChanged-letterListView="onSetSelectdSearchResultChangedLetterListView($event)"/>
+                                <LetterListRouterView  v-else-if="shallShowLetterListRouter==false || leftSideMode=== 'letterListRouterView'" ref="letterlist"  @set-selectdLetterChanged-letterListView="onSetSelectdLetterChangedLetterListView($event)" @set-selectdDraftChanged-letterListView="onSetSelectdDraftChangedLetterListView($event)" @set-selectdSearchResultChanged-letterListView="onSetSelectdSearchResultChangedLetterListView($event)"/>
                             </div>
                         </div>
                     </div>

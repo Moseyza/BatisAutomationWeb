@@ -1,5 +1,5 @@
 <template >
-    <div id="LetterListRouterView-container" style="flex:1;" >
+    <div id="LetterListRouterView-container" style="height:100%;width:100%" >
        <router-view
             @selected-letter-changed="onSelectdLetterChangedMobile($event)" 
             @selected-draft-changed="onSelectdDraftChangedMobile($event)"
