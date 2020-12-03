@@ -1,7 +1,7 @@
 <template>
     <div class="three-part-flexbox">
         <div style="text-align: end;"> 
-            <button class="" @click="returnToParentPage">بازگشت</button>
+            <button class="" @click="returnToParentPage"><i class="icon-arrowLeft"></i></button>
         </div>
         <div style="flex:0 1 auto"  class="flex-part-top" >
             <div class="symmetric-grid">

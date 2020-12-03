@@ -3,6 +3,7 @@ import { EnterpriseFormBookmark } from '@/store/models/EnterpriseForm/Enterprise
 import { EnterpriseFormTableBookmarkColumn } from '@/store/models/EnterpriseForm/EnterpriseFormTableBookmarkColumn';
 import store from '@/store';
 import File from '@/store/models/Letter/File';
+import * as  service from '@/store/Services/enterpriseFormService';
 
 @Component
 export default class BookmarkMixin extends Vue{
@@ -183,21 +184,26 @@ export default class BookmarkMixin extends Vue{
         }
     }
 
-    setValueInTableRow(eventArg: any,isFromBehindCode: boolean){
+    async setValueInTableRow(eventArg: any,isFromBehindCode: boolean){
         if(this.tableRowIndex === undefined)return;
         if(eventArg.rowIndex !== this.tableRowIndex)return;
         if(eventArg.tableName !== this.parentTableName)return;
         if(!this.tableColumnBookmark)return;
         if(eventArg.data && eventArg.data[this.tableColumnBookmark.englishName])
         {
-            // if(this.englishName == "CEOConfirmation1"){
-            //     const x = 6;
-            //     const y = x-1;
+            const val = eventArg.data[this.tableColumnBookmark.englishName];
+            // if(typeof val === "string")
+            // {
+            //     if((val as string).includes("%%"))
+            //     {
+            //         val = await  service.updateParameter(store.state.ownerId,val);
+            //         //console.log(val)
+            //     }
             // }
             if(isFromBehindCode)
-                this.setValueFromBehindCodeResult(eventArg.data[this.tableColumnBookmark.englishName]);
+                this.setValueFromBehindCodeResult(val);//eventArg.data[this.tableColumnBookmark.englishName]
             else
-                this.value = eventArg.data[this.tableColumnBookmark.englishName];
+                this.value = val;//eventArg.data[this.tableColumnBookmark.englishName];
 
         }
     }
