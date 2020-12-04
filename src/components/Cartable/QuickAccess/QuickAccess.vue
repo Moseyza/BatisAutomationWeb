@@ -24,6 +24,7 @@ import * as $ from 'jquery';
 import * as enterpriseFromService from '@/store/Services/enterpriseFormService.ts';
 import  store from '@/store';
 import { EnterpriseForm } from '../../../store/models/EnterpriseForm/EnterpriseForm';
+import { EnterpriseFormTableBookmarkColumn } from '@/store/models/EnterpriseForm/EnterpriseFormTableBookmarkColumn';
 @Component
 export default class QuickAccess extends Vue{
     enterpriseForms = [] as EnterpriseForm[];
@@ -66,10 +67,37 @@ export default class QuickAccess extends Vue{
         this.isLoading = false;
     }
 
-    showForm(id: string){
+    async showForm(id: string){
+        this.ownerId = store.state.ownerId;
         const selectedForm =  this.enterpriseForms.find(x=>x.id === id);
+        if(!selectedForm) return;
+        if(!selectedForm.bookmarks)return;
+        for(let i=0;i< selectedForm.bookmarks.length;i++) {
+            if(selectedForm.bookmarks[i].tableColumns!= null && selectedForm.bookmarks[i].tableColumns!= undefined){
+                if(selectedForm.bookmarks[i].tableColumns.length > 0)
+                {
+                    for(let j = 0;j<selectedForm.bookmarks[i].tableColumns.length;j++)
+                    {
+                        await this.updatePrams(selectedForm.bookmarks[i].tableColumns[j]);
+                    }
+                }
+            }
+        }
+        
         this.$emit('enterprise-form-selected',selectedForm);
     }
+
+    async updatePrams(col: EnterpriseFormTableBookmarkColumn){
+        if(!col)return;
+        if(col.defaultValue){
+                            if(col.defaultValue.includes("%%")){
+                                 const updatedValue = await enterpriseFromService.updateParameter(this.ownerId,col.defaultValue);
+                                 col.defaultValue = updatedValue;
+                                 alert(updatedValue);
+                            }
+                        }
+    }
+
 
 
 }
