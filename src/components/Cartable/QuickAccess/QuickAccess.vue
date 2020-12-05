@@ -74,13 +74,13 @@ export default class QuickAccess extends Vue{
         if(!selectedForm.bookmarks)return;
         for(let i=0;i< selectedForm.bookmarks.length;i++) {
             if(selectedForm.bookmarks[i].tableColumns!= null && selectedForm.bookmarks[i].tableColumns!= undefined){
-                if(selectedForm.bookmarks[i].tableColumns.length > 0)
-                {
-                    for(let j = 0;j<selectedForm.bookmarks[i].tableColumns.length;j++)
-                    {
-                        await this.updatePrams(selectedForm.bookmarks[i].tableColumns[j]);
-                    }
-                }
+                // if(selectedForm.bookmarks[i].tableColumns.length > 0)
+                // {
+                //     for(let j = 0;j<selectedForm.bookmarks[i].tableColumns.length;j++)
+                //     {
+                //         await this.updatePrams(selectedForm.bookmarks[i].tableColumns[j]);
+                //     }
+                // }
             }
         }
         
