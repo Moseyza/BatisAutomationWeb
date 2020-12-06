@@ -33,8 +33,8 @@
                                 <transition name="fade">
                                     <div v-if="shallShowMessage" class="ui green message">{{message}}</div>
                                 </transition>
-                                <div v-if="shallshowparentcomponent==false && shallShowLetterListRouter==true" style="height: 100%;width:100%">
-                                    <LetterDetailsMobile style="flex:1;widht:100%;"  v-if="(noLetterSelected == false && leftSideMode==='details')" :letter="selectedLetter" 
+                                <div v-if="shallshowparentcomponent==false && shallShowLetterListRouter==true" style="height: 100%;">
+                                    <LetterDetailsMobile style="flex:1;"  v-if="(noLetterSelected == false && leftSideMode==='details')" :letter="selectedLetter" 
                                     :searchResult="selectedSearchResult"
                                     @finalize-letter="onFinalizeLetter($event)"
                                     @returnToParentPage="onReturnToParentPage($event)"
@@ -162,6 +162,8 @@ export default class MainWindowMobile extends Mixins(MixinMainWindow) {
     }
     async onFolderMobileClicked(){
         this.leftSideMode = "letterListRouterView";
+         $('.ui.sidebar').hide("500");
+        //  $('.ui.sidebar').fadeOut( "slow" );
         //  await (this.$refs.letterlist as any).refresh();
     }
 

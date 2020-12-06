@@ -4,9 +4,10 @@ import { EnterpriseFormTableBookmarkColumn } from '@/store/models/EnterpriseForm
 import store from '@/store';
 import File from '@/store/models/Letter/File';
 import * as  service from '@/store/Services/enterpriseFormService';
+import ComponentMixin from '../../ComponentMixins/ComponentMixinBase';
 
 @Component
-export default class BookmarkMixin extends Vue{
+export default class BookmarkMixin extends ComponentMixin{
     @Prop() bookmark?: EnterpriseFormBookmark;
     @Prop() tableColumnBookmark?: EnterpriseFormTableBookmarkColumn;
     @Prop() maxLabelWidth?: number;
@@ -43,8 +44,13 @@ export default class BookmarkMixin extends Vue{
     }
 
     get maxLabelWidthStr(){
-        if(this.maxLabelWidth)
-            return (this.maxLabelWidth + 25).toString() + 'px'
+        if(this.maxLabelWidth){
+            if(this.isMobile()==false){
+                return (this.maxLabelWidth + 25).toString() + 'px'
+            }else{
+                return (this.maxLabelWidth).toString() + 'px'
+            }
+        }
         return '';
     }
 

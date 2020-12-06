@@ -79,6 +79,10 @@
                             <img :src="pdfSrc" width="100%" height="100%" alt="مشاهده پیش نمایش امکان پذیر نیست" style="overflow: auto;color:var(--color-danger);min-height:100px;max-width:100%;max-height:100%"/>
                         </div>
                         <div v-else-if="pdfLoaded" style="width:100%;height:100%">
+                            <!-- <object data="pdfSrc" type="application/pdf">
+                                <iframe src="https://docs.google.com/viewer?url=pdfSrc&embedded=true"></iframe>
+                            </object> -->
+                            <!-- <iframe  type="application/pdf" src="https://docs.google.com/viewer?url=http://localhost:8080/#/ReceivedLettersMobile&embedded=true" width="100%" height="100%" style="overflow: auto;"></iframe> -->
                             <iframe  :src="pdfSrc" type="application/pdf" width="100%" height="100%" style="overflow: auto;"></iframe>
                         </div>
                         <!--  -->

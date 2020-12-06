@@ -29,7 +29,6 @@
         
         onSelectdLetterChangedMobile(letter: Letter ){
             this.$emit('set-selectdLetterChanged-letterListView',letter);    
-            
         }
         async onSelectdDraftChangedMobile(letter: DraftLetter ){
             this.$emit('set-selectdDraftChanged-letterListView',letter);    
