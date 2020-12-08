@@ -1,11 +1,11 @@
 <template>
 <div id="container" class="container5">
-    <div class=" landscape ui centered grid" style="margin:0;display: flex;flex-direction: column;align-items: center;">
+    <div class=" landscape ui centered grid" style="margin: 0px;display: flex;justify-content: end;align-items: center;">
         <SingleCartableOwnerMobile style="display: flex;align-items: center;" @on-letter-owner-set="onLetterOwnerSet($event)"/>
         <div style="display:flex; direction: ltr">
             <ThemeSelector style="margin:0em 1em 0em 1em;"/>
             <div style="display: flex;align-items: center;">
-                {{currentDate}}  {{currentTime}}
+                {{currentDate}}
             </div>
         </div>
     </div>

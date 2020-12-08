@@ -13,11 +13,11 @@
                     <!-- <div style="display:flex;width:100%;" @click="shallHideletterList"> -->
                     <div style="display:flex;width:100%;">
                         <!-- <QuickAccessMobile @shallShowenterpriseFormListsEvent="showOfficeFormlist()" @fast-send-clicked="onFastSendBtnClick($event)" @enterprise-form-selected-Mobile="onEnterpriseFormSelected($event,null,null)"/> -->
-                        <QuickAccessMobile @shallShowenterpriseFormListsEvent="showOfficeFormlist()" @fast-send-clicked="onFastSendBtnClick($event)" />
+                        <QuickAccessMobile @shallShowenterpriseFormListsEvent="showOfficeFormlist()" @fast-send-clicked="onFastSendMobileBtnClick($event)" />
                     </div>
                 </div>
                 <div class="ui bottom attached segment pushable mobileBottomSegmant" style="background: transparent !important; height: 100%;flex:1">
-                    <div class="ui inverted labeled icon inline vertical right sidebar menu mobilesidebar">
+                    <div class="ui inverted labeled icon inline vertical right sidebar menu mobilesidebar" style="width: 70%;">
                         <div style="display: flex;flex-direction: column; height: 100%;background: var(--Header);">
                             <div class="three-part-flexbox">
                                 <div class="flex-part-middle">
@@ -64,7 +64,7 @@
                                 <SendEnterpriseForm  style="width:100%" v-else-if="leftSideMode=== 'enterpriseForm'" @shallShowenterpriseFormListsEvent="showOfficeFormlist()" @sendform-close="onSendFormClose($event)" :form="selectedFrom" :nextFormInfo="nextFormInfo" :tableLblWidth="maxTableLabelWidth" :formLblWidth="maxFormLabelWidth" :draftFormInfo="draftFormInfo" />
                                 <EnterpriseFormLists style="width:100%"  v-else-if="leftSideMode=== 'enterpriseFormLists'"  @enterprise-form-selected-Mobile="onEnterpriseFormMobileSelected($event,null,null)" />
                                 <!-- <LetterListRouterView  v-else-if="leftSideMode=== 'letterListRouterView'"  @set-selectdLetterChanged-letterListView="onSetSelectdLetterChangedLetterListView($event)" @set-selectdDraftChanged-letterListView="onSetSelectdDraftChangedLetterListView($event)" @set-selectdSearchResultChanged-letterListView="onSetSelectdSearchResultChangedLetterListView($event)"/> -->
-                                <LetterListRouterView  v-else-if="shallShowLetterListRouter==false || leftSideMode=== 'letterListRouterView'" ref="letterlist"  @set-selectdLetterChanged-letterListView="onSetSelectdLetterChangedLetterListView($event)" @set-selectdDraftChanged-letterListView="onSetSelectdDraftChangedLetterListView($event)" @set-selectdSearchResultChanged-letterListView="onSetSelectdSearchResultChangedLetterListView($event)"/>
+                                <LetterListRouterView  v-show="shallshowparentcomponent==true && shallShowLetterListRouter==false" ref="letterlist"  @set-selectdLetterChanged-letterListView="onSetSelectdLetterChangedLetterListView($event)" @set-selectdDraftChanged-letterListView="onSetSelectdDraftChangedLetterListView($event)" @set-selectdSearchResultChanged-letterListView="onSetSelectdSearchResultChangedLetterListView($event)"/>
                             </div>
                         </div>
                     </div>
@@ -107,7 +107,7 @@ export default class MainWindowMobile extends Mixins(MixinMainWindow) {
 
     shallShowenterpriseFormLists=false;
     shallShowLetterListRouter=false;
-    shallshowparentcomponent=false;
+    shallshowparentcomponent=true;
      async mounted(){
     //    alert("test");
            $('.ui.sidebar').sidebar({
@@ -159,17 +159,25 @@ export default class MainWindowMobile extends Mixins(MixinMainWindow) {
     showOfficeFormlist(){
         this.shallShowenterpriseFormLists=true;
         this.leftSideMode = 'enterpriseFormLists';
+        this.shallshowparentcomponent=false;
     }
     async onFolderMobileClicked(){
+        this.onReturnToParentPage();
         this.leftSideMode = "letterListRouterView";
          $('.ui.sidebar').hide("500");
+
         //  $('.ui.sidebar').fadeOut( "slow" );
         //  await (this.$refs.letterlist as any).refresh();
     }
 
+   onFastSendMobileBtnClick(mode: string){
+       this.shallshowparentcomponent=false;
+       this.onFastSendBtnClick(mode)
+   }
+
     onReturnToParentPage(){
-        this.shallshowparentcomponent=true;
         this.shallShowLetterListRouter=false;
+        this.shallshowparentcomponent=true;
     }
    
 }

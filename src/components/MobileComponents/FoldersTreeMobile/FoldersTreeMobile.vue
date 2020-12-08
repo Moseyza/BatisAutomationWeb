@@ -1,5 +1,5 @@
 <template >
-    <div id="folders-container"  class="container2" >
+    <div id="folders-container"  class="container2" style="display:flex;flex-direction:column" >
         <FoldersTreeNodeMobile
         v-for="folder in folders"
         :data="folder"

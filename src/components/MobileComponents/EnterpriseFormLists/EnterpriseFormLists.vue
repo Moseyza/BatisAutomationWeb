@@ -4,8 +4,8 @@
             <div class="ui active inline centered loader"></div>
         </div> 
         <div v-if="!isLoading" style="background: var(--BackgroundTable);flex: 1;display: flex;flex-direction: column;height: 100%;overflow: scroll;">
-            <div v-for="(form) in filteredForms" :key="form.id" class="item menu-item" style="cursor:pointer;border: solid thin;border-color: var(--FontColor); margin:0.3em">
-                <div @click="showForm(form.id)" style="padding-left:5px;">{{form.name}}</div>
+            <div v-for="(form) in filteredForms" :key="form.id" class="item menu-item" style="border-radius: 4px;cursor:pointer;margin: 1em;background:var(--color-icon);justify-content: center !important;">
+                <div @click="showForm(form.id)" style="padding: 0.3em;font-size: 1.3em;">{{form.name}}</div>
             </div>
         </div>
     </div>

@@ -2,15 +2,15 @@
     <div style="display:flex">
       <div v-if="letterOwners.length>1 && isOwnersLoaded" style="margin-left:5px">
             <div  id="cartables-dropdown"  class="ui icon top left dropdown">
-  		                <i class="action-icon icon-comboboxArrow" style="font-size: medium"></i>
-  		                <div class="left menu">
-    		                <div @click="onLetterOwnerChanged(owner.id)" v-for="owner in letterOwners" :key="owner.id" class="item menu-item"><div style="padding-left:5px">{{owner.nameOnly}}</div></div>
-  		                </div>
+                    <i class="action-icon icon-comboboxArrow" style="font-size: medium"></i>
+                    <div class="left menu">
+                        <div @click="onLetterOwnerChanged(owner.id)" v-for="owner in letterOwners" :key="owner.id" class="item menu-item"><div style="padding-left:5px">{{owner.nameOnly}}</div></div>
+                    </div>
 	        </div>
         </div>
         <div>
             {{ownerName}}
-            [{{post}}]
+            <!-- [{{post}}] -->
         </div>
         
     </div>

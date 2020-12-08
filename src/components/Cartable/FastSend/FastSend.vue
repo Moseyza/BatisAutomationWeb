@@ -114,7 +114,7 @@
             @button-clicked="onMessageBoxBtnClicked($event)"
             />
             <InPlaceSendingOptions   v-else-if="shallShowSendingOptions" @close="onSendingOptionsClosed()" @toggle-options="toggleSendOption($event)" :setCopyProp="shallSetCopyReceivers" :signProp="shallSign"/>
-            <div v-else style="display:flex">
+            <div v-else style="display:flex;justify-content: center;align-items: center;">
                     <div @click="cancel" class="action-icon bg1" style="flex:1;text-align:center"><i style="color:inherit;font-size:xx-large" class=" icon-close"></i></div>
                     <div v-if="mode === 'send'" @click="send(true)" class="action-icon bg1" style="flex:1;text-align:center"><i style="color:inherit;" class=" icon-saveDraft xlarg-text"></i></div>
                     <div class="action-icon" @click="showSendingOptions()" style="flex:1;text-align:center"><i  style="color:inherit;" class="action-icon icon-settings xlarg-text"></i></div>
