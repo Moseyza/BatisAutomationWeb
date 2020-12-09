@@ -205,7 +205,7 @@ export default class AdvancedSerachMobile extends Vue
                         searchDto.priorityTo = this.priority;
                 }
                 store.commit("setAdvancedSearchSettings",searchDto);
-                this.$router.push({name: "SearchResults"}).catch(err=>{ console.log('')});
+                this.$router.push({name: "SearchResultsMobile"}).catch(err=>{ console.log('')});
              
         }
 

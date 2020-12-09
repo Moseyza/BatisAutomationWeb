@@ -33,7 +33,7 @@
                                 <transition name="fade">
                                     <div v-if="shallShowMessage" class="ui green message">{{message}}</div>
                                 </transition>
-                                <div v-if="shallshowparentcomponent==false && shallShowLetterListRouter==true" style="height: 100%;">
+                                <div v-if="shallshowparentcomponent==false && shallShowLetterListRouter==true" style="height: 100%;width: 100%;">
                                     <LetterDetailsMobile style="flex:1;"  v-if="(noLetterSelected == false && leftSideMode==='details')" :letter="selectedLetter" 
                                     :searchResult="selectedSearchResult"
                                     @finalize-letter="onFinalizeLetter($event)"

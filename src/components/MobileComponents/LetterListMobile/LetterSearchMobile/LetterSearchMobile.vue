@@ -234,7 +234,7 @@ export default class LetterSearchMobile extends Vue {
         searchDto.searchInLetterOwnerDashboard = {} as LetterOwner;
         searchDto.searchInLetterOwnerDashboard.id = store.state.ownerId;
         store.commit("setAdvancedSearchSettings",searchDto);
-        this.$router.push({name: "SearchResults"}).catch(err=>{ console.log('')});
+        this.$router.push({name: "SearchResultsMobile"}).catch(err=>{ console.log('')});
     }
 
 

@@ -7,7 +7,7 @@
             <div style="flex:2;">
                 <div class="three-part-flexbox">
                     <div class="flex-part-top" style="flex: 0 0 auto;display:flex;">
-                            <QuickAccess  @fast-send-clicked="onFastSendBtnClick($event)" @enterprise-form-selected="onEnterpriseFormSelected($event,null,null)"/>
+                        <QuickAccess  @fast-send-clicked="onFastSendBtnClick($event)" @enterprise-form-selected="onEnterpriseFormSelected($event,null,null)"/>
                     </div>
                     <div class="flex-part-middle">
                         <FoldersTree :letterOwnerId="letterOwnerId" @folder-clicked="onFolderClicked()"></FoldersTree>

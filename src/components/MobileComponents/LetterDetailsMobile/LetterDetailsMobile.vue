@@ -79,11 +79,15 @@
                             <img :src="pdfSrc" width="100%" height="100%" alt="مشاهده پیش نمایش امکان پذیر نیست" style="overflow: auto;color:var(--color-danger);min-height:100px;max-width:100%;max-height:100%"/>
                         </div>
                         <div v-else-if="pdfLoaded" style="width:100%;height:100%">
-                            <!-- <object data="pdfSrc" type="application/pdf">
+                            <!-- <object data="url" type="application/pdf">
                                 <iframe src="https://docs.google.com/viewer?url=pdfSrc&embedded=true"></iframe>
                             </object> -->
-                            <!-- <iframe  type="application/pdf" src="https://docs.google.com/viewer?url=http://localhost:8080/#/ReceivedLettersMobile&embedded=true" width="100%" height="100%" style="overflow: auto;"></iframe> -->
-                            <iframe  :src="pdfSrc" type="application/pdf" width="100%" height="100%" style="overflow: auto;"></iframe>
+                            <iframe  type="application/pdf" src="https://docs.google.com/viewer?url=http://localhost:8080/src/اصل نامه.pdf&embedded=true" width="100%" height="100%" style="overflow: auto;"></iframe>
+                            <!-- <iframe src="http://docs.google.com/viewer?url=" + PathToMyPdfFile + "&embedded=true" width="100%" height="100%" style="width: 100%; height: 100%;" frameborder="0" scrolling="no"></iframe> -->
+                             <!-- <object :data="pdfSrc" type="application/pdf"> -->
+                                <iframe  :src="pdfSrc" type="application/pdf" width="100%" height="100%" style="overflow: auto;"></iframe>
+                            <!-- </object> -->
+                            <!-- <canvas id="the-canvas"></canvas> -->
                         </div>
                         <!--  -->
                         
@@ -182,6 +186,65 @@ export default class LetterDetailsMobile extends Vue {
             this.canReject = this.letter.isClosed;
         }
         store.state.eventHub.$on('show-file-requested',this.onShowFileRequested);
+
+//         var pdfData = atob(
+//   'JVBERi0xLjcKCjEgMCBvYmogICUgZW50cnkgcG9pbnQKPDwKICAvVHlwZSAvQ2F0YWxvZwog' +
+//   'IC9QYWdlcyAyIDAgUgo+PgplbmRvYmoKCjIgMCBvYmoKPDwKICAvVHlwZSAvUGFnZXMKICAv' +
+//   'TWVkaWFCb3ggWyAwIDAgMjAwIDIwMCBdCiAgL0NvdW50IDEKICAvS2lkcyBbIDMgMCBSIF0K' +
+//   'Pj4KZW5kb2JqCgozIDAgb2JqCjw8CiAgL1R5cGUgL1BhZ2UKICAvUGFyZW50IDIgMCBSCiAg' +
+//   'L1Jlc291cmNlcyA8PAogICAgL0ZvbnQgPDwKICAgICAgL0YxIDQgMCBSIAogICAgPj4KICA+' +
+//   'PgogIC9Db250ZW50cyA1IDAgUgo+PgplbmRvYmoKCjQgMCBvYmoKPDwKICAvVHlwZSAvRm9u' +
+//   'dAogIC9TdWJ0eXBlIC9UeXBlMQogIC9CYXNlRm9udCAvVGltZXMtUm9tYW4KPj4KZW5kb2Jq' +
+//   'Cgo1IDAgb2JqICAlIHBhZ2UgY29udGVudAo8PAogIC9MZW5ndGggNDQKPj4Kc3RyZWFtCkJU' +
+//   'CjcwIDUwIFRECi9GMSAxMiBUZgooSGVsbG8sIHdvcmxkISkgVGoKRVQKZW5kc3RyZWFtCmVu' +
+//   'ZG9iagoKeHJlZgowIDYKMDAwMDAwMDAwMCA2NTUzNSBmIAowMDAwMDAwMDEwIDAwMDAwIG4g' +
+//   'CjAwMDAwMDAwNzkgMDAwMDAgbiAKMDAwMDAwMDE3MyAwMDAwMCBuIAowMDAwMDAwMzAxIDAw' +
+//   'MDAwIG4gCjAwMDAwMDAzODAgMDAwMDAgbiAKdHJhaWxlcgo8PAogIC9TaXplIDYKICAvUm9v' +
+//   'dCAxIDAgUgo+PgpzdGFydHhyZWYKNDkyCiUlRU9G');
+
+// // Loaded via <script> tag, create shortcut to access PDF.js exports.
+//         // var pdfjsLib = window['pdfjs-dist/build/pdf'];
+
+// // The workerSrc property shall be specified.
+// // pdfjsLib.GlobalWorkerOptions.workerSrc = '//mozilla.github.io/pdf.js/build/pdf.worker.js';
+
+// // Using DocumentInitParameters object to load binary data.
+// var loadingTask = pdfjsLib.getDocument({data: pdfData});
+// loadingTask.promise.then(function(pdf:any) {
+//   console.log('PDF loaded');
+  
+//   // Fetch the first page
+//   var pageNumber = 1;
+//   pdf.getPage(pageNumber).then(function(page:any) {
+//     console.log('Page loaded');
+    
+//     var scale = 1.5;
+//     var viewport = page.getViewport({scale: scale});
+
+//     // Prepare canvas using PDF page dimensions
+//     const canvas = <HTMLCanvasElement> document.getElementById('the-canvas');
+//     if(canvas!=null){
+//         var context = canvas.getContext('2d');
+//         canvas.height = viewport.height;
+//         canvas.width = viewport.width;
+        
+//     }
+   
+
+//     // Render PDF page into canvas context
+//     var renderContext = {
+//       canvasContext: context,
+//       viewport: viewport
+//     };
+//     var renderTask = page.render(renderContext);
+//     renderTask.promise.then(function () {
+//       console.log('Page rendered');
+//     });
+//   });
+// }, function (reason:any) {
+//   // PDF loading error
+//   console.error(reason);
+// });
     }
     
     viewedFileName = "";

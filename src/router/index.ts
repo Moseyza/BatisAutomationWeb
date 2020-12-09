@@ -35,13 +35,23 @@ const routes = [
   },
   {
     path: '/',
-    name: 'MainWindowMobile',
-    component: () => import('@/components/MobileComponents/MainWindowMobile.vue'),
+    name: 'MainWindow',
+    component: () => import('@/components/MainWindow.vue'),
     children:[
       {
-        path: 'ReceivedLettersMobile',
-        name: 'ReceivedLettersMobile',
-        component: () => import('@/components/MobileComponents/ReceivedLettersMobile/ReceivedLettersMobile.vue'),
+        path: 'ReceivedLetters',
+        name: 'ReceivedLetters',
+        component: () => import('@/components/Cartable/ReceivedLetters/ReceivedLetters.vue'),
+      },
+      {
+        path: 'SentLetters',
+        name: 'SentLetters',
+        component: () => import('@/components/Cartable/SentLetters/SentLetters.vue')
+      },
+      {
+        path: 'DraftLetters',
+        name: 'DraftLetters',
+        component: () => import('@/components/Cartable/DraftLetters/DraftLetters.vue')
       },
       {
         path: 'FolderLetters',
@@ -68,6 +78,45 @@ const routes = [
       {
         path: 'OutgoingClosedLetters',
         name: 'OutgoingClosedLetters',
+        component: () => import('@/components/Cartable/ClosedLetters/Outgoing/OutgoingClosedLetters.vue'),
+      }
+    ]
+  },
+  {
+    path: '/',
+    name: 'MainWindowMobile',
+    component: () => import('@/components/MobileComponents/MainWindowMobile.vue'),
+    children:[
+      {
+        path: 'ReceivedLettersMobile',
+        name: 'ReceivedLettersMobile',
+        component: () => import('@/components/MobileComponents/ReceivedLettersMobile/ReceivedLettersMobile.vue'),
+      },
+      {
+        path: 'FolderLettersMobile',
+        name: 'FolderLettersMobile',
+        component: () => import('@/components/Cartable/ArchiveFolder/ArchiveFolder.vue'),
+        props: (route: any) => ({folderId: route.query.folderId})
+      },
+      {
+        path: 'AnnouncementBoardsMobile',
+        name: 'AnnouncementBoardsMobile',
+        component: () => import('@/components/Cartable/Announcements/Announcements.vue'),
+        props: (route: any) => ({boardId: route.query.boardId})
+      },
+      {
+        path: 'SearchResultsMobile',
+        name: 'SearchResultsMobile',
+        component: () => import('@/components/Cartable/SearchResultList/SearchResultList.vue'),
+      },
+      {
+        path: 'IncomingClosedLettersMobile',
+        name: 'IncomingClosedLettersMobile',
+        component: () => import('@/components/Cartable/ClosedLetters/Incoming/IncomingClosedLetters.vue'),
+      },
+      {
+        path: 'OutgoingClosedLettersMobile',
+        name: 'OutgoingClosedLettersMobile',
         component: () => import('@/components/Cartable/ClosedLetters/Outgoing/OutgoingClosedLetters.vue'),
       },
       {
@@ -122,55 +171,7 @@ const routes = [
       // }
     ]
   },
-  {
-    path: '/',
-    name: 'MainWindow',
-    component: () => import('@/components/MainWindow.vue'),
-    children:[
-      {
-        path: 'ReceivedLetters',
-        name: 'ReceivedLetters',
-        component: () => import('@/components/Cartable/ReceivedLetters/ReceivedLetters.vue'),
-      },
-      {
-        path: 'SentLetters',
-        name: 'SentLetters',
-        component: () => import('@/components/Cartable/SentLetters/SentLetters.vue')
-      },
-      {
-        path: 'DraftLetters',
-        name: 'DraftLetters',
-        component: () => import('@/components/Cartable/DraftLetters/DraftLetters.vue')
-      },
-      {
-        path: 'FolderLetters',
-        name: 'FolderLetters',
-        component: () => import('@/components/Cartable/ArchiveFolder/ArchiveFolder.vue'),
-        props: (route: any) => ({folderId: route.query.folderId})
-      },
-      {
-        path: 'AnnouncementBoard',
-        name: 'AnnouncementBoard',
-        component: () => import('@/components/Cartable/Announcements/Announcements.vue'),
-        props: (route: any) => ({boardId: route.query.boardId})
-      },
-      {
-        path: 'SearchResults',
-        name: 'SearchResults',
-        component: () => import('@/components/Cartable/SearchResultList/SearchResultList.vue'),
-      },
-      {
-        path: 'IncomingClosedLetters',
-        name: 'IncomingClosedLetters',
-        component: () => import('@/components/Cartable/ClosedLetters/Incoming/IncomingClosedLetters.vue'),
-      },
-      {
-        path: 'OutgoingClosedLetters',
-        name: 'OutgoingClosedLetters',
-        component: () => import('@/components/Cartable/ClosedLetters/Outgoing/OutgoingClosedLetters.vue'),
-      }
-    ]
-  }
+  
 
 
 ]

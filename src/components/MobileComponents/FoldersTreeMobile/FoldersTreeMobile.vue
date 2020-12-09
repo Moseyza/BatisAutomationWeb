@@ -112,7 +112,7 @@ export default class FoldersTreeMobile extends Vue {
         const closedIncomingLetters = {} as FoldersTreeNodeDataMobile;
         closedIncomingLetters.name = 'نامه های مختومه دریافتی';
         closedIncomingLetters.isRoot = false;
-        closedIncomingLetters.url = 'IncomingClosedLetters';
+        closedIncomingLetters.url = 'IncomingClosedLettersMobile';
         closedIncomingLetters.iconClass = {'icon-incommingClosed':true,'fixed-icon':true};
         closedIncomingLetters.children = [];    
         closedIncomingLetters.isSelected = false;
@@ -120,14 +120,14 @@ export default class FoldersTreeMobile extends Vue {
         const closedOutgoingLetters = {} as FoldersTreeNodeDataMobile;
         closedOutgoingLetters.name = 'نامه های مختومه ارسالی';
         closedOutgoingLetters.isRoot = false;
-        closedOutgoingLetters.url = 'OutgoingClosedLetters';
+        closedOutgoingLetters.url = 'OutgoingClosedLettersMobile';
         closedOutgoingLetters.iconClass = {'icon-outgoingClosed':true,'fixed-icon':true};
         closedOutgoingLetters.children = [];
         closedIncomingLetters.isSelected = false;
         const announcementBoardsNode = {} as FoldersTreeNodeDataMobile;
         announcementBoardsNode.name = 'برد اعلانات و اسناد';
         announcementBoardsNode.isRoot = true;
-        announcementBoardsNode.url = 'AnnouncementBoards';
+        announcementBoardsNode.url = 'AnnouncementBoardsMobile';
         announcementBoardsNode.iconClass = {'icon-AnnouncementBoard':true,'fixed-icon':true }
         announcementBoardsNode.children = [];
         this.addAnnouncementBoard(announcementBoardsNode,announcementBoards);
@@ -144,7 +144,7 @@ export default class FoldersTreeMobile extends Vue {
             childNode.name = folder.name;
             childNode.isRoot = false;
             childNode.iconClass = {'icon-folder':true,'fixed-icon':true};
-            childNode.url = `FolderLetters?folderId=${folder.id}`;
+            childNode.url = `FolderLettersMobile?folderId=${folder.id}`;
             childNode.children = [];
             childNode.isSelected = false;
             parent.children.push(childNode);
@@ -159,7 +159,7 @@ export default class FoldersTreeMobile extends Vue {
             childNode.name = board.name;
             childNode.isRoot = false;
             childNode.iconClass = {'icon-AnnouncementBoardChild':true,'fixed-icon':true};
-            childNode.url = `AnnouncementBoard?boardId=${board.id}`;
+            childNode.url = `AnnouncementBoardsMobile?boardId=${board.id}`;
             childNode.isSelected = false;
             childNode.children = [];
             parent.children.push(childNode);
