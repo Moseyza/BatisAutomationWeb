@@ -59,9 +59,9 @@
                                 >
                                 </SearchResultDetails >
                                 <FinalizeLetter style="width:100%" v-else-if="leftSideMode=== 'finalize'" :letter="selectedLetter"  />
-                                <ForwardLetter style="width:100%" v-else-if="leftSideMode=== 'forward'" @forward-closed="onForwardClosed" @forward-done="onLetterForwarded($event)" :letter="selectedLetter" />
-                                <FastSend  style="width:100%" :mode="fastSendMode" v-else-if="leftSideMode=== 'fastSend'"  @fastsend-canceled="onFastSendCanceled($event)"  :dependentLetters="fastSendDependencies" />
-                                <SendEnterpriseForm  style="width:100%" v-else-if="leftSideMode=== 'enterpriseForm'" @shallShowenterpriseFormListsEvent="showOfficeFormlist()" @sendform-close="onSendFormClose($event)" :form="selectedFrom" :nextFormInfo="nextFormInfo" :tableLblWidth="maxTableLabelWidth" :formLblWidth="maxFormLabelWidth" :draftFormInfo="draftFormInfo" />
+                                <ForwardLetterMobile style="width:100%" v-else-if="leftSideMode=== 'forward'" @forward-closed="onForwardClosed" @forward-done="onLetterForwarded($event)" :letter="selectedLetter" />
+                                <FastSendMobile  style="width:100%" :mode="fastSendMode" v-else-if="leftSideMode=== 'fastSend' && shallshowFastSend==true"  @fastsend-canceled="onFastSendCanceledMobile($event)"  :dependentLetters="fastSendDependencies" />
+                                <SendEnterpriseFormMobile  style="width:100%" v-else-if="leftSideMode=== 'enterpriseForm'" @shallShowenterpriseFormListsEvent="showOfficeFormlist()" @sendform-close="onSendFormCloseMobile($event)" :form="selectedFrom" :nextFormInfo="nextFormInfo" :tableLblWidth="maxTableLabelWidth" :formLblWidth="maxFormLabelWidth" :draftFormInfo="draftFormInfo" />
                                 <EnterpriseFormLists style="width:100%"  v-else-if="leftSideMode=== 'enterpriseFormLists'"  @enterprise-form-selected-Mobile="onEnterpriseFormMobileSelected($event,null,null)" />
                                 <!-- <LetterListRouterView  v-else-if="leftSideMode=== 'letterListRouterView'"  @set-selectdLetterChanged-letterListView="onSetSelectdLetterChangedLetterListView($event)" @set-selectdDraftChanged-letterListView="onSetSelectdDraftChangedLetterListView($event)" @set-selectdSearchResultChanged-letterListView="onSetSelectdSearchResultChangedLetterListView($event)"/> -->
                                 <LetterListRouterView  v-show="shallshowparentcomponent==true && shallShowLetterListRouter==false" ref="letterlist"  @set-selectdLetterChanged-letterListView="onSetSelectdLetterChangedLetterListView($event)" @set-selectdDraftChanged-letterListView="onSetSelectdDraftChangedLetterListView($event)" @set-selectdSearchResultChanged-letterListView="onSetSelectdSearchResultChangedLetterListView($event)"/>
@@ -98,10 +98,13 @@ import { EnterpriseForm } from '@/store/models/EnterpriseForm/EnterpriseForm';
 import { NextFormInfo } from '@/store/models/EnterpriseForm/NextFormInfo';
 import { DraftEnterpriseFormInfo } from '@/store/models/EnterpriseForm/LoadEnterpriseFormDraftResponse';
 import router from '@/router';
+import SendEnterpriseFormMobile from '@/components/MobileComponents/EnterpriseFormMobile/SendEnterpriseFormMobile.vue';
+import FastSendMobile from '@/components/MobileComponents/FastSendMobile/FastSendMobile.vue';
+import ForwardLetterMobile from '@/components/MobileComponents/ForwardLetterMobile/ForwardLetterMobile.vue';
 
 
 @Component({
-    components:{CartableTitleMobile,QuickAccessMobile,FoldersTreeMobile,LetterDetailsMobile,EnterpriseFormLists,LetterListRouterView}
+    components:{ForwardLetterMobile,FastSendMobile,CartableTitleMobile,QuickAccessMobile,FoldersTreeMobile,LetterDetailsMobile,EnterpriseFormLists,LetterListRouterView,SendEnterpriseFormMobile}
 })
 export default class MainWindowMobile extends Mixins(MixinMainWindow) {
 
@@ -115,7 +118,6 @@ export default class MainWindowMobile extends Mixins(MixinMainWindow) {
           }).sidebar('attach events','.sidebarButton')
           .sidebar('setting', 'mobileTransition', 'overlay')
           ;
-          
         //   await (this.$refs.letterlist as any).refresh();
     }
     //  mounted(){
@@ -165,7 +167,7 @@ export default class MainWindowMobile extends Mixins(MixinMainWindow) {
         this.onReturnToParentPage();
         this.leftSideMode = "letterListRouterView";
          $('.ui.sidebar').hide("500");
-
+            store.state.eventHub.$emit('refreshFeedEvent')
         //  $('.ui.sidebar').fadeOut( "slow" );
         //  await (this.$refs.letterlist as any).refresh();
     }
@@ -178,6 +180,19 @@ export default class MainWindowMobile extends Mixins(MixinMainWindow) {
     onReturnToParentPage(){
         this.shallShowLetterListRouter=false;
         this.shallshowparentcomponent=true;
+    }
+
+    onSendFormCloseMobile(isNextForm: boolean){
+        this.onSendFormClose(isNextForm);
+        this.shallshowparentcomponent=true;
+        this.shallshowFastSend=false;        
+        // this.$router.replace('ReceivedLettersMobile');
+        // this.$router.push('LetterDetailsMobile');
+    }
+
+    onFastSendCanceledMobile(){
+        this.shallshowparentcomponent=true;
+        this.shallshowFastSend=false;        
     }
    
 }

@@ -1,0 +1,84 @@
+<template>
+    <div class="symmetric-grid" style="margin-bottom:5px">
+        <div :style="{'width':maxLabelWidthStr}">
+            <span style="white-space: break-spaces;">{{persianName}}</span>
+            <span v-if="isMandatory" style="color:red;">*</span>
+            <span style="float:left">:</span>
+        </div>
+        <div style="flex:1;display:flex;padding:0 5px;">
+            <div style="flex:1">
+                <LetterAttachmentMobile v-if="isFileSelected"  :file="value"/>
+            </div>
+            <div style="flex: 0 1 auto">     
+                <button v-if="!isFileSelected" @click="onFileButtonClick()" class="button"> <i class="icon-addAttachment" ></i></button>
+                <input  v-if="!isFileSelected" ref="fileInput" type="file" @change="onFileChanged($event)"  style="display:none">
+                <button v-else  @click="clearFile()"  class="button"><i class="icon-clearSearch"></i></button>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script lang="ts">
+import {Vue,Component,Prop, Watch,Mixins} from 'vue-property-decorator';
+import File from '../../../../store/models/Letter/File';
+import * as util from '@/util/utils';
+import LetterAttachmentMobile from '@/components/MobileComponents/LetterDetailsMobile/LetterAttachmentMobile/LetterAttachmentMobile.vue';
+import BookmarkMixin from '@/components/Cartable/EnterpriseForm/BookmarkComponents/BookmarkMixin';
+@Component({
+    components:{LetterAttachmentMobile}
+})
+export default  class  FileBookmarkMobile extends Mixins(BookmarkMixin){
+    isFileSelected = false;
+    loadedPercent = 0;
+    created(){
+        //this.value = {} as File;
+        this.value = '';
+
+    }
+    onFileButtonClick(){
+        (this.$refs.fileInput as any).click();
+    }
+    onFileChanged(file: any){
+        const reader = new FileReader();
+        reader.addEventListener("progress",(evt)=>{
+            this.loadedPercent = (evt.loaded / evt.total) * 100;
+        });
+        reader.addEventListener("loadend",(x)=>{
+            const attachedFile = {} as File;
+            if(x.target)
+            {
+                attachedFile.id = util.getNewGuid();// '00000000-0000-0000-0000-000000000000';
+                attachedFile.extension = file.target.files[0].name;
+                attachedFile.content = file.target.files[0]; ///*new Uint8Array(x.target.result as ArrayBuffer);*/util.base64RemovePrefix((x.target as any).result);
+                this.value = attachedFile;
+                this.isFileSelected = true;
+                this.value = attachedFile;
+            }
+        });
+        //reader.readAsArrayBuffer(file.target.files[0])
+        reader.readAsDataURL(file.target.files[0]);
+    }
+
+    clearFile(){
+        this.isFileSelected = false;
+        this.value = {Name:"",Id:"00000000-0000-0000-0000-000000000000"}
+    }
+
+    onValueChanged(newVal: any, oldVal: any){
+        if(this.value.Name && this.value.Id){
+            const attachedFile = {} as File;
+            attachedFile.id = this.value.Id;
+            attachedFile.extension = this.value.Name;
+            this.value = attachedFile;
+            this.isFileSelected = true;
+        }
+    }
+    setValueFromBehindCodeResult(value: any){
+        if(!value.Id)return;
+        if(this.value.Id != "00000000-0000-0000-0000-000000000000" && value.Id == "00000000-0000-0000-0000-000000000000")
+            return;
+        this.value = value;
+    }
+    
+}
+</script>
