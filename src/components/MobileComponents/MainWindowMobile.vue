@@ -17,7 +17,7 @@
                     </div>
                 </div>
                 <div class="ui bottom attached segment pushable mobileBottomSegmant" style="background: transparent !important; height: 100%;flex:1">
-                    <div class="ui inverted labeled icon inline vertical right sidebar menu mobilesidebar" style="width: 70%;">
+                    <div class="ui inverted labeled icon inline vertical right sidebar mainWindowMobile menu mobilesidebar" style="width: 70%;">
                         <div style="display: flex;flex-direction: column; height: 100%;background: var(--Header);">
                             <div class="three-part-flexbox">
                                 <div class="flex-part-middle">
@@ -33,7 +33,7 @@
                                 <transition name="fade">
                                     <div v-if="shallShowMessage" class="ui green message">{{message}}</div>
                                 </transition>
-                                <div v-if="shallshowparentcomponent==false && shallShowLetterListRouter==true" style="height: 100%;width: 100%;">
+                                <div v-if="shallshowparentcomponent==false && shallShowLetterListRouter==true" style="height: 100%;width: 100%;flex: 1;">
                                     <LetterDetailsMobile style="flex:1;"  v-if="(noLetterSelected == false && leftSideMode==='details')" :letter="selectedLetter" 
                                     :searchResult="selectedSearchResult"
                                     @finalize-letter="onFinalizeLetter($event)"
@@ -113,7 +113,7 @@ export default class MainWindowMobile extends Mixins(MixinMainWindow) {
     shallshowparentcomponent=true;
      async mounted(){
     //    alert("test");
-           $('.ui.sidebar').sidebar({
+           $('.mainWindowMobile').sidebar({
             context: $('.bottom.segment')
           }).sidebar('attach events','.sidebarButton')
           .sidebar('setting', 'mobileTransition', 'overlay')

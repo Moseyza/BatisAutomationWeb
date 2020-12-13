@@ -1,11 +1,6 @@
 <template>
     <div class="three-part-flexbox">
         <FullPageLoader :isActive="sending" />
-         <div v-if="shallRenderOnMobile==true" style="text-align: end;">
-            <button @click="returnToParent">
-                بازگشت
-            </button>
-        </div>
         <div class="flex-part-top">
             <div v-if="mainReceivers.length>0" class="symmetric-grid" style="margin-bottom: 5px">
                 <div style="flex:1;margin-left:5px">
@@ -127,10 +122,7 @@ export default class SendEnterpriseFormMobile extends Mixins(ComponentMixinBase)
     created(){
         this.loadReceivers();
     }
-
-    returnToParent(){
-        this.$emit('shallShowenterpriseFormListsEvent')
-    }
+    
     async loadReceivers(){
         
         if(!this.form)return;
@@ -304,7 +296,9 @@ export default class SendEnterpriseFormMobile extends Mixins(ComponentMixinBase)
     onMsgBoxButtonClicked(btn: string){
         this.shallShowMsgBox = false;
         if((btn ==='ok' && this.isFormSent) || btn === 'yes'){
-            this.$emit('sendform-close',this.isNextForm);
+            // this.$emit('sendform-close',this.isNextForm);
+            this.$emit('shallShowenterpriseFormListsEvent')
+
         }
     }
     shallShowMainLookup = false;

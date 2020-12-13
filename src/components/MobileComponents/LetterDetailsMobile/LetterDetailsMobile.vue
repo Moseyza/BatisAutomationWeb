@@ -1,108 +1,100 @@
 <template>
     <div class="three-part-flexbox">
-        <div style="text-align: end;"> 
-            <button class="" @click="returnToParentPage"><i class="icon-arrowLeft"></i></button>
+        <div class="ui top attached menu">
+            <a class="item sidebarLetterDetailsButton" style="color: var(--Text);">
+                <i class="sidebar icon" style="color: var(--Text);"></i> Menu
+            </a>
         </div>
-        <div style="flex:0 1 auto"  class="flex-part-top" >
-            <div class="symmetric-grid">
-            <div style="flex:3">
-                <h4 style="margin-right:5px;color:var(--TxtColor);">{{letter.title}}</h4>
+        <div class="ui bottom attached segment pushable mobileBottomLetterDetailsSegmant" style="background: transparent !important; height: 100%;flex:1">
+            <div class="ui inverted labeled icon inline vertical left sidebar letterDetails menu mobilesidebar" style="width: 70%;">
+                <div style="flex:0 1 auto;height:100%"  class="flex-part-top" >
+                    <div style="height: 100%;display: flex;flex-direction: column;">
+                        <div style="flex:1">
+                            <h4 style="margin-right:5px;color:var(--TxtColor);">{{letter.title}}</h4>
+                              <div class="popup" data-content='یادداشت شخصی'> <i class="action-icon icon-comment" style="font-size: x-large"></i></div>
+                            <div class="popup" v-if="canFinalize" data-content='اختتام سریع' @click="finalizeLetterFast" > <i  class="action-icon icon-closeFast" ></i></div>
+                            <div v-if="finalizing" class="ui active inline small loader"></div>
+                            <div class="item menu-item" @click="finalizeLetter()" ><div style="padding-left:5px">اختتام</div> <i class="fixed-icon icon-closeLetter"></i> </div>
+                            <div class="item menu-item"><div style="padding-left:5px">چاپ</div> <i class="fixed-icon icon-print"></i></div>
+                            <div class="item menu-item"><div style="padding-left:5px">جریان وابستگی</div> <i class="fixed-icon icon-notRouted"></i></div>
+                            <div class="item menu-item"><div style="padding-left:5px">مشاهده گزارش</div> <i class="fixed-icon icon-report"></i></div>
+                            <div style="padding-top:5px" class="popup" v-if="canReject" data-content='بازگردانی نامه' @click="restoreLetter" > <i  style="font-size:20pt" class="action-icon icon-rejectClose" ></i></div>
+                            <!-- <div id="options-dropdown"  class="ui icon top left dropdown">
+                                <i class="action-icon icon-threeDots" style="font-size: x-large"></i>
+                                <div class="menu">        
+                                </div>
+                            </div> -->
+                        </div>
+                        <!-- <div style="flex:1;justify-content:space-around" class="symmetric-grid">
+                          
+                        </div> -->
+                    </div>
+                        <!-- <div>
+                        <div v-if="isReceived">نامه های دریافتی</div>
+                        <div v-else>نامه های ارسالی</div>
+                    </div> -->
+                </div>
             </div>
-            <div style="flex:1;justify-content:space-around" class="symmetric-grid">
-                <div class="popup" data-content='یادداشت شخصی'> <i class="action-icon icon-comment" style="font-size: x-large"></i></div>
-                <div class="popup" v-if="canFinalize" data-content='اختتام سریع' @click="finalizeLetterFast" > <i  class="action-icon icon-closeFast" ></i></div>
-                <div v-if="finalizing" class="ui active inline small loader"></div>
-                <div style="padding-top:5px" class="popup" v-if="canReject" data-content='بازگردانی نامه' @click="restoreLetter" > <i  style="font-size:20pt" class="action-icon icon-rejectClose" ></i></div>
-                <div id="options-dropdown"  class="ui icon top left dropdown">
-                    <i class="action-icon icon-threeDots" style="font-size: x-large"></i>
-                    <div class="menu">
-                        <div class="item menu-item" @click="finalizeLetter()" ><div style="padding-left:5px">اختتام</div> <i class="fixed-icon icon-closeLetter"></i> </div>
-                        <div class="item menu-item"><div style="padding-left:5px">چاپ</div> <i class="fixed-icon icon-print"></i></div>
-                        <div class="item menu-item"><div style="padding-left:5px">جریان وابستگی</div> <i class="fixed-icon icon-notRouted"></i></div>
-                        <div class="item menu-item"><div style="padding-left:5px">مشاهده گزارش</div> <i class="fixed-icon icon-report"></i></div>
+            <div style="flex:6;height:100%;" class="pusher flex-part-middle" >
+                <div class="container3">
+                    <div class="symmetric-grid" >
+                        <h4 class="highlight" v-if="isReceived">{{letter.sender.nameOnly}}</h4>
+                        <div class="ld-rcvs" v-else style="flex:1 0 auto">
+                            <h5 class="ld-rcvs highlight">{{receiversStr}}</h5>
+                        </div>
+                        <div class="popup" data-content='دانلود_فایل_اصلی' style="flex:0 1 auto; text-align:end;">
+                            <i @click="downloadLetterPdf()" class="helper-icon-large icon-download"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <div style="color:var(--TxtColor) !important">
+                            {{letterTime}}
+                        </div>
+                        <div>
+                            <LetterTrailTreeMobile :letterId="letter.letterPossessionId" :letterNo="letter.letterNo"></LetterTrailTreeMobile>
+                        </div>
+                    </div>
+                    <div class="wrap-grid">
+                        <LetterAttachmentMobile
+                        v-for="part in attachments"
+                        :key="part.id"
+                        :file="part.file"
+                        >
+                        </LetterAttachmentMobile>
                     </div>
                 </div>
-            </div>
-            </div>
-                <!-- <div>
-                <div v-if="isReceived">نامه های دریافتی</div>
-                <div v-else>نامه های ارسالی</div>
-            </div> -->
-        </div>
-        <div style="flex:6" class="flex-part-middle">
-        
-        <div class="container3">
-            <div class="symmetric-grid" >
-                <h4 class="highlight" v-if="isReceived">{{letter.sender.nameOnly}}</h4>
-                <div class="ld-rcvs" v-else style="flex:1 0 auto">
-                    <h5 class="ld-rcvs highlight">{{receiversStr}}</h5>
-                </div>
-                <div class="popup" data-content='دانلود_فایل_اصلی' style="flex:0 1 auto; text-align:end;">
-                    <i @click="downloadLetterPdf()" class="helper-icon-large icon-download"></i>
-                </div>
-            </div>
-            <div>
-                <div style="color:var(--TxtColor) !important">
-                    {{letterTime}}
-                </div>
-                <div>
-                    <LetterTrailTreeMobile :letterId="letter.letterPossessionId" :letterNo="letter.letterNo"></LetterTrailTreeMobile>
-                </div>
-            </div>
-            <div class="wrap-grid">
-                <LetterAttachmentMobile
-                v-for="part in attachments"
-                :key="part.id"
-                :file="part.file"
-                >
-                </LetterAttachmentMobile>
-            </div>
-        </div>
-        <div  style="height: 100%">
-            <div v-if="letter.comment">
-                <div  style="margin: 10px 0;color:var(--TxtColor) !important">هامش: {{letter.comment}}</div>
-                <div class="symmetric-grid" style="padding:20px">
-                    <div style="flex:1"></div>
-                    <!-- <div style="flex:2;border-bottom:2px #e7e7e7 solid;"></div> -->
-                    <div style="flex:1"></div>
-                </div>
-            </div>
-            <div style="display:flex;flex-direction:column;align-items: center; height:100%">
-                <!-- <p> -->
-                    <!-- {{letter.abstract}} -->
-                    <!-- <div class="action-button" style="font-size:x-large" @click="fitImage()" v-if="noPdfExists"><i class="icon icon-fitImage"></i></div> -->
-                    <div  style="font-size:large;color:var(--color-success)" v-if="noPdfExists"> {{viewedFileName}} </div>
-                    <div ref="previewContainer" style="padding:5px;flex:1;width:100%; color:var(--TxtColor);" class="ng-scope pdfobject-container">
-
-                        <span v-if="hasHtmlMainFile" v-html="htmlSrc"></span>
-                        <div v-else-if="noPdfExists">
-                            <img :src="pdfSrc" width="100%" height="100%" alt="مشاهده پیش نمایش امکان پذیر نیست" style="overflow: auto;color:var(--color-danger);min-height:100px;max-width:100%;max-height:100%"/>
+                <div  style="height: 100%">
+                    <div v-if="letter.comment">
+                        <div  style="margin: 10px 0;color:var(--TxtColor) !important">هامش: {{letter.comment}}</div>
+                        <div class="symmetric-grid" style="padding:20px">
+                            <div style="flex:1"></div>
+                            <!-- <div style="flex:2;border-bottom:2px #e7e7e7 solid;"></div> -->
+                            <div style="flex:1"></div>
                         </div>
-                        <div v-else-if="pdfLoaded" style="width:100%;height:100%">
-                            <!-- <object data="url" type="application/pdf">
-                                <iframe src="https://docs.google.com/viewer?url=pdfSrc&embedded=true"></iframe>
+                    </div>
+                    <div style="display:flex;flex-direction:column;align-items: center; height:100%">
+                        <!-- <p> -->
+                            <!-- {{letter.abstract}} -->
+                            <!-- <div class="action-button" style="font-size:x-large" @click="fitImage()" v-if="noPdfExists"><i class="icon icon-fitImage"></i></div> -->
+                            <div  style="font-size:large;color:var(--color-success)" v-if="noPdfExists"> {{viewedFileName}} </div>
+                            <div ref="previewContainer" style="padding:5px;flex:1;width:100%; color:var(--TxtColor);" class="ng-scope pdfobject-container">
+
+                                <span v-if="hasHtmlMainFile" v-html="htmlSrc"></span>
+                                <div v-else-if="noPdfExists">
+                                    <img :src="pdfSrc" width="100%" height="100%" alt="مشاهده پیش نمایش امکان پذیر نیست" style="overflow: auto;color:var(--color-danger);min-height:100px;max-width:100%;max-height:100%"/>
+                                </div>
+                                <div v-else-if="pdfLoaded" style="width:100%;height:100%">
+                                    <iframe  :src="pdfSrc" type="application/pdf" width="100%" height="100%" style="overflow: auto;"></iframe>
+                                </div>
+                            </div>
+                            <!-- <object :data="pdfSrc" type="application/pdf" width="100%" >
+                                <p><b>Example fallback content</b>: This browser does not support PDFs. Please download the PDF to view it: <a href="/pdf/sample.pdf">Download PDF</a>.</p>
                             </object> -->
-                            <iframe  type="application/pdf" src="https://docs.google.com/viewer?url=http://localhost:8080/src/اصل نامه.pdf&embedded=true" width="100%" height="100%" style="overflow: auto;"></iframe>
-                            <!-- <iframe src="http://docs.google.com/viewer?url=" + PathToMyPdfFile + "&embedded=true" width="100%" height="100%" style="width: 100%; height: 100%;" frameborder="0" scrolling="no"></iframe> -->
-                             <!-- <object :data="pdfSrc" type="application/pdf"> -->
-                                <iframe  :src="pdfSrc" type="application/pdf" width="100%" height="100%" style="overflow: auto;"></iframe>
-                            <!-- </object> -->
-                            <!-- <canvas id="the-canvas"></canvas> -->
-                        </div>
-                        <!--  -->
-                        
-
-                        
+                        <!-- </p> -->
                     </div>
-                    
-
-                    <!-- <object :data="pdfSrc" type="application/pdf" width="100%" >
-                        <p><b>Example fallback content</b>: This browser does not support PDFs. Please download the PDF to view it: <a href="/pdf/sample.pdf">Download PDF</a>.</p>
-                    </object> -->
-                <!-- </p> -->
+                </div>
             </div>
         </div>
-    </div>
         <div  style="flex:0 1 auto;display:flex;flex-direction:column;align-items:strech" class="flex-part-bottom">
             <div style="flex:1; display:flex;justify-content:space-around" class="container1">
                 <div v-if="nextEnterpriseForms.length>0" style="flex:1;text-align: center;" class="action-icon">
@@ -112,6 +104,9 @@
     		                <div v-for="form in nextEnterpriseForms" :key="form.id" class="item menu-item" style="max-height:10px !important;padding:0 5px !important"><div style="padding-left:5px" @click="loadNextForm(form.id)" >{{form.name}}</div> </div>
   		                </div>
 	                </div>
+                </div>
+                 <div style="flex:1;display: flex;justify-content: center;align-items: center;" @click="returnToParentPage">
+                    <i class="icon-close" style="color: inherit; font-size: xx-large;"></i>
                 </div>
                 <div style="flex:1;text-align: center;" class="action-icon">
                     <div style="flex:1" id="return-dropdown"  class="ui icon top left dropdown">
@@ -176,6 +171,8 @@ export default class LetterDetailsMobile extends Vue {
         this.loadNextForms();
     }
     
+   
+
     created(){
         // this.$router.replace('LetterDetailsMobile');
         // this.$router.push('LetterDetailsMobile');
@@ -330,6 +327,11 @@ export default class LetterDetailsMobile extends Vue {
         }
     }
     async mounted(){
+         $('.letterDetails').sidebar({
+            context: $('.mobileBottomLetterDetailsSegmant')
+          }).sidebar('attach events','.sidebarLetterDetailsButton')
+          .sidebar('setting', 'mobileTransition', 'overlay');
+
         $("#options-dropdown").dropdown({action: 'hide',silent: true});
         $("#return-dropdown").dropdown({action: 'nothing',silent: true});
         $(".popup").popup();
