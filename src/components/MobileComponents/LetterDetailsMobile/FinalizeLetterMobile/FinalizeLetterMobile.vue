@@ -91,7 +91,7 @@ import { AutoCompleteData } from '@/store/models/Letter/AutoCompleteData';
 @Component({
     components: {LetterTrailTreeMobile, FoldersTreeNodeMobile, AttachmentEditorMobile}
 })
-export default class FinalizeLetter extends Vue{
+export default class FinalizeLetterMobile extends Vue{
 @Prop() letter?: Letter
 isReceived = true;
 @Watch("letter")

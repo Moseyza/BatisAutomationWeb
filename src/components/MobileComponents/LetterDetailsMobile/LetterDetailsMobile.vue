@@ -1,24 +1,36 @@
 <template>
     <div class="three-part-flexbox">
-        <div class="ui top attached menu">
+        <div class="ui top attached menu" style="direction: ltr;">
             <a class="item sidebarLetterDetailsButton" style="color: var(--Text);">
-                <i class="sidebar icon" style="color: var(--Text);"></i> Menu
+                <i class="action-icon icon-threeDots" style="font-size: x-large;"></i>
             </a>
+            <h4 style="color:var(--TxtColor);margin: 0.3em;width: 100%;display: flex;justify-content: end;align-items: center;">{{letter.title}}</h4>
         </div>
-        <div class="ui bottom attached segment pushable mobileBottomLetterDetailsSegmant" style="background: transparent !important; height: 100%;flex:1">
+        <div class="ui bottom attached segment pushable mobileBottomLetterDetailsSegmant" style="background: transparent !important; height: 100%;flex:1;border:0;">
             <div class="ui inverted labeled icon inline vertical left sidebar letterDetails menu mobilesidebar" style="width: 70%;">
                 <div style="flex:0 1 auto;height:100%"  class="flex-part-top" >
                     <div style="height: 100%;display: flex;flex-direction: column;">
-                        <div style="flex:1">
-                            <h4 style="margin-right:5px;color:var(--TxtColor);">{{letter.title}}</h4>
-                              <div class="popup" data-content='یادداشت شخصی'> <i class="action-icon icon-comment" style="font-size: x-large"></i></div>
-                            <div class="popup" v-if="canFinalize" data-content='اختتام سریع' @click="finalizeLetterFast" > <i  class="action-icon icon-closeFast" ></i></div>
+                        <div style="flex:1;display: flex;flex-direction: column;justify-content: space-evenly;">
+                            <div class="popup" style="margin:1em;" data-content='یادداشت شخصی'> 
+                                <i class="action-icon icon-comment" style="font-size: 3em;"></i>
+                            </div>
+                            <div class="popup" style="margin:1em;" v-if="canFinalize" data-content='اختتام سریع' @click="finalizeLetterFast" > 
+                                <i  class="action-icon icon-closeFast" style="font-size: 4em;" ></i>
+                            </div>
                             <div v-if="finalizing" class="ui active inline small loader"></div>
-                            <div class="item menu-item" @click="finalizeLetter()" ><div style="padding-left:5px">اختتام</div> <i class="fixed-icon icon-closeLetter"></i> </div>
-                            <div class="item menu-item"><div style="padding-left:5px">چاپ</div> <i class="fixed-icon icon-print"></i></div>
-                            <div class="item menu-item"><div style="padding-left:5px">جریان وابستگی</div> <i class="fixed-icon icon-notRouted"></i></div>
-                            <div class="item menu-item"><div style="padding-left:5px">مشاهده گزارش</div> <i class="fixed-icon icon-report"></i></div>
-                            <div style="padding-top:5px" class="popup" v-if="canReject" data-content='بازگردانی نامه' @click="restoreLetter" > <i  style="font-size:20pt" class="action-icon icon-rejectClose" ></i></div>
+                            <div class="item menu-item" @click="finalizeLetter()" >
+                                <i class="fixed-icon icon-closeLetter" style="font-size: 3em;"></i> 
+                            </div>
+                            <div class="item menu-item">
+                                <i class="fixed-icon icon-print" style="font-size: 3em;"></i>
+                            </div>
+                            <div class="item menu-item">
+                                <i class="fixed-icon icon-notRouted" style="font-size: 3em;"></i>
+                            </div>
+                            <div class="item menu-item">
+                                <i class="fixed-icon icon-report" style="font-size: 3em;"></i>
+                            </div>
+                            <div style="padding-top:5px" class="popup" v-if="canReject" data-content='بازگردانی نامه' @click="restoreLetter" > <i  style="font-size: 3em;" class="action-icon icon-rejectClose"></i></div>
                             <!-- <div id="options-dropdown"  class="ui icon top left dropdown">
                                 <i class="action-icon icon-threeDots" style="font-size: x-large"></i>
                                 <div class="menu">        
