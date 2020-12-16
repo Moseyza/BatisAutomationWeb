@@ -1,5 +1,5 @@
 <template>
-    <div class="single-recipient" >
+    <div class="single-recipient" id='FastSendSelectedRecipientMobile' >
         <div class="item-block" >
             <div class="xsmall-text nowrap" style="flex:3">{{recipient.nameOnly}}</div>
             <div class="xxsmall-text nowrap" style="flex:4">{{recipient.post}}</div>

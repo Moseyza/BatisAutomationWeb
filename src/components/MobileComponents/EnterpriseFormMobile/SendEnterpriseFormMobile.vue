@@ -73,7 +73,8 @@ import FullPageLoader from '@/components/UiComponents/FullPageLoader.vue';
 import { NextFormInfo } from '@/store/models/EnterpriseForm/NextFormInfo';
 import { DraftEnterpriseFormInfo } from '@/store/models/EnterpriseForm/LoadEnterpriseFormDraftResponse';
 import EnterpriseFormContainerMobile from './EnterpriseFormContainerMobile/EnterpriseFormContainerMobile.vue';
-import FastSendRecipientSelectorMobile from '@/components/MobileComponents/FastSendMobile/FastSendRecipientSelectorMobile/FastSendSelectedRecipientMobile/FastSendSelectedRecipientMobile.vue';
+import FastSendRecipientSelectorMobile from '@/components/MobileComponents/FastSendMobile/FastSendRecipientSelectorMobile/FastSendRecipientSelectorMobile.vue';
+
 import  RecipientLookupMobile from '@/components/MobileComponents/ForwardLetterMobile/RecipientLookupMobile/RecipientLookupMobile.vue';
 import InPlaceMessageBox  from '@/components/UiComponents/InPlaceMessageBox.vue';
 
