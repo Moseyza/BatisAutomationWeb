@@ -8,7 +8,10 @@
              <!-- <div class="fill-parent" data-b-content="{Binding mainWindowViewModel,ViewSelector:viewSelector}"></div> -->
                 <div class="ui top attached menu">
                     <a class="item sidebarButton" style="color: var(--Text);">
-                        <i class="sidebar icon" style="color: var(--Text);"></i> Menu
+                        <div style='transform: rotate(90deg);'>
+                            <i class="action-icon icon-threeDots" style="font-size:1em;"></i>
+                        </div>
+                         Menu
                     </a>
                     <!-- <div style="display:flex;width:100%;" @click="shallHideletterList"> -->
                     <div style="display:flex;width:100%;">
@@ -31,7 +34,9 @@
                         <div class="" style="background: transparent !important;padding: 0;height: 100%;width:100%">
                             <div class="container2"  style="height:100%;width:100%;display: flex;margin:0;">
                                 <transition name="fade">
-                                    <div v-if="shallShowMessage" class="ui green message">{{message}}</div>
+                                    <div class="ui dimmer " v-bind:class="{ active: shallShowMessage }">
+                                        <div class="ui green message">{{message}}</div>
+                                    </div>
                                 </transition>
                                 <div v-if="shallshowparentcomponent==false && shallShowLetterListRouter==true" style="height: 100%;width: 100%;flex: 1;">
                                     <LetterDetailsMobile style="flex:1;"  v-if="(noLetterSelected == false && leftSideMode==='details')" :letter="selectedLetter" 
@@ -59,7 +64,7 @@
                                 >
                                 </SearchResultDetails >
                                 <FinalizeLetterMobile style="width:100%" v-else-if="leftSideMode=== 'finalize'" :letter="selectedLetter"  />
-                                <ForwardLetterMobile style="width:100%" v-else-if="leftSideMode=== 'forward'" @forward-closed="onForwardClosed" @forward-done="onLetterForwardedMobile($event)" :letter="selectedLetter" />
+                                <ForwardLetterMobile style="width:100%" v-else-if="leftSideMode=== 'forward'" @forward-closed="onForwardClosedMobile" @forward-done="onLetterForwardedMobile($event)" :letter="selectedLetter" />
                                 <FastSendMobile  style="width:100%" :mode="fastSendMode" v-else-if="leftSideMode=== 'fastSend' && shallshowFastSend==true"  @fastsend-canceled="onFastSendCanceledMobile($event)"  :dependentLetters="fastSendDependencies" />
                                 <SendEnterpriseFormMobile  style="width:100%" v-else-if="leftSideMode=== 'enterpriseForm'" @shallShowenterpriseFormListsEvent="showOfficeFormlist()" @sendform-close="onSendFormCloseMobile($event)" :form="selectedFrom" :nextFormInfo="nextFormInfo" :tableLblWidth="maxTableLabelWidth" :formLblWidth="maxFormLabelWidth" :draftFormInfo="draftFormInfo" />
                                 <EnterpriseFormLists style="width:100%"  v-else-if="leftSideMode=== 'enterpriseFormLists'"  @enterprise-form-selected-Mobile="onEnterpriseFormMobileSelected($event,null,null)" />
@@ -113,6 +118,7 @@ export default class MainWindowMobile extends Mixins(MixinMainWindow) {
     shallShowenterpriseFormLists=false;
     shallShowLetterListRouter=false;
     shallshowparentcomponent=true;
+
      async mounted(){
     //    alert("test");
            $('.mainWindowMobile').sidebar({
@@ -120,6 +126,7 @@ export default class MainWindowMobile extends Mixins(MixinMainWindow) {
           }).sidebar('attach events','.sidebarButton')
           .sidebar('setting', 'mobileTransition', 'overlay')
           ;
+
         //   await (this.$refs.letterlist as any).refresh();
     }
     //  mounted(){
@@ -175,7 +182,11 @@ export default class MainWindowMobile extends Mixins(MixinMainWindow) {
         //  $('.ui.sidebar').fadeOut( "slow" );
         //  await (this.$refs.letterlist as any).refresh();
     }
-
+    onForwardClosedMobile(){
+        this.leftSideMode="";
+        this.shallshowparentcomponent=true;
+        this.shallShowLetterListRouter=false;
+    }
    onFastSendMobileBtnClick(mode: string){
        this.shallshowparentcomponent=false;
        this.onFastSendBtnClick(mode)
