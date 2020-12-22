@@ -4,6 +4,7 @@
             @selected-letter-changed="onSelectdLetterChangedMobile($event)" 
             @selected-draft-changed="onSelectdDraftChangedMobile($event)"
             @selected-searchresult-changed="onSelectdSearchResultChangedMobile($event)" 
+            @refreshFeedEvent="onRefreshFeedEvent($event)"
             ref='letterlist'>
         </router-view>
     </div>
@@ -17,6 +18,7 @@
     import { Letter } from '@/store/models/Letter/Letter';
     import { DraftLetter } from '@/store/models/Letter/DraftLetter';
     import {LetterSearchResult } from '@/store/models/Letter/LetterSearchResult';
+    import store from '@/store';
 
     @Component({
     })
@@ -25,8 +27,12 @@
         async created(){
             // alert('listRouter')
             //  await (this.$refs.letterlist as any).refresh();
+            store.state.eventHub.$on('refreshFeedEvent',this.onRefreshFeedEvent)
         }
         
+        async onRefreshFeedEvent(){
+             await (this.$refs.letterlist as any).refresh();
+        }
         onSelectdLetterChangedMobile(letter: Letter ){
             this.$emit('set-selectdLetterChanged-letterListView',letter);    
         }

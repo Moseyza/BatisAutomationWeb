@@ -318,6 +318,9 @@ export default class LetterListMobile extends Vue{
         }
         store.state.eventHub.$on('calc-letterscount-requested',this.calcCounts);
         store.state.eventHub.$on('dependent-letter-sent',this.onDependentLetterSent);
+        store.state.eventHub.$on('closeFastEvent',this.closeLetter);
+        store.state.eventHub.$on('rejectCloseLetterEvent',this.rejectCloseLetter);
+        store.state.eventHub.$on('forwardLetterEvent',this.forwardLetter);
         
         //this.serverTime = await letterService.getServerTime();
         

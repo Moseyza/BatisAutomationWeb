@@ -36,6 +36,7 @@ export default class MixinMainWindow extends Mixins(ComponentMixinBase) {
     firstLoad = false;
     isLoading = false;
     shallShowMessage = false;
+    public shallshowFastSend=false;
     interval = 0;
     message = '';
     created(){
@@ -136,6 +137,8 @@ export default class MixinMainWindow extends Mixins(ComponentMixinBase) {
         this.fastSendDependencies = [];
         this.fastSendMode = mode;
         this.leftSideMode = 'fastSend';
+        this.shallshowFastSend=true;
+
     }
     async onFolderClicked(){
         this.leftSideMode = "";
@@ -152,7 +155,7 @@ export default class MixinMainWindow extends Mixins(ComponentMixinBase) {
     sendFastDependOn(mode: string){
         this.fastSendMode = 'send';
         this.leftSideMode = 'fastSend';
-        
+        this.shallshowFastSend=true;
         const dependentLetter = {} as DependentLetter;
         dependentLetter.dependencyType = mode;
         dependentLetter.id = this.selectedLetter.id;

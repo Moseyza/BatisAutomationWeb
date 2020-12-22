@@ -22,6 +22,8 @@ import { DraftLetter } from '../../../store/models/Letter/DraftLetter';
 import * as letterService from '@/store/Services/letterServices';
 import * as persianDate from 'persian-date';
 import { Letter } from '@/store/models/Letter/Letter';
+import store from '@/store';
+
 @Component({
     components:{LetterListMobile}
 })
@@ -33,6 +35,7 @@ export default class DraftLettersMobile extends Vue {
     defaultDate: any = {};
     async created(){
         await this.refresh();
+        store.state.eventHub.$on('deleteLetterEvent',this.refresh)
     }
     async refresh(){
         this.loading = true;

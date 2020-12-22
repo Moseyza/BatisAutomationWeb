@@ -8,7 +8,10 @@
              <!-- <div class="fill-parent" data-b-content="{Binding mainWindowViewModel,ViewSelector:viewSelector}"></div> -->
                 <div class="ui top attached menu">
                     <a class="item sidebarButton" style="color: var(--Text);">
-                        <i class="sidebar icon" style="color: var(--Text);"></i> Menu
+                        <div style='transform: rotate(90deg);'>
+                            <i class="action-icon icon-threeDots" style="font-size:1em;"></i>
+                        </div>
+                         Menu
                     </a>
                     <!-- <div style="display:flex;width:100%;" @click="shallHideletterList"> -->
                     <div style="display:flex;width:100%;">
@@ -17,7 +20,7 @@
                     </div>
                 </div>
                 <div class="ui bottom attached segment pushable mobileBottomSegmant" style="background: transparent !important; height: 100%;flex:1">
-                    <div class="ui inverted labeled icon inline vertical right sidebar menu mobilesidebar" style="width: 70%;">
+                    <div class="ui inverted labeled icon inline vertical right sidebar mainWindowMobile menu mobilesidebar" style="width: 70%;">
                         <div style="display: flex;flex-direction: column; height: 100%;background: var(--Header);">
                             <div class="three-part-flexbox">
                                 <div class="flex-part-middle">
@@ -31,37 +34,39 @@
                         <div class="" style="background: transparent !important;padding: 0;height: 100%;width:100%">
                             <div class="container2"  style="height:100%;width:100%;display: flex;margin:0;">
                                 <transition name="fade">
-                                    <div v-if="shallShowMessage" class="ui green message">{{message}}</div>
+                                    <div class="ui dimmer " v-bind:class="{ active: shallShowMessage }">
+                                        <div class="ui green message">{{message}}</div>
+                                    </div>
                                 </transition>
-                                <div v-if="shallshowparentcomponent==false && shallShowLetterListRouter==true" style="height: 100%;width: 100%;">
+                                <div v-if="shallshowparentcomponent==false && shallShowLetterListRouter==true" style="height: 100%;width: 100%;flex: 1;">
                                     <LetterDetailsMobile style="flex:1;"  v-if="(noLetterSelected == false && leftSideMode==='details')" :letter="selectedLetter" 
                                     :searchResult="selectedSearchResult"
                                     @finalize-letter="onFinalizeLetter($event)"
                                     @returnToParentPage="onReturnToParentPage($event)"
                                     @forward-letter="onForwardLetter($event)"
-                                    @letter-closed-fast="onLetterClosedFast($event)"
-                                    @closed-letter-rejected="onClosedLetterRejected($event)"
+                                    @letter-closed-fast="onLetterClosedFastMobile($event)"
+                                    @closed-letter-rejected="onClosedLetterRejectedMobile($event)"
                                     @send-fast-dependon="sendFastDependOn($event)"
                                     @next-form-selected="onNextFormSelected($event)"
                                     >
                                     </LetterDetailsMobile>
                                 </div>
                                
-                                <DraftDetails style="width:100%"
+                                <DraftDetailsMobile style="width:100%"
                                 v-if="noLetterSelected == false && leftSideMode==='draftDetails'" 
                                 :letter="selectedLetter" 
-                                @delete-letter="onDeleteLetter($event)"
+                                @delete-letter="onDeleteLetterMobile($event)"
                                 >
-                                </DraftDetails>
+                                </DraftDetailsMobile>
                                 <SearchResultDetails style="width:100%" v-else-if="noLetterSelected == false && leftSideMode==='searchResultDetails'" :searchResult="selectedSearchResult"
                                 @finalize-letter="onFinalizeLetter($event)"
                                 @forward-letter="onForwardLetter($event)"
                                 >
                                 </SearchResultDetails >
-                                <FinalizeLetter style="width:100%" v-else-if="leftSideMode=== 'finalize'" :letter="selectedLetter"  />
-                                <ForwardLetter style="width:100%" v-else-if="leftSideMode=== 'forward'" @forward-closed="onForwardClosed" @forward-done="onLetterForwarded($event)" :letter="selectedLetter" />
-                                <FastSend  style="width:100%" :mode="fastSendMode" v-else-if="leftSideMode=== 'fastSend'"  @fastsend-canceled="onFastSendCanceled($event)"  :dependentLetters="fastSendDependencies" />
-                                <SendEnterpriseForm  style="width:100%" v-else-if="leftSideMode=== 'enterpriseForm'" @shallShowenterpriseFormListsEvent="showOfficeFormlist()" @sendform-close="onSendFormClose($event)" :form="selectedFrom" :nextFormInfo="nextFormInfo" :tableLblWidth="maxTableLabelWidth" :formLblWidth="maxFormLabelWidth" :draftFormInfo="draftFormInfo" />
+                                <FinalizeLetterMobile style="width:100%" v-else-if="leftSideMode=== 'finalize'" :letter="selectedLetter"  />
+                                <ForwardLetterMobile style="width:100%" v-else-if="leftSideMode=== 'forward'" @forward-closed="onForwardClosedMobile" @forward-done="onLetterForwardedMobile($event)" :letter="selectedLetter" />
+                                <FastSendMobile  style="width:100%" :mode="fastSendMode" v-else-if="leftSideMode=== 'fastSend' && shallshowFastSend==true"  @fastsend-canceled="onFastSendCanceledMobile($event)"  :dependentLetters="fastSendDependencies" />
+                                <SendEnterpriseFormMobile  style="width:100%" v-else-if="leftSideMode=== 'enterpriseForm'" @shallShowenterpriseFormListsEvent="showOfficeFormlist()" @sendform-close="onSendFormCloseMobile($event)" :form="selectedFrom" :nextFormInfo="nextFormInfo" :tableLblWidth="maxTableLabelWidth" :formLblWidth="maxFormLabelWidth" :draftFormInfo="draftFormInfo" />
                                 <EnterpriseFormLists style="width:100%"  v-else-if="leftSideMode=== 'enterpriseFormLists'"  @enterprise-form-selected-Mobile="onEnterpriseFormMobileSelected($event,null,null)" />
                                 <!-- <LetterListRouterView  v-else-if="leftSideMode=== 'letterListRouterView'"  @set-selectdLetterChanged-letterListView="onSetSelectdLetterChangedLetterListView($event)" @set-selectdDraftChanged-letterListView="onSetSelectdDraftChangedLetterListView($event)" @set-selectdSearchResultChanged-letterListView="onSetSelectdSearchResultChangedLetterListView($event)"/> -->
                                 <LetterListRouterView  v-show="shallshowparentcomponent==true && shallShowLetterListRouter==false" ref="letterlist"  @set-selectdLetterChanged-letterListView="onSetSelectdLetterChangedLetterListView($event)" @set-selectdDraftChanged-letterListView="onSetSelectdDraftChangedLetterListView($event)" @set-selectdSearchResultChanged-letterListView="onSetSelectdSearchResultChangedLetterListView($event)"/>
@@ -98,24 +103,30 @@ import { EnterpriseForm } from '@/store/models/EnterpriseForm/EnterpriseForm';
 import { NextFormInfo } from '@/store/models/EnterpriseForm/NextFormInfo';
 import { DraftEnterpriseFormInfo } from '@/store/models/EnterpriseForm/LoadEnterpriseFormDraftResponse';
 import router from '@/router';
+import SendEnterpriseFormMobile from '@/components/MobileComponents/EnterpriseFormMobile/SendEnterpriseFormMobile.vue';
+import FastSendMobile from '@/components/MobileComponents/FastSendMobile/FastSendMobile.vue';
+import ForwardLetterMobile from '@/components/MobileComponents/ForwardLetterMobile/ForwardLetterMobile.vue';
+import FinalizeLetterMobile from '@/components/MobileComponents/LetterDetailsMobile/FinalizeLetterMobile/FinalizeLetterMobile.vue';
+import DraftDetailsMobile from '@/components/MobileComponents/DraftDetailsMobile/DraftDetailsMobile.vue';
 
 
 @Component({
-    components:{CartableTitleMobile,QuickAccessMobile,FoldersTreeMobile,LetterDetailsMobile,EnterpriseFormLists,LetterListRouterView}
+    components:{ForwardLetterMobile,FastSendMobile,CartableTitleMobile,QuickAccessMobile,FoldersTreeMobile,LetterDetailsMobile,EnterpriseFormLists,LetterListRouterView,SendEnterpriseFormMobile,FinalizeLetterMobile,DraftDetailsMobile}
 })
 export default class MainWindowMobile extends Mixins(MixinMainWindow) {
 
     shallShowenterpriseFormLists=false;
     shallShowLetterListRouter=false;
     shallshowparentcomponent=true;
+
      async mounted(){
     //    alert("test");
-           $('.ui.sidebar').sidebar({
+           $('.mainWindowMobile').sidebar({
             context: $('.bottom.segment')
           }).sidebar('attach events','.sidebarButton')
           .sidebar('setting', 'mobileTransition', 'overlay')
           ;
-          
+
         //   await (this.$refs.letterlist as any).refresh();
     }
     //  mounted(){
@@ -139,13 +150,15 @@ export default class MainWindowMobile extends Mixins(MixinMainWindow) {
     //     });
     // }
     onSetSelectdLetterChangedLetterListView(letter: Letter){
+        this.onSelectdLetterChanged(letter);
         this.shallshowparentcomponent=false;
         this.shallShowLetterListRouter=true;
-        this.onSelectdLetterChanged(letter);
     }
 
     async onSetSelectdDraftChangedLetterListView(letter: DraftLetter){
         this.onSelectdDraftChanged(letter);
+        this.shallshowparentcomponent=false;
+        this.shallShowLetterListRouter=true;
     }
 
     onEnterpriseFormMobileSelected(form: EnterpriseForm,nextFormInfo?: NextFormInfo,draftFormInfo?: DraftEnterpriseFormInfo){
@@ -165,11 +178,15 @@ export default class MainWindowMobile extends Mixins(MixinMainWindow) {
         this.onReturnToParentPage();
         this.leftSideMode = "letterListRouterView";
          $('.ui.sidebar').hide("500");
-
+            store.state.eventHub.$emit('refreshFeedEvent')
         //  $('.ui.sidebar').fadeOut( "slow" );
         //  await (this.$refs.letterlist as any).refresh();
     }
-
+    onForwardClosedMobile(){
+        this.leftSideMode="";
+        this.shallshowparentcomponent=true;
+        this.shallShowLetterListRouter=false;
+    }
    onFastSendMobileBtnClick(mode: string){
        this.shallshowparentcomponent=false;
        this.onFastSendBtnClick(mode)
@@ -179,7 +196,36 @@ export default class MainWindowMobile extends Mixins(MixinMainWindow) {
         this.shallShowLetterListRouter=false;
         this.shallshowparentcomponent=true;
     }
+
+    onSendFormCloseMobile(isNextForm: boolean){
+        this.onSendFormClose(isNextForm);
+        this.shallshowparentcomponent=true;
+        this.shallshowFastSend=false;        
+        // this.$router.replace('ReceivedLettersMobile');
+        // this.$router.push('LetterDetailsMobile');
+    }
+
+    onFastSendCanceledMobile(){
+        this.shallshowparentcomponent=true;
+        this.shallshowFastSend=false;        
+    }
    
+   onLetterClosedFastMobile(possessionId: string){
+        store.state.eventHub.$emit('closeFastEvent',possessionId)
+   }
+
+   onDeleteLetterMobile(){
+        this.leftSideMode = "";
+        store.state.eventHub.$emit('deleteLetterEvent')
+   }
+   
+   onClosedLetterRejectedMobile(possessionId: string){
+        store.state.eventHub.$emit('rejectCloseLetterEvent',possessionId);
+   }
+    
+    onLetterForwardedMobile(possessionId: string){
+        store.state.eventHub.$emit('forwardLetterEvent',possessionId);
+    }
 }
 
 </script>

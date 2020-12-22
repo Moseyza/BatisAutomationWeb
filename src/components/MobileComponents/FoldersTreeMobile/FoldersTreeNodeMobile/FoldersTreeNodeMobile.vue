@@ -1,12 +1,12 @@
 <template>
     <!-- <ul> -->
-        <div style="flex:1;">
-            <div @dblclick="titleDblClick()" style="display: flex;">
+        <div>
+            <div @dblclick="titleDblClick()" style="display: flex;margin: 1em;">
                 <div v-if="data.children.length == 0" ></div>
-                <i v-if="data.children.length >0" class="icon-nodeIconOpen node-icon" @click="toggle()" :class="{'icon-nodeIcon':!isOpen , 'icon-nodeIconOpen':isOpen}" style="display: flex;justify-content: center;align-items: center;"></i>
-                <i style="flex:1;padding-top:5px;" :class="data.iconClass"></i>
-                <h5 style="flex:5;text-align:right;padding-top:10px;color:var(--TxtColor)" v-if="data.isRoot" :class="{'highlight': data.isSelected }">{{data.name}}</h5>
-                <router-link style="flex:5;cursor:pointer;padding-top:10px;color:var(--TxtColor)" v-else tag="div" :to="data.url" @click.native="onFolderClicked"  :class="{'highlight': data.isSelected}" >{{data.name}}</router-link>
+                <!-- <i v-if="data.children.length >0" class="icon-nodeIconOpen node-icon" @click="toggle()" :class="{'icon-nodeIcon':!isOpen , 'icon-nodeIconOpen':isOpen}" style="display: flex;justify-content: center;align-items: center;"></i> -->
+                <i style="flex:1;font-size: 2.5em;margin-left: .2em;" :class="data.iconClass" @click="toggle()"></i>
+                <h5 style="flex:5;text-align:right;color:var(--TxtColor);font-size: 1.2em;display: flex;align-items: center;" v-if="data.isRoot" :class="{'highlight': data.isSelected }">{{data.name}}</h5>
+                <router-link style="flex:5;cursor:pointer;color:var(--TxtColor);text-align: right;font-size: 1.2em;display: flex;align-items: center;" v-else tag="div" :to="data.url" @click.native="onFolderClicked"  :class="{'highlight': data.isSelected}" >{{data.name}}</router-link>
                 <input type="checkbox" v-if="isSelectable" v-model="isSelected"/>
             </div>
             <div :class="{hide:!isOpen}">
