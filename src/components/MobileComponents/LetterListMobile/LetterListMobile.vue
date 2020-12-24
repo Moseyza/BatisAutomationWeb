@@ -3,7 +3,6 @@
         <div class="container2 flex-part-top" style="flex: 0.5 0 0;">
             <LetterSearchMobile 
             @mode-changed="onFilterModeChanged($event)" 
-            @form-selection="onFormSelection($event)" 
             @search-text-changed="onSearch($event)"  
             @sort-mode-changed="onSortModeChanged($event)"
             @date-filter-changed="onDateFilterChanged($event)"
@@ -321,6 +320,8 @@ export default class LetterListMobile extends Vue{
         store.state.eventHub.$on('closeFastEvent',this.closeLetter);
         store.state.eventHub.$on('rejectCloseLetterEvent',this.rejectCloseLetter);
         store.state.eventHub.$on('forwardLetterEvent',this.forwardLetter);
+        store.state.eventHub.$on("form-selection",this.onFormSelection);
+
         
         //this.serverTime = await letterService.getServerTime();
         

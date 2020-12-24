@@ -47,7 +47,7 @@
                                     @letter-closed-fast="onLetterClosedFastMobile($event)"
                                     @closed-letter-rejected="onClosedLetterRejectedMobile($event)"
                                     @send-fast-dependon="sendFastDependOn($event)"
-                                    @next-form-selected="onNextFormSelected($event)"
+                                    @next-form-selected="onNextFormSelectedMobile($event)"
                                     >
                                     </LetterDetailsMobile>
                                 </div>
@@ -66,7 +66,7 @@
                                 <FinalizeLetterMobile style="width:100%" v-else-if="leftSideMode=== 'finalize'" :letter="selectedLetter"  />
                                 <ForwardLetterMobile style="width:100%" v-else-if="leftSideMode=== 'forward'" @forward-closed="onForwardClosedMobile" @forward-done="onLetterForwardedMobile($event)" :letter="selectedLetter" />
                                 <FastSendMobile  style="width:100%" :mode="fastSendMode" v-else-if="leftSideMode=== 'fastSend' && shallshowFastSend==true"  @fastsend-canceled="onFastSendCanceledMobile($event)"  :dependentLetters="fastSendDependencies" />
-                                <SendEnterpriseFormMobile  style="width:100%" v-else-if="leftSideMode=== 'enterpriseForm'" @shallShowenterpriseFormListsEvent="showOfficeFormlist()" @sendform-close="onSendFormCloseMobile($event)" :form="selectedFrom" :nextFormInfo="nextFormInfo" :tableLblWidth="maxTableLabelWidth" :formLblWidth="maxFormLabelWidth" :draftFormInfo="draftFormInfo" />
+                                <SendEnterpriseFormMobile  style="width:100%" v-else-if="leftSideMode=== 'enterpriseForm'" @shallShowenterpriseFormListsEvent="showOfficeFormlist()" @shallRouteToReceiveFormEvent="onRouteToReceiveForm($event)" @sendform-close="onSendFormCloseMobile($event)" :form="selectedFrom" :nextFormInfo="nextFormInfo" :tableLblWidth="maxTableLabelWidth" :formLblWidth="maxFormLabelWidth" :draftFormInfo="draftFormInfo" :shallRouteToReciveLettersForm="shallRouteToReciveLettersForm" />
                                 <EnterpriseFormLists style="width:100%"  v-else-if="leftSideMode=== 'enterpriseFormLists'"  @enterprise-form-selected-Mobile="onEnterpriseFormMobileSelected($event,null,null)" />
                                 <!-- <LetterListRouterView  v-else-if="leftSideMode=== 'letterListRouterView'"  @set-selectdLetterChanged-letterListView="onSetSelectdLetterChangedLetterListView($event)" @set-selectdDraftChanged-letterListView="onSetSelectdDraftChangedLetterListView($event)" @set-selectdSearchResultChanged-letterListView="onSetSelectdSearchResultChangedLetterListView($event)"/> -->
                                 <LetterListRouterView  v-show="shallshowparentcomponent==true && shallShowLetterListRouter==false" ref="letterlist"  @set-selectdLetterChanged-letterListView="onSetSelectdLetterChangedLetterListView($event)" @set-selectdDraftChanged-letterListView="onSetSelectdDraftChangedLetterListView($event)" @set-selectdSearchResultChanged-letterListView="onSetSelectdSearchResultChangedLetterListView($event)"/>
@@ -95,7 +95,7 @@ import LetterListRouterView from '@/components/MobileComponents/LetterListRouter
 import store from '@/store';
 import {LetterSearchResult } from '@/store/models/Letter/LetterSearchResult';
 import * as enterpriseFormService from '@/store/Services/enterpriseFormService';
-import {Component, Mixins, Watch} from 'vue-property-decorator';
+import {Component, Mixins, Prop, Watch} from 'vue-property-decorator';
 import * as $ from 'jquery';
 import {Letter} from '@/store/models/Letter/Letter';
 import { DraftLetter } from '@/store/models/Letter/DraftLetter';
@@ -118,6 +118,7 @@ export default class MainWindowMobile extends Mixins(MixinMainWindow) {
     shallShowenterpriseFormLists=false;
     shallShowLetterListRouter=false;
     shallshowparentcomponent=true;
+    @Prop() shallRouteToReciveLettersForm?: boolean;
 
      async mounted(){
     //    alert("test");
@@ -170,6 +171,7 @@ export default class MainWindowMobile extends Mixins(MixinMainWindow) {
     }
 
     showOfficeFormlist(){
+        this.shallRouteToReciveLettersForm=false;
         this.shallShowenterpriseFormLists=true;
         this.leftSideMode = 'enterpriseFormLists';
         this.shallshowparentcomponent=false;
@@ -198,9 +200,14 @@ export default class MainWindowMobile extends Mixins(MixinMainWindow) {
     }
 
     onSendFormCloseMobile(isNextForm: boolean){
-        this.onSendFormClose(isNextForm);
+        if(isNextForm){
+            const possessionId =  this.selectedLetter.letterPossessionId;
+            this.onLetterForwardedMobile(possessionId);
+        }
+        this.clearLeftSide();
         this.shallshowparentcomponent=true;
-        this.shallshowFastSend=false;        
+        this.shallShowLetterListRouter=false;       
+        this.shallshowFastSend=false; 
         // this.$router.replace('ReceivedLettersMobile');
         // this.$router.push('LetterDetailsMobile');
     }
@@ -225,6 +232,19 @@ export default class MainWindowMobile extends Mixins(MixinMainWindow) {
     
     onLetterForwardedMobile(possessionId: string){
         store.state.eventHub.$emit('forwardLetterEvent',possessionId);
+    }
+
+    onRouteToReceiveForm(){
+        this.shallshowparentcomponent=true ;
+        this.shallShowLetterListRouter=false;
+        this.leftSideMode="";
+    }
+
+     async onNextFormSelectedMobile(nextFormRequest: any){
+        this.isLoading = true;
+        this.shallRouteToReciveLettersForm=true;
+    const nextFormInfo = await  enterpriseFormService.getNextForm(nextFormRequest);
+        this.onEnterpriseFormSelected(nextFormInfo.enterpriseForm,nextFormInfo,undefined);
     }
 }
 

@@ -13,7 +13,7 @@
                     </div>
                 </div>
             </div>
-            <div style="padding:3px 3px" id="filter-dropdown" class="ui icon top left dropdown ">
+            <div style="padding:3px 3px" id="filter-dropdown" class="ui icon top right dropdown ">
                 <i class="search-icon icon-filter action-icon " :class="{'active':isFilterActive}"></i>
                 <div class="menu">
                     <div class="item menu-item">
@@ -23,47 +23,70 @@
                         <div style="padding-left:5px">غیر فرم سازمانی({{counts.notForms}})</div>
                         <ToggleSwitch :checkedProp="showNotForms" @click="onToggleSwitchClick('notForms')" :isReadOnly="true" /> </div>
                     <div class="item menu-item">
-                        <div style="padding-left:5px">فرم های سازمانی({{counts.forms}})</div>
-                        <ToggleSwitch :checkedProp="showForms" @click="onToggleSwitchClick('forms')" :isReadOnly="true" />
-                        <div class="left menu" style="max-height:400px !important;overflow:auto;width:300px" >
-                            <div v-for="wf in workflows" :key="wf.id" class="item menu-item" :class="{'disabled': !showForms}" style="border-bottom:1px solid black;display:flex;align-items:strech" >
-                                <div style="padding-left:5px;width:150px;border-left:1px solid black;text-align: right;" >{{wf.name}}</div>
-                                <!-- <div class="left menu"> -->
-                                <div >
-                                    <div v-for="item in wf.enterpriseForms" :key="item.id" class="item menu-item" style="margin-bottom:3px">
-                                        <div style="padding-left:5px"> {{item.name}} </div>
-                                        <ToggleSwitch @checked-changed="formFilterSelection($event,item.id)" /> 
+                        <div  id="test" class="ui styled fluid accordion">
+                            <div class="title" style="display:flex;">
+                                <div style="padding-left:5px">فرم های سازمانی({{counts.forms}})</div>
+                                <ToggleSwitch :checkedProp="showForms" @click="onToggleSwitchClick('forms')" :isReadOnly="true" />
+                            </div>
+                            <div class="content">
+                                <div class="transition hidden">
+                                    <div style="max-height:400px !important;overflow:auto;" >
+                                        <SingleEnterpriseSearch :workflows="workflows"/>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        
                     </div>
                     <div class="divider"></div>
                     <div class="item menu-item">
-                        <div style="padding-left:5px">بارگذاری براساس تاریخ</div>
-                        <div class="left menu ">
-                            <div class="item menu-item">
-                                <div style="padding-left:5px">سال</div>
-                                <div class="left menu">
+                        <div  id="test" class="ui styled fluid accordion">
+                            <div class="title" style="direction: ltr;display:flex;">
+                                <i id="baseOnTime" class="search-icon action-icon icon-comboboxArrow" style="transform: rotate(-90deg);"></i>
+                                <div>بارگذاری براساس تاریخ</div>
+                            </div>
+                            <div class="content">
+                                <div class="transition hidden">
+                                    <div style="padding-left:5px">سال</div>
                                     <div v-for="year in yearsArray" :key="year.value" class="item menu-item">
                                         <div style="padding-left:5px"> {{year.value}} </div>
-                                        <ToggleSwitch :isReadOnly="true" :checkedProp="year.isSelected" @click="yearSelected(year.value)" /> </div>
-                                </div>
-                            </div>
-                            <div class="item menu-item scrolling">
-                                <div style="padding-left:5px">ماه</div>
-                                <div class="left menu " style="max-height:300px;overflow:auto">
+                                        <ToggleSwitch :isReadOnly="true" :checkedProp="year.isSelected" @click="yearSelected(year.value)" /> 
+                                    </div>
+                                    <div style="padding-left:5px">ماه</div>
                                     <div v-for="month in months" :key="month.id" class="item menu-item ">
                                         <div style="padding-left:5px"> {{month.name}} </div>
-                                        <ToggleSwitch :isReadOnly="true" :checkedProp="month.isSelected" @click="monthSelected(month.id)" /> </div>
-                                </div> 
+                                        <ToggleSwitch :isReadOnly="true" :checkedProp="month.isSelected" @click="monthSelected(month.id)" /> 
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="item menu-item">
-                        <div style="padding-left:5px">مرتب سازی براساس</div>
-                        <div class="left menu ">
+                        <div  id="test" class="ui styled fluid accordion">
+                            <div class="title" style="direction: ltr;display:flex;">
+                                <i id="baseOnEtc" class="search-icon action-icon icon-comboboxArrow" style="transform: rotate(-90deg);"></i>
+                                <div>مرتب سازی براساس</div>
+                            </div>
+                            <div class="content">
+                                <div class="transition hidden">
+                                    <div>
+                                        <div style="padding-left:5px">تاریخ</div>
+                                        <div class="item menu-item">
+                                            <ToggleSwitch :isReadOnly="true" :checkedProp="sortOnDate" @click="sortModeChanged('date')" />
+                                        </div>
+                                        <div style="padding-left:5px">نام فرستنده</div>
+                                        <div class="item menu-item">
+                                            <ToggleSwitch :isReadOnly="true" :checkedProp="sortOnSender" @click="sortModeChanged('sender')" />
+                                        </div>
+                                        <div style="padding-left:5px">عنوان</div>
+                                        <div class="item menu-item">
+                                            <ToggleSwitch :isReadOnly="true" :checkedProp="sortOnTitle" @click="sortModeChanged('title')" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- <div style="padding-left:5px">مرتب سازی براساس</div> -->
+                        <!-- <div class="right menu ">
                             <div class="item menu-item">
                                 <div style="padding-left:5px">تاریخ</div>
                                 <ToggleSwitch :isReadOnly="true" :checkedProp="sortOnDate" @click="sortModeChanged('date')" />
@@ -76,7 +99,7 @@
                                 <div style="padding-left:5px">عنوان</div>
                                 <ToggleSwitch :isReadOnly="true" :checkedProp="sortOnTitle" @click="sortModeChanged('title')" />
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>    
@@ -93,12 +116,13 @@ import ToggleSwitch from '@/components/UiComponents/ToggleSwitch.vue';
 import * as $ from 'jquery';
 import { Workflow } from '../../../../store/models/workflow/workflow';
 import AdvancedSearchMobile from './AdvancedSearchMobile/AdvancedSearchMobile.vue';
+import SingleEnterpriseSearch from './SingleEnterpriseSearch/SingleEnterpriseSearch.vue';
 import letterSearch from '../../../../store/models/Letter/letterSearch';
 import store from '@/store';
 import { LetterOwner } from '../../../../store/models/LetterOwner/LetterOwner';
 
 @Component({
-    components: { ToggleSwitch, AdvancedSearchMobile }
+    components: { ToggleSwitch, AdvancedSearchMobile,SingleEnterpriseSearch }
 })
 export default class LetterSearchMobile extends Vue {
     searchText = '';
@@ -116,9 +140,19 @@ export default class LetterSearchMobile extends Vue {
     clearSearchText(){
         this.searchText = "";
     }
+    created(){
+         $('.ui.accordion').accordion();
+         $('#test').accordion();
+         $('#test1').accordion();
+    }
     mounted() {
         $('#filter-dropdown').dropdown({ action: 'nothing' });
         $('#search-dropdown').dropdown({ action: 'nothing' });
+         $('.ui.accordion').accordion();
+         $('#test').accordion();
+         $('#test1').accordion();
+
+
         this.months.push(...[
             { isSelected: false, name: "فروردین", id: 1 },
             { isSelected: false, name: "اردیبهشت", id: 2 },
@@ -220,9 +254,7 @@ export default class LetterSearchMobile extends Vue {
         }
         this.$emit('mode-changed', mode);
     }
-    formFilterSelection(checked: boolean, formId: string) {
-        this.$emit("form-selection", { isSelected: checked, formId: formId });
-    }
+    
 
     nonConjunctiveSearch(){
         if(this.searchText.trim() === '')return;
@@ -268,5 +300,21 @@ input:focus {
 .ui.dropdown>.left.menu {
     left: 0!important;
     right: auto !important;
+}
+.ui.accordion{
+    background:var(--BackgroundTable) !important;
+    color: var(--FontColor) !important;
+}
+.active{
+    color: var(--FontColor) !important;
+}
+
+.title.active:first-child #baseOnTime{
+    -webkit-transform: rotate(360deg) !important;
+    transform: rotate(360deg) !important;
+}
+.title.active:first-child #baseOnEtc{
+    -webkit-transform: rotate(360deg) !important;
+    transform: rotate(360deg) !important;
 }
 </style>

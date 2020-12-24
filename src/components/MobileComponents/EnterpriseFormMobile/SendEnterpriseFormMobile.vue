@@ -48,8 +48,14 @@
         </div>
         <div class="flex-part-bottom container1" style="flex:0 1 auto">
             <InPlaceMessageBox v-if="shallShowMsgBox" :message="msgBoxMessage" :messageType="msgBoxMessageType" :buttons="msgBoxButtons" @button-clicked="onMsgBoxButtonClicked($event)"/>
+            <InPlaceMessageBox v-if="shallShowMsgBoxForRouteToReceiveForm" :message="msgBoxMessage" :messageType="msgBoxMessageType" :buttons="msgBoxButtons" @button-clicked="onRouteToReceiveForm($event)"/>
             <div v-else style="display:flex">
-                    <div  @click="cancel()" class="action-icon bg1" style="flex:1;text-align:center"><i style="color:inherit;font-size:xx-large" class=" icon-close"></i></div>
+                    <div class="action-icon bg1" style="flex:1;text-align:center">
+                        <div   @click="cancel()" class="action-icon bg1" style="flex:1;text-align:center">
+                            <i style="color:inherit;font-size:xx-large" class=" icon-close"></i>
+                        </div>
+                    </div>
+                    
                     <div   class="action-icon bg1" style="flex:1;text-align:center;margin-top: 3px;"><i style="color:inherit;font-size:x-large" class=" icon-letterPreview"></i></div>
                     <div  @click="send('save')" class="action-icon bg1" style="flex:1;text-align:center;margin-top: 3px;"><i style="color:inherit;font-size:x-large" class=" icon-saveDraft"></i></div>
                     <div  @click="send('send')" class="action-icon bg1 popup" :data-content="errors" style="flex:1;text-align:center"><i style="color:inherit;position:absolute" class=" icon-sendForwardLetter xlarg-text"></i> <span v-if="shallShowError()" style="color:red;position: absolute;margin: 8px;font-size: larger;">!</span> </div>
@@ -89,8 +95,12 @@ export default class SendEnterpriseFormMobile extends Mixins(ComponentMixinBase)
     @Prop() nextFormInfo?: NextFormInfo;
     isNextForm = false;
     @Prop() draftFormInfo?: DraftEnterpriseFormInfo;
+    @Prop() shallRouteToReciveLettersForm?: boolean;
+    @Watch('shallRouteToReciveLettersForm')
     msgBoxMessage = '';
     msgBoxMessageType = '';
+    shallShowMsgBoxForRouteToReceiveForm=false;
+    shallRouteToReciveLetter=false;
     msgBoxButtons = 'okCancel';
     shallShowMsgBox = false;
     formReceivers = [] as LetterOwnerWithFaxAndEmails[];
@@ -115,13 +125,18 @@ export default class SendEnterpriseFormMobile extends Mixins(ComponentMixinBase)
         store.state.eventHub.$emit('remove-all');
     }
 
+    onCloseToRouteReceiveLetter(){
+        this.shallRouteToReciveLetter=true;
+    }
     mounted(){
         if(this.isMobile()){
             this.shallRenderOnMobile=true
         }
     }
+
     created(){
         this.loadReceivers();
+        store.state.eventHub.$on('routeToReciveLettersFormEvent',this.onCloseToRouteReceiveLetter);
     }
     
     async loadReceivers(){
@@ -292,14 +307,26 @@ export default class SendEnterpriseFormMobile extends Mixins(ComponentMixinBase)
         this.msgBoxMessage = 'آیا مطمئن هستید؟';
         this.msgBoxMessageType = '';
         this.msgBoxButtons = 'yesNo';
+        if(this.shallRouteToReciveLettersForm==true){
+            this.shallShowMsgBoxForRouteToReceiveForm=true;
+        }else{
         this.shallShowMsgBox = true;
+        }
     }
+  
     onMsgBoxButtonClicked(btn: string){
         this.shallShowMsgBox = false;
         if((btn ==='ok' && this.isFormSent) || btn === 'yes'){
             // this.$emit('sendform-close',this.isNextForm);
             this.$emit('shallShowenterpriseFormListsEvent')
 
+        }
+    }
+    onRouteToReceiveForm(btn: string){
+        this.shallShowMsgBoxForRouteToReceiveForm = false;
+        if((btn ==='ok' && this.isFormSent) || btn === 'yes'){
+            // this.$emit('sendform-close',this.isNextForm);
+            this.$emit('shallRouteToReceiveFormEvent')
         }
     }
     shallShowMainLookup = false;

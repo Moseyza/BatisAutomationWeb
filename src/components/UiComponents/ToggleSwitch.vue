@@ -1,6 +1,6 @@
 <template>
     <label @click="onClick()" class="switch">
-        <input type="checkbox" v-model="checked" :disabled="isReadOnly">
+        <input class="checkbox" type="checkbox" v-model="checked" :disabled="isReadOnly">
         <span class="slider round"></span>
     </label>    
 </template>
